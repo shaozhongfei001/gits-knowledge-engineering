@@ -1,0 +1,8 @@
+gate: oracle_readonly_connect
+command: bash scripts/db/oracle_readonly_check.sh
+executed_at: 2026-08-02T01:22:00+08:00
+--- guard self-test ---
+oracle-readonly-guard: PASS
+--- oracle read-only connect ---
+oracle-readonly-check: PASS
+exit=0

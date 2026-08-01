@@ -1,10 +1,17 @@
 {
   "profile_id": "HZB-ORACLE-METADATA-QUARANTINE-V0.1",
-  "enabled": false,
+  "enabled": true,
   "default_install": false,
   "authorization_required": ["DATA_OWNER", "DBA", "SECURITY_OWNER"],
+  "authorization_granted": {
+    "DATA_OWNER": {"granted": true, "actor": "project_owner_as_data_owner", "granted_at": "2026-08-02", "adr": "ADR-0007"},
+    "DBA": {"granted": false, "pending": true, "note": "owner directed read-only proceed; written confirmation pending"},
+    "SECURITY_OWNER": {"granted": false, "pending": true, "note": "security owner review pending"}
+  },
   "allowed_environment": ["SIT", "CONTROLLED_TEST"],
   "transaction_policy": "FAIL_CLOSED_READ_ONLY",
+  "write_policy": "DENIED",
+  "loop": "P1-oracle-readonly",
   "qa_gate": "PENDING_INDEPENDENT_QA",
   "source_capture": "HASH_AND_LOCATOR_BY_DEFAULT"
 }

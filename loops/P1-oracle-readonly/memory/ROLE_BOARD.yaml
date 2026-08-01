@@ -1,0 +1,18 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "{{LOOP_ID}}",
+  "updated_at": "{{ISO_TIME}}",
+  "updated_by": "{{HOLDER}}",
+  "board_status": "PLANNED",
+  "baton": {
+    "holder": "{{HOLDER}}",
+    "packet": "{{LOOP_ID}}",
+    "wave": "W0",
+    "blocked_note": "",
+    "parallel_allowed": []
+  },
+  "roles": {
+    "{{HOLDER}}": {"responsibility": "implementation", "status": "planned"},
+    "independent_qa": {"responsibility": "gate_review", "status": "unassigned"}
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P1-oracle-readonly",
+  "title": "Oracle EDwCRM Read-Only Access Enablement",
+  "status": "planned",
+  "implementation_actor": "tech_lead",
+  "objective": [
+    "Enable read-only access to Oracle EDwCRM under ADR-0007 and data-owner authorization.",
+    "Prove read-only enforcement and metadata read without writing or dumping customer row data.",
+    "Keep contracts, implementation, evidence and handoff synchronized."
+  ],
+  "scope": {
+    "include": [
+      "docs/architecture/ADR-0007-oracle-readonly-enablement.md",
+      "tools/quarantine/oracle/",
+      "loops/P1-oracle-readonly/",
+      "scripts/db/oracle_readonly_check.sh"
+    ],
+    "exclude": [
+      "write_operations",
+      "production_credentials",
+      "customer_row_data_dump",
+      "production_writeback"
+    ]
+  },
+  "gates": [
+    {
+      "id": "readonly_guard_selftest",
+      "owner_kind": "implementation",
+      "command": "python3 tools/quarantine/oracle/readonly_guard.py --self-test",
+      "pass_condition": "Read-only guard self-test passes (fail-closed verified)."
+    },
+    {
+      "id": "oracle_readonly_connect",
+      "owner_kind": "implementation",
+      "command": "bash scripts/db/oracle_readonly_check.sh",
+      "pass_condition": "Real Oracle connection succeeds with SET TRANSACTION READ ONLY enforced and a metadata read returns; any failure closes the connection."
+    },
+    {
+      "id": "security_check",
+      "owner_kind": "implementation",
+      "command": "make security-check",
+      "pass_condition": "Secret, permissions and quarantine checks pass."
+    }
+  ],
+  "repair_policy": {
+    "max_attempts_per_gate": 5,
+    "failure_record": "loops/P1-oracle-readonly/FAILURES.md",
+    "record_before_fix": true,
+    "rerun_original_gate": true
+  },
+  "exit_states": ["ready_for_independent_qa", "blocked"]
+}
