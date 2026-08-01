@@ -3,5 +3,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent><groupId>com.gien.gits</groupId><artifactId>gits-knowledge-engineering</artifactId><version>0.1.0-SNAPSHOT</version><relativePath>../../pom.xml</relativePath></parent>
   <artifactId>human-action</artifactId>
-  <dependencies><dependency><groupId>com.gien.gits</groupId><artifactId>operational-ontology</artifactId><version>${project.version}</version></dependency></dependencies>
+  <dependencies>
+    <dependency><groupId>com.gien.gits</groupId><artifactId>operational-ontology</artifactId><version>${project.version}</version></dependency>
+    <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><scope>test</scope></dependency>
+  </dependencies>
 </project>
