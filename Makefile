@@ -1,4 +1,4 @@
-.PHONY: help bootstrap-check generate check contract-diff security-check framework-test tooling-test backend-test frontend-test verify new-loop memory-check evidence-check dry-run
+.PHONY: help bootstrap-check generate check contract-diff security-check framework-test tooling-test backend-test frontend-test db-check db-init verify new-loop memory-check evidence-check dry-run
 
 PYTHON ?= python3
 MVNW ?= ./mvnw
@@ -52,7 +52,13 @@ frontend-test: ## 前端锁文件安装、类型检查、测试和构建
 	@test -f frontend/package-lock.json || { echo "FAIL: frontend/package-lock.json missing; lock dependencies before testing"; exit 2; }
 	@cd frontend && npm ci && npm run check && npm run test && npm run build
 
-verify: bootstrap-check generate check framework-test tooling-test backend-test frontend-test ## 完整本地验证
+db-check: ## 验证gits_ke管理库可连接可写(需GITS_KEDB_PASSWORD在仓库外设置)
+	@bash scripts/db/db_check.sh
+
+db-init: ## 用Flyway初始化/迁移gits_ke schema(需GITS_KEDB_PASSWORD在仓库外设置)
+	@bash scripts/db/db_init.sh
+
+verify: bootstrap-check generate check framework-test tooling-test backend-test frontend-test db-check ## 完整本地验证
 
 new-loop: ## 创建批次：make new-loop LOOP=P1-xxx HOLDER=tech_lead
 	@test -n "$(LOOP)" -a -n "$(HOLDER)" || { echo "FAIL: LOOP and HOLDER are required"; exit 2; }

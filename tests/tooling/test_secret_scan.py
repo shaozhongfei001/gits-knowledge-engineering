@@ -21,7 +21,7 @@ class SecretScanTest(unittest.TestCase):
     def test_environment_placeholder_is_allowed(self):
         with tempfile.TemporaryDirectory() as raw:
             root = Path(raw)
-            (root / ".env.example").write_text("PASSWORD=${HZB_DB_PASSWORD}\n", encoding="utf-8")
+            (root / ".env.example").write_text("PASSWORD=${GITS_KEDB_PASSWORD}\n", encoding="utf-8")
             self.assertEqual([], MODULE.scan_root(root))
 
 

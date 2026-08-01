@@ -3,14 +3,14 @@ services:
     image: mysql:8.4
     profiles: [local-db]
     environment:
-      MYSQL_DATABASE: ${HZB_DB_NAME:-hzb_kno}
-      MYSQL_USER: ${HZB_DB_USER:-hzb_kno}
-      MYSQL_PASSWORD: ${HZB_DB_PASSWORD:?set HZB_DB_PASSWORD outside the repository}
-      MYSQL_ROOT_PASSWORD: ${HZB_DB_ROOT_PASSWORD:?set HZB_DB_ROOT_PASSWORD outside the repository}
+      MYSQL_DATABASE: ${GITS_KEDB_NAME:-gits_ke}
+      MYSQL_USER: ${GITS_KEDB_USER:-ontos}
+      MYSQL_PASSWORD: ${GITS_KEDB_PASSWORD:?set GITS_KEDB_PASSWORD outside the repository}
+      MYSQL_ROOT_PASSWORD: ${GITS_KEDB_ROOT_PASSWORD:?set GITS_KEDB_ROOT_PASSWORD outside the repository}
     ports:
       - "127.0.0.1:3306:3306"
     volumes:
-      - hzb_mysql_data:/var/lib/mysql
+      - gits_mysql_data:/var/lib/mysql
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD"]
       interval: 10s
@@ -18,4 +18,4 @@ services:
       retries: 12
 
 volumes:
-  hzb_mysql_data:
+  gits_mysql_data:
