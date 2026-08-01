@@ -1,4 +1,4 @@
-.PHONY: help bootstrap-check generate check contract-diff security-check framework-test tooling-test backend-test frontend-test db-check db-init verify new-loop memory-check evidence-check dry-run
+.PHONY: help bootstrap-check generate check contract-diff security-check framework-test tooling-test backend-test frontend-test db-check db-init verify new-loop memory-check evidence-check dry-run semantic-rule-gate
 
 PYTHON ?= python3
 MVNW ?= ./mvnw
@@ -22,6 +22,10 @@ check: ## 验证合同、生成物、Loop模板和安全基线
 	@bash scripts/check-contracts.sh
 	@$(PYTHON) scripts/loop_guard.py --template-check
 	@$(PYTHON) scripts/secret_scan.py --root .
+	@$(PYTHON) scripts/semantic_rule_gate.py
+
+semantic-rule-gate: ## 验证生成的语义与规则合同制品格式自洽(fail-closed)
+	@$(PYTHON) scripts/semantic_rule_gate.py
 
 contract-diff: ## 与指定基线目录比较兼容性：BASELINE=path
 	@test -n "$(BASELINE)" || { echo "FAIL: BASELINE is required"; exit 2; }
@@ -58,7 +62,7 @@ db-check: ## 验证gits_ke管理库可连接可写(需GITS_KEDB_PASSWORD在仓�
 db-init: ## 用Flyway初始化/迁移gits_ke schema(需GITS_KEDB_PASSWORD在仓库外设置)
 	@bash scripts/db/db_init.sh
 
-verify: bootstrap-check generate check framework-test tooling-test backend-test frontend-test db-check ## 完整本地验证
+verify: bootstrap-check generate check framework-test tooling-test backend-test frontend-test db-check semantic-rule-gate ## 完整本地验证
 
 new-loop: ## 创建批次：make new-loop LOOP=P1-xxx HOLDER=tech_lead
 	@test -n "$(LOOP)" -a -n "$(HOLDER)" || { echo "FAIL: LOOP and HOLDER are required"; exit 2; }
@@ -72,5 +76,5 @@ evidence-check: ## 检查状态、命令和证据hash
 	@test -n "$(LOOP)" || { echo "FAIL: LOOP is required"; exit 2; }
 	@$(PYTHON) scripts/loop_guard.py --loop "$(LOOP)" --evidence-only
 
-dry-run: generate check framework-test tooling-test ## 不连接真实外部系统的机制Dry-run
+dry-run: generate check framework-test tooling-test semantic-rule-gate ## 不连接真实外部系统的机制Dry-run
 	@echo "DEV_SELF_CHECK_PASS: framework and repository mechanisms; independent QA still required"
