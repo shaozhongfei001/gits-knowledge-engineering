@@ -6,7 +6,7 @@
 
 | 字段 | 值 |
 |---|---|
-| status | ready_for_independent_qa |
+| status | qa_passed |
 | baseline_commit | `784a143c4276d80bfa214dfee9cbf65f4a034ce9` |
 | baton_holder | `tech_lead` |
 | current_wave | `W0` |

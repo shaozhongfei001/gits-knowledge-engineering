@@ -1,0 +1,17 @@
+=== independent_qa evidence ===
+loop_id: P1-oracle-readonly
+gates: readonly_guard_selftest, oracle_readonly_connect
+executed_at: 2026-08-02T01:24:22+08:00
+actor: independent_qa_subagent
+
+### command 1: python3 tools/quarantine/oracle/readonly_guard.py --self-test
+exit_code: 0
+--- output ---
+oracle-readonly-guard: PASS
+--- end output ---
+
+### command 2: bash scripts/db/oracle_readonly_check.sh
+exit_code: 0
+--- output ---
+oracle-readonly-check: PASS
+--- end output ---

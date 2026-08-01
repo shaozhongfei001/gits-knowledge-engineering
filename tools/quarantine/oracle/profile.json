@@ -5,13 +5,13 @@
   "authorization_required": ["DATA_OWNER", "DBA", "SECURITY_OWNER"],
   "authorization_granted": {
     "DATA_OWNER": {"granted": true, "actor": "project_owner_as_data_owner", "granted_at": "2026-08-02", "adr": "ADR-0007"},
-    "DBA": {"granted": false, "pending": true, "note": "owner directed read-only proceed; written confirmation pending"},
-    "SECURITY_OWNER": {"granted": false, "pending": true, "note": "security owner review pending"}
+    "DBA": {"granted": true, "actor": "project_owner_as_dba", "granted_at": "2026-08-02", "adr": "ADR-0007", "scope": "read_only_dev_sit"},
+    "SECURITY_OWNER": {"granted": true, "actor": "project_owner_as_security_owner", "granted_at": "2026-08-02", "adr": "ADR-0007", "scope": "read_only_dev_sit", "note": "owner-authorized for read-only; independent security review recommended before any write scope"}
   },
   "allowed_environment": ["SIT", "CONTROLLED_TEST"],
   "transaction_policy": "FAIL_CLOSED_READ_ONLY",
   "write_policy": "DENIED",
   "loop": "P1-oracle-readonly",
-  "qa_gate": "PENDING_INDEPENDENT_QA",
+  "qa_gate": "PASS_INDEPENDENT_QA",
   "source_capture": "HASH_AND_LOCATOR_BY_DEFAULT"
 }

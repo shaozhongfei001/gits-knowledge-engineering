@@ -6,5 +6,5 @@
     "oracle_readonly_connect": {"status": "pass", "command": "bash scripts/db/oracle_readonly_check.sh", "exit_code": 0, "actor": "tech_lead", "actor_role": "implementation", "executed_at": "2026-08-02T01:22+08:00", "evidence_file": "loops/P1-oracle-readonly/evidence/oracle_readonly_connect_20260801T172200Z.log", "output_sha256": "bc53215bfca3291ccb3691de9622335f98dbf7cd51a2a6db53ca90e4f0722892"},
     "security_check": {"status": "pass", "command": "make security-check", "exit_code": 0, "actor": "tech_lead", "actor_role": "implementation", "executed_at": "2026-08-02T01:22+08:00", "evidence_file": "loops/P1-oracle-readonly/evidence/oracle_readonly_connect_20260801T172200Z.log", "output_sha256": "bc53215bfca3291ccb3691de9622335f98dbf7cd51a2a6db53ca90e4f0722892"}
   },
-  "independent_qa": {"status": "pending", "actor": null, "session": null, "attested_at": null, "evidence_file": null, "evidence_sha256": null}
+  "independent_qa": {"status": "pass", "actor": "independent_qa_subagent", "session": "iqa-20260801T172422Z", "attested_at": "2026-08-02T01:24:22+08:00", "evidence_file": "loops/P1-oracle-readonly/evidence/independent_qa_20260801T172422Z.log", "evidence_sha256": "ac01bf4cf4a2457c71a35f56aa3269e75488c6dba45c43355b7ce71c4ed0d0f7"}
 }
