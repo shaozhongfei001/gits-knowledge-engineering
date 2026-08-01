@@ -1,0 +1,29 @@
+{
+  "runManifest" : {
+    "runId" : "5f81876d-675a-4d7f-8c04-71a8e2bd631f",
+    "startedAt" : "2026-08-02T00:00:00Z",
+    "ontologyVersion" : "hzb-core@0.1.0",
+    "skillVersion" : "hzb.kno.context-assembly@1.0.0",
+    "promptVersion" : "prompt@0.1.0",
+    "model" : {
+      "provider" : "openai",
+      "modelId" : "gpt-4o",
+      "parametersHash" : "parametersHash-e2e-0001"
+    },
+    "ruleVersions" : [ "claim-reconciliation@1.0.0" ],
+    "dataSnapshot" : "snapshot-2026-08-02T00:00:00Z",
+    "permissionDecisionId" : "DEC-e2e-0001",
+    "traceId" : "trace-e2e-0001"
+  },
+  "result" : {
+    "gateState" : "MECHANISM_READY",
+    "metrics" : {
+      "placeholderScore" : 0.0,
+      "ruleVersionCount" : 1
+    },
+    "caseSetVersion" : "case-set-v0.1",
+    "mechanismE2e" : true,
+    "realInterface" : false,
+    "qaPass" : false
+  }
+}

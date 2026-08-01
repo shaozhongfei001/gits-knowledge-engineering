@@ -25,3 +25,11 @@
 - Exit: `0`
 - Evidence: `loops/P2-knowledge-engineering-build/evidence/security_check-20260801T175537Z.log`
 - SHA256: `682141f4d96b10995c75401d7804e5a09cfe71aae85332fc41be658346e3b50f`
+
+## Attempt 1｜20260801T180717Z
+
+- Gate: `e2e_mechanism`
+- Command: `bash scripts/e2e/mechanism_e2e.sh`
+- Exit: `0`
+- Evidence: `loops/P2-knowledge-engineering-build/evidence/e2e_mechanism-20260801T180717Z.log`
+- SHA256: `0751cfb5b981a705f9e20c71e5bf092a33d24e610510021071003b78fc8ded21`
