@@ -2,16 +2,6 @@
   "schema_version": "2.0",
   "loop_id": "P2-knowledge-engineering-build",
   "gates": {
-    "contract_generate": {
-      "status": "pending",
-      "command": "make generate",
-      "exit_code": null,
-      "actor": null,
-      "actor_role": null,
-      "executed_at": null,
-      "evidence_file": null,
-      "output_sha256": null
-    },
     "contract_check": {
       "status": "pass",
       "command": "make check",
@@ -51,14 +41,24 @@
       "executed_at": "2026-08-01T18:07:17.849771+00:00",
       "evidence_file": "loops/P2-knowledge-engineering-build/evidence/e2e_mechanism-20260801T180717Z.log",
       "output_sha256": "0751cfb5b981a705f9e20c71e5bf092a33d24e610510021071003b78fc8ded21"
+    },
+    "independent_qa": {
+      "status": "pass",
+      "command": "make verify",
+      "exit_code": 0,
+      "actor": "independent_qa_subagent",
+      "actor_role": "independent_qa",
+      "executed_at": "2026-08-01T18:09:05.495779+00:00",
+      "evidence_file": "loops/P2-knowledge-engineering-build/evidence/independent_qa-20260801T180905Z.log",
+      "output_sha256": "807b7803e976bbc9e5d683d40844af74414893e88577f3c381522cab09e8570a"
     }
   },
   "independent_qa": {
-    "status": "pending",
-    "actor": null,
-    "session": null,
-    "attested_at": null,
-    "evidence_file": null,
-    "evidence_sha256": null
+    "status": "pass",
+    "actor": "independent_qa_subagent",
+    "session": "iqa-p2-20260801T180749Z",
+    "attested_at": "2026-08-02T02:07:49+08:00",
+    "evidence_file": "loops/P2-knowledge-engineering-build/evidence/independent_qa_20260801T180749Z.log",
+    "evidence_sha256": "bf045f9074e0bf2527e88a55c2442320d7f33d6251664d0e1145a53ae101447a"
   }
 }

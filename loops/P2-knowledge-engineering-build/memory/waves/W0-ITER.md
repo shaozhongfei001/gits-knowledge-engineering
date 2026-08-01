@@ -33,3 +33,11 @@
 - Exit: `0`
 - Evidence: `loops/P2-knowledge-engineering-build/evidence/e2e_mechanism-20260801T180717Z.log`
 - SHA256: `0751cfb5b981a705f9e20c71e5bf092a33d24e610510021071003b78fc8ded21`
+
+## Attempt 1｜20260801T180905Z
+
+- Gate: `independent_qa`
+- Command: `make verify`
+- Exit: `0`
+- Evidence: `loops/P2-knowledge-engineering-build/evidence/independent_qa-20260801T180905Z.log`
+- SHA256: `807b7803e976bbc9e5d683d40844af74414893e88577f3c381522cab09e8570a`

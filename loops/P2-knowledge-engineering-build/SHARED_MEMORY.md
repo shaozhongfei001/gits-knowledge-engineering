@@ -6,11 +6,11 @@
 
 | 字段 | 值 |
 |---|---|
-| status | in_progress |
+| status | qa_passed |
 | baseline_commit | `5d2b5bb606b479e8446574d749b7e7f2aa7d24ac` |
-| baton_holder | `tech_lead` |
-| current_wave | `W0` |
-| updated_at | `2026-08-02T01:55:00+08:00` |
+| baton_holder | `independent_qa` |
+| current_wave | `W8` |
+| updated_at | `2026-08-02T02:08:00+08:00` |
 
 ## Role Results
 

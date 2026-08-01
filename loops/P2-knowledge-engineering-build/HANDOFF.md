@@ -3,8 +3,8 @@
 | 项 | 状态 |
 |---|---|
 | 交付对象 | 以dispatch和LOOP为准 |
-| 开发自检 | `PENDING` |
-| 独立QA | `PENDING` |
+| 开发自检 | `PASS` |
+| 独立QA | `PASS` |
 | 生产就绪 | `NO` |
 
 ## 交付物
