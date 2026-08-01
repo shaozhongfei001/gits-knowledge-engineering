@@ -11,7 +11,8 @@ public record OperatingCase(
         String purpose,
         Instant validFrom,
         Instant validTo,
-        Instant recordedAt) {
+        Instant recordedAt,
+        String createdBy) {
 
     public OperatingCase {
         Objects.requireNonNull(caseId, "caseId");
@@ -20,6 +21,7 @@ public record OperatingCase(
         purpose = requireText(purpose, "purpose");
         Objects.requireNonNull(validFrom, "validFrom");
         Objects.requireNonNull(recordedAt, "recordedAt");
+        createdBy = requireText(createdBy, "createdBy");
         if (validTo != null && validTo.isBefore(validFrom)) {
             throw new IllegalArgumentException("validTo must not precede validFrom");
         }

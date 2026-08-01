@@ -158,6 +158,32 @@ class MechanismE2eIT {
         resultNode.put("qaPass", false);
         artifact.set("result", resultNode);
 
+        // --- (f) Mapping locator evidence (CTR-MAP-001 spike, ADR-0009): hash + locator only ---
+        Path r2rml = Paths.get("specs/data/customer-source-mapping.r2rml.ttl");
+        if (!r2rml.isAbsolute()) {
+            Path fromModule = Paths.get("../../specs/data/customer-source-mapping.r2rml.ttl");
+            if (Files.exists(fromModule)) {
+                r2rml = fromModule;
+            }
+        }
+        assertTrue(Files.exists(r2rml), "CTR-MAP-001 R2RML source must exist for locator evidence");
+        String r2rmlText = Files.readString(r2rml, StandardCharsets.UTF_8);
+        assertTrue(r2rmlText.contains("A_ZHCX_CUST_BASE"), "spike source table locator");
+        assertTrue(r2rmlText.contains("{CUSTID}"), "spike subject column locator");
+        assertTrue(r2rmlText.contains("SPIKE_ONLY"), "must remain spike_only");
+        String r2rmlSha = sha256Hex(r2rmlText.getBytes(StandardCharsets.UTF_8));
+        ObjectNode mapping = mapper.createObjectNode();
+        mapping.put("contractId", "CTR-MAP-001");
+        mapping.put("adr", "ADR-0009");
+        mapping.put("status", "SPIKE_ONLY");
+        mapping.put("logicalTable", "A_ZHCX_CUST_BASE");
+        mapping.put("subjectColumn", "CUSTID");
+        mapping.put("sourceFile", "specs/data/customer-source-mapping.r2rml.ttl");
+        mapping.put("sourceSha256", r2rmlSha);
+        mapping.put("customerClassInCoreOntology", false);
+        mapping.put("rowDataRead", false);
+        artifact.set("mappingLocatorEvidence", mapping);
+
         String outPath = System.getProperty("e2e.manifest.out", "target/e2e-mechanism-run-manifest.json");
         Path out = Paths.get(outPath);
         if (out.getParent() != null) {
@@ -166,6 +192,18 @@ class MechanismE2eIT {
         Files.writeString(out, mapper.writeValueAsString(artifact), StandardCharsets.UTF_8);
         assertTrue(Files.exists(out), "run-manifest artifact must be written to disk");
         assertTrue(Files.size(out) > 0, "run-manifest artifact must be non-empty");
+        String written = Files.readString(out, StandardCharsets.UTF_8);
+        assertTrue(written.contains("A_ZHCX_CUST_BASE"));
+        assertTrue(written.contains("mappingLocatorEvidence"));
+    }
+
+    private static String sha256Hex(byte[] bytes) throws Exception {
+        byte[] digest = java.security.MessageDigest.getInstance("SHA-256").digest(bytes);
+        StringBuilder sb = new StringBuilder(digest.length * 2);
+        for (byte b : digest) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
     }
 
     private static byte[] turtle(String... lines) {

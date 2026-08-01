@@ -1,0 +1,64 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P3-mapping-and-gaps",
+  "gates": {
+    "contract_check": {
+      "status": "pass",
+      "command": "make check",
+      "exit_code": 0,
+      "actor": "tech_lead",
+      "actor_role": "implementation",
+      "executed_at": "2026-08-01T18:36:37.049095+00:00",
+      "evidence_file": "loops/P3-mapping-and-gaps/evidence/contract_check-20260801T183637Z.log",
+      "output_sha256": "97631b59ca51e0e88c5f0c97f4b82261a95b1cb9e01aa9a4f6341e142400fa85"
+    },
+    "build_test": {
+      "status": "pass",
+      "command": "./mvnw -q --batch-mode --no-transfer-progress test",
+      "exit_code": 0,
+      "actor": "tech_lead",
+      "actor_role": "implementation",
+      "executed_at": "2026-08-01T18:36:37.313196+00:00",
+      "evidence_file": "loops/P3-mapping-and-gaps/evidence/build_test-20260801T183637Z.log",
+      "output_sha256": "fd5f25af8db49984c01f04c1c895d607d2313e9d86368acbfc79abce312027bf"
+    },
+    "security_check": {
+      "status": "pass",
+      "command": "make security-check",
+      "exit_code": 0,
+      "actor": "tech_lead",
+      "actor_role": "implementation",
+      "executed_at": "2026-08-01T18:36:45.488133+00:00",
+      "evidence_file": "loops/P3-mapping-and-gaps/evidence/security_check-20260801T183645Z.log",
+      "output_sha256": "682141f4d96b10995c75401d7804e5a09cfe71aae85332fc41be658346e3b50f"
+    },
+    "e2e_mechanism": {
+      "status": "pass",
+      "command": "bash scripts/e2e/mechanism_e2e.sh",
+      "exit_code": 0,
+      "actor": "tech_lead",
+      "actor_role": "implementation",
+      "executed_at": "2026-08-01T18:36:45.633158+00:00",
+      "evidence_file": "loops/P3-mapping-and-gaps/evidence/e2e_mechanism-20260801T183645Z.log",
+      "output_sha256": "e3161ddf3adf70aa4e345d2dd13e5228f783b23f445480ed5f3f948861736646"
+    },
+    "independent_qa": {
+      "status": "pass",
+      "command": "make verify",
+      "exit_code": 0,
+      "actor": "independent_qa_subagent",
+      "actor_role": "independent_qa",
+      "executed_at": "2026-08-01T18:38:00.136918+00:00",
+      "evidence_file": "loops/P3-mapping-and-gaps/evidence/independent_qa-20260801T183800Z.log",
+      "output_sha256": "46467a14febd8206c1ae7efe9cdc58dd3067f5046c0aff655eb14ea6722721f7"
+    }
+  },
+  "independent_qa": {
+    "status": "pass",
+    "actor": "independent_qa_subagent",
+    "session": "iqa-p3-20260801T183717Z",
+    "attested_at": "2026-08-02T02:37:37+08:00",
+    "evidence_file": "loops/P3-mapping-and-gaps/evidence/independent_qa_20260801T183717Z.log",
+    "evidence_sha256": "0249a1b1476a283877d2e1f1ffb03fd401c01383619297aabbb198c9a553938d"
+  }
+}

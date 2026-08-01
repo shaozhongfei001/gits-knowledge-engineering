@@ -1,0 +1,40 @@
+{
+  "runManifest" : {
+    "runId" : "bc98359a-301a-461b-9024-10f1cb532ced",
+    "startedAt" : "2026-08-02T00:00:00Z",
+    "ontologyVersion" : "gits-core@0.1.0",
+    "skillVersion" : "gits.kno.context-assembly@1.0.0",
+    "promptVersion" : "prompt@0.1.0",
+    "model" : {
+      "provider" : "openai",
+      "modelId" : "gpt-4o",
+      "parametersHash" : "parametersHash-e2e-0001"
+    },
+    "ruleVersions" : [ "claim-reconciliation@1.0.0" ],
+    "dataSnapshot" : "snapshot-2026-08-02T00:00:00Z",
+    "permissionDecisionId" : "DEC-e2e-0001",
+    "traceId" : "trace-e2e-0001"
+  },
+  "result" : {
+    "gateState" : "MECHANISM_READY",
+    "metrics" : {
+      "ruleVersionCount" : 1,
+      "placeholderScore" : 0.0
+    },
+    "caseSetVersion" : "case-set-v0.1",
+    "mechanismE2e" : true,
+    "realInterface" : false,
+    "qaPass" : false
+  },
+  "mappingLocatorEvidence" : {
+    "contractId" : "CTR-MAP-001",
+    "adr" : "ADR-0009",
+    "status" : "SPIKE_ONLY",
+    "logicalTable" : "A_ZHCX_CUST_BASE",
+    "subjectColumn" : "CUSTID",
+    "sourceFile" : "specs/data/customer-source-mapping.r2rml.ttl",
+    "sourceSha256" : "d6b7e9e52c76c798158415e04b342f652f0837d9ac73cee47396e255d0c2909d",
+    "customerClassInCoreOntology" : false,
+    "rowDataRead" : false
+  }
+}

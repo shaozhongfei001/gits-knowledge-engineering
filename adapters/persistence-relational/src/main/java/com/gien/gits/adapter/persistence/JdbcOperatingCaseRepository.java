@@ -15,24 +15,19 @@ import com.gien.gits.ontology.CaseStatus;
 import com.gien.gits.ontology.OperatingCase;
 
 /**
- * JDBC persistence adapter for {@link OperatingCase} against the operating_case table
- * defined by Flyway migration V001.
- *
- * <p>Maps only the domain fields that exist as columns in V001:
- * case_id, case_type, status, purpose, valid_from, valid_to, recorded_at.
- * The remaining V001 columns (record_version, created_by) are not represented in the
- * domain record and are left to their schema defaults (record_version DEFAULT 0;
- * created_by requires a default supplied by the environment/test DDL).
+ * JDBC persistence adapter for {@link OperatingCase} against Flyway V001 operating_case.
+ * Maps domain fields to columns: case_id, case_type, status, purpose, valid_from, valid_to,
+ * recorded_at, created_by. record_version uses schema DEFAULT 0.
  */
 public class JdbcOperatingCaseRepository {
 
     private static final String INSERT_SQL =
             "INSERT INTO operating_case " +
-            "(case_id, case_type, status, purpose, valid_from, valid_to, recorded_at) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            "(case_id, case_type, status, purpose, valid_from, valid_to, recorded_at, created_by) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String FIND_BY_ID_SQL =
-            "SELECT case_id, case_type, status, purpose, valid_from, valid_to, recorded_at " +
+            "SELECT case_id, case_type, status, purpose, valid_from, valid_to, recorded_at, created_by " +
             "FROM operating_case WHERE case_id = ?";
 
     private final JdbcTemplate jdbcTemplate;
@@ -52,7 +47,8 @@ public class JdbcOperatingCaseRepository {
                 operatingCase.purpose(),
                 Timestamp.from(operatingCase.validFrom()),
                 operatingCase.validTo() == null ? null : Timestamp.from(operatingCase.validTo()),
-                Timestamp.from(operatingCase.recordedAt()));
+                Timestamp.from(operatingCase.recordedAt()),
+                operatingCase.createdBy());
     }
 
     public Optional<OperatingCase> findById(UUID caseId) {
@@ -74,7 +70,8 @@ public class JdbcOperatingCaseRepository {
                 rs.getString("purpose"),
                 rs.getTimestamp("valid_from").toInstant(),
                 rs.getTimestamp("valid_to") == null ? null : rs.getTimestamp("valid_to").toInstant(),
-                rs.getTimestamp("recorded_at").toInstant());
+                rs.getTimestamp("recorded_at").toInstant(),
+                rs.getString("created_by"));
     }
 
     private static final class OperatingCaseRowMapper implements RowMapper<OperatingCase> {

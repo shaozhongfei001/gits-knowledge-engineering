@@ -42,7 +42,7 @@ class JdbcOperatingCaseRepositoryTest {
                 "  valid_to TIMESTAMP NULL, " +
                 "  recorded_at TIMESTAMP NOT NULL, " +
                 "  record_version BIGINT NOT NULL DEFAULT 0, " +
-                "  created_by VARCHAR(128) NOT NULL DEFAULT 'system', " +
+                "  created_by VARCHAR(128) NOT NULL, " +
                 "  CONSTRAINT ck_case_valid_time CHECK (valid_to IS NULL OR valid_to >= valid_from)" +
                 ")");
         repository = new JdbcOperatingCaseRepository(jdbcTemplate);
@@ -55,7 +55,7 @@ class JdbcOperatingCaseRepositoryTest {
         Instant recordedAt = Instant.parse("2026-01-02T00:00:00Z");
         OperatingCase original = new OperatingCase(
                 caseId, "CLAIM_REVIEW", CaseStatus.OPEN, "Reconcile claim set for case",
-                validFrom, null, recordedAt);
+                validFrom, null, recordedAt, "tech_lead");
 
         repository.save(original);
 
@@ -63,6 +63,7 @@ class JdbcOperatingCaseRepositoryTest {
 
         assertTrue(found.isPresent());
         assertEquals(original, found.get());
+        assertEquals("tech_lead", found.get().createdBy());
     }
 
     @Test
@@ -73,5 +74,12 @@ class JdbcOperatingCaseRepositoryTest {
     @Test
     void findByIdNullThrowsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> repository.findById(null));
+    }
+
+    @Test
+    void blankCreatedByRejectedByDomain() {
+        assertThrows(IllegalArgumentException.class, () -> new OperatingCase(
+                UUID.randomUUID(), "CLAIM_REVIEW", CaseStatus.OPEN, "purpose",
+                Instant.parse("2026-01-01T00:00:00Z"), null, Instant.parse("2026-01-02T00:00:00Z"), "  "));
     }
 }

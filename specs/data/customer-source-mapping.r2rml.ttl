@@ -2,10 +2,13 @@
 @prefix gits: <https://gientech.com/gits/kno/> .
 
 <#CustomerTriplesMap> a rr:TriplesMap ;
-  rr:logicalTable [ rr:tableName "AUTHORIZED_CUSTOMER_VIEW" ] ;
+  rr:logicalTable [ rr:tableName "A_ZHCX_CUST_BASE" ] ;
   rr:subjectMap [
-    rr:template "https://gientech.com/gits/kno/customer/{CUSTOMER_ID}" ;
+    rr:template "https://gientech.com/gits/kno/customer/{CUSTID}" ;
     rr:class gits:Customer
   ] .
 
-# SPIKE_ONLY: table/view and column names require Data Owner approval and a real Source Contract.
+# SPIKE_ONLY (ADR-0009): A_ZHCX_CUST_BASE / CUSTID confirmed by data-mapping-owner
+# as the candidate authoritative source locator. gits:Customer is NOT in the core
+# operational ontology; this map must not auto-promote to the business master ontology.
+# No customer row data may be read without a further authorized loop.

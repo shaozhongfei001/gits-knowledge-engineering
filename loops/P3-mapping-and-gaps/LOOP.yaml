@@ -1,0 +1,47 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P3-mapping-and-gaps",
+  "title": "Mapping Source Selection and Engineering Gaps",
+  "status": "in_progress",
+  "implementation_actor": "tech_lead",
+  "objective": [
+    "Record data-mapping-owner confirmation of A_ZHCX_CUST_BASE as gits:Customer spike source.",
+    "Update CTR-MAP-001 spike R2RML locators; keep spike_only; do not introduce gits:Customer into core ontology.",
+    "Close OperatingCase created_by impedance mismatch; publish Source Contract candidate; extend mechanism E2E locator evidence.",
+    "Independent QA re-runs make verify."
+  ],
+  "scope": {
+    "include": [
+      "specs/data/customer-source-mapping.r2rml.ttl",
+      "docs/architecture/candidates/",
+      "docs/architecture/ADR-0009-customer-source-selection.md",
+      "modules/operational-ontology/",
+      "adapters/persistence-relational/",
+      "apps/api/src/test/java/com/gien/gits/api/e2e/",
+      "loops/P3-mapping-and-gaps/",
+      "docs/dispatch/P3-mapping-and-gaps.md",
+      "docs/governance/STATUS.md"
+    ],
+    "exclude": [
+      "introduce_customer_into_core_ontology",
+      "production_database",
+      "real_external_interfaces",
+      "oracle_write",
+      "customer_row_data_dump"
+    ]
+  },
+  "gates": [
+    {"id": "contract_check", "owner_kind": "implementation", "command": "make check", "pass_condition": "Contract, generated, loop-guard, secret-scan and semantic-rule-gate pass."},
+    {"id": "build_test", "owner_kind": "implementation", "command": "./mvnw -q --batch-mode --no-transfer-progress test", "pass_condition": "All modules compile and unit/integration tests pass."},
+    {"id": "security_check", "owner_kind": "implementation", "command": "make security-check", "pass_condition": "Secret, permissions and quarantine checks pass."},
+    {"id": "e2e_mechanism", "owner_kind": "implementation", "command": "bash scripts/e2e/mechanism_e2e.sh", "pass_condition": "Mechanism E2E passes and emits a run-manifest with mapping locator evidence."},
+    {"id": "independent_qa", "owner_kind": "independent_qa", "command": "make verify", "pass_condition": "Independent QA actor re-runs full verify chain green."}
+  ],
+  "repair_policy": {
+    "max_attempts_per_gate": 5,
+    "failure_record": "loops/P3-mapping-and-gaps/FAILURES.md",
+    "record_before_fix": true,
+    "rerun_original_gate": true
+  },
+  "exit_states": ["ready_for_independent_qa", "blocked"]
+}

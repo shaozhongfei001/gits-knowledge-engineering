@@ -1,0 +1,49 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P3-mapping-and-gaps",
+  "updated_at": "2026-08-02T02:35:00+08:00",
+  "updated_by": "tech_lead",
+  "board_status": "QA_PASS",
+  "baton": {
+    "holder": "independent_qa",
+    "packet": "P3-mapping-and-gaps",
+    "wave": "W6",
+    "blocked_note": "",
+    "parallel_allowed": [
+      "impl_mapping",
+      "impl_ontology",
+      "impl_contract",
+      "impl_e2e"
+    ]
+  },
+  "roles": {
+    "tech_lead": {
+      "responsibility": "implementation_orchestrator",
+      "status": "active"
+    },
+    "impl_mapping": {
+      "responsibility": "implementation",
+      "status": "dispatched",
+      "scope": "CTR-MAP-001 spike + candidate docs"
+    },
+    "impl_ontology": {
+      "responsibility": "implementation",
+      "status": "pending",
+      "scope": "OperatingCase.createdBy"
+    },
+    "impl_contract": {
+      "responsibility": "implementation",
+      "status": "pending",
+      "scope": "Source Contract candidate"
+    },
+    "impl_e2e": {
+      "responsibility": "implementation",
+      "status": "pending",
+      "scope": "mechanism E2E locator evidence"
+    },
+    "independent_qa": {
+      "responsibility": "gate_review",
+      "status": "pass"
+    }
+  }
+}
