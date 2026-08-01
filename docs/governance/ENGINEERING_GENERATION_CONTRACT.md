@@ -1,17 +1,17 @@
-# HZB-KNO-DEV-P0｜工程生成合同
+# GITS-KNO-DEV-P0｜工程生成合同
 
 | 项 | 受控值 |
 |---|---|
-| 工作流 | `HZB-KNO-DEV-P0` |
+| 工作流 | `GITS-KNO-DEV-P0` |
 | 执行角色 | 项目开发经理 / 工程架构师 |
-| 生成对象 | `HZB-KNO-DEV-PACKAGE-V0.1` |
+| 生成对象 | `GITS-KNO-DEV-PACKAGE-V0.1` |
 | 目标状态 | `DEV_PACKAGE_CANDIDATE` |
 | 下一门禁 | Owner Review → Independent QA |
 | 冻结 | `NO` |
 
 ## 权威顺序
 
-杭州银行已批准需求及Owner决策 → PB-HZB-CORP-V1.0-R2 → HLD受控候选 → HZB-KNO-TECH-V0.2 → SDD评估V0.1 → 旧框架参考资产。
+杭州银行已批准需求及Owner决策 → PB-GITS-CORP-V1.0-R2 → HLD受控候选 → GITS-KNO-TECH-V0.2 → SDD评估V0.1 → 旧框架参考资产。
 
 ## 本轮允许
 

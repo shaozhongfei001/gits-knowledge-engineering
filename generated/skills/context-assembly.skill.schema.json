@@ -1,5 +1,5 @@
 {
-  "$id": "https://gientech.com/hzb/kno/schemas/context-assembly-skill.json",
+  "$id": "https://gientech.com/gits/kno/schemas/context-assembly-skill.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "properties": {
@@ -75,7 +75,7 @@
       "type": "object"
     },
     "skillId": {
-      "const": "hzb.kno.context-assembly",
+      "const": "gits.kno.context-assembly",
       "type": "string"
     }
   },

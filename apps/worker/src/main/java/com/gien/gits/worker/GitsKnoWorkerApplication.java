@@ -1,11 +1,11 @@
-package com.gien.gits.api;
+package com.gien.gits.worker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = "com.gien.gits")
-public class HzbKnoApiApplication {
+public class GitsKnoWorkerApplication {
     public static void main(String[] args) {
-        SpringApplication.run(HzbKnoApiApplication.class, args);
+        SpringApplication.run(GitsKnoWorkerApplication.class, args);
     }
 }

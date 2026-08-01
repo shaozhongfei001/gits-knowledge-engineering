@@ -1,0 +1,12 @@
+gate: oracle_customer_candidate_columns
+contract: CTR-MAP-001 (spike_only)
+adr: ADR-0007
+executed_at: 2026-08-02T02:17:17+08:00
+constraint: READ-ONLY, METADATA ONLY (user_tab_columns)
+classification: CANDIDATE_ONLY, NOT_A_CONTRACT
+--- sqlplus output ---
+
+ERROR:
+ORA-12162: TNS:net service name is incorrectly specified
+
+

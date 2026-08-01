@@ -1,5 +1,5 @@
 {
-  "$id": "https://gientech.com/hzb/kno/schemas/controlled-action.json",
+  "$id": "https://gientech.com/gits/kno/schemas/controlled-action.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "properties": {

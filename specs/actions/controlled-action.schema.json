@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gientech.com/hzb/kno/schemas/controlled-action.json",
+  "$id": "https://gientech.com/gits/kno/schemas/controlled-action.json",
   "title": "Controlled Action",
   "type": "object",
   "additionalProperties": false,

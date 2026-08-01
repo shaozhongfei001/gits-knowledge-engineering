@@ -49,7 +49,7 @@ class InstallerTest(unittest.TestCase):
             self.assertEqual("v2\n", (target / "config.txt").read_text(encoding="utf-8"))
             self.run_installer(payload, target, "--rollback")
             self.assertEqual("v1\n", (target / "config.txt").read_text(encoding="utf-8"))
-            restored = json.loads((target / ".hzb-sdd/install-manifest.json").read_text(encoding="utf-8"))
+            restored = json.loads((target / ".gits-sdd/install-manifest.json").read_text(encoding="utf-8"))
             self.assertEqual(first_manifest["install_id"], restored["install_id"])
 
     def test_conflict_is_fail_closed_and_non_mutating(self):
@@ -62,7 +62,7 @@ class InstallerTest(unittest.TestCase):
             (target / "config.txt").write_text("user\n", encoding="utf-8")
             self.run_installer(payload, target, "--apply", expected=3)
             self.assertEqual("user\n", (target / "config.txt").read_text(encoding="utf-8"))
-            self.assertFalse((target / ".hzb-sdd/install-manifest.json").exists())
+            self.assertFalse((target / ".gits-sdd/install-manifest.json").exists())
 
     def test_symlink_in_payload_is_rejected(self):
         with tempfile.TemporaryDirectory() as raw:

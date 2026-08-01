@@ -1,5 +1,5 @@
 {
-  "$id": "https://gientech.com/hzb/kno/schemas/run-manifest.json",
+  "$id": "https://gientech.com/gits/kno/schemas/run-manifest.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "properties": {

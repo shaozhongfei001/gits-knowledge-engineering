@@ -2,7 +2,7 @@
 
 | 项 | 状态 |
 |---|---|
-| 交付对象 | `HZB-SDD-FRAMEWORK-V0.2`与`HZB-KNO-DEV-PACKAGE-V0.1` |
+| 交付对象 | `GITS-SDD-FRAMEWORK-V0.2`与`GITS-KNO-DEV-PACKAGE-V0.1` |
 | 开发自检 | `PASS` |
 | 独立QA | `PENDING` |
 | 生产就绪 | `NO` |

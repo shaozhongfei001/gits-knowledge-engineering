@@ -29,7 +29,7 @@ class WorkerEventHandlerTest {
         return CloudEvent.builder()
                 .specversion("1.0")
                 .id(id)
-                .source("/hzb/kno/worker/test")
+                .source("/gits/kno/worker/test")
                 .type(type)
                 .time(Instant.now().toString())
                 .subject("claim-1")
@@ -49,7 +49,7 @@ class WorkerEventHandlerTest {
         CloudEvent received = handler.find("evt-claim-001").orElseThrow();
         assertThat(received.type()).isEqualTo(DomainEventType.CLAIM_CANDIDATE_RECORDED);
         assertThat(received.id()).isEqualTo("evt-claim-001");
-        assertThat(received.source()).isEqualTo("/hzb/kno/worker/test");
+        assertThat(received.source()).isEqualTo("/gits/kno/worker/test");
         assertThat(received.specversion()).isEqualTo("1.0");
         assertThat(received.datacontenttype()).isEqualTo("application/json");
         assertThat(received.data()).containsEntry("note", "in-process mechanism");
@@ -66,7 +66,7 @@ class WorkerEventHandlerTest {
         CloudEvent received = handler.find("evt-action-001").orElseThrow();
         assertThat(received.type()).isEqualTo(DomainEventType.CONTROLLED_ACTION_REQUESTED);
         assertThat(received.id()).isEqualTo("evt-action-001");
-        assertThat(received.source()).isEqualTo("/hzb/kno/worker/test");
+        assertThat(received.source()).isEqualTo("/gits/kno/worker/test");
     }
 
     @Test

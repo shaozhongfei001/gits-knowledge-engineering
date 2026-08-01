@@ -58,7 +58,7 @@ def materialize(loop_id: str, holder: str, title: str, profile: str) -> Path:
             {"id": "tooling_test", "owner_kind": "implementation", "command": "make tooling-test", "pass_condition": "Contract, Loop, security and read-only guard tests pass."},
         ]
         loop["gates"] = extra + loop["gates"]
-        loop["title"] = "HZB SDD Framework V0.2 Dry-run"
+        loop["title"] = "GITS SDD Framework V0.2 Dry-run"
         loop_path.write_text(json.dumps(loop, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
         for gate in extra:

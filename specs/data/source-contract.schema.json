@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gientech.com/hzb/kno/schemas/source-contract.json",
+  "$id": "https://gientech.com/gits/kno/schemas/source-contract.json",
   "title": "Physical Source Contract",
   "type": "object",
   "additionalProperties": false,

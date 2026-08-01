@@ -1,6 +1,6 @@
 spring:
   application:
-    name: hzb-kno-api
+    name: gits-kno-api
   main:
     banner-mode: "off"
 

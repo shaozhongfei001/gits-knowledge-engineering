@@ -1,5 +1,5 @@
 {
-  "profile_id": "HZB-ORACLE-METADATA-QUARANTINE-V0.1",
+  "profile_id": "GITS-ORACLE-METADATA-QUARANTINE-V0.1",
   "enabled": true,
   "default_install": false,
   "authorization_required": ["DATA_OWNER", "DBA", "SECURITY_OWNER"],

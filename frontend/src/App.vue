@@ -18,7 +18,7 @@ onMounted(async () => {
   <main class="shell">
     <header class="hero">
       <div>
-        <p class="eyebrow">HZB · KNOWLEDGE ENGINEERING</p>
+        <p class="eyebrow">GITS · KNOWLEDGE ENGINEERING</p>
         <h1>知识工程与岗位智能体基础能力</h1>
         <p class="subtitle">可编译语义合同 · 运行本体控制平面 · 可重建投影</p>
       </div>

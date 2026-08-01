@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gientech.com/hzb/kno/schemas/evidence-bundle.json",
+  "$id": "https://gientech.com/gits/kno/schemas/evidence-bundle.json",
   "title": "Evidence Bundle",
   "type": "object",
   "additionalProperties": false,

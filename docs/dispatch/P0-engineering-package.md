@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 |---|---|
-| packet | `HZB-KNO-DEV-P0` |
+| packet | `GITS-KNO-DEV-P0` |
 | status | `READY_FOR_INDEPENDENT_QA` |
 | baseline | `specs/BASELINE_INDEX.yaml` |
 | contract registry | `specs/CONTRACT_INDEX.yaml` |

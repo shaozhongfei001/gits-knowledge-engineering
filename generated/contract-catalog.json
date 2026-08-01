@@ -1,14 +1,14 @@
 {
   "contracts": [
     {
-      "authority_source": "specs/openapi/hzb-kno-api.openapi.json",
+      "authority_source": "specs/openapi/gits-kno-api.openapi.json",
       "compatibility": "backward_compatible",
       "consumers": [
         "api_app",
         "frontend_bff_adapter"
       ],
       "generated": [
-        "generated/openapi/hzb-kno-api.normalized.json"
+        "generated/openapi/gits-kno-api.normalized.json"
       ],
       "id": "CTR-API-001",
       "kind": "openapi",
@@ -29,7 +29,7 @@
       "owner": "integration_contract_owner"
     },
     {
-      "authority_source": "specs/semantic/hzb-core.linkml.yaml",
+      "authority_source": "specs/semantic/gits-core.linkml.yaml",
       "compatibility": "explicit_migration",
       "consumers": [
         "operational_ontology",
@@ -37,15 +37,15 @@
         "context_evidence"
       ],
       "generated": [
-        "generated/semantic/hzb-core.schema.json",
-        "generated/semantic/hzb-core.shacl.ttl"
+        "generated/semantic/gits-core.schema.json",
+        "generated/semantic/gits-core.shacl.ttl"
       ],
       "id": "CTR-SEM-001",
       "kind": "linkml_subset",
       "owner": "semantic_architecture_owner"
     },
     {
-      "authority_source": "specs/semantic/hzb-core.owl.ttl",
+      "authority_source": "specs/semantic/gits-core.owl.ttl",
       "compatibility": "explicit_migration",
       "consumers": [
         "semantic_runtime"
@@ -152,5 +152,5 @@
       "owner": "data_mapping_owner"
     }
   ],
-  "registry_id": "HZB-KNO-CONTRACT-INDEX-V0.1"
+  "registry_id": "GITS-KNO-CONTRACT-INDEX-V0.1"
 }

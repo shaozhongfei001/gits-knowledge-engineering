@@ -1,0 +1,113 @@
+gate: oracle_customer_candidate_columns
+contract: CTR-MAP-001 (spike_only) | adr: ADR-0007
+executed_at: 2026-08-02T02:17:25+08:00
+constraint: READ-ONLY, METADATA ONLY
+classification: CANDIDATE_ONLY, NOT_A_CONTRACT
+--- sqlplus output ---
+
+Transaction set.
+
+=== A_ZHCX_CUST_BASE columns ===
+
+COLUMN_NAME		       DATA_TYPE												  N
+------------------------------ ---------------------------------------------------------------------------------------------------------- -
+CUSTID			       VARCHAR2 												  N
+CUSTCODE		       VARCHAR2 												  Y
+CUSTNAME		       VARCHAR2 												  Y
+CUSTATTR		       VARCHAR2 												  Y
+CERTNO			       VARCHAR2 												  Y
+REGION			       VARCHAR2 												  Y
+TELNO			       VARCHAR2 												  Y
+MGROWNERID		       VARCHAR2 												  Y
+BRID			       VARCHAR2 												  Y
+ASSACTOR		       VARCHAR2 												  Y
+ASSACTORBRID		       VARCHAR2 												  Y
+ASSUSERS		       VARCHAR2 												  Y
+INDUSMAPPING		       VARCHAR2 												  Y
+INDUSLEV1		       VARCHAR2 												  Y
+INDUSLEV2		       VARCHAR2 												  Y
+INDUSLEV3		       VARCHAR2 												  Y
+INDUSLEV4		       VARCHAR2 												  Y
+SUBBANKID		       VARCHAR2 												  Y
+ENTTYPE 		       VARCHAR2 												  Y
+CUSTTYPE		       VARCHAR2 												  Y
+ACCTSMSNO		       VARCHAR2 												  Y
+OPENMANAID		       VARCHAR2 												  Y
+OPENORG 		       VARCHAR2 												  Y
+CREATEDATE		       DATE													  Y
+CUSTSTATUS		       VARCHAR2 												  Y
+SEX			       VARCHAR2 												  Y
+BIRTHDAY		       DATE													  Y
+AGE			       VARCHAR2 												  Y
+ADDRESS 		       VARCHAR2 												  Y
+ADDRMAPPING		       VARCHAR2 												  Y
+HOMETEL 		       VARCHAR2 												  Y
+MOBILETEL		       VARCHAR2 												  Y
+EDUCATION		       VARCHAR2 												  Y
+DEGREE			       VARCHAR2 												  Y
+YEARSOFWORK		       NUMBER													  Y
+ACCTYPE 		       VARCHAR2 												  Y
+AGRICULTURE		       VARCHAR2 												  Y
+ANNUALINCOME		       NUMBER													  Y
+SPOUSENAME		       VARCHAR2 												  Y
+SPOUSECERTNO		       VARCHAR2 												  Y
+SPOUSETEL		       VARCHAR2 												  Y
+WORKUNIT		       VARCHAR2 												  Y
+UNITPHONE		       VARCHAR2 												  Y
+UNITADDR		       VARCHAR2 												  Y
+MANAGEENTNAME		       VARCHAR2 												  Y
+MANAGEENTLICENCEID	       VARCHAR2 												  Y
+MANAGEITEM		       VARCHAR2 												  Y
+MANAADDRESS		       VARCHAR2 												  Y
+MANAADDRMAPPING 	       VARCHAR2 												  Y
+MANAGETERM		       NUMBER													  Y
+STOCKSHARE		       NUMBER													  Y
+CORPLEGALPERSNAME	       VARCHAR2 												  Y
+CORPFINAPHONE		       VARCHAR2 												  Y
+CORPLICENCEADDRESS	       VARCHAR2 												  Y
+CORPLICENCEADDRMAPPING	       VARCHAR2 												  Y
+CORPLEGALPERSMOBILE	       VARCHAR2 												  Y
+CORPSPOUSENAME		       VARCHAR2 												  Y
+CORPREGCAPITAL		       NUMBER													  Y
+CORPTOTALBAL		       NUMBER													  Y
+CORPLIABBAL		       NUMBER													  Y
+REFCUSTID		       VARCHAR2 												  Y
+CREDITGRADE		       VARCHAR2 												  Y
+RISKSIGN		       VARCHAR2 												  Y
+FIRSTLOADDATE		       DATE													  Y
+ISOURSHAR		       VARCHAR2 												  Y
+COMGROUPS		       VARCHAR2 												  Y
+BATGROUPS		       VARCHAR2 												  Y
+CUSTLPERIOD		       VARCHAR2 												  Y
+DATA_DT 		       DATE													  N
+
+69 rows selected.
+
+=== DM_CSP_ALL_CUST columns ===
+
+COLUMN_NAME		       DATA_TYPE												  N
+------------------------------ ---------------------------------------------------------------------------------------------------------- -
+CUSTID			       VARCHAR2 												  Y
+YBDK_FLAG		       VARCHAR2 												  Y
+XBDK_FLAG		       VARCHAR2 												  Y
+ZZDK_FLAG		       VARCHAR2 												  Y
+XFXD_FLAG		       VARCHAR2 												  Y
+CDHP_FLAG		       VARCHAR2 												  Y
+BH_FLAG 		       VARCHAR2 												  Y
+TX_FLAG 		       VARCHAR2 												  Y
+WTDK_FLAG		       VARCHAR2 												  Y
+CYYBT_FLAG		       VARCHAR2 												  Y
+XECYT_FLAG		       VARCHAR2 												  Y
+TSCX_FLAG		       VARCHAR2 												  Y
+ZDXDHT_FLAG		       VARCHAR2 												  Y
+HQCK_FLAG		       VARCHAR2 												  Y
+LC_FLAG 		       VARCHAR2 												  Y
+XYK_FLAG		       VARCHAR2 												  Y
+DZQD_FLAG		       VARCHAR2 												  Y
+JFZZFW_FLAG		       VARCHAR2 												  Y
+DFGZ_FLAG		       VARCHAR2 												  Y
+AGE			       NUMBER													  Y
+DEP_AVG_Y		       NUMBER													  Y
+
+21 rows selected.
+

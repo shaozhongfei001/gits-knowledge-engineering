@@ -1,0 +1,76 @@
+@prefix gits: <https://gientech.com/gits/kno/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+gits:ActionShape a sh:NodeShape ;
+  sh:targetClass gits:Action ;
+  sh:property [ sh:path gits:action_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:confirmation_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:idempotency_key ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:status ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:target_object_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:target_system ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:target_version ; sh:datatype xsd:string ; sh:minCount 1 ] .
+
+gits:ClaimShape a sh:NodeShape ;
+  sh:targetClass gits:Claim ;
+  sh:property [ sh:path gits:case_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:claim_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:claim_status ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:claim_type ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:recorded_at ; sh:datatype xsd:dateTime ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:statement ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:supersedes_claim_id ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path gits:valid_from ; sh:datatype xsd:dateTime ] ;
+  sh:property [ sh:path gits:valid_to ; sh:datatype xsd:dateTime ] .
+
+gits:EvaluationShape a sh:NodeShape ;
+  sh:targetClass gits:Evaluation ;
+  sh:property [ sh:path gits:case_set_version ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:evaluated_at ; sh:datatype xsd:dateTime ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:evaluation_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:gate_state ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:run_manifest_id ; sh:datatype xsd:string ; sh:minCount 1 ] .
+
+gits:EvidenceShape a sh:NodeShape ;
+  sh:targetClass gits:Evidence ;
+  sh:property [ sh:path gits:content_hash ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:evidence_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:locator ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:permission_label ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:source_uri ; sh:datatype xsd:anyURI ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:source_version ; sh:datatype xsd:string ; sh:minCount 1 ] .
+
+gits:HumanConfirmationShape a sh:NodeShape ;
+  sh:targetClass gits:HumanConfirmation ;
+  sh:property [ sh:path gits:actor_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:confirmation_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:confirmed_at ; sh:datatype xsd:dateTime ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:decision ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:subject_id ; sh:datatype xsd:string ; sh:minCount 1 ] .
+
+gits:InteractionShape a sh:NodeShape ;
+  sh:targetClass gits:Interaction ;
+  sh:property [ sh:path gits:case_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:channel ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:interaction_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:occurred_at ; sh:datatype xsd:dateTime ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:source_hash ; sh:datatype xsd:string ; sh:minCount 1 ] .
+
+gits:OperatingCaseShape a sh:NodeShape ;
+  sh:targetClass gits:OperatingCase ;
+  sh:property [ sh:path gits:case_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:case_type ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:purpose ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:recorded_at ; sh:datatype xsd:dateTime ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:status ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:valid_from ; sh:datatype xsd:dateTime ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:valid_to ; sh:datatype xsd:dateTime ] .
+
+gits:ReceiptShape a sh:NodeShape ;
+  sh:targetClass gits:Receipt ;
+  sh:property [ sh:path gits:action_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:receipt_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:received_at ; sh:datatype xsd:dateTime ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:status ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:target_version_after ; sh:datatype xsd:string ] .

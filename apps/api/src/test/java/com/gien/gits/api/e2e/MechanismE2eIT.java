@@ -59,28 +59,28 @@ class MechanismE2eIT {
         // --- (a) Semantic / SHACL: load minimal ontology + shapes, validate conforming candidate ---
         byte[] ontology = turtle(
                 "@prefix owl: <http://www.w3.org/2002/07/owl#> .",
-                "@prefix hzb: <https://gientech.com/hzb/kno/> .",
-                "hzb:CoreOntology a owl:Ontology .",
-                "hzb:OperatingCase a owl:Class .");
+                "@prefix gits: <https://gientech.com/gits/kno/> .",
+                "gits:CoreOntology a owl:Ontology .",
+                "gits:OperatingCase a owl:Class .");
         byte[] shapes = turtle(
                 "@prefix sh: <http://www.w3.org/ns/shacl#> .",
                 "@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .",
-                "@prefix hzb: <https://gientech.com/hzb/kno/> .",
-                "hzb:OperatingCaseShape a sh:NodeShape ;",
-                "    sh:targetClass hzb:OperatingCase ;",
+                "@prefix gits: <https://gientech.com/gits/kno/> .",
+                "gits:OperatingCaseShape a sh:NodeShape ;",
+                "    sh:targetClass gits:OperatingCase ;",
                 "    sh:property [",
-                "        sh:path hzb:caseType ;",
+                "        sh:path gits:caseType ;",
                 "        sh:minCount 1 ;",
                 "        sh:datatype xsd:string ;",
                 "    ] .");
         JenaSemanticRepositoryAdapter semanticRepository = new JenaSemanticRepositoryAdapter();
-        semanticRepository.load(new SemanticPackage("hzb-core", "0.1.0", ontology, shapes));
+        semanticRepository.load(new SemanticPackage("gits-core", "0.1.0", ontology, shapes));
 
         byte[] conformingCandidate = turtle(
-                "@prefix hzb: <https://gientech.com/hzb/kno/> .",
+                "@prefix gits: <https://gientech.com/gits/kno/> .",
                 "@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .",
-                "hzb:case-1 a hzb:OperatingCase ;",
-                "    hzb:caseType \"claim-reconciliation\" .");
+                "gits:case-1 a gits:OperatingCase ;",
+                "    gits:caseType \"claim-reconciliation\" .");
         SemanticRepositoryPort.ValidationResult validationResult =
                 semanticRepository.validate(conformingCandidate);
         assertTrue(validationResult.conforms(),
@@ -125,8 +125,8 @@ class MechanismE2eIT {
         RunManifest manifest = new RunManifest(
                 UUID.randomUUID(),
                 Instant.parse("2026-08-02T00:00:00Z"),
-                "hzb-core@0.1.0",
-                "hzb.kno.context-assembly@1.0.0",
+                "gits-core@0.1.0",
+                "gits.kno.context-assembly@1.0.0",
                 "prompt@0.1.0",
                 new RunManifest.ModelVersion("openai", "gpt-4o", "parametersHash-e2e-0001"),
                 List.of("claim-reconciliation@1.0.0"),

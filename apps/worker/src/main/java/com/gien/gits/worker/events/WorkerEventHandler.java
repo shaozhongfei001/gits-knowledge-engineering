@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
  * <p>This is engineering mechanism only — it does NOT perform real business
  * processing and does NOT talk to any external broker. It records each received
  * CloudEvent keyed by its {@code id} in an in-memory map so that callers and
- * tests can assert delivery. {@code hzb.worker.enabled=false} (no external
+ * tests can assert delivery. {@code gits.worker.enabled=false} (no external
  * integration) is preserved: this handler stays purely in-process.
  */
 @Component

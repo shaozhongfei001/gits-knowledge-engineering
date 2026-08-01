@@ -1,0 +1,32 @@
+@prefix gits: <https://gientech.com/gits/kno/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+gits:CoreOntology a owl:Ontology ;
+  rdfs:label "杭州银行知识工程运行本体核心"@zh .
+
+gits:OperatingCase a owl:Class .
+gits:Interaction a owl:Class ; rdfs:subClassOf prov:Activity .
+gits:Claim a owl:Class ; rdfs:subClassOf prov:Entity .
+gits:Evidence a owl:Class ; rdfs:subClassOf prov:Entity .
+gits:HumanConfirmation a owl:Class ; rdfs:subClassOf prov:Activity .
+gits:Action a owl:Class ; rdfs:subClassOf prov:Activity .
+gits:Receipt a owl:Class ; rdfs:subClassOf prov:Entity .
+gits:Evaluation a owl:Class ; rdfs:subClassOf prov:Activity .
+
+gits:belongsToCase a owl:ObjectProperty ;
+  rdfs:range gits:OperatingCase .
+
+gits:supportedBy a owl:ObjectProperty ;
+  rdfs:domain gits:Claim ;
+  rdfs:range gits:Evidence .
+
+gits:authorizedBy a owl:ObjectProperty ;
+  rdfs:domain gits:Action ;
+  rdfs:range gits:HumanConfirmation .
+
+gits:producedReceipt a owl:ObjectProperty ;
+  rdfs:domain gits:Action ;
+  rdfs:range gits:Receipt .

@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gientech.com/hzb/kno/schemas/context-assembly-skill.json",
+  "$id": "https://gientech.com/gits/kno/schemas/context-assembly-skill.json",
   "title": "Context Assembly Skill Contract",
   "type": "object",
   "additionalProperties": false,
   "required": ["contractVersion", "skillId", "request", "response"],
   "properties": {
     "contractVersion": {"type": "string", "const": "1.0.0"},
-    "skillId": {"type": "string", "const": "hzb.kno.context-assembly"},
+    "skillId": {"type": "string", "const": "gits.kno.context-assembly"},
     "request": {
       "type": "object",
       "additionalProperties": false,

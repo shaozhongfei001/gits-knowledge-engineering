@@ -275,8 +275,8 @@
       "type": "object"
     }
   },
-  "$id": "https://gientech.com/hzb/kno/core/schema.json",
+  "$id": "https://gientech.com/gits/kno/core/schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "hzb_kno_core",
+  "title": "gits_kno_core",
   "version": "0.1.0"
 }

@@ -14,10 +14,10 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SHACL_TTL = ROOT / "generated" / "semantic" / "hzb-core.shacl.ttl"
-SCHEMA_JSON = ROOT / "generated" / "semantic" / "hzb-core.schema.json"
+SHACL_TTL = ROOT / "generated" / "semantic" / "gits-core.shacl.ttl"
+SCHEMA_JSON = ROOT / "generated" / "semantic" / "gits-core.schema.json"
 DMN_XML = ROOT / "generated" / "rules" / "claim-reconciliation.normalized.dmn"
-LINKML_YAML = ROOT / "specs" / "semantic" / "hzb-core.linkml.yaml"
+LINKML_YAML = ROOT / "specs" / "semantic" / "gits-core.linkml.yaml"
 
 SH_NS = "http://www.w3.org/ns/shacl#"
 DMN_NS = "https://www.omg.org/spec/DMN/20230324/MODEL/"

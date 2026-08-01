@@ -11,14 +11,14 @@ import org.junit.jupiter.api.Test;
 class InMemorySemanticRepositoryTest {
 
     private static final byte[] ONTOLOGY = turtle(
-            "@prefix hzb: <https://gientech.com/hzb/kno/> .",
+            "@prefix gits: <https://gientech.com/gits/kno/> .",
             "@prefix owl: <http://www.w3.org/2002/07/owl#> .",
-            "hzb:CoreOntology a owl:Ontology .");
+            "gits:CoreOntology a owl:Ontology .");
 
     private static final byte[] SHAPES = turtle(
             "@prefix sh: <http://www.w3.org/ns/shacl#> .",
-            "@prefix hzb: <https://gientech.com/hzb/kno/> .",
-            "hzb:OperatingCaseShape a sh:NodeShape .");
+            "@prefix gits: <https://gientech.com/gits/kno/> .",
+            "gits:OperatingCaseShape a sh:NodeShape .");
 
     private static byte[] turtle(String... lines) {
         return String.join("\n", lines).getBytes(StandardCharsets.UTF_8);
@@ -27,12 +27,12 @@ class InMemorySemanticRepositoryTest {
     @Test
     void loadThenValidateValidCandidateConformsAndVersionMatches() {
         InMemorySemanticRepository repo = new InMemorySemanticRepository();
-        repo.load(new SemanticPackage("hzb-core", "0.1.0", ONTOLOGY, SHAPES));
+        repo.load(new SemanticPackage("gits-core", "0.1.0", ONTOLOGY, SHAPES));
 
         byte[] candidate = turtle(
-                "@prefix hzb: <https://gientech.com/hzb/kno/> .",
+                "@prefix gits: <https://gientech.com/gits/kno/> .",
                 "@prefix owl: <http://www.w3.org/2002/07/owl#> .",
-                "hzb:OperatingCase a owl:Class .");
+                "gits:OperatingCase a owl:Class .");
 
         SemanticRepositoryPort.ValidationResult result = repo.validate(candidate);
         assertTrue(result.conforms(), () -> "expected conforms=true, report=" + result.reportText());
@@ -42,7 +42,7 @@ class InMemorySemanticRepositoryTest {
     @Test
     void validateNullCandidateIsFailClosedWithoutException() {
         InMemorySemanticRepository repo = new InMemorySemanticRepository();
-        repo.load(new SemanticPackage("hzb-core", "0.1.0", ONTOLOGY, SHAPES));
+        repo.load(new SemanticPackage("gits-core", "0.1.0", ONTOLOGY, SHAPES));
 
         SemanticRepositoryPort.ValidationResult nullResult = repo.validate(null);
         assertFalse(nullResult.conforms());
@@ -55,11 +55,11 @@ class InMemorySemanticRepositoryTest {
     @Test
     void validateMalformedCandidateIsFailClosedWithoutException() {
         InMemorySemanticRepository repo = new InMemorySemanticRepository();
-        repo.load(new SemanticPackage("hzb-core", "0.1.0", ONTOLOGY, SHAPES));
+        repo.load(new SemanticPackage("gits-core", "0.1.0", ONTOLOGY, SHAPES));
 
         SemanticRepositoryPort.ValidationResult result =
-                repo.validate(turtle("@prefix hzb: <https://gientech.com/hzb/kno/> .",
-                        "hzb:OperatingCase rdfs:label \"unterminated ."));
+                repo.validate(turtle("@prefix gits: <https://gientech.com/gits/kno/> .",
+                        "gits:OperatingCase rdfs:label \"unterminated ."));
         assertFalse(result.conforms(), () -> "expected conforms=false, report=" + result.reportText());
     }
 
@@ -68,6 +68,6 @@ class InMemorySemanticRepositoryTest {
         assertThrows(IllegalArgumentException.class,
                 () -> new SemanticPackage("  ", "0.1.0", ONTOLOGY, SHAPES));
         assertThrows(IllegalArgumentException.class,
-                () -> new SemanticPackage("hzb-core", "", ONTOLOGY, SHAPES));
+                () -> new SemanticPackage("gits-core", "", ONTOLOGY, SHAPES));
     }
 }

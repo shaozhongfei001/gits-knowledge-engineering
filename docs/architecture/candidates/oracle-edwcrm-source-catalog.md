@@ -43,7 +43,7 @@
 
 The following is a **candidate** source catalog for `CTR-MAP-001`. Table and
 column names are locators only; semantic assignment to the business ontology
-(e.g. `hzb:Customer`) is **not** performed here and remains a candidate mapping
+(e.g. `gits:Customer`) is **not** performed here and remains a candidate mapping
 decision for the data mapping owner.
 
 ### Tables (212 — first 30 shown as a representative sample)
@@ -100,14 +100,14 @@ This spike confirms the **metadata surface** available for that mapping:
   confirm whether it exists as a view.
 - Several candidate customer-bearing base tables are present as locators, e.g.
   `A_ZHCX_CUST_BASE`, `A_CUST_ANALYSYS_IFO`, `C01_CRDT_AGT`, `D03_CUST_CARD_INFO`.
-  Which (if any) is the authoritative source for `hzb:Customer` is a **mapping
+  Which (if any) is the authoritative source for `gits:Customer` is a **mapping
   decision for the data mapping owner**, not established by this spike.
 
 ## What this artifact is NOT
 
 - **NOT a contract change.** `specs/CONTRACT_INDEX.yaml` and
   `specs/data/customer-source-mapping.r2rml.ttl` are untouched.
-- **NOT auto-promoted to the business ontology.** No `hzb:` class/property
+- **NOT auto-promoted to the business ontology.** No `gits:` class/property
   assignment is made.
 - **NOT a customer data dump.** No row data was read; only schema locators.
 - **NOT a DBA/SECURITY_OWNER sign-off.** ADR-0007 records those as pending.

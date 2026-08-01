@@ -141,19 +141,19 @@ def linkml_json_schema(profile: dict) -> dict:
 
 def linkml_shacl(profile: dict) -> str:
     lines = [
-        "@prefix hzb: <https://gientech.com/hzb/kno/> .",
+        "@prefix gits: <https://gientech.com/gits/kno/> .",
         "@prefix sh: <http://www.w3.org/ns/shacl#> .",
         "@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .",
         "",
     ]
     xsd = {"string": "xsd:string", "datetime": "xsd:dateTime", "date": "xsd:date", "uri": "xsd:anyURI", "integer": "xsd:integer", "boolean": "xsd:boolean", "decimal": "xsd:decimal"}
     for class_name, class_def in sorted(profile["classes"].items()):
-        lines.extend([f"hzb:{class_name}Shape a sh:NodeShape ;", f"  sh:targetClass hzb:{class_name} ;"])
+        lines.extend([f"gits:{class_name}Shape a sh:NodeShape ;", f"  sh:targetClass gits:{class_name} ;"])
         attributes = sorted(class_def.get("attributes", {}).items())
         for index, (attr_name, attr) in enumerate(attributes):
             suffix = " ;" if index < len(attributes) - 1 else " ."
             min_count = " ; sh:minCount 1" if attr.get("required") or attr.get("identifier") else ""
-            lines.append(f"  sh:property [ sh:path hzb:{attr_name} ; sh:datatype {xsd[attr.get('range', 'string')]}{min_count} ]{suffix}")
+            lines.append(f"  sh:property [ sh:path gits:{attr_name} ; sh:datatype {xsd[attr.get('range', 'string')]}{min_count} ]{suffix}")
         if not attributes:
             lines[-1] = lines[-1][:-1] + "."
         lines.append("")
@@ -237,7 +237,7 @@ def compile_all(destination: Path) -> dict:
         "registry_id": index["registry_id"],
         "source_hashes": source_hashes,
         "generated_hashes": generated_hashes,
-        "compiler": "HZB_BOOTSTRAP_LINKML_SUBSET_0.1",
+        "compiler": "GITS_BOOTSTRAP_LINKML_SUBSET_0.1",
         "limitations": ["OFFICIAL_LINKML_AND_JENA_VALIDATION_REQUIRED_BEFORE_PRODUCTION_BASELINE"],
     }
     write_json(destination / "manifest.json", manifest)

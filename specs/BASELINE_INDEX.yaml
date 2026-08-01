@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
-  "project_id": "HZB-KNO-01",
-  "package_id": "HZB-KNO-DEV-PACKAGE-V0.1",
+  "project_id": "GITS-KNO-01",
+  "package_id": "GITS-KNO-DEV-PACKAGE-V0.1",
   "generated_on": "2026-07-31",
   "authority_order": [
     "owner_decisions_and_approved_changes",
@@ -13,31 +13,31 @@
   ],
   "inputs": [
     {
-      "id": "REQ-HZB-20260728",
+      "id": "REQ-GITS-20260728",
       "title": "银行知识工程体系和智能体基础能力建设方案-20260728-立项版",
       "scope": "第4章技术架构不具权威性；业务需求和范围作为受控输入",
       "state": "CONTROLLED_INPUT_NOT_FROZEN"
     },
     {
-      "id": "PB-HZB-CORP-V1.0-R2",
+      "id": "PB-GITS-CORP-V1.0-R2",
       "title": "杭州银行对公产品基线候选",
       "scope": "4个产品领域、22个模块、206项功能候选",
       "state": "APPROVED_WITHOUT_FREEZE"
     },
     {
-      "id": "HLD-HZB-KNO-V0.1",
+      "id": "HLD-GITS-KNO-V0.1",
       "title": "概要设计说明书V0.1设计候选",
       "scope": "181页总体HLD与追踪矩阵；全景覆盖，首期纵向验证",
       "state": "DESIGN_CANDIDATE"
     },
     {
-      "id": "HZB-KNO-TECH-V0.2",
+      "id": "GITS-KNO-TECH-V0.2",
       "title": "技术栈选型与应用指南V0.2",
       "scope": "可编译语义合同＋运行本体控制平面＋可重建投影",
       "state": "OWNER_DIRECTION_APPROVED_PRODUCTION_FREEZE_NO"
     },
     {
-      "id": "HZB-SDD-ASSESSMENT-V0.1",
+      "id": "GITS-SDD-ASSESSMENT-V0.1",
       "title": "SDD工程框架继承与改造评估V0.1",
       "scope": "方法继承、核心工具重建、多合同、Oracle隔离",
       "state": "P0_REMEDIATION_AUTHORIZED_BY_CURRENT_REQUEST"

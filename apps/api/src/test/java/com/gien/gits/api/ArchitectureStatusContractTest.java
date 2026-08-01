@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * Contract conformance test for CTR-API-001 / getArchitectureStatus.
- * Asserts the response matches specs/openapi/hzb-kno-api.openapi.json
+ * Asserts the response matches specs/openapi/gits-kno-api.openapi.json
  * (ArchitectureStatus schema) exactly: 4 fields, const/enum values, no extras.
  */
 @SpringBootTest
@@ -31,7 +31,7 @@ class ArchitectureStatusContractTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.*", hasSize(4)))
-                .andExpect(jsonPath("$.packageId").value("HZB-KNO-DEV-PACKAGE-V0.1"))
+                .andExpect(jsonPath("$.packageId").value("GITS-KNO-DEV-PACKAGE-V0.1"))
                 .andExpect(jsonPath("$.state").value("DEV_PACKAGE_CANDIDATE"))
                 .andExpect(jsonPath("$.productionReady").value(false))
                 .andExpect(jsonPath("$.frozen").value(false))

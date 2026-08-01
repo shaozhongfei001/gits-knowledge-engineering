@@ -1,10 +1,10 @@
 {
-  "id": "https://gientech.com/hzb/kno/core",
-  "name": "hzb_kno_core",
+  "id": "https://gientech.com/gits/kno/core",
+  "name": "gits_kno_core",
   "version": "0.1.0",
-  "default_prefix": "hzb",
+  "default_prefix": "gits",
   "prefixes": {
-    "hzb": "https://gientech.com/hzb/kno/",
+    "gits": "https://gientech.com/gits/kno/",
     "prov": "http://www.w3.org/ns/prov#",
     "time": "http://www.w3.org/2006/time#"
   },

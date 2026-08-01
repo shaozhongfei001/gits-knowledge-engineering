@@ -2,7 +2,7 @@
   "asyncapi": "3.0.0",
   "channels": {
     "claimCandidateRecorded": {
-      "address": "hzb.kno.claim-candidate-recorded.v1",
+      "address": "gits.kno.claim-candidate-recorded.v1",
       "messages": {
         "claimCandidateRecorded": {
           "$ref": "#/components/messages/ClaimCandidateRecorded"
@@ -10,7 +10,7 @@
       }
     },
     "controlledActionRequested": {
-      "address": "hzb.kno.controlled-action-requested.v1",
+      "address": "gits.kno.controlled-action-requested.v1",
       "messages": {
         "controlledActionRequested": {
           "$ref": "#/components/messages/ControlledActionRequested"
@@ -82,7 +82,7 @@
   },
   "defaultContentType": "application/cloudevents+json",
   "info": {
-    "title": "HZB Knowledge Engineering Domain Events",
+    "title": "GITS Knowledge Engineering Domain Events",
     "version": "0.1.0"
   },
   "operations": {

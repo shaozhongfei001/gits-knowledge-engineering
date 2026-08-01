@@ -10,7 +10,7 @@ public class ArchitectureStatusController {
 
     @GetMapping("/status")
     ArchitectureStatus status() {
-        return new ArchitectureStatus("HZB-KNO-DEV-PACKAGE-V0.1", "DEV_PACKAGE_CANDIDATE", false, false);
+        return new ArchitectureStatus("GITS-KNO-DEV-PACKAGE-V0.1", "DEV_PACKAGE_CANDIDATE", false, false);
     }
 
     record ArchitectureStatus(String packageId, String state, boolean productionReady, boolean frozen) {}

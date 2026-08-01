@@ -1,5 +1,5 @@
 {
-  "$id": "https://gientech.com/hzb/kno/schemas/source-contract.json",
+  "$id": "https://gientech.com/gits/kno/schemas/source-contract.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "properties": {

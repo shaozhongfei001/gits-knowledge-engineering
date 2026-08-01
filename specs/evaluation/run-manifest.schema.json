@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://gientech.com/hzb/kno/schemas/run-manifest.json",
+  "$id": "https://gientech.com/gits/kno/schemas/run-manifest.json",
   "title": "Replayable Run Manifest",
   "type": "object",
   "additionalProperties": false,

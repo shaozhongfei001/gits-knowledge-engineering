@@ -1,5 +1,5 @@
 export interface ArchitectureStatus {
-  packageId: 'HZB-KNO-DEV-PACKAGE-V0.1'
+  packageId: 'GITS-KNO-DEV-PACKAGE-V0.1'
   state: 'DEV_PACKAGE_CANDIDATE'
   productionReady: false
   frozen: false

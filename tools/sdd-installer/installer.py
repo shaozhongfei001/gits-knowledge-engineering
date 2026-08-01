@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed, plan/apply/rollback installer for the HZB SDD payload."""
+"""Fail-closed, plan/apply/rollback installer for the GITS SDD payload."""
 
 from __future__ import annotations
 
@@ -16,9 +16,9 @@ import tempfile
 import uuid
 
 
-FRAMEWORK_ID = "HZB-SDD-FRAMEWORK-V0.2"
+FRAMEWORK_ID = "GITS-SDD-FRAMEWORK-V0.2"
 FRAMEWORK_VERSION = "0.2.0"
-STATE_DIR = ".hzb-sdd"
+STATE_DIR = ".gits-sdd"
 MANIFEST_NAME = "install-manifest.json"
 
 

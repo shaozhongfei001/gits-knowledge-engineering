@@ -1,11 +1,11 @@
 @prefix rr: <http://www.w3.org/ns/r2rml#> .
-@prefix hzb: <https://gientech.com/hzb/kno/> .
+@prefix gits: <https://gientech.com/gits/kno/> .
 
 <#CustomerTriplesMap> a rr:TriplesMap ;
   rr:logicalTable [ rr:tableName "AUTHORIZED_CUSTOMER_VIEW" ] ;
   rr:subjectMap [
-    rr:template "https://gientech.com/hzb/kno/customer/{CUSTOMER_ID}" ;
-    rr:class hzb:Customer
+    rr:template "https://gientech.com/gits/kno/customer/{CUSTOMER_ID}" ;
+    rr:class gits:Customer
   ] .
 
 # SPIKE_ONLY: table/view and column names require Data Owner approval and a real Source Contract.

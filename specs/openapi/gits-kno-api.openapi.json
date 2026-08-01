@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.1",
   "info": {
-    "title": "HZB Knowledge Engineering API",
+    "title": "GITS Knowledge Engineering API",
     "version": "0.1.0",
     "description": "工程候选API；不代表真实外部系统已经接通。"
   },
@@ -37,7 +37,7 @@
         "additionalProperties": false,
         "required": ["packageId", "state", "productionReady", "frozen"],
         "properties": {
-          "packageId": {"type": "string", "const": "HZB-KNO-DEV-PACKAGE-V0.1"},
+          "packageId": {"type": "string", "const": "GITS-KNO-DEV-PACKAGE-V0.1"},
           "state": {"type": "string", "enum": ["DEV_PACKAGE_CANDIDATE"]},
           "productionReady": {"type": "boolean", "const": false},
           "frozen": {"type": "boolean", "const": false}
