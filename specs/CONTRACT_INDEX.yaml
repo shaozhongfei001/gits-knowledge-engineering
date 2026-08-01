@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0",
+  "registry_id": "HZB-KNO-CONTRACT-INDEX-V0.1",
+  "status": "ENGINEERING_CANDIDATE",
+  "contracts": [
+    {
+      "id": "CTR-API-001",
+      "kind": "openapi",
+      "authority_source": "specs/openapi/hzb-kno-api.openapi.json",
+      "owner": "integration_contract_owner",
+      "compatibility": "backward_compatible",
+      "consumers": ["api_app", "frontend_bff_adapter"],
+      "generated": ["generated/openapi/hzb-kno-api.normalized.json"]
+    },
+    {
+      "id": "CTR-EVENT-001",
+      "kind": "asyncapi",
+      "authority_source": "specs/events/domain-events.asyncapi.json",
+      "owner": "integration_contract_owner",
+      "compatibility": "backward_compatible",
+      "consumers": ["api_app", "worker_app"],
+      "generated": ["generated/events/domain-events.normalized.json"]
+    },
+    {
+      "id": "CTR-SEM-001",
+      "kind": "linkml_subset",
+      "authority_source": "specs/semantic/hzb-core.linkml.yaml",
+      "owner": "semantic_architecture_owner",
+      "compatibility": "explicit_migration",
+      "consumers": ["operational_ontology", "semantic_runtime", "context_evidence"],
+      "generated": ["generated/semantic/hzb-core.schema.json", "generated/semantic/hzb-core.shacl.ttl"]
+    },
+    {
+      "id": "CTR-SEM-002",
+      "kind": "turtle",
+      "authority_source": "specs/semantic/hzb-core.owl.ttl",
+      "owner": "semantic_architecture_owner",
+      "compatibility": "explicit_migration",
+      "consumers": ["semantic_runtime"],
+      "generated": []
+    },
+    {
+      "id": "CTR-RULE-001",
+      "kind": "dmn",
+      "authority_source": "specs/rules/claim-reconciliation.dmn",
+      "owner": "rule_owner",
+      "compatibility": "versioned_decision",
+      "consumers": ["policy_rule", "context_evidence"],
+      "generated": ["generated/rules/claim-reconciliation.normalized.dmn"]
+    },
+    {
+      "id": "CTR-SKILL-001",
+      "kind": "json_schema",
+      "authority_source": "specs/skills/context-assembly.skill.schema.json",
+      "owner": "skill_contract_owner",
+      "compatibility": "backward_compatible",
+      "consumers": ["existing_aios_adapter", "context_evidence"],
+      "generated": ["generated/skills/context-assembly.skill.schema.json"]
+    },
+    {
+      "id": "CTR-ACTION-001",
+      "kind": "json_schema",
+      "authority_source": "specs/actions/controlled-action.schema.json",
+      "owner": "human_action_owner",
+      "compatibility": "no_silent_breaking_change",
+      "consumers": ["human_action", "external_system_adapters"],
+      "generated": ["generated/actions/controlled-action.schema.json"]
+    },
+    {
+      "id": "CTR-DATA-001",
+      "kind": "json_schema",
+      "authority_source": "specs/data/source-contract.schema.json",
+      "owner": "data_mapping_owner",
+      "compatibility": "versioned_mapping",
+      "consumers": ["oracle_mapping_spike", "semantic_runtime"],
+      "generated": ["generated/data/source-contract.schema.json"]
+    },
+    {
+      "id": "CTR-EVIDENCE-001",
+      "kind": "json_schema",
+      "authority_source": "specs/evidence/evidence-bundle.schema.json",
+      "owner": "evidence_owner",
+      "compatibility": "backward_compatible",
+      "consumers": ["context_evidence", "scenario_services", "evaluation"],
+      "generated": ["generated/evidence/evidence-bundle.schema.json"]
+    },
+    {
+      "id": "CTR-EVAL-001",
+      "kind": "json_schema",
+      "authority_source": "specs/evaluation/run-manifest.schema.json",
+      "owner": "evaluation_owner",
+      "compatibility": "backward_compatible",
+      "consumers": ["evaluation", "release_gate"],
+      "generated": ["generated/evaluation/run-manifest.schema.json"]
+    },
+    {
+      "id": "CTR-MAP-001",
+      "kind": "turtle",
+      "authority_source": "specs/data/customer-source-mapping.r2rml.ttl",
+      "owner": "data_mapping_owner",
+      "compatibility": "spike_only",
+      "consumers": ["oracle_mapping_spike"],
+      "generated": []
+    }
+  ]
+}

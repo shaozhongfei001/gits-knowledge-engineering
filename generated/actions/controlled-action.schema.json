@@ -1,0 +1,100 @@
+{
+  "$id": "https://gientech.com/hzb/kno/schemas/controlled-action.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actionId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "humanConfirmation": {
+      "additionalProperties": false,
+      "properties": {
+        "actorId": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "confirmationId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "confirmedAt": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "decision": {
+          "enum": [
+            "APPROVED",
+            "MODIFIED_AND_APPROVED"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "confirmationId",
+        "actorId",
+        "decision",
+        "confirmedAt"
+      ],
+      "type": "object"
+    },
+    "idempotencyKey": {
+      "minLength": 16,
+      "type": "string"
+    },
+    "proposalId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "requestedAt": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "target": {
+      "additionalProperties": false,
+      "properties": {
+        "expectedVersion": {
+          "type": "string"
+        },
+        "objectId": {
+          "type": "string"
+        },
+        "objectType": {
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "CREATE_TASK",
+            "UPDATE_WHITELISTED_FIELDS"
+          ],
+          "type": "string"
+        },
+        "payload": {
+          "type": "object"
+        },
+        "system": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "system",
+        "objectType",
+        "objectId",
+        "expectedVersion",
+        "operation",
+        "payload"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "actionId",
+    "proposalId",
+    "humanConfirmation",
+    "target",
+    "idempotencyKey",
+    "requestedAt"
+  ],
+  "title": "Controlled Action",
+  "type": "object"
+}

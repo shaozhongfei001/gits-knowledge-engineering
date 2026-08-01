@@ -1,0 +1,14 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "{{LOOP_ID}}",
+  "status": "planned",
+  "current_phase": "planning",
+  "baseline_commit": "{{BASELINE_COMMIT}}",
+  "implementation_actor": "{{HOLDER}}",
+  "qa_actor": null,
+  "completed_gates": [],
+  "next_action": "Execute gates through scripts/record_gate.py and preserve evidence.",
+  "blocked": false,
+  "blocking_reason": null,
+  "updated_at": "{{ISO_TIME}}"
+}

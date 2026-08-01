@@ -1,0 +1,10 @@
+{
+  "profile_id": "HZB-ORACLE-METADATA-QUARANTINE-V0.1",
+  "enabled": false,
+  "default_install": false,
+  "authorization_required": ["DATA_OWNER", "DBA", "SECURITY_OWNER"],
+  "allowed_environment": ["SIT", "CONTROLLED_TEST"],
+  "transaction_policy": "FAIL_CLOSED_READ_ONLY",
+  "qa_gate": "PENDING_INDEPENDENT_QA",
+  "source_capture": "HASH_AND_LOCATOR_BY_DEFAULT"
+}

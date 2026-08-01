@@ -1,0 +1,33 @@
+{
+  "compiler": "HZB_BOOTSTRAP_LINKML_SUBSET_0.1",
+  "generated_hashes": {
+    "actions/controlled-action.schema.json": "464d7e5994cced349e29fc4d3f74fb25f16bc38d332f51e3331da3c9339acab2",
+    "contract-catalog.json": "182bd2653048f3f1ba734418f7c64fe1c78eec3ed4a268c1543862ed0f3589e2",
+    "data/source-contract.schema.json": "7af9e295105c640b79720dd24b055e6e866ae8170c499de7dfd81cbe5033fe30",
+    "evaluation/run-manifest.schema.json": "437232a355c70082f434fc0a0b1d39d366abcef4c71fce4b817b571c93cc7324",
+    "events/domain-events.normalized.json": "92ec98fe3e425bfd71306ffb49bebac27b1171a7b97c13059898d32ba90c5e87",
+    "evidence/evidence-bundle.schema.json": "835edd8c227fb417caf755b7bf8f15a3f7718aefe395e48aa33a5cff6f20a818",
+    "openapi/hzb-kno-api.normalized.json": "4ea08ebb9bfc7689beba1c5389f70d980f1aa2d6ee6a3251dbb231c8009db9de",
+    "rules/claim-reconciliation.normalized.dmn": "78105f2a2a6a030e843290f5ce1d35d2d853b088c24e16283d19d3a22a2a4e85",
+    "semantic/hzb-core.schema.json": "4e24390b2aa8dace88f906beb74e693f8f7257ebda7392a45ff95393f9d8273d",
+    "semantic/hzb-core.shacl.ttl": "40ff9e2b871b2ee653624db3d1d6914b9605743381b46314575b1559a4bea4a9",
+    "skills/context-assembly.skill.schema.json": "7ab941f6b32d8ec86f11a73b6f218476e3242f384dd4152f0b0d12d427b5b2f5"
+  },
+  "limitations": [
+    "OFFICIAL_LINKML_AND_JENA_VALIDATION_REQUIRED_BEFORE_PRODUCTION_BASELINE"
+  ],
+  "registry_id": "HZB-KNO-CONTRACT-INDEX-V0.1",
+  "source_hashes": {
+    "CTR-ACTION-001": "edc2e2fdf8ee90927e6b466e4a5677cffc2572564af5be7ce08752b87baa11e0",
+    "CTR-API-001": "fefdf21f7d156a5a85c31cfb8555d82b23c08fad6e59c84e82e5682fcfebe1f9",
+    "CTR-DATA-001": "2ee547a0a1a340bc629c4ac3c122859b2bf8ed5eb83fcbbe59ae3488b266bcbd",
+    "CTR-EVAL-001": "77ea2dd569b2cbee7d3cbb3f4a22549dd1ce357820ee7aeb42b354d3e7bb16a5",
+    "CTR-EVENT-001": "95a705a46b5fe6ad7333fe60aeb6bd558dcb75a546bdb8bcc6c1c357ddef5c77",
+    "CTR-EVIDENCE-001": "561cc374074aec4c011f95aef1028b3163df570c6b59ec26f9ca202c7d154d76",
+    "CTR-MAP-001": "77a2ac08d004332f6aa4de9ff90f58675c5081816d8da56ecc540724d93bc6d1",
+    "CTR-RULE-001": "78105f2a2a6a030e843290f5ce1d35d2d853b088c24e16283d19d3a22a2a4e85",
+    "CTR-SEM-001": "4583d5e5809d0973b1880f2760505dce8864205881f6be5118d7ce915336003c",
+    "CTR-SEM-002": "f7c3c5d7d42a199ea4f09c72393a6d4a97bd4c1dcc24c7d38bec257b84a60336",
+    "CTR-SKILL-001": "dee9a49f889b490c72641607babfa07aeecd059ce0a048e2caa93e24ad0d3367"
+  }
+}

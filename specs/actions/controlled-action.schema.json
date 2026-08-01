@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gientech.com/hzb/kno/schemas/controlled-action.json",
+  "title": "Controlled Action",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["actionId", "proposalId", "humanConfirmation", "target", "idempotencyKey", "requestedAt"],
+  "properties": {
+    "actionId": {"type": "string", "format": "uuid"},
+    "proposalId": {"type": "string", "format": "uuid"},
+    "humanConfirmation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["confirmationId", "actorId", "decision", "confirmedAt"],
+      "properties": {
+        "confirmationId": {"type": "string", "format": "uuid"},
+        "actorId": {"type": "string", "minLength": 1},
+        "decision": {"type": "string", "enum": ["APPROVED", "MODIFIED_AND_APPROVED"]},
+        "confirmedAt": {"type": "string", "format": "date-time"}
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["system", "objectType", "objectId", "expectedVersion", "operation", "payload"],
+      "properties": {
+        "system": {"type": "string"},
+        "objectType": {"type": "string"},
+        "objectId": {"type": "string"},
+        "expectedVersion": {"type": "string"},
+        "operation": {"type": "string", "enum": ["CREATE_TASK", "UPDATE_WHITELISTED_FIELDS"]},
+        "payload": {"type": "object"}
+      }
+    },
+    "idempotencyKey": {"type": "string", "minLength": 16},
+    "requestedAt": {"type": "string", "format": "date-time"}
+  }
+}

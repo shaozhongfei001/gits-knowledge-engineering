@@ -1,0 +1,48 @@
+{
+  "asyncapi": "3.0.0",
+  "info": {"title": "HZB Knowledge Engineering Domain Events", "version": "0.1.0"},
+  "defaultContentType": "application/cloudevents+json",
+  "channels": {
+    "claimCandidateRecorded": {
+      "address": "hzb.kno.claim-candidate-recorded.v1",
+      "messages": {"claimCandidateRecorded": {"$ref": "#/components/messages/ClaimCandidateRecorded"}}
+    },
+    "controlledActionRequested": {
+      "address": "hzb.kno.controlled-action-requested.v1",
+      "messages": {"controlledActionRequested": {"$ref": "#/components/messages/ControlledActionRequested"}}
+    }
+  },
+  "operations": {
+    "receiveClaimCandidate": {"action": "receive", "channel": {"$ref": "#/channels/claimCandidateRecorded"}},
+    "sendControlledActionRequest": {"action": "send", "channel": {"$ref": "#/channels/controlledActionRequested"}}
+  },
+  "components": {
+    "messages": {
+      "ClaimCandidateRecorded": {
+        "name": "ClaimCandidateRecorded",
+        "payload": {"$ref": "#/components/schemas/CloudEvent"}
+      },
+      "ControlledActionRequested": {
+        "name": "ControlledActionRequested",
+        "payload": {"$ref": "#/components/schemas/CloudEvent"}
+      }
+    },
+    "schemas": {
+      "CloudEvent": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["specversion", "id", "source", "type", "time", "subject", "datacontenttype", "data"],
+        "properties": {
+          "specversion": {"type": "string", "const": "1.0"},
+          "id": {"type": "string"},
+          "source": {"type": "string", "format": "uri-reference"},
+          "type": {"type": "string"},
+          "time": {"type": "string", "format": "date-time"},
+          "subject": {"type": "string"},
+          "datacontenttype": {"type": "string", "const": "application/json"},
+          "data": {"type": "object"}
+        }
+      }
+    }
+  }
+}

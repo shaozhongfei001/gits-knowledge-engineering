@@ -1,0 +1,17 @@
+COMMAND=make tooling-test
+EXIT_CODE=0
+STDOUT
+
+STDERR
+test_transfer_updates_control_set_together (test_baton.BatonTest.test_transfer_updates_control_set_together) ... ok
+test_new_optional_property_is_compatible (test_contract_diff.ContractDiffTest.test_new_optional_property_is_compatible) ... ok
+test_removed_property_is_breaking (test_contract_diff.ContractDiffTest.test_removed_property_is_breaking) ... ok
+test_dummy_command_is_rejected (test_loop_guard.LoopGuardTest.test_dummy_command_is_rejected) ... ok
+test_guard_self_test_covers_accept_and_fail_closed (test_oracle_readonly_guard.ReadOnlyGuardTest.test_guard_self_test_covers_accept_and_fail_closed) ... ok
+test_environment_placeholder_is_allowed (test_secret_scan.SecretScanTest.test_environment_placeholder_is_allowed) ... ok
+test_real_credential_and_personal_path_are_rejected (test_secret_scan.SecretScanTest.test_real_credential_and_personal_path_are_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.092s
+
+OK

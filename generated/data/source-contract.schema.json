@@ -1,0 +1,78 @@
+{
+  "$id": "https://gientech.com/hzb/kno/schemas/source-contract.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "classification": {
+      "enum": [
+        "PUBLIC",
+        "INTERNAL",
+        "SENSITIVE",
+        "RESTRICTED"
+      ],
+      "type": "string"
+    },
+    "effectiveFrom": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "objects": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "authority": {
+            "enum": [
+              "AUTHORITATIVE",
+              "REFERENCE",
+              "DERIVED"
+            ],
+            "type": "string"
+          },
+          "fields": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "name": {
+            "type": "string"
+          },
+          "schema": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "schema",
+          "name",
+          "authority",
+          "fields"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "sourceContractId": {
+      "type": "string"
+    },
+    "system": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "sourceContractId",
+    "version",
+    "system",
+    "owner",
+    "classification",
+    "objects",
+    "effectiveFrom"
+  ],
+  "title": "Physical Source Contract",
+  "type": "object"
+}

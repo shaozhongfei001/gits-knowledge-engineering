@@ -1,0 +1,72 @@
+{
+  "$id": "https://gientech.com/hzb/kno/schemas/run-manifest.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "dataSnapshot": {
+      "type": "string"
+    },
+    "model": {
+      "properties": {
+        "modelId": {
+          "type": "string"
+        },
+        "parametersHash": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "provider",
+        "modelId",
+        "parametersHash"
+      ],
+      "type": "object"
+    },
+    "ontologyVersion": {
+      "type": "string"
+    },
+    "permissionDecisionId": {
+      "type": "string"
+    },
+    "promptVersion": {
+      "type": "string"
+    },
+    "ruleVersions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "runId": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "skillVersion": {
+      "type": "string"
+    },
+    "startedAt": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "traceId": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "runId",
+    "startedAt",
+    "ontologyVersion",
+    "skillVersion",
+    "promptVersion",
+    "model",
+    "ruleVersions",
+    "dataSnapshot",
+    "permissionDecisionId",
+    "traceId"
+  ],
+  "title": "Replayable Run Manifest",
+  "type": "object"
+}

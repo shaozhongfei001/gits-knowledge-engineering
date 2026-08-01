@@ -1,0 +1,64 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P0-framework-dryrun",
+  "gates": {
+    "contract_generate": {
+      "status": "pass",
+      "command": "make generate",
+      "exit_code": 0,
+      "actor": "engineering_generation_agent",
+      "actor_role": "implementation",
+      "executed_at": "2026-08-01T05:02:37.476131+00:00",
+      "evidence_file": "loops/P0-framework-dryrun/evidence/contract_generate-20260801T050237Z.log",
+      "output_sha256": "048ab7c55cfbb3c6707b7212288bd84d678861d4abb19a7eca16fbb7a71803b8"
+    },
+    "contract_check": {
+      "status": "pass",
+      "command": "make check",
+      "exit_code": 0,
+      "actor": "engineering_generation_agent",
+      "actor_role": "implementation",
+      "executed_at": "2026-08-01T05:02:37.548453+00:00",
+      "evidence_file": "loops/P0-framework-dryrun/evidence/contract_check-20260801T050237Z.log",
+      "output_sha256": "528448f1fea10f4108f5ba46244c8fde17ad7c64010a98d1abde8ef29d469da9"
+    },
+    "security_check": {
+      "status": "pass",
+      "command": "make security-check",
+      "exit_code": 0,
+      "actor": "engineering_generation_agent",
+      "actor_role": "implementation",
+      "executed_at": "2026-08-01T05:02:37.690393+00:00",
+      "evidence_file": "loops/P0-framework-dryrun/evidence/security_check-20260801T050237Z.log",
+      "output_sha256": "682141f4d96b10995c75401d7804e5a09cfe71aae85332fc41be658346e3b50f"
+    },
+    "framework_test": {
+      "status": "pass",
+      "command": "make framework-test",
+      "exit_code": 0,
+      "actor": "engineering_generation_agent",
+      "actor_role": "implementation",
+      "executed_at": "2026-08-01T05:02:36.986800+00:00",
+      "evidence_file": "loops/P0-framework-dryrun/evidence/framework_test-20260801T050236Z.log",
+      "output_sha256": "07a43b9231aa80534bf3f009766def635737a37a2b5c76ef34cab0f97e4ab928"
+    },
+    "tooling_test": {
+      "status": "pass",
+      "command": "make tooling-test",
+      "exit_code": 0,
+      "actor": "engineering_generation_agent",
+      "actor_role": "implementation",
+      "executed_at": "2026-08-01T05:02:37.287816+00:00",
+      "evidence_file": "loops/P0-framework-dryrun/evidence/tooling_test-20260801T050237Z.log",
+      "output_sha256": "f1f26aa13ec2d09eaca2b2c03c6aee84efc42ef7f05110c8ec77e40c57ee12e8"
+    }
+  },
+  "independent_qa": {
+    "status": "pending",
+    "actor": null,
+    "session": null,
+    "attested_at": null,
+    "evidence_file": null,
+    "evidence_sha256": null
+  }
+}

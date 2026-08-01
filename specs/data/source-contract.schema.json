@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gientech.com/hzb/kno/schemas/source-contract.json",
+  "title": "Physical Source Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["sourceContractId", "version", "system", "owner", "classification", "objects", "effectiveFrom"],
+  "properties": {
+    "sourceContractId": {"type": "string"},
+    "version": {"type": "string"},
+    "system": {"type": "string"},
+    "owner": {"type": "string"},
+    "classification": {"type": "string", "enum": ["PUBLIC", "INTERNAL", "SENSITIVE", "RESTRICTED"]},
+    "effectiveFrom": {"type": "string", "format": "date-time"},
+    "objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["schema", "name", "authority", "fields"],
+        "properties": {
+          "schema": {"type": "string"},
+          "name": {"type": "string"},
+          "authority": {"type": "string", "enum": ["AUTHORITATIVE", "REFERENCE", "DERIVED"]},
+          "fields": {"type": "array", "items": {"type": "object"}}
+        }
+      }
+    }
+  }
+}

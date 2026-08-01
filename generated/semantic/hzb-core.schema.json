@@ -1,0 +1,282 @@
+{
+  "$defs": {
+    "Action": {
+      "additionalProperties": false,
+      "description": "A controlled attempt to create a formal task or write to an authoritative system.",
+      "properties": {
+        "action_id": {
+          "type": "string"
+        },
+        "confirmation_id": {
+          "type": "string"
+        },
+        "idempotency_key": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "target_object_id": {
+          "type": "string"
+        },
+        "target_system": {
+          "type": "string"
+        },
+        "target_version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "action_id",
+        "confirmation_id",
+        "idempotency_key",
+        "status",
+        "target_object_id",
+        "target_system",
+        "target_version"
+      ],
+      "type": "object"
+    },
+    "Claim": {
+      "additionalProperties": false,
+      "description": "A typed assertion that remains separate from authoritative facts.",
+      "properties": {
+        "case_id": {
+          "type": "string"
+        },
+        "claim_id": {
+          "type": "string"
+        },
+        "claim_status": {
+          "type": "string"
+        },
+        "claim_type": {
+          "type": "string"
+        },
+        "recorded_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "statement": {
+          "type": "string"
+        },
+        "supersedes_claim_id": {
+          "type": "string"
+        },
+        "valid_from": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "valid_to": {
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "claim_id",
+        "claim_status",
+        "claim_type",
+        "recorded_at",
+        "statement"
+      ],
+      "type": "object"
+    },
+    "Evaluation": {
+      "additionalProperties": false,
+      "description": "A replayable evaluation result bound to all material artifact versions.",
+      "properties": {
+        "case_set_version": {
+          "type": "string"
+        },
+        "evaluated_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "evaluation_id": {
+          "type": "string"
+        },
+        "gate_state": {
+          "type": "string"
+        },
+        "run_manifest_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_set_version",
+        "evaluated_at",
+        "evaluation_id",
+        "gate_state",
+        "run_manifest_id"
+      ],
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "description": "A locatable source that supports, refutes or qualifies a claim.",
+      "properties": {
+        "content_hash": {
+          "type": "string"
+        },
+        "evidence_id": {
+          "type": "string"
+        },
+        "locator": {
+          "type": "string"
+        },
+        "permission_label": {
+          "type": "string"
+        },
+        "source_uri": {
+          "format": "uri",
+          "type": "string"
+        },
+        "source_version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "content_hash",
+        "evidence_id",
+        "locator",
+        "permission_label",
+        "source_uri",
+        "source_version"
+      ],
+      "type": "object"
+    },
+    "HumanConfirmation": {
+      "additionalProperties": false,
+      "description": "A named human disposition over a candidate claim or proposal.",
+      "properties": {
+        "actor_id": {
+          "type": "string"
+        },
+        "confirmation_id": {
+          "type": "string"
+        },
+        "confirmed_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "decision": {
+          "type": "string"
+        },
+        "subject_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "actor_id",
+        "confirmation_id",
+        "confirmed_at",
+        "decision",
+        "subject_id"
+      ],
+      "type": "object"
+    },
+    "Interaction": {
+      "additionalProperties": false,
+      "description": "A visit, call, message or other interaction event.",
+      "properties": {
+        "case_id": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "string"
+        },
+        "interaction_id": {
+          "type": "string"
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "source_hash": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "channel",
+        "interaction_id",
+        "occurred_at",
+        "source_hash"
+      ],
+      "type": "object"
+    },
+    "OperatingCase": {
+      "additionalProperties": false,
+      "description": "A durable business matter spanning multiple interactions.",
+      "properties": {
+        "case_id": {
+          "type": "string"
+        },
+        "case_type": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "recorded_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "valid_to": {
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "case_type",
+        "purpose",
+        "recorded_at",
+        "status",
+        "valid_from"
+      ],
+      "type": "object"
+    },
+    "Receipt": {
+      "additionalProperties": false,
+      "description": "The authoritative result or failure receipt of a controlled action.",
+      "properties": {
+        "action_id": {
+          "type": "string"
+        },
+        "receipt_id": {
+          "type": "string"
+        },
+        "received_at": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "target_version_after": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "action_id",
+        "receipt_id",
+        "received_at",
+        "status"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://gientech.com/hzb/kno/core/schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "hzb_kno_core",
+  "version": "0.1.0"
+}

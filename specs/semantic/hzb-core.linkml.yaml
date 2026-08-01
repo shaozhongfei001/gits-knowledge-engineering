@@ -1,0 +1,102 @@
+{
+  "id": "https://gientech.com/hzb/kno/core",
+  "name": "hzb_kno_core",
+  "version": "0.1.0",
+  "default_prefix": "hzb",
+  "prefixes": {
+    "hzb": "https://gientech.com/hzb/kno/",
+    "prov": "http://www.w3.org/ns/prov#",
+    "time": "http://www.w3.org/2006/time#"
+  },
+  "classes": {
+    "OperatingCase": {
+      "description": "A durable business matter spanning multiple interactions.",
+      "attributes": {
+        "case_id": {"identifier": true, "range": "string", "required": true},
+        "case_type": {"range": "string", "required": true},
+        "status": {"range": "string", "required": true},
+        "purpose": {"range": "string", "required": true},
+        "valid_from": {"range": "datetime", "required": true},
+        "valid_to": {"range": "datetime", "required": false},
+        "recorded_at": {"range": "datetime", "required": true}
+      }
+    },
+    "Interaction": {
+      "description": "A visit, call, message or other interaction event.",
+      "attributes": {
+        "interaction_id": {"identifier": true, "range": "string", "required": true},
+        "case_id": {"range": "string", "required": true},
+        "occurred_at": {"range": "datetime", "required": true},
+        "channel": {"range": "string", "required": true},
+        "source_hash": {"range": "string", "required": true}
+      }
+    },
+    "Claim": {
+      "description": "A typed assertion that remains separate from authoritative facts.",
+      "attributes": {
+        "claim_id": {"identifier": true, "range": "string", "required": true},
+        "case_id": {"range": "string", "required": true},
+        "claim_type": {"range": "string", "required": true},
+        "claim_status": {"range": "string", "required": true},
+        "statement": {"range": "string", "required": true},
+        "valid_from": {"range": "datetime", "required": false},
+        "valid_to": {"range": "datetime", "required": false},
+        "recorded_at": {"range": "datetime", "required": true},
+        "supersedes_claim_id": {"range": "string", "required": false}
+      }
+    },
+    "Evidence": {
+      "description": "A locatable source that supports, refutes or qualifies a claim.",
+      "attributes": {
+        "evidence_id": {"identifier": true, "range": "string", "required": true},
+        "source_uri": {"range": "uri", "required": true},
+        "source_version": {"range": "string", "required": true},
+        "locator": {"range": "string", "required": true},
+        "content_hash": {"range": "string", "required": true},
+        "permission_label": {"range": "string", "required": true}
+      }
+    },
+    "HumanConfirmation": {
+      "description": "A named human disposition over a candidate claim or proposal.",
+      "attributes": {
+        "confirmation_id": {"identifier": true, "range": "string", "required": true},
+        "subject_id": {"range": "string", "required": true},
+        "decision": {"range": "string", "required": true},
+        "actor_id": {"range": "string", "required": true},
+        "confirmed_at": {"range": "datetime", "required": true}
+      }
+    },
+    "Action": {
+      "description": "A controlled attempt to create a formal task or write to an authoritative system.",
+      "attributes": {
+        "action_id": {"identifier": true, "range": "string", "required": true},
+        "confirmation_id": {"range": "string", "required": true},
+        "target_system": {"range": "string", "required": true},
+        "target_object_id": {"range": "string", "required": true},
+        "target_version": {"range": "string", "required": true},
+        "idempotency_key": {"range": "string", "required": true},
+        "status": {"range": "string", "required": true}
+      }
+    },
+    "Receipt": {
+      "description": "The authoritative result or failure receipt of a controlled action.",
+      "attributes": {
+        "receipt_id": {"identifier": true, "range": "string", "required": true},
+        "action_id": {"range": "string", "required": true},
+        "status": {"range": "string", "required": true},
+        "target_version_after": {"range": "string", "required": false},
+        "received_at": {"range": "datetime", "required": true}
+      }
+    },
+    "Evaluation": {
+      "description": "A replayable evaluation result bound to all material artifact versions.",
+      "attributes": {
+        "evaluation_id": {"identifier": true, "range": "string", "required": true},
+        "run_manifest_id": {"range": "string", "required": true},
+        "case_set_version": {"range": "string", "required": true},
+        "gate_state": {"range": "string", "required": true},
+        "evaluated_at": {"range": "datetime", "required": true}
+      }
+    }
+  }
+}

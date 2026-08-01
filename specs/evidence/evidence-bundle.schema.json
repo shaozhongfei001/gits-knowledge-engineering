@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gientech.com/hzb/kno/schemas/evidence-bundle.json",
+  "title": "Evidence Bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["bundleId", "caseId", "purpose", "permissionDecisionId", "assembledAt", "facts", "claims", "evidence", "unknowns", "conflicts"],
+  "properties": {
+    "bundleId": {"type": "string", "format": "uuid"},
+    "caseId": {"type": "string", "format": "uuid"},
+    "purpose": {"type": "string"},
+    "permissionDecisionId": {"type": "string"},
+    "assembledAt": {"type": "string", "format": "date-time"},
+    "facts": {"type": "array", "items": {"type": "object"}},
+    "claims": {"type": "array", "items": {"type": "object"}},
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["evidenceId", "sourceVersion", "locator", "contentHash", "permissionLabel"],
+        "properties": {
+          "evidenceId": {"type": "string"},
+          "sourceVersion": {"type": "string"},
+          "locator": {"type": "string"},
+          "contentHash": {"type": "string"},
+          "permissionLabel": {"type": "string"}
+        }
+      }
+    },
+    "unknowns": {"type": "array", "items": {"type": "string"}},
+    "conflicts": {"type": "array", "items": {"type": "object"}}
+  }
+}

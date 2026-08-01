@@ -1,0 +1,32 @@
+:root {
+  color: #142026;
+  background: #eef2f1;
+  font-family: Inter, "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+
+.shell { max-width: 1180px; margin: 0 auto; padding: 64px 28px 32px; }
+.hero { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.eyebrow { color: #16765f; font-size: 12px; font-weight: 700; letter-spacing: .18em; }
+h1 { margin: 10px 0 8px; font-size: clamp(30px, 4vw, 52px); letter-spacing: -.04em; }
+.subtitle { margin: 0; color: #53645f; font-size: 18px; }
+.status-panel { min-height: 122px; margin: 44px 0 24px; padding: 28px; border: 1px solid #d5dfdc; border-radius: 18px; background: rgba(255,255,255,.82); box-shadow: 0 18px 55px rgba(22,55,47,.08); }
+.status-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.status-grid div { display: flex; flex-direction: column; gap: 8px; }
+.status-grid span { color: #687974; font-size: 13px; }
+.status-grid strong { overflow-wrap: anywhere; font-size: 16px; }
+.capabilities { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.capabilities article { padding: 26px; border-radius: 18px; background: #173e35; color: white; }
+.capabilities article > span { color: #76d6ba; font-family: ui-monospace, monospace; }
+.capabilities h2 { margin: 34px 0 10px; font-size: 21px; }
+.capabilities p { margin: 0; color: #cbdad6; line-height: 1.7; }
+footer { padding: 28px 4px; color: #65746f; font-size: 13px; }
+
+@media (max-width: 760px) {
+  .shell { padding-top: 34px; }
+  .hero { flex-direction: column; }
+  .status-grid, .capabilities { grid-template-columns: 1fr; }
+}

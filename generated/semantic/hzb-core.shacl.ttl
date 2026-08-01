@@ -1,0 +1,76 @@
+@prefix hzb: <https://gientech.com/hzb/kno/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+hzb:ActionShape a sh:NodeShape ;
+  sh:targetClass hzb:Action ;
+  sh:property [ sh:path hzb:action_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:confirmation_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:idempotency_key ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:status ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:target_object_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:target_system ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:target_version ; sh:datatype xsd:string ; sh:minCount 1 ] .
+
+hzb:ClaimShape a sh:NodeShape ;
+  sh:targetClass hzb:Claim ;
+  sh:property [ sh:path hzb:case_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:claim_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:claim_status ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:claim_type ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:recorded_at ; sh:datatype xsd:dateTime ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:statement ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:supersedes_claim_id ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path hzb:valid_from ; sh:datatype xsd:dateTime ] ;
+  sh:property [ sh:path hzb:valid_to ; sh:datatype xsd:dateTime ] .
+
+hzb:EvaluationShape a sh:NodeShape ;
+  sh:targetClass hzb:Evaluation ;
+  sh:property [ sh:path hzb:case_set_version ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:evaluated_at ; sh:datatype xsd:dateTime ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:evaluation_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:gate_state ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:run_manifest_id ; sh:datatype xsd:string ; sh:minCount 1 ] .
+
+hzb:EvidenceShape a sh:NodeShape ;
+  sh:targetClass hzb:Evidence ;
+  sh:property [ sh:path hzb:content_hash ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:evidence_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:locator ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:permission_label ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:source_uri ; sh:datatype xsd:anyURI ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:source_version ; sh:datatype xsd:string ; sh:minCount 1 ] .
+
+hzb:HumanConfirmationShape a sh:NodeShape ;
+  sh:targetClass hzb:HumanConfirmation ;
+  sh:property [ sh:path hzb:actor_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:confirmation_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:confirmed_at ; sh:datatype xsd:dateTime ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:decision ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:subject_id ; sh:datatype xsd:string ; sh:minCount 1 ] .
+
+hzb:InteractionShape a sh:NodeShape ;
+  sh:targetClass hzb:Interaction ;
+  sh:property [ sh:path hzb:case_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:channel ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:interaction_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:occurred_at ; sh:datatype xsd:dateTime ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:source_hash ; sh:datatype xsd:string ; sh:minCount 1 ] .
+
+hzb:OperatingCaseShape a sh:NodeShape ;
+  sh:targetClass hzb:OperatingCase ;
+  sh:property [ sh:path hzb:case_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:case_type ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:purpose ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:recorded_at ; sh:datatype xsd:dateTime ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:status ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:valid_from ; sh:datatype xsd:dateTime ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:valid_to ; sh:datatype xsd:dateTime ] .
+
+hzb:ReceiptShape a sh:NodeShape ;
+  sh:targetClass hzb:Receipt ;
+  sh:property [ sh:path hzb:action_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:receipt_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:received_at ; sh:datatype xsd:dateTime ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:status ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path hzb:target_version_after ; sh:datatype xsd:string ] .

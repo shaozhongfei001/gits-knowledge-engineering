@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: hzb-kno-worker
+  main:
+    web-application-type: none
+    banner-mode: "off"
+
+hzb:
+  worker:
+    enabled: false
+    reason: "No external integration is enabled in the engineering candidate."

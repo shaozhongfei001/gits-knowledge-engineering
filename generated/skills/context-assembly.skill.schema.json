@@ -1,0 +1,90 @@
+{
+  "$id": "https://gientech.com/hzb/kno/schemas/context-assembly-skill.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "contractVersion": {
+      "const": "1.0.0",
+      "type": "string"
+    },
+    "request": {
+      "additionalProperties": false,
+      "properties": {
+        "asOf": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "caseId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "identityTokenRef": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "permissionContext": {
+          "type": "object"
+        },
+        "purpose": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "caseId",
+        "purpose",
+        "identityTokenRef",
+        "permissionContext",
+        "asOf"
+      ],
+      "type": "object"
+    },
+    "response": {
+      "additionalProperties": false,
+      "properties": {
+        "conflicts": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "evidenceBundleId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "permissionDecisionId": {
+          "type": "string"
+        },
+        "trimmed": {
+          "type": "boolean"
+        },
+        "unknowns": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "evidenceBundleId",
+        "permissionDecisionId",
+        "trimmed",
+        "unknowns",
+        "conflicts"
+      ],
+      "type": "object"
+    },
+    "skillId": {
+      "const": "hzb.kno.context-assembly",
+      "type": "string"
+    }
+  },
+  "required": [
+    "contractVersion",
+    "skillId",
+    "request",
+    "response"
+  ],
+  "title": "Context Assembly Skill Contract",
+  "type": "object"
+}

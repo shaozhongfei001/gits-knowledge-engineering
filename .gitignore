@@ -1,0 +1,14 @@
+# Build artifacts
+target/
+**/target/
+
+# Node
+frontend/node_modules/
+
+# Python
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# OS / editor noise
+.DS_Store

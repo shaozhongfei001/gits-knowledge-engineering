@@ -1,0 +1,5 @@
+# P0-framework-dryrun｜Failures（append-only）
+
+失败必须在修改实现之前由 `scripts/record_gate.py`追加。每项至少包含时间、Gate、命令、退出码、证据文件、初步分类和下一动作；修复后追加根因、变更SHA与原命令重跑结果，不覆盖原记录。
+
+本Loop内5项门禁首次执行均为PASS。Loop建立前发生的TypeScript 7兼容性红测和Java工具链环境缺口记录在`docs/governance/P0_REMEDIATION_LOG.md`，未回填成虚假的本Loop失败。

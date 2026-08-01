@@ -1,0 +1,59 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "HZB Knowledge Engineering API",
+    "version": "0.1.0",
+    "description": "工程候选API；不代表真实外部系统已经接通。"
+  },
+  "servers": [{"url": "/api/v1"}],
+  "paths": {
+    "/architecture/status": {
+      "get": {
+        "operationId": "getArchitectureStatus",
+        "summary": "Return the declared engineering package status",
+        "responses": {
+          "200": {
+            "description": "Current declared status",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ArchitectureStatus"}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Problem": {
+        "description": "RFC 9457 problem detail",
+        "content": {"application/problem+json": {"schema": {"$ref": "#/components/schemas/Problem"}}}
+      }
+    },
+    "schemas": {
+      "ArchitectureStatus": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["packageId", "state", "productionReady", "frozen"],
+        "properties": {
+          "packageId": {"type": "string", "const": "HZB-KNO-DEV-PACKAGE-V0.1"},
+          "state": {"type": "string", "enum": ["DEV_PACKAGE_CANDIDATE"]},
+          "productionReady": {"type": "boolean", "const": false},
+          "frozen": {"type": "boolean", "const": false}
+        }
+      },
+      "Problem": {
+        "type": "object",
+        "required": ["type", "title", "status", "traceId"],
+        "properties": {
+          "type": {"type": "string", "format": "uri-reference"},
+          "title": {"type": "string"},
+          "status": {"type": "integer", "minimum": 400, "maximum": 599},
+          "detail": {"type": "string"},
+          "traceId": {"type": "string"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P0-framework-dryrun",
+  "title": "HZB SDD Framework V0.2 Dry-run",
+  "status": "planned",
+  "implementation_actor": "engineering_generation_agent",
+  "objective": [
+    "Deliver the explicitly dispatched engineering outcome.",
+    "Keep contracts, implementation, evidence and handoff synchronized."
+  ],
+  "scope": {
+    "include": [
+      "docs/dispatch/",
+      "loops/P0-framework-dryrun/"
+    ],
+    "exclude": [
+      "unrelated_features",
+      "production_credentials",
+      "quarantined_assets"
+    ]
+  },
+  "gates": [
+    {
+      "id": "framework_test",
+      "owner_kind": "implementation",
+      "command": "make framework-test",
+      "pass_condition": "Installer safety tests pass."
+    },
+    {
+      "id": "tooling_test",
+      "owner_kind": "implementation",
+      "command": "make tooling-test",
+      "pass_condition": "Contract, Loop, security and read-only guard tests pass."
+    },
+    {
+      "id": "contract_generate",
+      "owner_kind": "implementation",
+      "command": "make generate",
+      "pass_condition": "All registered contracts compile without placeholders or unsupported constructs."
+    },
+    {
+      "id": "contract_check",
+      "owner_kind": "implementation",
+      "command": "make check",
+      "pass_condition": "Generated artifacts exactly match authoritative contract sources."
+    },
+    {
+      "id": "security_check",
+      "owner_kind": "implementation",
+      "command": "make security-check",
+      "pass_condition": "Secret, permissions and quarantine checks pass."
+    }
+  ],
+  "repair_policy": {
+    "max_attempts_per_gate": 5,
+    "failure_record": "loops/P0-framework-dryrun/FAILURES.md",
+    "record_before_fix": true,
+    "rerun_original_gate": true
+  },
+  "exit_states": [
+    "ready_for_independent_qa",
+    "blocked"
+  ]
+}

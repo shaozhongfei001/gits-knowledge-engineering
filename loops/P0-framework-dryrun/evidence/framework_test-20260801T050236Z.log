@@ -1,0 +1,13 @@
+COMMAND=make framework-test
+EXIT_CODE=0
+STDOUT
+
+STDERR
+test_conflict_is_fail_closed_and_non_mutating (test_installer.InstallerTest.test_conflict_is_fail_closed_and_non_mutating) ... ok
+test_plan_apply_idempotency_update_and_rollback (test_installer.InstallerTest.test_plan_apply_idempotency_update_and_rollback) ... ok
+test_symlink_in_payload_is_rejected (test_installer.InstallerTest.test_symlink_in_payload_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.205s
+
+OK
