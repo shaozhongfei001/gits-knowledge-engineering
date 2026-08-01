@@ -44,6 +44,9 @@ public final class JenaSemanticRepositoryAdapter implements SemanticRepositoryPo
 
     @Override
     public ValidationResult validate(byte[] candidateTurtle) {
+        if (candidateTurtle == null || candidateTurtle.length == 0) {
+            return new ValidationResult(false, "candidate turtle is null or empty", version.get());
+        }
         Model candidate = ModelFactory.createDefaultModel();
         RDFDataMgr.read(candidate, new ByteArrayInputStream(candidateTurtle), Lang.TURTLE);
         ValidationReport report = ShaclValidator.get().validate(shapes.get().getGraph(), candidate.getGraph());

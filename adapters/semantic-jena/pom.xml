@@ -7,5 +7,6 @@
     <dependency><groupId>com.gien.gits</groupId><artifactId>semantic-runtime</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>org.apache.jena</groupId><artifactId>jena-arq</artifactId></dependency>
     <dependency><groupId>org.apache.jena</groupId><artifactId>jena-shacl</artifactId></dependency>
+    <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><scope>test</scope></dependency>
   </dependencies>
 </project>
