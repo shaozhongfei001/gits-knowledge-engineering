@@ -1,0 +1,19 @@
+# P2-knowledge-engineering-build｜Shared Memory
+
+> Chat不是SSOT；未落盘等于不存在。
+
+## Current Snapshot
+
+| 字段 | 值 |
+|---|---|
+| status | in_progress |
+| baseline_commit | `5d2b5bb606b479e8446574d749b7e7f2aa7d24ac` |
+| baton_holder | `tech_lead` |
+| current_wave | `W0` |
+| updated_at | `2026-08-02T01:55:00+08:00` |
+
+## Role Results
+
+| 角色 | 状态 | 结果 | Handoff |
+|---|---|---|---|
+| `tech_lead` | planned | - | `memory/handoffs/tech_lead.md` |

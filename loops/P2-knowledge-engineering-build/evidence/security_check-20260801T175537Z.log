@@ -1,0 +1,8 @@
+COMMAND=make security-check
+EXIT_CODE=0
+STDOUT
+secret-scan: PASS
+sensitive-permissions: PASS
+oracle-readonly-guard: PASS
+
+STDERR

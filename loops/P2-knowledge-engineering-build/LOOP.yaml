@@ -1,0 +1,57 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P2-knowledge-engineering-build",
+  "title": "Knowledge Engineering Contract-Faithful Build",
+  "status": "in_progress",
+  "implementation_actor": "tech_lead",
+  "objective": [
+    "Advance the project from mechanism dry-run to contract-faithful implementation + mechanism-level agent E2E + independent QA pass.",
+    "Tech Lead dispatches and accepts multi-agent work via shared memory; each wave leaves evidence, fail-closed.",
+    "Respect governance red lines: contract-first, generated read-only, no invented fields/states/permissions, AI output = candidate claim, no self-QA, no git add ., no unauthorized external systems."
+  ],
+  "scope": {
+    "include": [
+      "modules/",
+      "adapters/",
+      "apps/",
+      "frontend/",
+      "specs/",
+      "generated/",
+      "scripts/",
+      "loops/P2-knowledge-engineering-build/",
+      "docs/dispatch/P2-knowledge-engineering-build.md",
+      "docs/governance/STATUS.md"
+    ],
+    "exclude": [
+      "production_database_writeback",
+      "real_external_interfaces_unauthorized",
+      "customer_acceptance",
+      "freeze"
+    ]
+  },
+  "waves": [
+    {"id": "W0", "name": "package_rename_done", "status": "pass", "commit": "5d2b5bb"},
+    {"id": "W1", "name": "operational_ontology_verify", "owner": "impl_ontology"},
+    {"id": "W2", "name": "leaf_modules_implement", "owner": "impl_leaf", "parallel": ["semantic_runtime", "context_evidence", "human_action", "evaluation"]},
+    {"id": "W3", "name": "adapters_implement", "owner": "impl_adapter", "parallel": ["semantic_jena", "persistence_relational"]},
+    {"id": "W4", "name": "apps_contract_wiring", "owner": "impl_app", "parallel": ["api_openapi", "worker_asyncapi"]},
+    {"id": "W5", "name": "semantic_rule_runtime_gates", "owner": "impl_semantic"},
+    {"id": "W6", "name": "oracle_readonly_spike", "owner": "impl_oracle"},
+    {"id": "W7", "name": "mechanism_e2e", "owner": "impl_e2e"},
+    {"id": "W8", "name": "independent_qa_release", "owner": "independent_qa"}
+  ],
+  "gates": [
+    {"id": "contract_check", "owner_kind": "implementation", "command": "make check", "pass_condition": "Contract, generated, loop-guard and secret-scan checks pass."},
+    {"id": "build_test", "owner_kind": "implementation", "command": "./mvnw -q --batch-mode --no-transfer-progress test", "pass_condition": "All modules compile and unit tests pass."},
+    {"id": "security_check", "owner_kind": "implementation", "command": "make security-check", "pass_condition": "Secret, permissions and quarantine checks pass."},
+    {"id": "e2e_mechanism", "owner_kind": "implementation", "command": "bash scripts/e2e/mechanism_e2e.sh", "pass_condition": "Mechanism-level agent E2E (mock externals) passes and emits a run-manifest."},
+    {"id": "independent_qa", "owner_kind": "independent_qa", "command": "make verify", "pass_condition": "Independent QA actor re-runs full verify chain green."}
+  ],
+  "repair_policy": {
+    "max_attempts_per_gate": 5,
+    "failure_record": "loops/P2-knowledge-engineering-build/FAILURES.md",
+    "record_before_fix": true,
+    "rerun_original_gate": true
+  },
+  "exit_states": ["ready_for_independent_qa", "blocked"]
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P2-knowledge-engineering-build",
+  "updated_at": "2026-08-02T01:55:00+08:00",
+  "updated_by": "tech_lead",
+  "board_status": "IN_PROGRESS",
+  "baton": {
+    "holder": "tech_lead",
+    "packet": "P2-knowledge-engineering-build",
+    "wave": "W1",
+    "blocked_note": "",
+    "parallel_allowed": ["impl_ontology", "impl_leaf", "impl_adapter", "impl_app", "impl_semantic", "impl_oracle", "impl_e2e"]
+  },
+  "roles": {
+    "tech_lead": {"responsibility": "implementation_orchestrator", "status": "active"},
+    "impl_ontology": {"responsibility": "implementation", "status": "dispatched", "scope": "modules/operational-ontology"},
+    "impl_leaf": {"responsibility": "implementation", "status": "pending", "scope": "semantic-runtime,context-evidence,human-action,evaluation"},
+    "impl_adapter": {"responsibility": "implementation", "status": "pending", "scope": "semantic-jena,persistence-relational"},
+    "impl_app": {"responsibility": "implementation", "status": "pending", "scope": "apps/api,apps/worker"},
+    "impl_semantic": {"responsibility": "implementation", "status": "pending", "scope": "SHACL/DMN/LinkML gates"},
+    "impl_oracle": {"responsibility": "implementation", "status": "pending", "scope": "CTR-MAP-001 readonly spike"},
+    "impl_e2e": {"responsibility": "implementation", "status": "pending", "scope": "mechanism E2E"},
+    "independent_qa": {"responsibility": "gate_review", "status": "unassigned"}
+  }
+}

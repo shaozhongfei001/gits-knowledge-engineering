@@ -1,0 +1,21 @@
+COMMAND=./mvnw -q --batch-mode --no-transfer-progress test
+EXIT_CODE=0
+STDOUT
+01:55:35.484 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.gien.gits.api.ArchitectureStatusControllerTest]: ArchitectureStatusControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+01:55:35.555 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.gien.gits.api.HzbKnoApiApplication for test class com.gien.gits.api.ArchitectureStatusControllerTest
+2026-08-02T01:55:35.824+08:00  INFO 3205942 --- [hzb-kno-api] [           main] c.g.g.a.ArchitectureStatusControllerTest : Starting ArchitectureStatusControllerTest using Java 21.0.11 with PID 3205942 (started by szf in /home/szf/dev/gits-knowledge-engineering/apps/api)
+2026-08-02T01:55:35.825+08:00  INFO 3205942 --- [hzb-kno-api] [           main] c.g.g.a.ArchitectureStatusControllerTest : No active profile set, falling back to 1 default profile: "default"
+2026-08-02T01:55:36.796+08:00  INFO 3205942 --- [hzb-kno-api] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-08-02T01:55:36.797+08:00  INFO 3205942 --- [hzb-kno-api] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-08-02T01:55:36.803+08:00  INFO 3205942 --- [hzb-kno-api] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-08-02T01:55:36.812+08:00  INFO 3205942 --- [hzb-kno-api] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 14 ms
+2026-08-02T01:55:36.864+08:00  INFO 3205942 --- [hzb-kno-api] [           main] o.s.s.config.TaskSchedulerRouter         : No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2026-08-02T01:55:36.868+08:00  INFO 3205942 --- [hzb-kno-api] [           main] c.g.g.a.ArchitectureStatusControllerTest : Started ArchitectureStatusControllerTest in 1.239 seconds (process running for 1.747)
+
+STDERR
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/home/szf/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release

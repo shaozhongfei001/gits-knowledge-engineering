@@ -1,0 +1,8 @@
+COMMAND=make check
+EXIT_CODE=0
+STDOUT
+contract-check: PASS
+loop-guard: PASS
+secret-scan: PASS
+
+STDERR
