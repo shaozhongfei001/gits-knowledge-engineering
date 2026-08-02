@@ -10,6 +10,7 @@
 | ADR-0006 | Java 包名统一到 com.gien.gits | Accepted | owner批准；com.gientech.hzb.kno → com.gien.gits（仅Java包） |
 | ADR-0007 | Oracle EDwCRM 只读访问启用 | Accepted with read-only boundary | DATA_OWNER已授权；只读强制；专用loop P1-oracle-readonly |
 | ADR-0008 | 领域前缀与标识 hzb→gits | Accepted | owner批准；合同/URI/事件/制品名统一 gits；历史证据日志不回写 |
-| ADR-0009 | gits:Customer Spike 权威源 A_ZHCX_CUST_BASE | Accepted spike_only | data-mapping-owner确认；不引入核心本体；专用loop P3 |
+| ADR-0009 | gits:Customer Spike 权威源 A_ZHCX_CUST_BASE | Accepted spike_only (superseded for promotion by ADR-0010) | 源定位确认；正式化见 ADR-0010 / P4 |
+| ADR-0010 | 引入 gits:Customer 语义类并正式登记 Source Contract | Accepted | 语义合同层；CTR-DATA-002；CTR-MAP-001→versioned_mapping；不进运营控制面；loop P4 |
 
 正式版本、Owner、日期、替代方案、后果和验证证据将在对应ADR评审时补齐；本索引不能替代ADR批准。

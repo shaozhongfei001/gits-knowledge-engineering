@@ -1,0 +1,9 @@
+COMMAND=bash scripts/e2e/mechanism_e2e.sh
+EXIT_CODE=0
+STDOUT
+mechanism-e2e: building and running MechanismE2eIT
+mechanism-e2e: PASS
+mechanism-e2e: manifest path => loops/P2-knowledge-engineering-build/evidence/mechanism_e2e_run_manifest_20260802T034715Z.json
+mechanism-e2e: manifest sha256 => d25d738ceb7c4e6cadec1814585acfe61fe6ae6ea697dba102ca763568f52306
+
+STDERR

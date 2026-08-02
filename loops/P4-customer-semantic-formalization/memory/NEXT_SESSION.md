@@ -1,0 +1,11 @@
+# P4-customer-semantic-formalization｜Next Session Baton
+
+| 字段 | 值 |
+|---|---|
+| **Updated** | `2026-08-02T11:49:00+08:00` |
+| **holder** | `independent_qa` |
+| **packet** | `P4-customer-semantic-formalization` |
+| **wave** | `W_QA` |
+| **do_not_start** | QA_PASS_BY_IMPLEMENTATION、CUSTOMER_OPERATIONAL_TABLE、ORACLE_ROW_READ |
+
+短提示词：你是 independent_qa。复跑 make verify，写入 EVIDENCE.json.independent_qa；不得由 tech_lead 代签。

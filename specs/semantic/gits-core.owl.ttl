@@ -3,9 +3,11 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 gits:CoreOntology a owl:Ontology ;
-  rdfs:label "杭州银行知识工程运行本体核心"@zh .
+  rdfs:label "GITS Knowledge Engineering core ontology"@en ;
+  rdfs:comment "Operational control-plane classes plus domain reference classes declared in semantic contracts (ADR-0001, ADR-0010)."@en .
 
 gits:OperatingCase a owl:Class .
 gits:Interaction a owl:Class ; rdfs:subClassOf prov:Activity .
@@ -15,6 +17,17 @@ gits:HumanConfirmation a owl:Class ; rdfs:subClassOf prov:Activity .
 gits:Action a owl:Class ; rdfs:subClassOf prov:Activity .
 gits:Receipt a owl:Class ; rdfs:subClassOf prov:Entity .
 gits:Evaluation a owl:Class ; rdfs:subClassOf prov:Activity .
+
+# Domain reference class (semantic contract). Not an operational control-plane entity.
+# Authoritative physical source: CTR-DATA-002 (EDWCRM.A_ZHCX_CUST_BASE). ADR-0010.
+gits:Customer a owl:Class ;
+  rdfs:label "Customer"@en ;
+  rdfs:comment "Bank customer domain reference. Mapped from EDWCRM.A_ZHCX_CUST_BASE; not stored as operational control-plane state."@en .
+
+gits:customerId a owl:DatatypeProperty ;
+  rdfs:domain gits:Customer ;
+  rdfs:range xsd:string ;
+  rdfs:comment "Maps from A_ZHCX_CUST_BASE.CUSTID."@en .
 
 gits:belongsToCase a owl:ObjectProperty ;
   rdfs:range gits:OperatingCase .

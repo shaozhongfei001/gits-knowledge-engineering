@@ -82,6 +82,48 @@
       ],
       "type": "object"
     },
+    "Customer": {
+      "additionalProperties": false,
+      "description": "Domain reference for a bank customer (semantic contract). Authoritative physical source is CTR-DATA-002 EDWCRM.A_ZHCX_CUST_BASE. Not an operational control-plane entity (ADR-0010).",
+      "properties": {
+        "brid": {
+          "description": "Maps from BRID",
+          "type": "string"
+        },
+        "cert_no": {
+          "description": "Maps from CERTNO",
+          "type": "string"
+        },
+        "cust_code": {
+          "description": "Maps from CUSTCODE",
+          "type": "string"
+        },
+        "cust_name": {
+          "description": "Maps from CUSTNAME",
+          "type": "string"
+        },
+        "cust_status": {
+          "description": "Maps from CUSTSTATUS",
+          "type": "string"
+        },
+        "cust_type": {
+          "description": "Maps from CUSTTYPE",
+          "type": "string"
+        },
+        "customer_id": {
+          "description": "Maps from CUSTID",
+          "type": "string"
+        },
+        "region": {
+          "description": "Maps from REGION",
+          "type": "string"
+        }
+      },
+      "required": [
+        "customer_id"
+      ],
+      "type": "object"
+    },
     "Evaluation": {
       "additionalProperties": false,
       "description": "A replayable evaluation result bound to all material artifact versions.",
@@ -216,6 +258,9 @@
         "case_type": {
           "type": "string"
         },
+        "created_by": {
+          "type": "string"
+        },
         "purpose": {
           "type": "string"
         },
@@ -238,6 +283,7 @@
       "required": [
         "case_id",
         "case_type",
+        "created_by",
         "purpose",
         "recorded_at",
         "status",
@@ -278,5 +324,5 @@
   "$id": "https://gientech.com/gits/kno/core/schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "gits_kno_core",
-  "version": "0.1.0"
+  "version": "0.2.0"
 }

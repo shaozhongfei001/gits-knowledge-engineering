@@ -2,15 +2,16 @@
   "compiler": "GITS_BOOTSTRAP_LINKML_SUBSET_0.1",
   "generated_hashes": {
     "actions/controlled-action.schema.json": "dec24cde4d6466221de17cd0468f01192ac4402d4a3c74e6916f3763845547fc",
-    "contract-catalog.json": "445354589726e3e29e25f81b55447e3db30b5903a0f5be8a0d59dbcbcfe033e1",
+    "contract-catalog.json": "feb194c4c67c12a8008120df2160d6dc350c3128342d57c83291eeb411291f0e",
     "data/source-contract.schema.json": "5091ac1956b4f67d5456ba399aa8f87603ed140ef4cf6a11cf9617f501f29cb2",
+    "data/src-edwcrm-cust-base.v0.1.json": "44967f12f46e80e4207c7e27e9b7d8e2c1c2ae3449fc5aa192c654117571c8c3",
     "evaluation/run-manifest.schema.json": "d85fd6e378b8c56b5f323d5c665e291835551fd3e9743de4e598923dde3633a2",
     "events/domain-events.normalized.json": "21e16e840101f6eb3e6daa99247e859591e8fcec58364c825d8fccce37c6b18c",
     "evidence/evidence-bundle.schema.json": "0665515e3528e17f0c75e61a7aefcba83e1143c538412b6819565ecf63052cd5",
     "openapi/gits-kno-api.normalized.json": "0f0f92c66e4b92909177fcf9b5a59984a12fb7492b145990fad3f0f987983f97",
     "rules/claim-reconciliation.normalized.dmn": "f0dabb82ecfdb249b76364bf7d1987a847fb59cc1e47d3178886bf17f8b654bc",
-    "semantic/gits-core.schema.json": "7243193d37947f00bf4fa71471fa2d38d583a8d6b5e6c00915df09b292c9a8a9",
-    "semantic/gits-core.shacl.ttl": "8118111d44257781bdcf0d67d818fb3deccb52d4edc4863536361211e6271d67",
+    "semantic/gits-core.schema.json": "0327ef20f686ed6e1937b170d0a152bbe27a7b7644a345f85045582326c1e1f9",
+    "semantic/gits-core.shacl.ttl": "7a05947cc4a4196ba546dc8974c840594c19a5d552000e5ecfdfb4eef052de9b",
     "skills/context-assembly.skill.schema.json": "713e06a9a8abf4fc42c9b9895f395313ed67ef5c6c1f429a19119cae2ccebe81"
   },
   "limitations": [
@@ -21,13 +22,14 @@
     "CTR-ACTION-001": "650df57e991234d0e7e903aa3fa2674c9bf8f65b3d9b067cf42b5c1e1290b00b",
     "CTR-API-001": "2fa0653f841902e8260a06f1088700330dc406676fed61e39b8ee7711935d844",
     "CTR-DATA-001": "a3079c8ef7855dcc5be085f3e9e9545d19bdb28c62ca28e30c9c24874c4f5bc5",
+    "CTR-DATA-002": "66663cb6f38d977419cfdfe878c6e9f1f244a710de11809ec1d29778b5d1a732",
     "CTR-EVAL-001": "0801cbf4f855cf54b063f2b0434006e7f2a1959181180f77f1709201b4e01545",
     "CTR-EVENT-001": "7ebe61944db6bc1a51604223711d8ab080b7a633b22a93740b125bc189f34158",
     "CTR-EVIDENCE-001": "c7cf15255d0dcbef24aed8f94e11cb33528a2e0718eb9f9674a1841266b85242",
-    "CTR-MAP-001": "d6b7e9e52c76c798158415e04b342f652f0837d9ac73cee47396e255d0c2909d",
+    "CTR-MAP-001": "f873a85266b45c9ee6aa77ccf04288f26da731485a6fe6fea381fd17f11e784a",
     "CTR-RULE-001": "f0dabb82ecfdb249b76364bf7d1987a847fb59cc1e47d3178886bf17f8b654bc",
-    "CTR-SEM-001": "257354fa5723341a48f47013cbc43d58ae00a6095daa68e41f47894b6c487194",
-    "CTR-SEM-002": "2d4b98a492060940c8367a0fdc7a485ff361f9a41635ca8b8c10881254c3b12f",
+    "CTR-SEM-001": "cc1f8993802583ba393ce8d45c2a5e3b233ef1991530fc7cd92658969807141a",
+    "CTR-SEM-002": "eddf0f74f0a0d1ad7e26821e158e4838b29872bb2c2a6711351d1a1b9fe0e212",
     "CTR-SKILL-001": "954406cf749725c9d9945e305361b9f7cd79cec4bbc723b54c4768b394fbb14e"
   }
 }

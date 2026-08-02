@@ -1,0 +1,50 @@
+{
+  "classification": "SENSITIVE",
+  "effectiveFrom": "2026-08-02T00:00:00Z",
+  "objects": [
+    {
+      "authority": "AUTHORITATIVE",
+      "fields": [
+        {
+          "mapsToSubject": "customer/{CUSTID}",
+          "name": "CUSTID",
+          "role": "primary_key"
+        },
+        {
+          "name": "CUSTNAME",
+          "role": "attribute"
+        },
+        {
+          "name": "CUSTCODE",
+          "role": "attribute"
+        },
+        {
+          "name": "CERTNO",
+          "role": "attribute"
+        },
+        {
+          "name": "CUSTTYPE",
+          "role": "attribute"
+        },
+        {
+          "name": "CUSTSTATUS",
+          "role": "attribute"
+        },
+        {
+          "name": "REGION",
+          "role": "attribute"
+        },
+        {
+          "name": "BRID",
+          "role": "attribute"
+        }
+      ],
+      "name": "A_ZHCX_CUST_BASE",
+      "schema": "EDWCRM"
+    }
+  ],
+  "owner": "data_mapping_owner",
+  "sourceContractId": "SRC-EDWCRM-CUST-BASE-v0.1",
+  "system": "EDWCRM",
+  "version": "0.1.0"
+}

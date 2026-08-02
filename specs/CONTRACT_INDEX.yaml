@@ -72,8 +72,17 @@
       "authority_source": "specs/data/source-contract.schema.json",
       "owner": "data_mapping_owner",
       "compatibility": "versioned_mapping",
-      "consumers": ["oracle_mapping_spike", "semantic_runtime"],
+      "consumers": ["oracle_mapping_spike", "semantic_runtime", "source_contract_instances"],
       "generated": ["generated/data/source-contract.schema.json"]
+    },
+    {
+      "id": "CTR-DATA-002",
+      "kind": "source_contract_instance",
+      "authority_source": "specs/data/src-edwcrm-cust-base.v0.1.json",
+      "owner": "data_mapping_owner",
+      "compatibility": "versioned_mapping",
+      "consumers": ["oracle_mapping_spike", "semantic_runtime", "ctr_map_001"],
+      "generated": ["generated/data/src-edwcrm-cust-base.v0.1.json"]
     },
     {
       "id": "CTR-EVIDENCE-001",
@@ -98,8 +107,8 @@
       "kind": "turtle",
       "authority_source": "specs/data/customer-source-mapping.r2rml.ttl",
       "owner": "data_mapping_owner",
-      "compatibility": "spike_only",
-      "consumers": ["oracle_mapping_spike"],
+      "compatibility": "versioned_mapping",
+      "consumers": ["oracle_mapping_spike", "semantic_runtime"],
       "generated": []
     }
   ]

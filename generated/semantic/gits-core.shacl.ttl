@@ -24,6 +24,17 @@ gits:ClaimShape a sh:NodeShape ;
   sh:property [ sh:path gits:valid_from ; sh:datatype xsd:dateTime ] ;
   sh:property [ sh:path gits:valid_to ; sh:datatype xsd:dateTime ] .
 
+gits:CustomerShape a sh:NodeShape ;
+  sh:targetClass gits:Customer ;
+  sh:property [ sh:path gits:brid ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path gits:cert_no ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path gits:cust_code ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path gits:cust_name ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path gits:cust_status ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path gits:cust_type ; sh:datatype xsd:string ] ;
+  sh:property [ sh:path gits:customer_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:region ; sh:datatype xsd:string ] .
+
 gits:EvaluationShape a sh:NodeShape ;
   sh:targetClass gits:Evaluation ;
   sh:property [ sh:path gits:case_set_version ; sh:datatype xsd:string ; sh:minCount 1 ] ;
@@ -61,6 +72,7 @@ gits:OperatingCaseShape a sh:NodeShape ;
   sh:targetClass gits:OperatingCase ;
   sh:property [ sh:path gits:case_id ; sh:datatype xsd:string ; sh:minCount 1 ] ;
   sh:property [ sh:path gits:case_type ; sh:datatype xsd:string ; sh:minCount 1 ] ;
+  sh:property [ sh:path gits:created_by ; sh:datatype xsd:string ; sh:minCount 1 ] ;
   sh:property [ sh:path gits:purpose ; sh:datatype xsd:string ; sh:minCount 1 ] ;
   sh:property [ sh:path gits:recorded_at ; sh:datatype xsd:dateTime ; sh:minCount 1 ] ;
   sh:property [ sh:path gits:status ; sh:datatype xsd:string ; sh:minCount 1 ] ;

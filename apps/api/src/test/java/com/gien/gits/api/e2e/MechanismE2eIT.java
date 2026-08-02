@@ -168,19 +168,40 @@ class MechanismE2eIT {
         }
         assertTrue(Files.exists(r2rml), "CTR-MAP-001 R2RML source must exist for locator evidence");
         String r2rmlText = Files.readString(r2rml, StandardCharsets.UTF_8);
-        assertTrue(r2rmlText.contains("A_ZHCX_CUST_BASE"), "spike source table locator");
-        assertTrue(r2rmlText.contains("{CUSTID}"), "spike subject column locator");
-        assertTrue(r2rmlText.contains("SPIKE_ONLY"), "must remain spike_only");
+        assertTrue(r2rmlText.contains("A_ZHCX_CUST_BASE"), "source table locator");
+        assertTrue(r2rmlText.contains("{CUSTID}"), "subject column locator");
+        assertTrue(r2rmlText.contains("VERSIONED_MAPPING"), "must be versioned_mapping");
+        assertTrue(!r2rmlText.contains("SPIKE_ONLY"), "spike_only must be retired by ADR-0010");
+        Path owl = Paths.get("specs/semantic/gits-core.owl.ttl");
+        if (!Files.exists(owl)) {
+            Path fromModule = Paths.get("../../specs/semantic/gits-core.owl.ttl");
+            if (Files.exists(fromModule)) {
+                owl = fromModule;
+            }
+        }
+        assertTrue(Files.exists(owl), "CTR-SEM-002 OWL source must exist");
+        String owlText = Files.readString(owl, StandardCharsets.UTF_8);
+        assertTrue(owlText.contains("gits:Customer"), "Customer must be in semantic OWL");
+        Path sourceContract = Paths.get("specs/data/src-edwcrm-cust-base.v0.1.json");
+        if (!Files.exists(sourceContract)) {
+            Path fromModule = Paths.get("../../specs/data/src-edwcrm-cust-base.v0.1.json");
+            if (Files.exists(fromModule)) {
+                sourceContract = fromModule;
+            }
+        }
+        assertTrue(Files.exists(sourceContract), "CTR-DATA-002 Source Contract must exist");
         String r2rmlSha = sha256Hex(r2rmlText.getBytes(StandardCharsets.UTF_8));
         ObjectNode mapping = mapper.createObjectNode();
         mapping.put("contractId", "CTR-MAP-001");
-        mapping.put("adr", "ADR-0009");
-        mapping.put("status", "SPIKE_ONLY");
+        mapping.put("sourceContractId", "CTR-DATA-002");
+        mapping.put("adr", "ADR-0010");
+        mapping.put("status", "VERSIONED_MAPPING");
         mapping.put("logicalTable", "A_ZHCX_CUST_BASE");
         mapping.put("subjectColumn", "CUSTID");
         mapping.put("sourceFile", "specs/data/customer-source-mapping.r2rml.ttl");
         mapping.put("sourceSha256", r2rmlSha);
-        mapping.put("customerClassInCoreOntology", false);
+        mapping.put("customerClassInCoreOntology", true);
+        mapping.put("customerInOperationalControlPlane", false);
         mapping.put("rowDataRead", false);
         artifact.set("mappingLocatorEvidence", mapping);
 

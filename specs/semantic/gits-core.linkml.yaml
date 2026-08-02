@@ -1,7 +1,7 @@
 {
   "id": "https://gientech.com/gits/kno/core",
   "name": "gits_kno_core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "default_prefix": "gits",
   "prefixes": {
     "gits": "https://gientech.com/gits/kno/",
@@ -18,7 +18,21 @@
         "purpose": {"range": "string", "required": true},
         "valid_from": {"range": "datetime", "required": true},
         "valid_to": {"range": "datetime", "required": false},
-        "recorded_at": {"range": "datetime", "required": true}
+        "recorded_at": {"range": "datetime", "required": true},
+        "created_by": {"range": "string", "required": true}
+      }
+    },
+    "Customer": {
+      "description": "Domain reference for a bank customer (semantic contract). Authoritative physical source is CTR-DATA-002 EDWCRM.A_ZHCX_CUST_BASE. Not an operational control-plane entity (ADR-0010).",
+      "attributes": {
+        "customer_id": {"identifier": true, "range": "string", "required": true, "description": "Maps from CUSTID"},
+        "cust_name": {"range": "string", "required": false, "description": "Maps from CUSTNAME"},
+        "cust_code": {"range": "string", "required": false, "description": "Maps from CUSTCODE"},
+        "cert_no": {"range": "string", "required": false, "description": "Maps from CERTNO"},
+        "cust_type": {"range": "string", "required": false, "description": "Maps from CUSTTYPE"},
+        "cust_status": {"range": "string", "required": false, "description": "Maps from CUSTSTATUS"},
+        "region": {"range": "string", "required": false, "description": "Maps from REGION"},
+        "brid": {"range": "string", "required": false, "description": "Maps from BRID"}
       }
     },
     "Interaction": {

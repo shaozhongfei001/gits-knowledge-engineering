@@ -104,6 +104,30 @@ def validate_turtle(path: Path) -> None:
         raise ValueError(f"{path}: unbalanced Turtle delimiters")
 
 
+def validate_source_contract_instance(instance: dict, path: Path) -> None:
+    """Fail-closed structural validation against CTR-DATA-001 required shape."""
+    required = ("sourceContractId", "version", "system", "owner", "classification", "objects", "effectiveFrom")
+    missing = [key for key in required if key not in instance]
+    if missing:
+        raise ValueError(f"{path}: missing required Source Contract fields: {missing}")
+    classification = instance.get("classification")
+    if classification not in {"PUBLIC", "INTERNAL", "SENSITIVE", "RESTRICTED"}:
+        raise ValueError(f"{path}: invalid classification {classification}")
+    objects = instance.get("objects")
+    if not isinstance(objects, list) or not objects:
+        raise ValueError(f"{path}: objects must be a non-empty array")
+    for index, obj in enumerate(objects):
+        if not isinstance(obj, dict):
+            raise ValueError(f"{path}: objects[{index}] must be an object")
+        for key in ("schema", "name", "authority", "fields"):
+            if key not in obj:
+                raise ValueError(f"{path}: objects[{index}] missing {key}")
+        if obj.get("authority") not in {"AUTHORITATIVE", "REFERENCE", "DERIVED"}:
+            raise ValueError(f"{path}: objects[{index}] invalid authority")
+        if not isinstance(obj.get("fields"), list):
+            raise ValueError(f"{path}: objects[{index}].fields must be an array")
+
+
 def linkml_json_schema(profile: dict) -> dict:
     definitions = {}
     for class_name, class_def in sorted(profile.get("classes", {}).items()):
@@ -189,7 +213,7 @@ def compile_all(destination: Path) -> dict:
         source_hashes[item["id"]] = digest(source_path)
         kind = item["kind"]
         parsed = None
-        if kind in {"openapi", "asyncapi", "json_schema", "linkml_subset"}:
+        if kind in {"openapi", "asyncapi", "json_schema", "linkml_subset", "source_contract_instance"}:
             parsed = load_json(source_path)
         if kind == "openapi":
             validate_openapi(parsed, source_path)
@@ -200,6 +224,8 @@ def compile_all(destination: Path) -> dict:
         elif kind == "linkml_subset":
             if not parsed.get("id") or not parsed.get("name") or not parsed.get("classes"):
                 raise ValueError(f"{source_path}: id, name and classes are required")
+        elif kind == "source_contract_instance":
+            validate_source_contract_instance(parsed, source_path)
         elif kind == "dmn":
             validate_dmn(source_path)
         elif kind == "turtle":
@@ -208,7 +234,7 @@ def compile_all(destination: Path) -> dict:
             raise ValueError(f"{item['id']}: unsupported contract kind {kind}")
 
         generated_targets = [Path(raw).relative_to("generated") for raw in item["generated"]]
-        if kind in {"openapi", "asyncapi", "json_schema"}:
+        if kind in {"openapi", "asyncapi", "json_schema", "source_contract_instance"}:
             if len(generated_targets) != 1:
                 raise ValueError(f"{item['id']}: exactly one normalized target required")
             write_json(destination / generated_targets[0], parsed)

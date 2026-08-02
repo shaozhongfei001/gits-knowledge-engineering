@@ -1,0 +1,70 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P4-customer-semantic-formalization",
+  "title": "Customer Semantic Formalization and Source Contract Registry",
+  "status": "in_progress",
+  "implementation_actor": "tech_lead",
+  "objective": [
+    "Introduce gits:Customer into semantic contracts (LinkML/OWL) per ADR-0010.",
+    "Register authoritative Source Contract CTR-DATA-002 and elevate CTR-MAP-001 to versioned_mapping.",
+    "Keep Customer out of the relational operational control plane; no row-data reads.",
+    "Independent QA re-runs make verify."
+  ],
+  "scope": {
+    "include": [
+      "specs/semantic/",
+      "specs/data/",
+      "specs/CONTRACT_INDEX.yaml",
+      "scripts/contract_pipeline.py",
+      "apps/api/src/test/java/com/gien/gits/api/e2e/",
+      "docs/architecture/ADR-0010-customer-semantic-and-source-contract.md",
+      "docs/dispatch/P4-customer-semantic-formalization.md",
+      "loops/P4-customer-semantic-formalization/",
+      "docs/governance/STATUS.md",
+      "generated/"
+    ],
+    "exclude": [
+      "customer_operational_table",
+      "oracle_row_data_read",
+      "oracle_write",
+      "production_database",
+      "real_external_interfaces"
+    ]
+  },
+  "gates": [
+    {
+      "id": "contract_check",
+      "owner_kind": "implementation",
+      "command": "make generate && make check",
+      "pass_condition": "Contracts compile and generated artifacts match."
+    },
+    {
+      "id": "build_test",
+      "owner_kind": "implementation",
+      "command": "./mvnw -q --batch-mode --no-transfer-progress test",
+      "pass_condition": "Backend tests pass."
+    },
+    {
+      "id": "security_check",
+      "owner_kind": "implementation",
+      "command": "make security-check",
+      "pass_condition": "Security baseline passes."
+    },
+    {
+      "id": "e2e_mechanism",
+      "owner_kind": "implementation",
+      "command": "bash scripts/e2e/mechanism_e2e.sh",
+      "pass_condition": "Mechanism E2E asserts Customer in semantic contracts and mapping locators."
+    }
+  ],
+  "repair_policy": {
+    "max_attempts_per_gate": 5,
+    "failure_record": "loops/P4-customer-semantic-formalization/FAILURES.md",
+    "record_before_fix": true,
+    "rerun_original_gate": true
+  },
+  "exit_states": [
+    "ready_for_independent_qa",
+    "blocked"
+  ]
+}

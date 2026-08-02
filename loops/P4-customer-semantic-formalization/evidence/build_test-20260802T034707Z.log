@@ -1,0 +1,38 @@
+COMMAND=./mvnw -q --batch-mode --no-transfer-progress test
+EXIT_CODE=0
+STDOUT
+11:47:11.581 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.gien.gits.api.ArchitectureStatusContractTest]: ArchitectureStatusContractTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+11:47:11.654 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.gien.gits.api.GitsKnoApiApplication for test class com.gien.gits.api.ArchitectureStatusContractTest
+2026-08-02T11:47:11.932+08:00  INFO 1485641 --- [gits-kno-api] [           main] c.g.g.a.ArchitectureStatusContractTest   : Starting ArchitectureStatusContractTest using Java 21.0.11 with PID 1485641 (started by szf in /home/szf/dev/gits-knowledge-engineering/apps/api)
+2026-08-02T11:47:11.933+08:00  INFO 1485641 --- [gits-kno-api] [           main] c.g.g.a.ArchitectureStatusContractTest   : No active profile set, falling back to 1 default profile: "default"
+2026-08-02T11:47:12.902+08:00  INFO 1485641 --- [gits-kno-api] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-08-02T11:47:12.902+08:00  INFO 1485641 --- [gits-kno-api] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-08-02T11:47:12.907+08:00  INFO 1485641 --- [gits-kno-api] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-08-02T11:47:12.915+08:00  INFO 1485641 --- [gits-kno-api] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 12 ms
+2026-08-02T11:47:12.960+08:00  INFO 1485641 --- [gits-kno-api] [           main] o.s.s.config.TaskSchedulerRouter         : No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2026-08-02T11:47:12.964+08:00  INFO 1485641 --- [gits-kno-api] [           main] c.g.g.a.ArchitectureStatusContractTest   : Started ArchitectureStatusContractTest in 1.231 seconds (process running for 1.753)
+2026-08-02T11:47:13.594+08:00  INFO 1485641 --- [gits-kno-api] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.gien.gits.api.ArchitectureStatusControllerTest]: ArchitectureStatusControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-08-02T11:47:13.597+08:00  INFO 1485641 --- [gits-kno-api] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.gien.gits.api.GitsKnoApiApplication for test class com.gien.gits.api.ArchitectureStatusControllerTest
+11:47:14.055 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.gien.gits.worker.events.WorkerEventHandlerTest]: WorkerEventHandlerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+11:47:14.115 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.gien.gits.worker.GitsKnoWorkerApplication for test class com.gien.gits.worker.events.WorkerEventHandlerTest
+2026-08-02T11:47:14.376+08:00  INFO 1486067 --- [gits-kno-worker] [           main] c.g.g.w.events.WorkerEventHandlerTest    : Starting WorkerEventHandlerTest using Java 21.0.11 with PID 1486067 (started by szf in /home/szf/dev/gits-knowledge-engineering/apps/worker)
+2026-08-02T11:47:14.377+08:00  INFO 1486067 --- [gits-kno-worker] [           main] c.g.g.w.events.WorkerEventHandlerTest    : No active profile set, falling back to 1 default profile: "default"
+2026-08-02T11:47:14.622+08:00  INFO 1486067 --- [gits-kno-worker] [           main] o.s.s.config.TaskSchedulerRouter         : No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2026-08-02T11:47:14.623+08:00  INFO 1486067 --- [gits-kno-worker] [           main] c.g.g.w.events.WorkerEventHandlerTest    : Started WorkerEventHandlerTest in 0.429 seconds (process running for 0.948)
+
+STDERR
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/home/szf/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/home/szf/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release

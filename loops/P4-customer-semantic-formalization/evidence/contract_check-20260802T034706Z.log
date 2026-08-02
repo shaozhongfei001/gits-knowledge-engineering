@@ -1,0 +1,14 @@
+COMMAND=make generate && make check
+EXIT_CODE=0
+STDOUT
+contract-generate: PASS
+contract-check: PASS
+loop-guard: PASS
+secret-scan: PASS
+semantic-rule-gate: SHACL: PASS
+semantic-rule-gate: Schema JSON: PASS
+semantic-rule-gate: DMN: PASS
+semantic-rule-gate: LinkML: PASS
+semantic-rule-gate: PASS
+
+STDERR
