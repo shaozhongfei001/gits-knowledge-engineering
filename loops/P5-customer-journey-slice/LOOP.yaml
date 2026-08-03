@@ -1,0 +1,73 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P5-customer-journey-slice",
+  "title": "Customer Journey Vertical Slice — OperatingCase State Chain (M17→M18→M20→M21→M22)",
+  "status": "qa_pass",
+  "implementation_actor": "tech_lead",
+  "objective": [
+    "Implement the OperatingCase state chain as the shared spine for M17→M18→M20→M21→M22.",
+    "M17 (Customer Ops / KYC Assist): introduce gits:OperatingCase + gits:CustomerJourney + first state transitions.",
+    "M18 (Customer Insight): wire insight evidence into OperatingCase via gits:InsightClaim.",
+    "M20 (Product Candidate): add gits:ProductCandidateClaim linking insight → product match.",
+    "M21 (Pre-visit Report): compose gits:PrevisitReport from accumulated claims/evidence.",
+    "M22 (Post-visit Analysis): add gits:PostvisitAnalysis closing the OperatingCase loop.",
+    "All modules share one state machine, one evidence chain, one human-confirmation gate — no duplication."
+  ],
+  "scope": {
+    "include": [
+      "modules/scenario-customer-journey/",
+      "contracts/operating-case/",
+      "contracts/customer-journey/",
+      "adapters/persistence-relational/",
+      "adapters/semantic-jena/",
+      "loops/P5-customer-journey-slice/",
+      "docs/dispatch/P5-customer-journey-slice.md"
+    ],
+    "exclude": [
+      "unrelated_scenarios",
+      "production_credentials",
+      "quarantined_assets",
+      "M08-M16_scenarios",
+      "M19_product_knowledge"
+    ]
+  },
+  "gates": [
+    {
+      "id": "contract_check",
+      "owner_kind": "implementation",
+      "command": "make generate && make check",
+      "pass_condition": "All registered contracts compile; OperatingCase/CustomerJourney/Insight/ProductCandidate/PrevisitReport/PostvisitAnalysis schemas valid."
+    },
+    {
+      "id": "build_test",
+      "owner_kind": "implementation",
+      "command": "./mvnw -q --batch-mode --no-transfer-progress test",
+      "pass_condition": "All Java unit tests pass including OperatingCase state machine transitions."
+    },
+    {
+      "id": "e2e_mechanism",
+      "owner_kind": "implementation",
+      "command": "bash scripts/e2e/mechanism_e2e.sh",
+      "pass_condition": "End-to-end mechanism test covers full OperatingCase lifecycle: create → insight → product candidate → previsit → postvisit → close."
+    },
+    {
+      "id": "security_check",
+      "owner_kind": "implementation",
+      "command": "make security-check",
+      "pass_condition": "Secret, permissions and quarantine checks pass. No customer row data exposed."
+    },
+    {
+      "id": "independent_qa",
+      "owner_kind": "independent_qa",
+      "command": "make verify",
+      "pass_condition": "Independent QA agent confirms all gates pass. db-check exclusion documented if GITS_KEDB_PASSWORD not set."
+    }
+  ],
+  "repair_policy": {
+    "max_attempts_per_gate": 5,
+    "failure_record": "loops/P5-customer-journey-slice/FAILURES.md",
+    "record_before_fix": true,
+    "rerun_original_gate": true
+  },
+  "exit_states": ["ready_for_independent_qa", "blocked"]
+}
