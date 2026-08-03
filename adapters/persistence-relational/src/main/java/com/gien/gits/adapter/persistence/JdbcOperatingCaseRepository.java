@@ -30,6 +30,9 @@ public class JdbcOperatingCaseRepository {
             "SELECT case_id, case_type, status, purpose, valid_from, valid_to, recorded_at, created_by " +
             "FROM operating_case WHERE case_id = ?";
 
+    private static final String UPDATE_STATUS_SQL =
+            "UPDATE operating_case SET status = ? WHERE case_id = ?";
+
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcOperatingCaseRepository(JdbcTemplate jdbcTemplate) {
@@ -60,6 +63,15 @@ public class JdbcOperatingCaseRepository {
                 new OperatingCaseRowMapper(),
                 caseId.toString());
         return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
+    }
+
+    /** 更新案例状态 */
+    public void updateStatus(UUID caseId, CaseStatus newStatus) {
+        if (caseId == null) {
+            throw new IllegalArgumentException("caseId must not be null");
+        }
+        Objects.requireNonNull(newStatus, "newStatus");
+        jdbcTemplate.update(UPDATE_STATUS_SQL, newStatus.name(), caseId.toString());
     }
 
     private static OperatingCase toOperatingCase(ResultSet rs) throws SQLException {

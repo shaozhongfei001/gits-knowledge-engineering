@@ -6,3 +6,10 @@
 - Baton: `tech_lead / W1`
 - State: `in_progress`
 - Notes: ADR-0010 accepted; introduce gits:Customer semantic class + CTR-DATA-002.
+
+## Baton transfer｜2026-08-02T14:26:24.316302+00:00
+
+- From: `independent_qa`
+- To: `tech_lead`
+- State: `qa_pass`
+- Actor: `independent_qa_agent`

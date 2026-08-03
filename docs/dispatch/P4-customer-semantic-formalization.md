@@ -3,7 +3,7 @@
 | 字段 | 值 |
 |---|---|
 | packet | `P4-CUSTOMER-SEMANTIC-FORMALIZATION` |
-| status | `IN_PROGRESS` |
+| status | `CLOSED` |
 | baseline | `specs/BASELINE_INDEX.yaml` |
 | contract registry | `specs/CONTRACT_INDEX.yaml` |
 | implementation actor | `tech_lead` |

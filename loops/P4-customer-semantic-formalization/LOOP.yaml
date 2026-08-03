@@ -2,7 +2,7 @@
   "schema_version": "2.0",
   "loop_id": "P4-customer-semantic-formalization",
   "title": "Customer Semantic Formalization and Source Contract Registry",
-  "status": "in_progress",
+  "status": "closed",
   "implementation_actor": "tech_lead",
   "objective": [
     "Introduce gits:Customer into semantic contracts (LinkML/OWL) per ADR-0010.",
