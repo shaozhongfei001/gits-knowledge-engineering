@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0",
   "loop_id": "P2-knowledge-engineering-build",
-  "status": "qa_pass",
+  "status": "closed",
   "current_phase": "independent_qa_complete",
   "baseline_commit": "5d2b5bb606b479e8446574d749b7e7f2aa7d24ac",
   "implementation_actor": "tech_lead",

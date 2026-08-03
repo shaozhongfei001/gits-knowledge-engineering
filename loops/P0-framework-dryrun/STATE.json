@@ -6,9 +6,15 @@
   "baseline_commit": "31fdff21e74e85b2bb7f3b7ce639e2dca15ecfd7",
   "implementation_actor": "engineering_generation_agent",
   "qa_actor": null,
-  "completed_gates": [],
-  "next_action": "Execute gates through scripts/record_gate.py and preserve evidence.",
+  "completed_gates": [
+    "framework_test",
+    "tooling_test",
+    "contract_generate",
+    "contract_check",
+    "security_check"
+  ],
+  "next_action": "Independent QA actor must re-run make verify and fill independent_qa; implementation cannot self-sign.",
   "blocked": false,
   "blocking_reason": null,
-  "updated_at": "2026-08-01T05:03:31.708806+00:00"
+  "updated_at": "2026-08-02T14:24:10+00:00"
 }

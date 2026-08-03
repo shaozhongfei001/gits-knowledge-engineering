@@ -27,6 +27,7 @@
     <module>modules/context-evidence</module>
     <module>modules/human-action</module>
     <module>modules/evaluation</module>
+    <module>modules/scenario-customer-journey</module>
     <module>adapters/semantic-jena</module>
     <module>adapters/persistence-relational</module>
     <module>apps/api</module>

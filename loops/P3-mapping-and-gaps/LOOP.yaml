@@ -2,7 +2,7 @@
   "schema_version": "2.0",
   "loop_id": "P3-mapping-and-gaps",
   "title": "Mapping Source Selection and Engineering Gaps",
-  "status": "in_progress",
+  "status": "closed",
   "implementation_actor": "tech_lead",
   "objective": [
     "Record data-mapping-owner confirmation of A_ZHCX_CUST_BASE as gits:Customer spike source.",

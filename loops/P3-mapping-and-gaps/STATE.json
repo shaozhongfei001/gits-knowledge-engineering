@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0",
   "loop_id": "P3-mapping-and-gaps",
-  "status": "qa_pass",
+  "status": "closed",
   "current_phase": "independent_qa_complete",
   "baseline_commit": "a28b5b0e1bc52bf337661db8a5345e0c9768793d",
   "implementation_actor": "tech_lead",

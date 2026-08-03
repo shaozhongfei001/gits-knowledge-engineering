@@ -2,7 +2,7 @@
   "schema_version": "2.0",
   "loop_id": "P0-framework-dryrun",
   "title": "GITS SDD Framework V0.2 Dry-run",
-  "status": "planned",
+  "status": "ready_for_independent_qa",
   "implementation_actor": "engineering_generation_agent",
   "objective": [
     "Deliver the explicitly dispatched engineering outcome.",

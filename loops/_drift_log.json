@@ -1,0 +1,47 @@
+[
+  {
+    "detected_at": "2026-08-02T14:36:27.739163+00:00",
+    "drift_count": 4,
+    "drifts": [
+      "P1-oracle-readonly: LOOP.yaml status='closed' != STATE.json status='qa_passed'",
+      "P2-knowledge-engineering-build: LOOP.yaml status='in_progress' != STATE.json status='qa_pass'",
+      "P3-mapping-and-gaps: LOOP.yaml status='in_progress' != STATE.json status='qa_pass'",
+      "P4-customer-semantic-formalization: LOOP.yaml status='closed' != STATE.json status='qa_pass'"
+    ]
+  },
+  {
+    "detected_at": "2026-08-02T14:37:42.866799+00:00",
+    "drift_count": 1,
+    "drifts": [
+      "P5-customer-journey-slice: LOOP.yaml status='ready_for_independent_qa' != STATE.json status='qa_pass'"
+    ]
+  },
+  {
+    "detected_at": "2026-08-03T09:17:35.140749+00:00",
+    "drift_count": 1,
+    "drifts": [
+      "P6-e2e-business-chain: LOOP.yaml status='implementation' != STATE.json status='completed'"
+    ]
+  },
+  {
+    "detected_at": "2026-08-03T09:24:00.000379+00:00",
+    "drift_count": 1,
+    "drifts": [
+      "P6-e2e-business-chain: LOOP.yaml status='implementation' != STATE.json status='completed'"
+    ]
+  },
+  {
+    "detected_at": "2026-08-03T09:52:47.923580+00:00",
+    "drift_count": 1,
+    "drifts": [
+      "P6-e2e-business-chain: LOOP.yaml status='implementation' != STATE.json status='completed'"
+    ]
+  },
+  {
+    "detected_at": "2026-08-03T09:56:53.951179+00:00",
+    "drift_count": 1,
+    "drifts": [
+      "P6-e2e-business-chain: LOOP.yaml status='implementation' != STATE.json status='completed'"
+    ]
+  }
+]

@@ -2,7 +2,7 @@
   "schema_version": "2.0",
   "loop_id": "P1-oracle-readonly",
   "title": "Oracle EDwCRM Read-Only Access Enablement",
-  "status": "planned",
+  "status": "closed",
   "implementation_actor": "tech_lead",
   "objective": [
     "Enable read-only access to Oracle EDwCRM under ADR-0007 and data-owner authorization.",

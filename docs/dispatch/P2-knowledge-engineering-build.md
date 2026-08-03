@@ -3,7 +3,7 @@
 | 字段 | 值 |
 |---|---|
 | packet | `P2-KNOWLEDGE-ENGINEERING-BUILD` |
-| status | `IN_PROGRESS` |
+| status | `CLOSED` |
 | baseline | `specs/BASELINE_INDEX.yaml` |
 | contract registry | `specs/CONTRACT_INDEX.yaml` |
 | implementation actor | `tech_lead`（经共享记忆派工多智能体） |

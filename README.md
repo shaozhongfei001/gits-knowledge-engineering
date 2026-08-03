@@ -68,3 +68,58 @@ make new-loop LOOP=P1-first-slice HOLDER=tech_lead
 - 任何红测先进入 `FAILURES.md`/ITER，再修复；
 - 开发自检只能写 `DEV_SELF_CHECK_PASS`，不得写 `QA_PASS`；
 - 真实E2E必须由独立角色在真实环境留存命令、日志、截图或回执证据。
+
+## 端到端业务链演示
+
+基于"王磊/鑫达贸易"业务场景，验证M17→M22完整客户旅程链路。
+
+### 快速启动（H2内存数据库，默认）
+
+```bash
+# 1. 编译
+./mvnw clean install -DskipTests
+
+# 2. 运行端到端集成测试
+./mvnw test -pl apps/api
+
+# 3. 交互式curl演示
+./scripts/e2e-demo.sh
+```
+
+### 使用MySQL
+
+```bash
+# 1. 确保MySQL已启动，配置见 apps/api/src/main/resources/application-mysql.yaml
+# 2. curl演示脚本指定mysql profile
+./scripts/e2e-demo.sh mysql
+
+# 3. 或直接启动应用
+./mvnw spring-boot:run -pl apps/api -Dspring-boot.run.profiles=mysql
+```
+
+### 业务链路说明
+
+| 步骤 | 模块 | API | 说明 |
+|------|------|-----|------|
+| 开户 | M17 | `POST /api/journey/open` | 创建CustomerJourney，阶段=KYC_COLLECT |
+| 查询 | M17 | `GET /api/journey/{id}` | 查询旅程详情 |
+| 交互 | M17 | `POST /api/interaction` | 创建交互记录（电话、拜访等） |
+| 主张 | M18 | `POST /api/claim` | 创建AI候选主张 |
+| 确认 | M18 | `POST /api/claim/{id}/status` | 人工确认推进主张状态 |
+| 推进 | M17-M22 | `POST /api/journey/{id}/advance` | 推进旅程阶段 |
+
+完整5步链路（signal→insight→product match→previsit→postvisit）通过`CustomerJourneyService`方法调用实现，JourneyPhase完整流转：
+
+```text
+KYC_COLLECT → INSIGHT_ANALYSIS → PRODUCT_MATCHING → PREVISIT_PREP → POSTVISIT_REVIEW → COMPLETED
+```
+
+### 集成测试覆盖
+
+| 测试类 | 测试数 | 覆盖范围 |
+|--------|--------|----------|
+| `FullChainE2eIT` | 6 | HTTP→H2→M17→M22完整链路 + API独立验证 + DB完整性 |
+| `PersistenceIntegrationTest` | 5 | JDBC Repository CRUD + Flyway迁移 |
+| `ArchitectureStatusContractTest` | 1 | 架构状态合同 |
+| `ArchitectureStatusControllerTest` | 1 | 架构状态REST端点 |
+| `MechanismE2eIT` | 1 | 机制端到端验证 |

@@ -1,0 +1,77 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P6-e2e-business-chain",
+  "title": "End-to-End Business Chain — Spring Boot REST → H2 Persistence → M17→M22 Full Lifecycle",
+  "status": "implementation",
+  "implementation_actor": "tech_lead",
+  "objective": [
+    "Bridge from domain-object skeleton + in-memory orchestration to Spring Boot application → REST API → H2 persistence → full business-chain closure.",
+    "T1: V002 Flyway migration — Interaction table extended to 14 fields per Interaction record design.",
+    "T2: JDBC Repositories for Interaction, Claim, and CustomerJourney with Spring Data integration.",
+    "T3: api/pom.xml wires persistence-relational adapter dependency.",
+    "T4: application.yaml adds H2 + Flyway configuration for embedded DB.",
+    "T5: Spring Boot startup integration test (GitsKnoApiApplication starts with all beans).",
+    "T6: CustomerJourneyController — open / query / advance-state REST endpoints.",
+    "T7: InteractionController — CRUD REST endpoints for interaction records.",
+    "T8: ClaimController — CRUD + status-advance REST endpoints for AI candidate claims.",
+    "T9: CustomerJourneyOrchestrator refactored to Spring @Service with injected repositories.",
+    "T10: Full-chain integration test (HTTP → H2 → M17→M22 complete lifecycle)."
+  ],
+  "scope": {
+    "include": [
+      "adapters/persistence-relational/",
+      "apps/api/",
+      "modules/scenario-customer-journey/",
+      "modules/operational-ontology/",
+      "loops/P6-e2e-business-chain/",
+      "docs/dispatch/P6-e2e-business-chain.md",
+      "scripts/e2e-demo.sh"
+    ],
+    "exclude": [
+      "unrelated_scenarios",
+      "production_credentials",
+      "quarantined_assets",
+      "M08-M16_scenarios",
+      "M19_product_knowledge"
+    ]
+  },
+  "gates": [
+    {
+      "id": "contract_check",
+      "owner_kind": "implementation",
+      "command": "make generate && make check",
+      "pass_condition": "All registered contracts compile; V002 migration valid; API schemas valid."
+    },
+    {
+      "id": "build_test",
+      "owner_kind": "implementation",
+      "command": "./mvnw -q --batch-mode --no-transfer-progress test",
+      "pass_condition": "All Java tests pass including integration tests with H2."
+    },
+    {
+      "id": "e2e_business_chain",
+      "owner_kind": "implementation",
+      "command": "./mvnw test -pl apps/api -Dtest=FullChainE2eIT",
+      "pass_condition": "Full chain HTTP→H2→M17→M22 passes: open→interact→claim→confirm→advance→complete."
+    },
+    {
+      "id": "security_check",
+      "owner_kind": "implementation",
+      "command": "make security-check",
+      "pass_condition": "Secret, permissions and quarantine checks pass. No customer row data exposed."
+    },
+    {
+      "id": "independent_qa",
+      "owner_kind": "independent_qa",
+      "command": "make verify",
+      "pass_condition": "Independent QA agent confirms all gates pass."
+    }
+  ],
+  "repair_policy": {
+    "max_attempts_per_gate": 5,
+    "failure_record": "loops/P6-e2e-business-chain/FAILURES.md",
+    "record_before_fix": true,
+    "rerun_original_gate": true
+  },
+  "exit_states": ["ready_for_independent_qa", "blocked"]
+}

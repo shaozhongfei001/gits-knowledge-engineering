@@ -12,3 +12,10 @@ __pycache__/
 
 # OS / editor noise
 .DS_Store
+
+# Hermes / HEMM runtime
+.hemm/
+.hermes_run/
+
+# IDE
+.vscode/
