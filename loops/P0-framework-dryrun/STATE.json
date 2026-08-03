@@ -1,11 +1,11 @@
 {
   "schema_version": "2.0",
   "loop_id": "P0-framework-dryrun",
-  "status": "ready_for_independent_qa",
-  "current_phase": "independent_qa",
+  "status": "completed",
+  "current_phase": "completed",
   "baseline_commit": "31fdff21e74e85b2bb7f3b7ce639e2dca15ecfd7",
   "implementation_actor": "engineering_generation_agent",
-  "qa_actor": null,
+  "qa_actor": "independent_qa_agent",
   "completed_gates": [
     "framework_test",
     "tooling_test",
@@ -13,8 +13,9 @@
     "contract_check",
     "security_check"
   ],
-  "next_action": "Independent QA actor must re-run make verify and fill independent_qa; implementation cannot self-sign.",
+  "next_action": "Loop completed. QA_PASS recorded by independent_qa_agent.",
   "blocked": false,
   "blocking_reason": null,
-  "updated_at": "2026-08-02T14:24:10+00:00"
+  "updated_at": "2026-08-03T12:22:47.896976+00:00",
+  "qa_pass_at": "2026-08-03T12:22:47.896976+00:00"
 }

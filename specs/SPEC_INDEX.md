@@ -13,7 +13,7 @@
 
 | Dispatch | Packet | Loop | Status | QA Actor | 关闭依据 |
 |---|---|---|---|---|---|
-| P0 | GITS-KNO-DEV-P0 | P0-framework-dryrun | ready_for_independent_qa | pending | 5/5 implementation gates pass；STATE 已同步 |
+| P0 | GITS-KNO-DEV-P0 | P0-framework-dryrun | completed (QA pass) | independent_qa_agent | 5/5 gates pass + make check PASS + independent_qa_agent QA_PASS |
 | P1 | P1-ORACLE-READONLY | P1-oracle-readonly | qa_passed → CLOSED | independent_qa_subagent | EVIDENCE.json 3/3 gates + independent_qa pass |
 | P2 | P2-KNOWLEDGE-ENGINEERING-BUILD | P2-knowledge-engineering-build | qa_pass → CLOSED | independent_qa_subagent | EVIDENCE.json independent_qa pass + git commit 4432973 |
 | P3 | P3-MAPPING-AND-GAPS | P3-mapping-and-gaps | qa_pass → CLOSED | independent_qa_subagent | EVIDENCE.json independent_qa pass + git commit 0313da2 |
