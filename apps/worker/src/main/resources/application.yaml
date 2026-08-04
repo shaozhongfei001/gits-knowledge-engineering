@@ -2,10 +2,21 @@ spring:
   application:
     name: gits-kno-worker
   main:
-    web-application-type: none
     banner-mode: "off"
+
+server:
+  port: 8090
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
 
 gits:
   worker:
-    enabled: false
-    reason: "No external integration is enabled in the engineering candidate."
+    enabled: true
