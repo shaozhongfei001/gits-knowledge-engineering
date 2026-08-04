@@ -1,6 +1,10 @@
 # Build artifacts
 target/
 **/target/
+dist/
+frontend/dist/
+*.jar
+*.class
 
 # Node
 node_modules/
@@ -13,6 +17,20 @@ __pycache__/
 
 # OS / editor noise
 .DS_Store
+.idea/
+
+# Environment files (may contain secrets)
+.env
+*.env
+!.env.example
+
+# Logs
+*.log
+
+# Test reports
+playwright-report/
+test-results/
+coverage/
 
 # Hermes / HEMM runtime
 .hemm/
