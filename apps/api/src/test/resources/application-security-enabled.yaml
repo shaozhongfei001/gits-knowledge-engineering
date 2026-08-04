@@ -1,0 +1,6 @@
+# Security-enabled test profile — activates API Key authentication
+engagement:
+  security:
+    api-key: "test-api-key-123"
+    cors:
+      allowed-origins: "http://localhost:5173,http://localhost:8080"

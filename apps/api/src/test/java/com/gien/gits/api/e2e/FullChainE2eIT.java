@@ -25,10 +25,10 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gien.gits.adapter.persistence.JdbcClaimRepository;
-import com.gien.gits.adapter.persistence.JdbcInteractionRepository;
-import com.gien.gits.adapter.persistence.JdbcOperatingCaseRepository;
-import com.gien.gits.adapter.persistence.scenario.JdbcCustomerJourneyRepository;
+import com.gien.gits.customerjourney.port.WritableCustomerJourneyRepository;
+import com.gien.gits.ontology.port.WritableClaimRepository;
+import com.gien.gits.ontology.port.WritableInteractionRepository;
+import com.gien.gits.ontology.port.WritableOperatingCaseRepository;
 import com.gien.gits.api.service.CustomerJourneyService;
 import com.gien.gits.customerjourney.CustomerJourney;
 import com.gien.gits.customerjourney.InsightClaim;
@@ -37,8 +37,10 @@ import com.gien.gits.customerjourney.PostvisitAnalysis;
 import com.gien.gits.customerjourney.PrevisitReport;
 import com.gien.gits.customerjourney.ProductCandidateClaim;
 import com.gien.gits.ontology.CaseStatus;
+import com.gien.gits.ontology.CaseType;
 import com.gien.gits.ontology.Claim;
 import com.gien.gits.ontology.ClaimStatus;
+import com.gien.gits.ontology.ClaimType;
 import com.gien.gits.ontology.OperatingCase;
 
 /**
@@ -62,10 +64,10 @@ class FullChainE2eIT {
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
     @Autowired private JdbcTemplate jdbcTemplate;
-    @Autowired private JdbcOperatingCaseRepository caseRepo;
-    @Autowired private JdbcClaimRepository claimRepo;
-    @Autowired private JdbcInteractionRepository interactionRepo;
-    @Autowired private JdbcCustomerJourneyRepository journeyRepo;
+    @Autowired private WritableOperatingCaseRepository caseRepo;
+    @Autowired private WritableClaimRepository claimRepo;
+    @Autowired private WritableInteractionRepository interactionRepo;
+    @Autowired private WritableCustomerJourneyRepository journeyRepo;
     @Autowired private CustomerJourneyService journeyService;
 
     // ── 预置数据（@BeforeEach确保每测试独立） ──
@@ -77,13 +79,13 @@ class FullChainE2eIT {
         Instant now = Instant.now();
         // 预置OperatingCase: OPEN状态
         operatingCase = new OperatingCase(
-                UUID.randomUUID(), "customer-journey", CaseStatus.OPEN,
+                UUID.randomUUID(), CaseType.CONTINUOUS_ENGAGEMENT, CaseStatus.OPEN,
                 "鑫达贸易跨境结算风险信号", now, null, now, "system-signal");
         caseRepo.save(operatingCase);
 
         // 预置初始Claim: claimType必须是CUSTOMER_JOURNEY（InsightClaim.fromClaim要求）
         initialClaim = new Claim(
-                UUID.randomUUID(), operatingCase.caseId(), "CUSTOMER_JOURNEY",
+                UUID.randomUUID(), operatingCase.caseId(), ClaimType.CUSTOMER_JOURNEY,
                 ClaimStatus.CANDIDATE, "跨境结算量增长42%，存在汇率风险敞口",
                 now, null, now, null);
         claimRepo.save(initialClaim);

@@ -14,10 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 
-import com.gien.gits.adapter.persistence.JdbcClaimRepository;
-import com.gien.gits.adapter.persistence.JdbcInteractionRepository;
-import com.gien.gits.adapter.persistence.JdbcOperatingCaseRepository;
-import com.gien.gits.adapter.persistence.scenario.JdbcCustomerJourneyRepository;
+import com.gien.gits.customerjourney.port.WritableCustomerJourneyRepository;
+import com.gien.gits.ontology.port.WritableClaimRepository;
+import com.gien.gits.ontology.port.WritableInteractionRepository;
+import com.gien.gits.ontology.port.WritableOperatingCaseRepository;
 import com.gien.gits.customerjourney.CustomerJourney;
 import com.gien.gits.customerjourney.InsightClaim;
 import com.gien.gits.customerjourney.JourneyPhase;
@@ -25,8 +25,11 @@ import com.gien.gits.customerjourney.PostvisitAnalysis;
 import com.gien.gits.customerjourney.PrevisitReport;
 import com.gien.gits.customerjourney.ProductCandidateClaim;
 import com.gien.gits.ontology.CaseStatus;
+import com.gien.gits.ontology.CaseType;
+import com.gien.gits.ontology.Channel;
 import com.gien.gits.ontology.Claim;
 import com.gien.gits.ontology.ClaimStatus;
+import com.gien.gits.ontology.ClaimType;
 import com.gien.gits.ontology.Interaction;
 import com.gien.gits.ontology.Interaction.Direction;
 import com.gien.gits.ontology.Interaction.InteractionOutcome;
@@ -46,14 +49,14 @@ import com.gien.gits.ontology.OperatingCase;
 class PersistenceIntegrationTest {
 
     @Autowired private JdbcTemplate jdbcTemplate;
-    @Autowired private JdbcOperatingCaseRepository caseRepo;
-    @Autowired private JdbcInteractionRepository interactionRepo;
-    @Autowired private JdbcClaimRepository claimRepo;
-    @Autowired private JdbcCustomerJourneyRepository journeyRepo;
+    @Autowired private WritableOperatingCaseRepository caseRepo;
+    @Autowired private WritableInteractionRepository interactionRepo;
+    @Autowired private WritableClaimRepository claimRepo;
+    @Autowired private WritableCustomerJourneyRepository journeyRepo;
 
     private OperatingCase sampleCase() {
         Instant now = Instant.now();
-        return new OperatingCase(UUID.randomUUID(), "customer-journey",
+        return new OperatingCase(UUID.randomUUID(), CaseType.CONTINUOUS_ENGAGEMENT,
                 CaseStatus.OPEN, "integration-test", now, null, now, "test-runner");
     }
 
@@ -80,7 +83,7 @@ class PersistenceIntegrationTest {
 
         var found = caseRepo.findById(oc.caseId());
         assertTrue(found.isPresent());
-        assertEquals("customer-journey", found.get().caseType());
+        assertEquals(CaseType.CONTINUOUS_ENGAGEMENT, found.get().caseType());
         assertEquals(CaseStatus.OPEN, found.get().status());
     }
 
@@ -97,7 +100,7 @@ class PersistenceIntegrationTest {
 
         Interaction interaction = new Interaction(
                 UUID.randomUUID(), oc.caseId(), journeyId,
-                InteractionType.AI_INSIGHT_PUSH, Direction.OUTBOUND, "SYSTEM_PUSH",
+                InteractionType.AI_INSIGHT_PUSH, Direction.OUTBOUND, Channel.SYSTEM_PUSH,
                 ai, List.of(ai, rm),
                 "跨境结算量增长42%，有套期保值需求",
                 List.of(), InteractionOutcome.INFORMATION_GATHERED,
@@ -121,7 +124,7 @@ class PersistenceIntegrationTest {
         OperatingCase oc = sampleCase();
         caseRepo.save(oc);
 
-        Claim claim = new Claim(UUID.randomUUID(), oc.caseId(), "OPPORTUNITY",
+        Claim claim = new Claim(UUID.randomUUID(), oc.caseId(), ClaimType.OPPORTUNITY,
                 ClaimStatus.CANDIDATE, "跨境结算增长42%触发KYC",
                 Instant.now(), null, Instant.now(), null);
         claimRepo.save(claim);
@@ -155,7 +158,7 @@ class PersistenceIntegrationTest {
 
         // M18: 洞察
         UUID claimId = UUID.randomUUID();
-        claimRepo.save(new Claim(claimId, oc.caseId(), "OPPORTUNITY",
+        claimRepo.save(new Claim(claimId, oc.caseId(), ClaimType.OPPORTUNITY,
                 ClaimStatus.CANDIDATE, "远期结售汇需求", now, null, now, null));
         UUID insightId = UUID.randomUUID();
         InsightClaim insight = new InsightClaim(insightId, claimId, oc.caseId(),
@@ -168,7 +171,7 @@ class PersistenceIntegrationTest {
 
         // M20: 产品候选
         UUID productClaimId = UUID.randomUUID();
-        claimRepo.save(new Claim(productClaimId, oc.caseId(), "PRODUCT_CANDIDATE",
+        claimRepo.save(new Claim(productClaimId, oc.caseId(), ClaimType.PRODUCT_CANDIDATE,
                 ClaimStatus.CANDIDATE, "推荐远期结售汇", now, null, now, null));
         UUID productId = UUID.randomUUID();
         ProductCandidateClaim product = new ProductCandidateClaim(productId,
