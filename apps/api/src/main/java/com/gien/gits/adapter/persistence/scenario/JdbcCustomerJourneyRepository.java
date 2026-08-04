@@ -17,6 +17,7 @@ import com.gien.gits.customerjourney.JourneyPhase;
 import com.gien.gits.customerjourney.PostvisitAnalysis;
 import com.gien.gits.customerjourney.PrevisitReport;
 import com.gien.gits.customerjourney.ProductCandidateClaim;
+import com.gien.gits.customerjourney.port.WritableCustomerJourneyRepository;
 
 /**
  * JDBC persistence adapter for CustomerJourney scenario entities.
@@ -26,7 +27,7 @@ import com.gien.gits.customerjourney.ProductCandidateClaim;
  * <p>Placed in the API app's adapter package because persistence-relational
  * does not depend on scenario-customer-journey module.
  */
-public class JdbcCustomerJourneyRepository {
+public class JdbcCustomerJourneyRepository implements WritableCustomerJourneyRepository {
 
     private final JdbcTemplate jdbc;
 

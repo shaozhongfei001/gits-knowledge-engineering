@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gien.gits.adapter.persistence.JdbcInteractionRepository;
+import com.gien.gits.ontology.port.WritableInteractionRepository;
 import com.gien.gits.ontology.Interaction;
 
 /**
@@ -22,9 +22,9 @@ import com.gien.gits.ontology.Interaction;
 @RequestMapping("/api/interaction")
 public class InteractionController {
 
-    private final JdbcInteractionRepository interactionRepo;
+    private final WritableInteractionRepository interactionRepo;
 
-    public InteractionController(JdbcInteractionRepository interactionRepo) {
+    public InteractionController(WritableInteractionRepository interactionRepo) {
         this.interactionRepo = interactionRepo;
     }
 

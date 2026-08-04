@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/gits_kno?useSSL=true}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+  h2:
+    console:
+      enabled: false
+  flyway:
+    locations: classpath:db/migration
+
+engagement:
+  llm:
+    mode: ${LLM_MODE:real}
+    base-url: ${LLM_BASE_URL:https://api.openai.com}
+    api-key: ${LLM_API_KEY:}
+    model: ${LLM_MODEL:gpt-4o-mini}
+    timeout: ${LLM_TIMEOUT:30s}
+  crm:
+    mode: ${CRM_MODE:http}
+    base-url: ${CRM_BASE_URL:}
+    auth-token: ${CRM_AUTH_TOKEN:}
+    timeout: ${CRM_TIMEOUT:10s}
+  security:
+    api-key: ${API_KEY:}
+
+management:
+  tracing:
+    sampling:
+      probability: ${TRACE_SAMPLING:0.1}
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_URL:http://localhost:9411/api/v2/spans}

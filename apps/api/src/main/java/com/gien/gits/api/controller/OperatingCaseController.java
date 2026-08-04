@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gien.gits.adapter.persistence.JdbcOperatingCaseRepository;
+import com.gien.gits.ontology.port.WritableOperatingCaseRepository;
 import com.gien.gits.ontology.CaseStatus;
+import com.gien.gits.ontology.CaseType;
 import com.gien.gits.ontology.OperatingCase;
 
 /**
@@ -22,9 +23,9 @@ import com.gien.gits.ontology.OperatingCase;
 @RequestMapping("/api/case")
 public class OperatingCaseController {
 
-    private final JdbcOperatingCaseRepository caseRepo;
+    private final WritableOperatingCaseRepository caseRepo;
 
-    public OperatingCaseController(JdbcOperatingCaseRepository caseRepo) {
+    public OperatingCaseController(WritableOperatingCaseRepository caseRepo) {
         this.caseRepo = caseRepo;
     }
 
@@ -35,7 +36,7 @@ public class OperatingCaseController {
         Instant now = Instant.now();
         OperatingCase operatingCase = new OperatingCase(
                 caseId,
-                req.caseType(),
+                CaseType.valueOf(req.caseType()),
                 req.status() != null ? req.status() : CaseStatus.OPEN,
                 req.purpose(),
                 req.validFrom() != null ? req.validFrom() : now,
@@ -80,7 +81,7 @@ public class OperatingCaseController {
 
     private static OperatingCaseResponse toResponse(OperatingCase oc) {
         return new OperatingCaseResponse(
-                oc.caseId(), oc.caseType(), oc.status(), oc.purpose(),
+                oc.caseId(), oc.caseType().name(), oc.status(), oc.purpose(),
                 oc.validFrom(), oc.validTo(), oc.recordedAt(), oc.createdBy());
     }
 }

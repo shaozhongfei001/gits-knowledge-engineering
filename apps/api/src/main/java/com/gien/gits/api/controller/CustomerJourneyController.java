@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gien.gits.adapter.persistence.scenario.JdbcCustomerJourneyRepository;
+import com.gien.gits.customerjourney.port.WritableCustomerJourneyRepository;
 import com.gien.gits.api.service.CustomerJourneyService;
 import com.gien.gits.customerjourney.CustomerJourney;
 import com.gien.gits.customerjourney.JourneyPhase;
@@ -25,10 +25,10 @@ import com.gien.gits.customerjourney.JourneyPhase;
 public class CustomerJourneyController {
 
     private final CustomerJourneyService journeyService;
-    private final JdbcCustomerJourneyRepository journeyRepo;
+    private final WritableCustomerJourneyRepository journeyRepo;
 
     public CustomerJourneyController(CustomerJourneyService journeyService,
-                                     JdbcCustomerJourneyRepository journeyRepo) {
+                                     WritableCustomerJourneyRepository journeyRepo) {
         this.journeyService = journeyService;
         this.journeyRepo = journeyRepo;
     }

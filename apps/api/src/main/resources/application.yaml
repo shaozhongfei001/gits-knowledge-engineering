@@ -8,24 +8,66 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
   h2:
     console:
       enabled: true
       path: /h2-console
   flyway:
     enabled: true
-    locations: classpath:db/migration
+    locations: classpath:db/migration/h2
     baseline-on-migrate: true
+
+gits:
+  seed:
+    enabled: true  # Enable seed data in dev/test; disabled by default in prod
+
+engagement:
+  scenario:
+    enabled: true
+  llm:
+    mode: mock
+    base-url: "${LLM_BASE_URL:https://api.openai.com}"
+    api-key: "${LLM_API_KEY:}"
+    model: "${LLM_MODEL:gpt-4o-mini}"
+    timeout: 30
+  crm:
+    mode: logging
+    writeback-url: ""
+    auth-token: "${CRM_AUTH_TOKEN:}"
+    timeout: 30
+  security:
+    api-key: ""  # Empty = disabled (dev mode). Set value to enable API key auth.
+    cors:
+      allowed-origins: "http://localhost:5173,http://localhost:8080"
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,metrics,prometheus
   endpoint:
     health:
       probes:
         enabled: true
+      show-details: when-authorized
+  metrics:
+    tags:
+      application: gits-kno-api
+  tracing:
+    sampling:
+      probability: 1.0  # Sample 100% in dev, reduce in production
+  zipkin:
+    tracing:
+      endpoint: "${ZIPKIN_URL:http://localhost:9411/api/v2/spans}"
 
 server:
   shutdown: graceful
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html

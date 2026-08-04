@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gien.gits.adapter.persistence.JdbcClaimRepository;
+import com.gien.gits.ontology.port.WritableClaimRepository;
 import com.gien.gits.ontology.Claim;
 import com.gien.gits.ontology.ClaimStatus;
 
@@ -21,9 +21,9 @@ import com.gien.gits.ontology.ClaimStatus;
 @RequestMapping("/api/claim")
 public class ClaimController {
 
-    private final JdbcClaimRepository claimRepo;
+    private final WritableClaimRepository claimRepo;
 
-    public ClaimController(JdbcClaimRepository claimRepo) {
+    public ClaimController(WritableClaimRepository claimRepo) {
         this.claimRepo = claimRepo;
     }
 
