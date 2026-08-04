@@ -1,35 +1,73 @@
 import { test, expect } from '@playwright/test';
 
+const mockCustomer = {
+  customerId: 'cust-001',
+  customerName: '测试企业A',
+  riskLevel: 'HIGH',
+  customerTier: 'STRATEGIC',
+  industry: 'MANUFACTURING',
+  enterpriseScale: 'LARGE',
+  region: '华东',
+  registeredCapitalCny: 50000000,
+  listedStatus: 'LISTED',
+  relationshipSince: '2020-01-01',
+  rmName: '张经理',
+  managingBranch: '总行营业部'
+};
+
+const mockContext = {
+  customer: mockCustomer,
+  kycGapProfile: {
+    profileId: 'kgp-001',
+    customerId: 'cust-001',
+    asOf: '2026-08-05',
+    knownItems: ['企业基本信息', '股权结构'],
+    partialKnownItems: ['财务数据'],
+    staleItems: ['行业分析'],
+    conflictingOrAmbiguousItems: [],
+    unknownItems: ['实控人信息'],
+    priorityQuestions: ['请补充实控人变更信息']
+  },
+  opportunitySignals: [
+    {
+      signalId: 'sig-001',
+      signalType: 'FINANCING_NEED',
+      content: '企业有新增融资需求',
+      sourceType: 'INTERACTION',
+      status: 'DETECTED',
+      detectedAt: '2026-08-01'
+    }
+  ],
+  recentInteractions: [],
+  activeJourneys: [],
+  recentTransactions: []
+};
+
 test.describe('Customer Detail', () => {
-  test.skip('should search and navigate to customer', async ({ page }) => {
-    await page.goto('/');
-    // Wait for customer list to load
-    await expect(page.locator('.loading-state')).not.toBeVisible({ timeout: 10000 });
-    // Click on the first customer card
-    const firstCard = page.locator('.customer-grid .customer-card').first();
-    if (await firstCard.isVisible()) {
-      await firstCard.click();
-      await expect(page).toHaveURL(/\/customers\//);
-    }
+  test.beforeEach(async ({ page }) => {
+    // Mock customer context API
+    await page.route('**/api/v1/engagement/customers/cust-001/context', async route => {
+      await route.fulfill({ json: mockContext });
+    });
+    await page.route('**/api/v1/engagement/customers/cust-001', async route => {
+      await route.fulfill({ json: mockCustomer });
+    });
   });
 
-  test.skip('should display customer detail view', async ({ page }) => {
-    // Navigate directly to a customer page (requires a valid customer ID)
-    await page.goto('/customers/test-customer-id');
-    // Customer info section should be visible
-    const customerInfo = page.locator('.customer-info-section');
-    await expect(customerInfo).toBeVisible();
+  test('should display customer basic info', async ({ page }) => {
+    await page.goto('/customer/cust-001');
+    await expect(page.locator('.customer-header')).toBeVisible();
+    await expect(page.locator('.customer-header')).toContainText('测试企业A');
   });
 
-  test.skip('should show operating view with KYC gaps and signals', async ({ page }) => {
-    await page.goto('/customers/test-customer-id');
-    // KYC gap section
-    const kycSection = page.locator('.section:has-text("KYC缺口摘要")');
-    if (await kycSection.isVisible()) {
-      await expect(kycSection.locator('.gap-card')).toHaveCount(3);
-    }
-    // Opportunity signals section
-    const signalSection = page.locator('.section:has-text("机会信号")');
-    await expect(signalSection).toBeVisible();
+  test('should display KYC gap profile section', async ({ page }) => {
+    await page.goto('/customer/cust-001');
+    await expect(page.locator('.kyc-section')).toBeVisible();
+    await expect(page.locator('.kyc-section')).toContainText('KYC');
+  });
+
+  test('should display opportunity signals', async ({ page }) => {
+    await page.goto('/customer/cust-001');
+    await expect(page.locator('.signals-section')).toBeVisible();
   });
 });
