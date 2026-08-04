@@ -1,8 +1,10 @@
 package com.gien.gits.customerjourney;
 
 import com.gien.gits.ontology.CaseStatus;
+import com.gien.gits.ontology.CaseType;
 import com.gien.gits.ontology.Claim;
 import com.gien.gits.ontology.ClaimStatus;
+import com.gien.gits.ontology.ClaimType;
 import com.gien.gits.ontology.OperatingCase;
 
 import org.junit.jupiter.api.Test;
@@ -61,7 +63,7 @@ class CustomerJourneyTest {
     @Test
     void insightClaimFromValidClaim() {
         UUID caseId = UUID.randomUUID();
-        Claim claim = new Claim(UUID.randomUUID(), caseId, "CUSTOMER_JOURNEY", ClaimStatus.CANDIDATE,
+        Claim claim = new Claim(UUID.randomUUID(), caseId, ClaimType.CUSTOMER_JOURNEY, ClaimStatus.CANDIDATE,
                 "Customer shows expansion intent", Instant.now(), null, Instant.now(), null);
         InsightClaim insight = InsightClaim.fromClaim(claim, "OPPORTUNITY", "Expansion signal detected");
         assertEquals(claim.claimId(), insight.claimId());
@@ -71,7 +73,7 @@ class CustomerJourneyTest {
 
     @Test
     void insightClaimRejectsWrongCaseType() {
-        Claim claim = new Claim(UUID.randomUUID(), UUID.randomUUID(), "SOMETHING_ELSE", ClaimStatus.CANDIDATE,
+        Claim claim = new Claim(UUID.randomUUID(), UUID.randomUUID(), ClaimType.PRODUCT_CANDIDATE, ClaimStatus.CANDIDATE,
                 "Some statement", Instant.now(), null, Instant.now(), null);
         assertThrows(IllegalArgumentException.class, () ->
                 InsightClaim.fromClaim(claim, "RISK", "Bad claim type"));
@@ -174,7 +176,7 @@ class CustomerJourneyTest {
     // ── OperatingCaseStateMachine ───────────────────────────────
 
     private OperatingCase makeCase(CaseStatus status) {
-        return new OperatingCase(UUID.randomUUID(), "CUSTOMER_JOURNEY", status, "Test purpose",
+        return new OperatingCase(UUID.randomUUID(), CaseType.CONTINUOUS_ENGAGEMENT, status, "Test purpose",
                 Instant.now(), null, Instant.now(), "tester");
     }
 

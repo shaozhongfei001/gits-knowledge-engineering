@@ -1,8 +1,11 @@
 package com.gien.gits.customerjourney;
 
 import com.gien.gits.ontology.CaseStatus;
+import com.gien.gits.ontology.CaseType;
+import com.gien.gits.ontology.Channel;
 import com.gien.gits.ontology.Claim;
 import com.gien.gits.ontology.ClaimStatus;
+import com.gien.gits.ontology.ClaimType;
 import com.gien.gits.ontology.Interaction;
 import com.gien.gits.ontology.OperatingCase;
 
@@ -54,11 +57,11 @@ class CustomerJourneyChainTest {
         void fullJourney_withInteractions() {
             // 准备：开设案例
             UUID caseId = UUID.randomUUID();
-            OperatingCase case_ = new OperatingCase(caseId, "CUSTOMER_JOURNEY",
+            OperatingCase case_ = new OperatingCase(caseId, CaseType.CONTINUOUS_ENGAGEMENT,
                     CaseStatus.OPEN, "对公客户经营-访前访后", Instant.now(), null,
                     Instant.now(), "risk-signal-engine");
 
-            Claim aiSignal = new Claim(UUID.randomUUID(), caseId, "CUSTOMER_JOURNEY",
+            Claim aiSignal = new Claim(UUID.randomUUID(), caseId, ClaimType.CUSTOMER_JOURNEY,
                     ClaimStatus.CANDIDATE,
                     "跨境结算量环比增长42%，无汇率对冲工具",
                     Instant.now(), null, Instant.now(), null);
@@ -93,7 +96,7 @@ class CustomerJourneyChainTest {
             // --- M18交互：AI洞察推送 → 推送给王磊 ---
             Interaction m18Interaction = interactions.get(1);
             assertEquals(Interaction.InteractionType.AI_INSIGHT_PUSH, m18Interaction.type());
-            assertEquals("AI_INSIGHT_ENGINE", m18Interaction.channel());
+            assertEquals(Channel.AI_INSIGHT_ENGINE, m18Interaction.channel());
             assertTrue(m18Interaction.contentSummary().contains("套期保值"));
             assertEquals(1, m18Interaction.producedClaimIds().size(),
                     "M18交互应产出1个洞察ID");
@@ -101,7 +104,7 @@ class CustomerJourneyChainTest {
             // --- M20交互：AI产品匹配 → 推送给王磊 ---
             Interaction m20Interaction = interactions.get(2);
             assertEquals(Interaction.InteractionType.AI_INSIGHT_PUSH, m20Interaction.type());
-            assertEquals("PRODUCT_MATCH_ENGINE", m20Interaction.channel());
+            assertEquals(Channel.PRODUCT_MATCH_ENGINE, m20Interaction.channel());
             assertTrue(m20Interaction.contentSummary().contains("远期结售汇"));
 
             // --- M21交互：王磊实地拜访鑫达贸易 ---
@@ -144,11 +147,11 @@ class CustomerJourneyChainTest {
         @DisplayName("客户拒绝场景：M22交互结果=CUSTOMER_DECLINED")
         void customerDeclinedScenario() {
             UUID caseId = UUID.randomUUID();
-            OperatingCase case_ = new OperatingCase(caseId, "CUSTOMER_JOURNEY",
+            OperatingCase case_ = new OperatingCase(caseId, CaseType.CONTINUOUS_ENGAGEMENT,
                     CaseStatus.OPEN, "对公客户经营", Instant.now(), null,
                     Instant.now(), "risk-signal-engine");
 
-            Claim aiSignal = new Claim(UUID.randomUUID(), caseId, "CUSTOMER_JOURNEY",
+            Claim aiSignal = new Claim(UUID.randomUUID(), caseId, ClaimType.CUSTOMER_JOURNEY,
                     ClaimStatus.CANDIDATE, "信号", Instant.now(), null, Instant.now(), null);
 
             var result = CustomerJourneyOrchestrator.executeFullChain(
@@ -174,10 +177,10 @@ class CustomerJourneyChainTest {
         @DisplayName("AI交互产出只能是CANDIDATE——防止AI自我强化")
         void aiInteractionCannotProduceVerifiedFact() {
             UUID caseId = UUID.randomUUID();
-            OperatingCase case_ = new OperatingCase(caseId, "CUSTOMER_JOURNEY",
+            OperatingCase case_ = new OperatingCase(caseId, CaseType.CONTINUOUS_ENGAGEMENT,
                     CaseStatus.OPEN, "test", Instant.now(), null, Instant.now(), "system");
 
-            Claim aiSignal = new Claim(UUID.randomUUID(), caseId, "CUSTOMER_JOURNEY",
+            Claim aiSignal = new Claim(UUID.randomUUID(), caseId, ClaimType.CUSTOMER_JOURNEY,
                     ClaimStatus.CANDIDATE, "信号", Instant.now(), null, Instant.now(), null);
 
             var result = CustomerJourneyOrchestrator.executeFullChain(
@@ -212,7 +215,7 @@ class CustomerJourneyChainTest {
                     UUID.randomUUID(), UUID.randomUUID(), null,
                     Interaction.InteractionType.PHONE_CALL,
                     Interaction.Direction.OUTBOUND,
-                    "",  // channel为空
+                    null,  // channel为null
                     new Interaction.Participant("RM-01", Interaction.Participant.Role.RELATIONSHIP_MANAGER, "王磊"),
                     List.of(), "摘要", List.of(),
                     Interaction.InteractionOutcome.COMPLETED,
@@ -235,7 +238,7 @@ class CustomerJourneyChainTest {
                     UUID.randomUUID(), UUID.randomUUID(), null,
                     Interaction.InteractionType.AI_INSIGHT_PUSH,
                     Interaction.Direction.OUTBOUND,
-                    "AI_ENGINE",
+                    Channel.AI_INSIGHT_ENGINE,
                     new Interaction.Participant("AI-01", Interaction.Participant.Role.AI_AGENT, "AI"),
                     List.of(new Interaction.Participant("RM-01", Interaction.Participant.Role.RELATIONSHIP_MANAGER, "王磊")),
                     "推送洞察", List.of(),
@@ -253,7 +256,7 @@ class CustomerJourneyChainTest {
                     UUID.randomUUID(), UUID.randomUUID(), null,
                     Interaction.InteractionType.SIGNAL_TRIGGER,
                     Interaction.Direction.OUTBOUND,
-                    "RISK_ENGINE",
+                    Channel.RISK_SIGNAL_ENGINE,
                     new Interaction.Participant("AI-01", Interaction.Participant.Role.AI_AGENT, "AI"),
                     List.of(), "信号触发", List.of(),
                     Interaction.InteractionOutcome.INFORMATION_GATHERED,
@@ -273,7 +276,7 @@ class CustomerJourneyChainTest {
         @Test
         @DisplayName("链路可中途取消——CANCELLED状态不可恢复")
         void cancelIsTerminal() {
-            OperatingCase openCase = new OperatingCase(UUID.randomUUID(), "CUSTOMER_JOURNEY",
+            OperatingCase openCase = new OperatingCase(UUID.randomUUID(), CaseType.CONTINUOUS_ENGAGEMENT,
                     CaseStatus.OPEN, "test", Instant.now(), null, Instant.now(), "system");
             OperatingCase inProgress = OperatingCaseStateMachine.transition(openCase, CaseStatus.IN_PROGRESS);
             OperatingCase cancelled = OperatingCaseStateMachine.transition(inProgress, CaseStatus.CANCELLED);
@@ -286,7 +289,7 @@ class CustomerJourneyChainTest {
         @Test
         @DisplayName("WAITING_FOR_HUMAN不能直接CLOSE——模拟客户经理必须确认")
         void humanMustConfirmBeforeClose() {
-            OperatingCase openCase = new OperatingCase(UUID.randomUUID(), "CUSTOMER_JOURNEY",
+            OperatingCase openCase = new OperatingCase(UUID.randomUUID(), CaseType.CONTINUOUS_ENGAGEMENT,
                     CaseStatus.OPEN, "test", Instant.now(), null, Instant.now(), "system");
             OperatingCase inProgress = OperatingCaseStateMachine.transition(openCase, CaseStatus.IN_PROGRESS);
             OperatingCase waiting = OperatingCaseStateMachine.transition(inProgress, CaseStatus.WAITING_FOR_HUMAN);

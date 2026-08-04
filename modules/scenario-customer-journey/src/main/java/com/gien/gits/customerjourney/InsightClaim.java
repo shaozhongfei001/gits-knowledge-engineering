@@ -2,6 +2,7 @@ package com.gien.gits.customerjourney;
 
 import com.gien.gits.ontology.Claim;
 import com.gien.gits.ontology.ClaimStatus;
+import com.gien.gits.ontology.ClaimType;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -26,7 +27,7 @@ public record InsightClaim(
 
     public static InsightClaim fromClaim(Claim claim, String insightCategory, String insightSummary) {
         Objects.requireNonNull(claim, "claim");
-        if (!"CUSTOMER_JOURNEY".equals(claim.claimType())) {
+        if (claim.claimType() != ClaimType.CUSTOMER_JOURNEY) {
             throw new IllegalArgumentException(
                     "Claim must have claimType CUSTOMER_JOURNEY, but was: " + claim.claimType());
         }

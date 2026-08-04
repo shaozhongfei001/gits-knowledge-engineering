@@ -1,6 +1,7 @@
 package com.gien.gits.customerjourney;
 
 import com.gien.gits.ontology.CaseStatus;
+import com.gien.gits.ontology.Channel;
 import com.gien.gits.ontology.Claim;
 import com.gien.gits.ontology.ClaimStatus;
 import com.gien.gits.ontology.Interaction;
@@ -49,7 +50,7 @@ public final class CustomerJourneyOrchestrator {
                 UUID.randomUUID(), openCase.caseId(), journey.journeyId(),
                 Interaction.InteractionType.SIGNAL_TRIGGER,
                 Interaction.Direction.OUTBOUND,
-                "RISK_SIGNAL_ENGINE",
+                Channel.RISK_SIGNAL_ENGINE,
                 new Interaction.Participant("AI-CUSTOMER-JOURNEY", Interaction.Participant.Role.AI_AGENT, "客户旅程智能体"),
                 List.of(new Interaction.Participant("RM-" + customerId, Interaction.Participant.Role.RELATIONSHIP_MANAGER, "客户经理")),
                 signalDescription,
@@ -84,7 +85,7 @@ public final class CustomerJourneyOrchestrator {
                 UUID.randomUUID(), candidateClaim.caseId(), journeyId,
                 Interaction.InteractionType.AI_INSIGHT_PUSH,
                 Interaction.Direction.OUTBOUND,
-                "AI_INSIGHT_ENGINE",
+                Channel.AI_INSIGHT_ENGINE,
                 new Interaction.Participant("AI-INSIGHT", Interaction.Participant.Role.AI_AGENT, "洞察分析智能体"),
                 List.of(new Interaction.Participant(rmId, Interaction.Participant.Role.RELATIONSHIP_MANAGER, rmName)),
                 insightSummary,
@@ -115,7 +116,7 @@ public final class CustomerJourneyOrchestrator {
                 UUID.randomUUID(), insight.operatingCaseId(), insight.insightId(),
                 Interaction.InteractionType.AI_INSIGHT_PUSH,
                 Interaction.Direction.OUTBOUND,
-                "PRODUCT_MATCH_ENGINE",
+                Channel.PRODUCT_MATCH_ENGINE,
                 new Interaction.Participant("AI-PRODUCT", Interaction.Participant.Role.AI_AGENT, "产品匹配智能体"),
                 List.of(new Interaction.Participant(rmId, Interaction.Participant.Role.RELATIONSHIP_MANAGER, rmName)),
                 "匹配产品: " + productName + "，理由: " + matchReason,
@@ -146,7 +147,7 @@ public final class CustomerJourneyOrchestrator {
                 .flatMap(i -> i.producedClaimIds().stream())
                 .toList();
         List<UUID> productIds = priorInteractions.stream()
-                .filter(i -> i.type() == Interaction.InteractionType.AI_INSIGHT_PUSH && i.channel().equals("PRODUCT_MATCH_ENGINE"))
+                .filter(i -> i.type() == Interaction.InteractionType.AI_INSIGHT_PUSH && i.channel() == Channel.PRODUCT_MATCH_ENGINE)
                 .flatMap(i -> i.producedClaimIds().stream())
                 .toList();
 
@@ -160,7 +161,7 @@ public final class CustomerJourneyOrchestrator {
                 UUID.randomUUID(), operatingCaseId, journeyId,
                 Interaction.InteractionType.FACE_TO_FACE_VISIT,
                 Interaction.Direction.OUTBOUND,
-                "FACE_TO_FACE",
+                Channel.FACE_TO_FACE,
                 new Interaction.Participant(rmId, Interaction.Participant.Role.RELATIONSHIP_MANAGER, rmName),
                 List.of(new Interaction.Participant(customerId, Interaction.Participant.Role.CUSTOMER, customerContact)),
                 summary,
@@ -195,7 +196,7 @@ public final class CustomerJourneyOrchestrator {
                 UUID.randomUUID(), operatingCaseId, journeyId,
                 customerAgreed ? Interaction.InteractionType.FOLLOW_UP : Interaction.InteractionType.FACE_TO_FACE_VISIT,
                 customerAgreed ? Interaction.Direction.INBOUND : Interaction.Direction.OUTBOUND,
-                customerAgreed ? "PHONE_CALL" : "FACE_TO_FACE",
+                customerAgreed ? Channel.PHONE_CALL : Channel.FACE_TO_FACE,
                 customerAgreed
                         ? new Interaction.Participant(customerId, Interaction.Participant.Role.CUSTOMER, customerContact)
                         : new Interaction.Participant(rmId, Interaction.Participant.Role.RELATIONSHIP_MANAGER, rmName),
