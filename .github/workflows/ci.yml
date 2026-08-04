@@ -1,0 +1,239 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  compile:
+    name: Compile (JDK 21)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Compile
+        run: ./mvnw --batch-mode --no-transfer-progress compile -pl apps/api -am
+
+  unit-test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: compile
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Run Unit Tests
+        run: ./mvnw --batch-mode --no-transfer-progress test -pl apps/api -Dtest="**/*Test" -DfailIfNoTests=false
+
+      - name: Upload JaCoCo Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: apps/api/target/site/jacoco/
+
+  integration-test:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: compile
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Run Integration Tests
+        run: ./mvnw --batch-mode --no-transfer-progress verify -pl apps/api -Dtest="**/*IT" -DfailIfNoTests=false
+
+  contract-check:
+    name: Contract Index Consistency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate CONTRACT_INDEX.yaml references
+        run: |
+          echo "Checking specs/CONTRACT_INDEX.yaml consistency..."
+          if [ ! -f specs/CONTRACT_INDEX.yaml ]; then
+            echo "ERROR: specs/CONTRACT_INDEX.yaml not found"
+            exit 1
+          fi
+          # Extract referenced file paths and verify each exists
+          FAILED=0
+          while IFS= read -r ref; do
+            if [ -n "$ref" ]; then
+              if [ ! -f "$ref" ]; then
+                echo "MISSING: $ref"
+                FAILED=1
+              else
+                echo "OK: $ref"
+              fi
+            fi
+          done < <(grep -oP 'path:\s*\K\S+' specs/CONTRACT_INDEX.yaml 2>/dev/null || true)
+          if [ "$FAILED" -ne 0 ]; then
+            echo "FAIL: Some contract references are missing"
+            exit 1
+          fi
+          echo "PASS: All contract references verified"
+
+  security-check:
+    name: Security Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Secret Scan & Permissions Check
+        run: |
+          python3 scripts/secret_scan.py --root .
+          python3 scripts/sensitive_permissions.py --root .
+
+  docker-build:
+    name: Docker Build Verification
+    runs-on: ubuntu-latest
+    needs: [unit-test, integration-test]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: docker build -t gits-api:ci-verify .
+
+      - name: Verify Image Created
+        run: docker images gits-api:ci-verify
+
+  frontend:
+    name: Frontend Build & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run Unit Tests
+        run: npm run test
+
+  e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: [docker-build, frontend]
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E Tests
+        run: npm run e2e
+
+      - name: Upload Playwright Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/
+
+  build-summary:
+    name: Build Summary
+    runs-on: ubuntu-latest
+    needs: [compile, unit-test, integration-test, contract-check, security-check, docker-build, frontend, e2e]
+    if: always()
+    steps:
+      - name: Check build status
+        run: |
+          echo "## Build Summary"
+          echo "| Job | Status |"
+          echo "|-----|--------|"
+          echo "| Compile | ${{ needs.compile.result }} |"
+          echo "| Unit Tests | ${{ needs.unit-test.result }} |"
+          echo "| Integration Tests | ${{ needs.integration-test.result }} |"
+          echo "| Contract Check | ${{ needs.contract-check.result }} |"
+          echo "| Security Check | ${{ needs.security-check.result }} |"
+          echo "| Docker Build | ${{ needs.docker-build.result }} |"
+          echo "| Frontend | ${{ needs.frontend.result }} |"
+          echo "| E2E Tests | ${{ needs.e2e.result }} |"
+          if [ "${{ needs.compile.result }}" = "failure" ] || \
+             [ "${{ needs.unit-test.result }}" = "failure" ] || \
+             [ "${{ needs.integration-test.result }}" = "failure" ] || \
+             [ "${{ needs.contract-check.result }}" = "failure" ] || \
+             [ "${{ needs.security-check.result }}" = "failure" ] || \
+             [ "${{ needs.docker-build.result }}" = "failure" ] || \
+             [ "${{ needs.frontend.result }}" = "failure" ] || \
+             [ "${{ needs.e2e.result }}" = "failure" ]; then
+            echo "FAIL: One or more jobs failed"
+            exit 1
+          fi
+          echo "PASS: All jobs succeeded"
