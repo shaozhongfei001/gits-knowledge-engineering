@@ -12,26 +12,28 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.gien.gits.ontology.CaseStatus;
+import com.gien.gits.ontology.CaseType;
 import com.gien.gits.ontology.OperatingCase;
+import com.gien.gits.ontology.port.WritableOperatingCaseRepository;
 
 /**
  * JDBC persistence adapter for {@link OperatingCase} against Flyway V001 operating_case.
  * Maps domain fields to columns: case_id, case_type, status, purpose, valid_from, valid_to,
  * recorded_at, created_by. record_version uses schema DEFAULT 0.
  */
-public class JdbcOperatingCaseRepository {
+public class JdbcOperatingCaseRepository implements WritableOperatingCaseRepository {
 
     private static final String INSERT_SQL =
             "INSERT INTO operating_case " +
-            "(case_id, case_type, status, purpose, valid_from, valid_to, recorded_at, created_by) " +
+            "(case_id, case_type, `status`, purpose, valid_from, valid_to, recorded_at, created_by) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String FIND_BY_ID_SQL =
-            "SELECT case_id, case_type, status, purpose, valid_from, valid_to, recorded_at, created_by " +
+            "SELECT case_id, case_type, `status`, purpose, valid_from, valid_to, recorded_at, created_by " +
             "FROM operating_case WHERE case_id = ?";
 
     private static final String UPDATE_STATUS_SQL =
-            "UPDATE operating_case SET status = ? WHERE case_id = ?";
+            "UPDATE operating_case SET `status` = ? WHERE case_id = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -45,7 +47,7 @@ public class JdbcOperatingCaseRepository {
         }
         jdbcTemplate.update(INSERT_SQL,
                 operatingCase.caseId().toString(),
-                operatingCase.caseType(),
+                operatingCase.caseType().name(),
                 operatingCase.status().name(),
                 operatingCase.purpose(),
                 Timestamp.from(operatingCase.validFrom()),
@@ -77,7 +79,7 @@ public class JdbcOperatingCaseRepository {
     private static OperatingCase toOperatingCase(ResultSet rs) throws SQLException {
         return new OperatingCase(
                 UUID.fromString(rs.getString("case_id")),
-                rs.getString("case_type"),
+                CaseType.valueOf(rs.getString("case_type")),
                 CaseStatus.valueOf(rs.getString("status")),
                 rs.getString("purpose"),
                 rs.getTimestamp("valid_from").toInstant(),

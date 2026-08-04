@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import com.gien.gits.ontology.CaseStatus;
+import com.gien.gits.ontology.CaseType;
 import com.gien.gits.ontology.OperatingCase;
 
 class JdbcOperatingCaseRepositoryTest {
@@ -54,7 +55,7 @@ class JdbcOperatingCaseRepositoryTest {
         Instant validFrom = Instant.parse("2026-01-01T00:00:00Z");
         Instant recordedAt = Instant.parse("2026-01-02T00:00:00Z");
         OperatingCase original = new OperatingCase(
-                caseId, "CLAIM_REVIEW", CaseStatus.OPEN, "Reconcile claim set for case",
+                caseId, CaseType.CLAIM_RECONCILIATION, CaseStatus.OPEN, "Reconcile claim set for case",
                 validFrom, null, recordedAt, "tech_lead");
 
         repository.save(original);
@@ -79,7 +80,7 @@ class JdbcOperatingCaseRepositoryTest {
     @Test
     void blankCreatedByRejectedByDomain() {
         assertThrows(IllegalArgumentException.class, () -> new OperatingCase(
-                UUID.randomUUID(), "CLAIM_REVIEW", CaseStatus.OPEN, "purpose",
+                UUID.randomUUID(), CaseType.CLAIM_RECONCILIATION, CaseStatus.OPEN, "purpose",
                 Instant.parse("2026-01-01T00:00:00Z"), null, Instant.parse("2026-01-02T00:00:00Z"), "  "));
     }
 }

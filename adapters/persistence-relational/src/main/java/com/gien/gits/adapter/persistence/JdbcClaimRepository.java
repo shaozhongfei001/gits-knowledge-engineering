@@ -13,11 +13,13 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.gien.gits.ontology.Claim;
 import com.gien.gits.ontology.ClaimStatus;
+import com.gien.gits.ontology.ClaimType;
+import com.gien.gits.ontology.port.WritableClaimRepository;
 
 /**
  * JDBC persistence adapter for {@link Claim} against Flyway V001/V002 claim table.
  */
-public class JdbcClaimRepository {
+public class JdbcClaimRepository implements WritableClaimRepository {
 
     private static final String INSERT_SQL =
             "INSERT INTO claim " +
@@ -52,7 +54,7 @@ public class JdbcClaimRepository {
                 claim.claimId().toString(),
                 claim.caseId().toString(),
                 null, // interaction_id — not set at creation time
-                claim.claimType(),
+                claim.claimType().name(),
                 claim.status().name(),
                 claim.statement(),
                 claim.validFrom() == null ? null : Timestamp.from(claim.validFrom()),
@@ -91,7 +93,7 @@ public class JdbcClaimRepository {
         return new Claim(
                 UUID.fromString(rs.getString("claim_id")),
                 UUID.fromString(rs.getString("case_id")),
-                rs.getString("claim_type"),
+                ClaimType.valueOf(rs.getString("claim_type")),
                 ClaimStatus.valueOf(rs.getString("claim_status")),
                 rs.getString("statement_text"),
                 validFromTs == null ? null : validFromTs.toInstant(),

@@ -12,9 +12,11 @@ import java.util.UUID;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.gien.gits.ontology.Channel;
 import com.gien.gits.ontology.Claim;
 import com.gien.gits.ontology.ClaimStatus;
 import com.gien.gits.ontology.Interaction;
+import com.gien.gits.ontology.port.WritableInteractionRepository;
 
 /**
  * JDBC persistence adapter for {@link Interaction} against Flyway V002 enriched interaction schema.
@@ -24,7 +26,7 @@ import com.gien.gits.ontology.Interaction;
  * participants are stored in the interaction_participant table.
  * producedClaimIds is stored as a JSON array column.
  */
-public class JdbcInteractionRepository {
+public class JdbcInteractionRepository implements WritableInteractionRepository {
 
     private static final String INSERT_SQL =
             "INSERT INTO interaction " +
@@ -80,7 +82,7 @@ public class JdbcInteractionRepository {
                 interaction.journeyId() == null ? null : interaction.journeyId().toString(),
                 interaction.type().name(),
                 interaction.direction().name(),
-                interaction.channel(),
+                interaction.channel().name(),
                 interaction.contentSummary(),
                 interaction.outcome().name(),
                 interaction.initiator().participantId(),
@@ -151,7 +153,7 @@ public class JdbcInteractionRepository {
                 journeyIdStr == null ? null : UUID.fromString(journeyIdStr),
                 Interaction.InteractionType.valueOf(rs.getString("interaction_type")),
                 Interaction.Direction.valueOf(rs.getString("direction")),
-                rs.getString("channel"),
+                Channel.valueOf(rs.getString("channel")),
                 new Interaction.Participant(
                         rs.getString("initiator_id"),
                         Interaction.Participant.Role.valueOf(rs.getString("initiator_role")),
