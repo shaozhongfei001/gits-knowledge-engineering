@@ -1,33 +1,81 @@
 spring:
   datasource:
-    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/gits_kno?useSSL=true}
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/gits_kno?useSSL=true&allowPublicKeyRetrieval=true}
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: ${HIKARI_MAX_POOL:20}
+      minimum-idle: ${HIKARI_MIN_IDLE:5}
+      idle-timeout: ${HIKARI_IDLE_TIMEOUT:300000}
+      connection-timeout: ${HIKARI_CONN_TIMEOUT:30000}
+      max-lifetime: ${HIKARI_MAX_LIFETIME:1800000}
+      leak-detection-threshold: ${HIKARI_LEAK_DETECTION:60000}
   h2:
     console:
       enabled: false
   flyway:
-    locations: classpath:db/migration
+    enabled: true
+    locations: classpath:db/migration/mysql
+    baseline-on-migrate: true
+    baseline-version: "0"
+
+gits:
+  seed:
+    enabled: false  # No seed data in production
 
 engagement:
+  scenario:
+    enabled: true
   llm:
-    mode: ${LLM_MODE:real}
+    mode: ${LLM_MODE:mock}  # Default to mock; set 'real' only when LLM_API_KEY is configured
     base-url: ${LLM_BASE_URL:https://api.openai.com}
     api-key: ${LLM_API_KEY:}
     model: ${LLM_MODEL:gpt-4o-mini}
     timeout: ${LLM_TIMEOUT:30s}
   crm:
-    mode: ${CRM_MODE:http}
-    base-url: ${CRM_BASE_URL:}
+    mode: ${CRM_MODE:logging}  # Default to logging; set 'http' only when CRM_BASE_URL is configured
+    writeback-url: ${CRM_BASE_URL:}
     auth-token: ${CRM_AUTH_TOKEN:}
     timeout: ${CRM_TIMEOUT:10s}
   security:
-    api-key: ${API_KEY:}
+    api-key: ${API_KEY:}  # Must be set in production to enable API key auth
+    cors:
+      allowed-origins: ${CORS_ALLOWED_ORIGINS:}
+  oracle:
+    source:
+      enabled: ${ORACLE_SOURCE_ENABLED:false}
+      jdbc-url: ${ORACLE_JDBC_URL:}
+      username: ${ORACLE_USER:}
+      password: ${ORACLE_PASSWORD:}
+      poll-interval: ${ORACLE_POLL_INTERVAL:60s}
 
 management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus  # Restrict in production
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: when-authorized
+  metrics:
+    tags:
+      application: gits-kno-api
   tracing:
     sampling:
       probability: ${TRACE_SAMPLING:0.1}
   zipkin:
     tracing:
       endpoint: ${ZIPKIN_URL:http://localhost:9411/api/v2/spans}
+
+server:
+  shutdown: graceful
+  port: ${SERVER_PORT:8080}
+
+springdoc:
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}  # Disable Swagger UI in production by default
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}
