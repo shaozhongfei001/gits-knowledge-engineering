@@ -13,14 +13,14 @@ class OperationalOntologyTest {
 
     @Test
     void candidateClaimIsNotAuthoritative() {
-        Claim claim = new Claim(UUID.randomUUID(), UUID.randomUUID(), "CUSTOMER_STATEMENT", ClaimStatus.CANDIDATE,
+        Claim claim = new Claim(UUID.randomUUID(), UUID.randomUUID(), ClaimType.CUSTOMER_STATEMENT, ClaimStatus.CANDIDATE,
                 "客户计划扩大结算合作", null, null, Instant.now(), null);
         assertFalse(claim.isAuthoritative());
     }
 
     @Test
     void verifiedFactIsExplicit() {
-        Claim claim = new Claim(UUID.randomUUID(), UUID.randomUUID(), "SYSTEM_FACT", ClaimStatus.VERIFIED_FACT,
+        Claim claim = new Claim(UUID.randomUUID(), UUID.randomUUID(), ClaimType.SYSTEM_FACT, ClaimStatus.VERIFIED_FACT,
                 "权威系统事实", Instant.now(), null, Instant.now(), null);
         assertTrue(claim.isAuthoritative());
     }

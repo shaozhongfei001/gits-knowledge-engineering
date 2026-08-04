@@ -7,7 +7,7 @@ import java.util.UUID;
 public record Claim(
         UUID claimId,
         UUID caseId,
-        String claimType,
+        ClaimType claimType,
         ClaimStatus status,
         String statement,
         Instant validFrom,
@@ -20,7 +20,7 @@ public record Claim(
         Objects.requireNonNull(caseId, "caseId");
         Objects.requireNonNull(status, "status");
         Objects.requireNonNull(recordedAt, "recordedAt");
-        if (claimType == null || claimType.isBlank() || statement == null || statement.isBlank()) {
+        if (claimType == null || statement == null || statement.isBlank()) {
             throw new IllegalArgumentException("claimType and statement are required");
         }
         if (validFrom != null && validTo != null && validTo.isBefore(validFrom)) {

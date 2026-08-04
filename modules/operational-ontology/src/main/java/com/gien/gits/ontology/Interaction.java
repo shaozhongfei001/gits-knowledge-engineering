@@ -23,7 +23,7 @@ public record Interaction(
         UUID journeyId,
         InteractionType type,
         Direction direction,
-        String channel,
+        Channel channel,
         Participant initiator,
         List<Participant> participants,
         String contentSummary,
@@ -118,9 +118,7 @@ public record Interaction(
         Objects.requireNonNull(caseId, "caseId");
         Objects.requireNonNull(type, "type");
         Objects.requireNonNull(direction, "direction");
-        if (channel == null || channel.isBlank()) {
-            throw new IllegalArgumentException("channel is required");
-        }
+        Objects.requireNonNull(channel, "channel");
         Objects.requireNonNull(initiator, "initiator");
         participants = List.copyOf(Objects.requireNonNullElse(participants, List.of()));
         // contentSummary 可以为空（信号触发类交互可能没有自然语言摘要）

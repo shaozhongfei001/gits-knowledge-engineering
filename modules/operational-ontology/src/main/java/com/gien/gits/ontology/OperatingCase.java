@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record OperatingCase(
         UUID caseId,
-        String caseType,
+        CaseType caseType,
         CaseStatus status,
         String purpose,
         Instant validFrom,
@@ -16,7 +16,7 @@ public record OperatingCase(
 
     public OperatingCase {
         Objects.requireNonNull(caseId, "caseId");
-        caseType = requireText(caseType, "caseType");
+        Objects.requireNonNull(caseType, "caseType");
         Objects.requireNonNull(status, "status");
         purpose = requireText(purpose, "purpose");
         Objects.requireNonNull(validFrom, "validFrom");
