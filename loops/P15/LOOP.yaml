@@ -2,8 +2,9 @@ loop:
   id: P15
   title: "质量闭环与生产就绪加固"
   subtitle: "消除 P0-P14 遗留技术债，达成 REAL_E2E_PASS + QA_PASS + PRODUCTION_READY"
-  status: ACTIVE
+  status: CLOSED
   started: 2026-08-05
+  closed: 2026-08-05
   owner: tech_lead
 
   target_non_claims:
@@ -15,7 +16,7 @@ loop:
     - id: G1
       title: "E2E 测试全部 skip — 零实际验证"
       priority: P0
-      status: PENDING
+      status: DONE
       diagnosis: |
         frontend/e2e/ 下 4 个 spec 文件共 12 个测试全部 test.skip，
         CI e2e job "成功"但实际零覆盖，REAL_E2E_PASS non-claim 无法消除。
@@ -28,7 +29,7 @@ loop:
     - id: G2
       title: "DMN 适配器 0% 测试覆盖率"
       priority: P0
-      status: PENDING
+      status: DONE
       diagnosis: |
         DmnClaimReconciliationAdapter (52行) 和内部类 DmnRule/TriVal 
         覆盖率均为 0%，P11 G3 的 DMN 决策引擎从未被集成测试验证。
@@ -41,7 +42,7 @@ loop:
     - id: G3
       title: "构建产物入库 + .gitignore 不完善"
       priority: P0
-      status: PENDING
+      status: DONE
       diagnosis: |
         frontend/dist/ (28个文件) 已入库，.gitignore 缺少 dist/, .env, *.jar 等规则。
       remediation: |
@@ -53,7 +54,7 @@ loop:
     - id: G4
       title: "application-prod.yaml 配置不完整"
       priority: P1
-      status: PENDING
+      status: DONE
       diagnosis: |
         缺少 HikariCP 连接池调优、Flyway baselineOnMigrate、
         actuator 端点限制、优雅停机、Oracle source 配置段。
@@ -70,7 +71,7 @@ loop:
     - id: G5
       title: "CI 无覆盖率门禁 + E2E job 空转"
       priority: P1
-      status: PENDING
+      status: DONE
       diagnosis: |
         JaCoCo 报告生成但无阈值强制；E2E job 所有测试 skip；
         CI 仅测试 apps/api，未覆盖 Worker 和适配器模块。
@@ -84,7 +85,7 @@ loop:
     - id: G6
       title: "P11 HANDOFF.md 缺失 + Loop 状态漂移"
       priority: P1
-      status: PENDING
+      status: DONE
       diagnosis: |
         P11 引入 LLM/DMN/CRM/Events 重大架构变更但无交接文档；
         P5 状态为 qa_pass 而非 closed；P7 LOOP.yaml 极简(423B)无 gates。
