@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Spring Boot默认配置: 从Spring Environment中读取属性 -->
+    <springProperty scope="context" name="appName" source="spring.application.name" defaultValue="gits-kno-api"/>
+
+    <!-- ====== 默认profile: 人类可读的控制台日志 ====== -->
+    <springProfile name="!json">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} [traceId=%X{traceId:-},spanId=%X{spanId:-}] - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <!-- ====== JSON profile: 结构化JSON日志 ====== -->
+    <springProfile name="json">
+        <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <includeMdc>true</includeMdc>
+                <includeContext>true</includeContext>
+                <includeStructuredArguments>true</includeStructuredArguments>
+                <includeTags>true</includeTags>
+                <customFields>{"app_name":"${appName}"}</customFields>
+                <!-- 确保traceId/spanId从MDC中包含 -->
+                <includeMdcKeys>traceId,spanId</includeMdcKeys>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="JSON_CONSOLE"/>
+        </root>
+    </springProfile>
+
+</configuration>

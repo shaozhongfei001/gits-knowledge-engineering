@@ -8,10 +8,10 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gien.gits.adapter.persistence.JdbcClaimRepository;
-import com.gien.gits.adapter.persistence.JdbcInteractionRepository;
-import com.gien.gits.adapter.persistence.JdbcOperatingCaseRepository;
-import com.gien.gits.adapter.persistence.scenario.JdbcCustomerJourneyRepository;
+import com.gien.gits.ontology.port.WritableClaimRepository;
+import com.gien.gits.ontology.port.WritableInteractionRepository;
+import com.gien.gits.ontology.port.WritableOperatingCaseRepository;
+import com.gien.gits.customerjourney.port.WritableCustomerJourneyRepository;
 import com.gien.gits.customerjourney.CustomerJourney;
 import com.gien.gits.customerjourney.CustomerJourneyOrchestrator;
 import com.gien.gits.customerjourney.InsightClaim;
@@ -23,6 +23,7 @@ import com.gien.gits.customerjourney.ProductCandidateClaim;
 import com.gien.gits.ontology.CaseStatus;
 import com.gien.gits.ontology.Claim;
 import com.gien.gits.ontology.ClaimStatus;
+import com.gien.gits.ontology.ClaimType;
 import com.gien.gits.ontology.Interaction;
 import com.gien.gits.ontology.OperatingCase;
 
@@ -35,15 +36,15 @@ import com.gien.gits.ontology.OperatingCase;
 @Service
 public class CustomerJourneyService {
 
-    private final JdbcOperatingCaseRepository caseRepo;
-    private final JdbcInteractionRepository interactionRepo;
-    private final JdbcClaimRepository claimRepo;
-    private final JdbcCustomerJourneyRepository journeyRepo;
+    private final WritableOperatingCaseRepository caseRepo;
+    private final WritableInteractionRepository interactionRepo;
+    private final WritableClaimRepository claimRepo;
+    private final WritableCustomerJourneyRepository journeyRepo;
 
-    public CustomerJourneyService(JdbcOperatingCaseRepository caseRepo,
-                                  JdbcInteractionRepository interactionRepo,
-                                  JdbcClaimRepository claimRepo,
-                                  JdbcCustomerJourneyRepository journeyRepo) {
+    public CustomerJourneyService(WritableOperatingCaseRepository caseRepo,
+                                  WritableInteractionRepository interactionRepo,
+                                  WritableClaimRepository claimRepo,
+                                  WritableCustomerJourneyRepository journeyRepo) {
         this.caseRepo = Objects.requireNonNull(caseRepo, "caseRepo");
         this.interactionRepo = Objects.requireNonNull(interactionRepo, "interactionRepo");
         this.claimRepo = Objects.requireNonNull(claimRepo, "claimRepo");
@@ -119,7 +120,7 @@ public class CustomerJourneyService {
 
         // 同时创建产品候选对应的Claim（使用独立的claimId，避免与原始Claim冲突）
         claimRepo.save(new Claim(UUID.randomUUID(), insight.operatingCaseId(),
-                "PRODUCT_CANDIDATE", ClaimStatus.CANDIDATE, "产品候选: " + productName,
+                ClaimType.PRODUCT_CANDIDATE, ClaimStatus.CANDIDATE, "产品候选: " + productName,
                 Instant.now(), null, Instant.now(), null));
 
         // 落库
