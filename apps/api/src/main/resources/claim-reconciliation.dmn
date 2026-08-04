@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20230324/MODEL/" id="gits-claim-reconciliation" name="GITS Claim Reconciliation" namespace="https://gientech.com/gits/kno/dmn">
+  <inputData id="input-authoritative-match" name="authoritativeMatch">
+    <variable id="var-authoritative-match" name="authoritativeMatch" typeRef="boolean"/>
+  </inputData>
+  <inputData id="input-conflict" name="conflictDetected">
+    <variable id="var-conflict" name="conflictDetected" typeRef="boolean"/>
+  </inputData>
+  <inputData id="input-evidence" name="evidenceComplete">
+    <variable id="var-evidence" name="evidenceComplete" typeRef="boolean"/>
+  </inputData>
+  <decision id="decision-reconciliation-status" name="reconciliationStatus">
+    <variable id="var-status" name="reconciliationStatus" typeRef="string"/>
+    <informationRequirement><requiredInput href="#input-authoritative-match"/></informationRequirement>
+    <informationRequirement><requiredInput href="#input-conflict"/></informationRequirement>
+    <informationRequirement><requiredInput href="#input-evidence"/></informationRequirement>
+    <decisionTable id="table-reconciliation" hitPolicy="FIRST">
+      <input id="in-conflict"><inputExpression id="expr-conflict" typeRef="boolean"><text>conflictDetected</text></inputExpression></input>
+      <input id="in-match"><inputExpression id="expr-match" typeRef="boolean"><text>authoritativeMatch</text></inputExpression></input>
+      <input id="in-evidence"><inputExpression id="expr-evidence" typeRef="boolean"><text>evidenceComplete</text></inputExpression></input>
+      <output id="out-status" name="reconciliationStatus" typeRef="string"/>
+      <rule id="rule-conflict"><inputEntry id="r1i1"><text>true</text></inputEntry><inputEntry id="r1i2"><text>-</text></inputEntry><inputEntry id="r1i3"><text>-</text></inputEntry><outputEntry id="r1o"><text>"CONFLICT_REQUIRES_HUMAN_REVIEW"</text></outputEntry></rule>
+      <rule id="rule-verified"><inputEntry id="r2i1"><text>false</text></inputEntry><inputEntry id="r2i2"><text>true</text></inputEntry><inputEntry id="r2i3"><text>true</text></inputEntry><outputEntry id="r2o"><text>"VERIFIED_FACT"</text></outputEntry></rule>
+      <rule id="rule-candidate"><inputEntry id="r3i1"><text>false</text></inputEntry><inputEntry id="r3i2"><text>-</text></inputEntry><inputEntry id="r3i3"><text>-</text></inputEntry><outputEntry id="r3o"><text>"CANDIDATE_CLAIM"</text></outputEntry></rule>
+    </decisionTable>
+  </decision>
+</definitions>
