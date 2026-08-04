@@ -3,20 +3,34 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": {"node": ">=22"},
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "vite",
     "check": "vue-tsc --noEmit",
     "test": "vitest run",
-    "build": "vue-tsc --noEmit && vite build"
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "build": "vue-tsc --noEmit && vite build",
+    "e2e": "playwright test",
+    "e2e:headed": "playwright test --headed"
   },
   "dependencies": {
+    "@vicons/ionicons5": "^0.13.0",
+    "axios": "^1.15.2",
+    "naive-ui": "^2.44.1",
     "tdesign-vue-next": "1.20.5",
-    "vue": "3.5.40"
+    "vue": "3.5.40",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "@types/node": "22.20.1",
     "@vitejs/plugin-vue": "6.0.8",
+    "@vitest/coverage-v8": "^4.1.10",
+    "@vue/test-utils": "^2.4.6",
+    "happy-dom": "^20.9.0",
     "typescript": "5.9.3",
     "vite": "8.2.0",
     "vitest": "4.1.10",

@@ -1,0 +1,373 @@
+<template>
+  <div class="customer-view">
+    <div v-if="loading" class="loading-state">
+      <n-spin size="large" />
+    </div>
+
+    <template v-else-if="context">
+      <!-- 客户基本信息 -->
+      <div class="section customer-info-section">
+        <div class="section-header">
+          <h2>{{ context.customer.customerName }}</h2>
+          <RiskBadge :level="context.customer.riskLevel" />
+        </div>
+        <n-grid :cols="4" :x-gap="16" :y-gap="12">
+          <n-gi>
+            <div class="info-item">
+              <span class="info-label">行业</span>
+              <span class="info-value">{{ industryLabel }}</span>
+            </div>
+          </n-gi>
+          <n-gi>
+            <div class="info-item">
+              <span class="info-label">规模</span>
+              <span class="info-value">{{ scaleLabel }}</span>
+            </div>
+          </n-gi>
+          <n-gi>
+            <div class="info-item">
+              <span class="info-label">客户层级</span>
+              <span class="info-value tier">{{ tierLabel }}</span>
+            </div>
+          </n-gi>
+          <n-gi>
+            <div class="info-item">
+              <span class="info-label">风险等级</span>
+              <span class="info-value">{{ riskLabel }}</span>
+            </div>
+          </n-gi>
+          <n-gi>
+            <div class="info-item">
+              <span class="info-label">统一社会信用代码</span>
+              <span class="info-value">{{ context.customer.unifiedSocialCreditCode || '-' }}</span>
+            </div>
+          </n-gi>
+          <n-gi>
+            <div class="info-item">
+              <span class="info-label">注册资本</span>
+              <span class="info-value">{{ formatCapital(context.customer.registeredCapitalCny) }}</span>
+            </div>
+          </n-gi>
+          <n-gi>
+            <div class="info-item">
+              <span class="info-label">客户经理</span>
+              <span class="info-value">{{ context.customer.rmName || '-' }}</span>
+            </div>
+          </n-gi>
+          <n-gi>
+            <div class="info-item">
+              <span class="info-label">管辖区</span>
+              <span class="info-value">{{ context.customer.region || '-' }}</span>
+            </div>
+          </n-gi>
+        </n-grid>
+        <div v-if="context.customer.relationshipSummary" class="summary-row">
+          <span class="info-label">关系概要</span>
+          <span class="summary-text">{{ context.customer.relationshipSummary }}</span>
+        </div>
+      </div>
+
+      <!-- KYC缺口摘要 -->
+      <div v-if="context.kycGapProfile" class="section">
+        <h3 class="section-title">KYC缺口摘要</h3>
+        <n-grid :cols="3" :x-gap="16" :y-gap="12">
+          <n-gi>
+            <n-card size="small" class="gap-card gap-unknown">
+              <div class="gap-count">{{ context.kycGapProfile.unknownItems?.length || 0 }}</div>
+              <div class="gap-label">未知项</div>
+              <div v-if="context.kycGapProfile.unknownItems?.length" class="gap-items">
+                <n-tag v-for="item in context.kycGapProfile.unknownItems.slice(0, 5)" :key="item" size="small" type="error">{{ item }}</n-tag>
+              </div>
+            </n-card>
+          </n-gi>
+          <n-gi>
+            <n-card size="small" class="gap-card gap-partial">
+              <div class="gap-count">{{ context.kycGapProfile.partialKnownItems?.length || 0 }}</div>
+              <div class="gap-label">部分已知</div>
+              <div v-if="context.kycGapProfile.partialKnownItems?.length" class="gap-items">
+                <n-tag v-for="item in context.kycGapProfile.partialKnownItems.slice(0, 5)" :key="item" size="small" type="warning">{{ item }}</n-tag>
+              </div>
+            </n-card>
+          </n-gi>
+          <n-gi>
+            <n-card size="small" class="gap-card gap-stale">
+              <div class="gap-count">{{ context.kycGapProfile.staleItems?.length || 0 }}</div>
+              <div class="gap-label">过期项</div>
+              <div v-if="context.kycGapProfile.staleItems?.length" class="gap-items">
+                <n-tag v-for="item in context.kycGapProfile.staleItems.slice(0, 5)" :key="item" size="small" type="info">{{ item }}</n-tag>
+              </div>
+            </n-card>
+          </n-gi>
+        </n-grid>
+        <div v-if="context.kycGapProfile.priorityQuestions?.length" class="priority-questions">
+          <span class="info-label">优先问题：</span>
+          <ul>
+            <li v-for="q in context.kycGapProfile.priorityQuestions" :key="q">{{ q }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 机会信号 -->
+      <div class="section">
+        <h3 class="section-title">机会信号</h3>
+        <div v-if="context.opportunitySignals?.length" class="signal-list">
+          <SignalCard v-for="signal in context.opportunitySignals" :key="signal.signalId" :signal="signal" />
+        </div>
+        <n-empty v-else description="暂无机会信号" size="small" />
+      </div>
+
+      <!-- 交易流水摘要 -->
+      <div v-if="context.recentTransactions?.length" class="section">
+        <h3 class="section-title">近期交易流水</h3>
+        <n-data-table :columns="txColumns" :data="context.recentTransactions" :bordered="false" size="small" />
+      </div>
+
+      <!-- 旅程列表 -->
+      <div class="section">
+        <h3 class="section-title">经营旅程</h3>
+        <div v-if="context.activeJourneys?.length" class="journey-list">
+          <n-card
+            v-for="journey in context.activeJourneys"
+            :key="journey.journeyId"
+            class="journey-card"
+            hoverable
+            @click="goToJourney(journey.journeyId)"
+          >
+            <div class="journey-header">
+              <span class="journey-id">{{ journey.journeyId.slice(0, 8) }}</span>
+              <n-tag :type="journeyPhaseColor(journey.phase)" size="small">
+                {{ journeyPhaseLabel(journey.phase) }}
+              </n-tag>
+            </div>
+            <div class="journey-meta">
+              <span>开始时间: {{ formatDate(journey.startedAt) }}</span>
+            </div>
+          </n-card>
+        </div>
+        <n-empty v-else description="暂无经营旅程" size="small" />
+      </div>
+    </template>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import {
+  NSpin, NGrid, NGi, NCard, NTag, NEmpty, NDataTable
+} from 'naive-ui'
+import type { DataTableColumns } from 'naive-ui'
+import RiskBadge from '../components/RiskBadge.vue'
+import SignalCard from '../components/SignalCard.vue'
+import { fetchCustomerContext } from '../api/engagement'
+import type { CustomerContext, Industry, EnterpriseScale, CustomerTier, RiskLevel, JourneyPhase, TransactionRecord } from '../api/engagement'
+import {
+  INDUSTRY_LABELS, ENTERPRISE_SCALE_LABELS, CUSTOMER_TIER_LABELS,
+  RISK_LEVEL_LABELS, JOURNEY_PHASE_LABELS
+} from '../api/engagement'
+
+const route = useRoute()
+const router = useRouter()
+const context = ref<CustomerContext | null>(null)
+const loading = ref(true)
+
+const industryLabel = computed(() =>
+  context.value?.customer.industry ? INDUSTRY_LABELS[context.value.customer.industry as Industry] : '-'
+)
+const scaleLabel = computed(() =>
+  context.value?.customer.enterpriseScale ? ENTERPRISE_SCALE_LABELS[context.value.customer.enterpriseScale as EnterpriseScale] : '-'
+)
+const tierLabel = computed(() =>
+  context.value?.customer.customerTier ? CUSTOMER_TIER_LABELS[context.value.customer.customerTier as CustomerTier] : '-'
+)
+const riskLabel = computed(() =>
+  context.value?.customer.riskLevel ? RISK_LEVEL_LABELS[context.value.customer.riskLevel as RiskLevel] : '-'
+)
+
+const txColumns: DataTableColumns<TransactionRecord> = [
+  { title: '时间', key: 'occurredAt', width: 120, render: (row) => formatDate(row.occurredAt) },
+  { title: '类型', key: 'transactionType', width: 100 },
+  { title: '金额', key: 'amount', width: 120, render: (row) => `${row.amount.toLocaleString()} ${row.currency}` },
+  { title: '描述', key: 'description', ellipsis: { tooltip: true } }
+]
+
+function formatCapital(value?: number): string {
+  if (!value) return '-'
+  if (value >= 1e8) return `${(value / 1e8).toFixed(2)}亿元`
+  if (value >= 1e4) return `${(value / 1e4).toFixed(2)}万元`
+  return `${value.toLocaleString()}元`
+}
+
+function formatDate(dateStr: string): string {
+  try {
+    return new Date(dateStr).toLocaleDateString('zh-CN')
+  } catch {
+    return dateStr
+  }
+}
+
+function journeyPhaseLabel(phase: JourneyPhase): string {
+  return JOURNEY_PHASE_LABELS[phase] || phase
+}
+
+function journeyPhaseColor(phase: JourneyPhase): 'success' | 'warning' | 'info' | 'default' | 'error' {
+  switch (phase) {
+    case 'COMPLETED': return 'success'
+    case 'POSTVISIT_REVIEW': return 'warning'
+    case 'KYC_COLLECT': return 'info'
+    default: return 'default'
+  }
+}
+
+function goToJourney(journeyId: string) {
+  router.push({ name: 'JourneyTimeline', params: { id: journeyId } })
+}
+
+onMounted(async () => {
+  const customerId = route.params.id as string
+  try {
+    context.value = await fetchCustomerContext(customerId)
+  } catch (e) {
+    console.error('Failed to load customer context:', e)
+  } finally {
+    loading.value = false
+  }
+})
+</script>
+
+<style scoped>
+.customer-view {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+.section {
+  margin-bottom: 24px;
+}
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.section-header h2 {
+  font-size: 22px;
+  color: #003366;
+  margin: 0;
+}
+.section-title {
+  font-size: 16px;
+  color: #003366;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #b8860b;
+  display: inline-block;
+}
+.customer-info-section {
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.info-label {
+  font-size: 12px;
+  color: #8c8c8c;
+}
+.info-value {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+.info-value.tier {
+  color: #b8860b;
+}
+.summary-row {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.summary-text {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+}
+.gap-card {
+  text-align: center;
+}
+.gap-count {
+  font-size: 28px;
+  font-weight: 700;
+}
+.gap-unknown .gap-count { color: #cf1322; }
+.gap-partial .gap-count { color: #d46b08; }
+.gap-stale .gap-count { color: #003366; }
+.gap-label {
+  font-size: 13px;
+  color: #666;
+  margin: 4px 0 8px;
+}
+.gap-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+.priority-questions {
+  margin-top: 12px;
+  padding: 12px;
+  background: #fffbe6;
+  border-radius: 6px;
+  border-left: 3px solid #b8860b;
+}
+.priority-questions ul {
+  margin: 4px 0 0;
+  padding-left: 20px;
+  font-size: 13px;
+  color: #333;
+}
+.signal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.journey-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+.journey-card {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.journey-card:hover {
+  transform: translateY(-1px);
+}
+.journey-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.journey-id {
+  font-family: monospace;
+  font-size: 13px;
+  color: #666;
+}
+.journey-meta {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #999;
+}
+</style>

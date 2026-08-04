@@ -1,57 +1,94 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { Alert as TAlert, Empty as TEmpty, Loading as TLoading, Tag as TTag } from 'tdesign-vue-next'
-import 'tdesign-vue-next/es/alert/style/index.css'
-import 'tdesign-vue-next/es/empty/style/index.css'
-import 'tdesign-vue-next/es/loading/style/index.css'
-import 'tdesign-vue-next/es/tag/style/index.css'
-import { loadArchitectureStatus, type LoadState } from './architectureStatus'
+import { ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { NMenu, NLayout, NLayoutHeader, NLayoutContent, NButton, NIcon } from 'naive-ui'
+import type { MenuOption } from 'naive-ui'
 
-const state = ref<LoadState>({ kind: 'loading' })
+const router = useRouter()
+const route = useRoute()
 
-onMounted(async () => {
-  state.value = await loadArchitectureStatus()
-})
+const menuOptions: MenuOption[] = [
+  { label: '客户经营概览', key: 'Dashboard' },
+  { label: '持续经营工作台', key: 'EngagementWorkspace' }
+]
+
+const activeKey = ref('Dashboard')
+
+function handleMenuUpdate(key: string) {
+  activeKey.value = key
+  router.push({ name: key })
+}
+
+// Sync active key with route
+import { watch } from 'vue'
+watch(() => route.name, (name) => {
+  if (name && typeof name === 'string') {
+    activeKey.value = name
+  }
+}, { immediate: true })
 </script>
 
 <template>
-  <main class="shell">
-    <header class="hero">
-      <div>
-        <p class="eyebrow">GITS · KNOWLEDGE ENGINEERING</p>
-        <h1>知识工程与岗位智能体基础能力</h1>
-        <p class="subtitle">可编译语义合同 · 运行本体控制平面 · 可重建投影</p>
+  <n-layout class="app-layout">
+    <n-layout-header class="app-header" bordered>
+      <div class="header-left">
+        <span class="brand" @click="router.push('/')">GITS</span>
+        <span class="brand-sub">客户经营闭环</span>
       </div>
-      <t-tag theme="warning" variant="light">工程候选</t-tag>
-    </header>
-
-    <section class="status-panel" aria-live="polite">
-      <t-loading v-if="state.kind === 'loading'" text="正在核对工程状态…" />
-      <t-empty v-else-if="state.kind === 'empty'" description="状态服务未返回内容" />
-      <t-alert v-else-if="state.kind === 'timeout'" theme="warning" :message="state.message" />
-      <t-alert v-else-if="state.kind === 'error'" theme="error" :message="state.message" />
-      <template v-else>
-        <div class="status-grid">
-          <div><span>开发包</span><strong>{{ state.value.packageId }}</strong></div>
-          <div><span>当前状态</span><strong>{{ state.value.state }}</strong></div>
-          <div><span>生产就绪</span><strong>否</strong></div>
-          <div><span>已冻结</span><strong>否</strong></div>
-        </div>
-      </template>
-    </section>
-
-    <section class="capabilities">
-      <article>
-        <span>01</span><h2>规范语义</h2><p>LinkML、OWL、SKOS与SHACL形成可审查、可编译、可版本化的语义合同。</p>
-      </article>
-      <article>
-        <span>02</span><h2>责任链</h2><p>Case、Interaction、Claim、Evidence、人工确认、Action与回执保持可追溯。</p>
-      </article>
-      <article>
-        <span>03</span><h2>真实门禁</h2><p>合同、构建、证据、安全和E2E必须以可执行命令与物证通过，拒绝假绿。</p>
-      </article>
-    </section>
-
-    <footer>总体22模块保持全景覆盖；首期仅验证客户持续经营六阶段主链。</footer>
-  </main>
+      <n-menu
+        mode="horizontal"
+        :value="activeKey"
+        :options="menuOptions"
+        @update:value="handleMenuUpdate"
+        class="header-menu"
+      />
+    </n-layout-header>
+    <n-layout-content class="app-content">
+      <router-view />
+    </n-layout-content>
+  </n-layout>
 </template>
+
+<style scoped>
+.app-layout {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+.app-header {
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  height: 56px;
+  background: linear-gradient(135deg, #003366, #004d99);
+}
+.header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-right: 32px;
+}
+.brand {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  cursor: pointer;
+  letter-spacing: 2px;
+}
+.brand-sub {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+.header-menu {
+  background: transparent;
+}
+:deep(.header-menu .n-menu-item) {
+  color: rgba(255, 255, 255, 0.8);
+}
+:deep(.header-menu .n-menu-item--selected) {
+  color: #ffd700;
+}
+.app-content {
+  padding: 0;
+  min-height: calc(100vh - 56px);
+}
+</style>
