@@ -5,6 +5,7 @@
   <artifactId>human-action</artifactId>
   <dependencies>
     <dependency><groupId>com.gien.gits</groupId><artifactId>operational-ontology</artifactId><version>${project.version}</version></dependency>
+    <dependency><groupId>com.gien.gits</groupId><artifactId>scenario-hermes</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>org.junit.jupiter</groupId><artifactId>junit-jupiter</artifactId><scope>test</scope></dependency>
   </dependencies>
 </project>
