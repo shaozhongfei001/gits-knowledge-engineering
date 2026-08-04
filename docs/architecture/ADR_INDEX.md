@@ -12,5 +12,8 @@
 | ADR-0008 | 领域前缀与标识 hzb→gits | Accepted | owner批准；合同/URI/事件/制品名统一 gits；历史证据日志不回写 |
 | ADR-0009 | gits:Customer Spike 权威源 A_ZHCX_CUST_BASE | Accepted spike_only (superseded for promotion by ADR-0010) | 源定位确认；正式化见 ADR-0010 / P4 |
 | ADR-0010 | 引入 gits:Customer 语义类并正式登记 Source Contract | Accepted | 语义合同层；CTR-DATA-002；CTR-MAP-001→versioned_mapping；不进运营控制面；loop P4 |
+| ADR-0011 | 六边形架构 (Ports & Adapters) | Accepted | 领域核心零基础设施依赖；适配器实现端口接口 |
+| ADR-0012 | DMN引擎选型 — 轻量XML解析 vs KIE | Accepted | 选择轻量XML解析避免Jakarta/Javax冲突 |
+| ADR-0013 | 可观测性技术栈选择 | Accepted | Micrometer+Prometheus+Zipkin+Logstash |
 
 正式版本、Owner、日期、替代方案、后果和验证证据将在对应ADR评审时补齐；本索引不能替代ADR批准。
