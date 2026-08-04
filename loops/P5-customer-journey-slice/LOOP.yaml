@@ -2,7 +2,7 @@
   "schema_version": "2.0",
   "loop_id": "P5-customer-journey-slice",
   "title": "Customer Journey Vertical Slice — OperatingCase State Chain (M17→M18→M20→M21→M22)",
-  "status": "qa_pass",
+  "status": "closed",
   "implementation_actor": "tech_lead",
   "objective": [
     "Implement the OperatingCase state chain as the shared spine for M17→M18→M20→M21→M22.",
