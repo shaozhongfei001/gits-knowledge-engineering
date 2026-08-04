@@ -1,0 +1,65 @@
+{
+  "version": "0.1.0",
+  "generatedAt": "2026-08-04T09:33:26Z",
+  "description": "Hermes-Oracle融合知识双向引用索引",
+  "hermesToOracle": {
+    "CASE-HERMES-UNKNOWN": {
+      "customerId": null,
+      "appliedMetrics": [],
+      "lineageTraces": [
+        "A_CUST_ANALYSYS_IFO",
+        "A_ZHCX_CUST_EXP",
+        "F_CUST_CRC_IFO",
+        "F_CUST_SIGN_IFO",
+        "F_STATISTIC_CUSTINFO",
+        "DM_CSP_ALL_CUST"
+      ],
+      "derivedFieldCount": 0,
+      "dataQualityIssueCount": 4
+    }
+  },
+  "oracleToHermes": {
+    "A_CUST_ANALYSYS_IFO": {
+      "tableDescription": "客户分析信息表",
+      "appliedToCases": [
+        "CASE-HERMES-UNKNOWN"
+      ],
+      "hermesEntity": "customer"
+    },
+    "A_ZHCX_CUST_EXP": {
+      "tableDescription": "客户财务报表",
+      "appliedToCases": [
+        "CASE-HERMES-UNKNOWN"
+      ],
+      "hermesEntity": "customer"
+    },
+    "F_CUST_CRC_IFO": {
+      "tableDescription": "客户信用卡信息",
+      "appliedToCases": [
+        "CASE-HERMES-UNKNOWN"
+      ],
+      "hermesEntity": "customer"
+    },
+    "F_CUST_SIGN_IFO": {
+      "tableDescription": "客户签约信息",
+      "appliedToCases": [
+        "CASE-HERMES-UNKNOWN"
+      ],
+      "hermesEntity": "customer"
+    },
+    "F_STATISTIC_CUSTINFO": {
+      "tableDescription": "客户统计信息",
+      "appliedToCases": [
+        "CASE-HERMES-UNKNOWN"
+      ],
+      "hermesEntity": "customer"
+    },
+    "DM_CSP_ALL_CUST": {
+      "tableDescription": "全量客户数据集市",
+      "appliedToCases": [
+        "CASE-HERMES-UNKNOWN"
+      ],
+      "hermesEntity": "customer"
+    }
+  }
+}

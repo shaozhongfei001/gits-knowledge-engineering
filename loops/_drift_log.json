@@ -7,41 +7,59 @@
       "P2-knowledge-engineering-build: LOOP.yaml status='in_progress' != STATE.json status='qa_pass'",
       "P3-mapping-and-gaps: LOOP.yaml status='in_progress' != STATE.json status='qa_pass'",
       "P4-customer-semantic-formalization: LOOP.yaml status='closed' != STATE.json status='qa_pass'"
-    ]
+    ],
+    "resolved_at": "2026-08-04T00:00:00+08:00",
+    "resolution": "All P1-P4 LOOP.yaml status fields now aligned with STATE.json (all closed). Historical drift entries were from earlier states; current files are consistent."
   },
   {
     "detected_at": "2026-08-02T14:37:42.866799+00:00",
     "drift_count": 1,
     "drifts": [
       "P5-customer-journey-slice: LOOP.yaml status='ready_for_independent_qa' != STATE.json status='qa_pass'"
-    ]
+    ],
+    "resolved_at": "2026-08-04T00:00:00+08:00",
+    "resolution": "P5 LOOP.yaml status now 'qa_pass', aligned with STATE.json."
   },
   {
     "detected_at": "2026-08-03T09:17:35.140749+00:00",
     "drift_count": 1,
     "drifts": [
       "P6-e2e-business-chain: LOOP.yaml status='implementation' != STATE.json status='completed'"
-    ]
+    ],
+    "resolved_at": "2026-08-04T00:00:00+08:00",
+    "resolution": "P6 LOOP.yaml status updated from 'implementation' to 'completed', aligned with STATE.json."
   },
   {
     "detected_at": "2026-08-03T09:24:00.000379+00:00",
     "drift_count": 1,
     "drifts": [
       "P6-e2e-business-chain: LOOP.yaml status='implementation' != STATE.json status='completed'"
-    ]
+    ],
+    "resolved_at": "2026-08-04T00:00:00+08:00",
+    "resolution": "Same as above — P6 LOOP.yaml fixed."
   },
   {
     "detected_at": "2026-08-03T09:52:47.923580+00:00",
     "drift_count": 1,
     "drifts": [
       "P6-e2e-business-chain: LOOP.yaml status='implementation' != STATE.json status='completed'"
-    ]
+    ],
+    "resolved_at": "2026-08-04T00:00:00+08:00",
+    "resolution": "Same as above — P6 LOOP.yaml fixed."
   },
   {
     "detected_at": "2026-08-03T09:56:53.951179+00:00",
     "drift_count": 1,
     "drifts": [
       "P6-e2e-business-chain: LOOP.yaml status='implementation' != STATE.json status='completed'"
-    ]
+    ],
+    "resolved_at": "2026-08-04T00:00:00+08:00",
+    "resolution": "Same as above — P6 LOOP.yaml fixed."
+  },
+  {
+    "detected_at": "2026-08-04T00:00:00+08:00",
+    "drift_count": 0,
+    "drifts": [],
+    "note": "P10 governance-steward drift reconciliation complete. All P1-P6 LOOP.yaml status fields now aligned with their respective STATE.json. No remaining drifts detected."
   }
 ]

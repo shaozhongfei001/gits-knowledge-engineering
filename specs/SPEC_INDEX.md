@@ -5,9 +5,7 @@
 
 ## 当前 Active Dispatch/Loop
 
-| Dispatch | Packet | Loop | Status | Implementation Actor | 合同关联 |
-|---|---|---|---|---|---|
-| P5 | P5-CUSTOMER-JOURNEY-SLICE | P5-customer-journey-slice | CLOSED (QA pass) | CTR-API-001, CTR-SEM-001, CTR-SEM-002, CTR-DATA-001, CTR-DATA-002 |
+> 无活跃Loop。P0-P10全部已关闭。
 
 ## 已关闭 Dispatch/Loop
 
@@ -18,12 +16,16 @@
 | P2 | P2-KNOWLEDGE-ENGINEERING-BUILD | P2-knowledge-engineering-build | qa_pass → CLOSED | independent_qa_subagent | EVIDENCE.json independent_qa pass + git commit 4432973 |
 | P3 | P3-MAPPING-AND-GAPS | P3-mapping-and-gaps | qa_pass → CLOSED | independent_qa_subagent | EVIDENCE.json independent_qa pass + git commit 0313da2 |
 | P4 | P4-CUSTOMER-SEMANTIC-FORMALIZATION | P4-customer-semantic-formalization | qa_pass → CLOSED | independent_qa_agent | EVIDENCE.json independent_qa pass + Baton transferred 2026-08-02 |
+| P5 | P5-CUSTOMER-JOURNEY-SLICE | P5-customer-journey-slice | CLOSED (QA pass) | independent_qa_agent | CTR-API-001, CTR-SEM-001, CTR-SEM-002, CTR-DATA-001, CTR-DATA-002 |
+| P6 | P6-E2E-BUSINESS-CHAIN | P6-e2e-business-chain | completed | tech_lead | E2E业务链 HTTP→H2→M17→M22 全链路通过 |
+| P7 | P7-MYSQL-COMPATIBILITY | P7-mysql-compatibility | COMPLETED | tech_lead | MySQL兼容性迁移完成，H2双版本Flyway |
+| P8 | P8-HERMES-SCENARIO-LANDING | P8-hermes-scenario-landing | COMPLETED | tech_lead | 华东精工场景全链路落地，AT-001~AT-006通过 |
+| P9 | P9-HUADONG-ENGAGEMENT-CLOSED-LOOP | P9-huadong-engagement-closed-loop | COMPLETED | tech_lead | 9个Gap全部交付，31测试通过，前端Vite构建通过 |
+| P10 | P10-QUALITY-HARDENING | P10 | COMPLETED | tech_lead | 6个Gap全部交付，83后端+102前端测试，Docker+CI就绪 |
 
 ## 规划中 Dispatch/Loop
 
-| Dispatch | Loop | Status | 前置条件 |
-|---|---|---|---|
-| P1 | P1-oracle-readonly | closed (QA pass) | Oracle VM 可达；ADR-0007 已批准 |
+> 暂无。待确定P11方向。
 
 ## 模块-阶段映射
 

@@ -1,0 +1,513 @@
+{
+  "version": "0.1.0",
+  "generatedAt": "2026-08-04T09:33:26Z",
+  "description": "Hermes业务数据与Oracle元数据的融合知识包",
+  "fusionModel": {
+    "businessData": "Hermes演示数据包_V1.0 — 客户经理视角的业务数据",
+    "metadataLayer": "Oracle编目库 — 数据仓库指标口径、血缘关系、质量问题",
+    "fusionPrinciple": "业务数据为事实，元数据为注解；注解不改变事实，但提供可解释性"
+  },
+  "cases": [
+    {
+      "caseId": "CASE-HERMES-UNKNOWN",
+      "caseType": "CUSTOMER_OPERATING",
+      "subject": {
+        "customerId": null,
+        "customerName": null,
+        "industry": null,
+        "customerType": null,
+        "creditRating": null
+      },
+      "businessData": {
+        "creditFacilities": [],
+        "timeline": {},
+        "kycGaps": {},
+        "events": {},
+        "recon": {}
+      },
+      "oracleAnnotations": {
+        "appliedMetrics": [],
+        "lineageTraces": [
+          {
+            "tableName": "A_CUST_ANALYSYS_IFO",
+            "tableDescription": "客户分析信息表",
+            "hermesEntity": "customer",
+            "fieldLineageCount": 20,
+            "sampleLineage": [
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              }
+            ]
+          },
+          {
+            "tableName": "A_ZHCX_CUST_EXP",
+            "tableDescription": "客户财务报表",
+            "hermesEntity": "customer",
+            "fieldLineageCount": 196,
+            "sampleLineage": [
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              }
+            ]
+          },
+          {
+            "tableName": "F_CUST_CRC_IFO",
+            "tableDescription": "客户信用卡信息",
+            "hermesEntity": "customer",
+            "fieldLineageCount": 53,
+            "sampleLineage": [
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              }
+            ]
+          },
+          {
+            "tableName": "F_CUST_SIGN_IFO",
+            "tableDescription": "客户签约信息",
+            "hermesEntity": "customer",
+            "fieldLineageCount": 17,
+            "sampleLineage": [
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              }
+            ]
+          },
+          {
+            "tableName": "F_STATISTIC_CUSTINFO",
+            "tableDescription": "客户统计信息",
+            "hermesEntity": "customer",
+            "fieldLineageCount": 90,
+            "sampleLineage": [
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              }
+            ]
+          },
+          {
+            "tableName": "DM_CSP_ALL_CUST",
+            "tableDescription": "全量客户数据集市",
+            "hermesEntity": "customer",
+            "fieldLineageCount": 20,
+            "sampleLineage": [
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              },
+              {
+                "sourceField": null,
+                "targetField": null,
+                "transformation": null
+              }
+            ]
+          }
+        ],
+        "derivedFieldLogic": [],
+        "dataQualityIssues": [
+          {
+            "issueId": "issue_452b8dff7d",
+            "severity": "MAJOR",
+            "category": "DICT_ANOMALY",
+            "objectRef": "program_argument",
+            "message": "ALL_ARGUMENTS 无参数记录的过程: SP_F_CUST_SIGN_IFO, SP_F_STATISTIC_CUSTINFO, UP_CONTROL_PROCESS_SUB1；源码显式声明参数，Gate6 已改用 SOURCE_PARSE 并标注。需 DBA 侧确认字典异常原因。",
+            "status": "OPEN",
+            "impactOnHermes": "Oracle数据字典与源码不一致，可能导致Hermes中显示的指标值与数据仓库实际计算结果存在偏差。客户经理在Hermes界面看到的'逾期率'可能与后台报表不一致。"
+          },
+          {
+            "issueId": "issue_f5fc69d6bf",
+            "severity": "MAJOR",
+            "category": "PRIVILEGE_GAP",
+            "objectRef": "DBETL",
+            "message": "外部 Schema `DBETL` 被 EDWCRM 源码调用但 ALL_OBJECTS 不可见（ALL_DEPENDENCIES 亦无记录）→ 调度日志包血缘断点；需业务/DBA 确认是否另开权限",
+            "status": "OPEN",
+            "impactOnHermes": "DBETL Schema权限缺失导致调度日志血缘断点。Hermes中显示的'最近更新时间'可能无法追溯到具体的ETL作业执行记录。"
+          },
+          {
+            "issueId": "issue_aef5076292",
+            "severity": "MINOR",
+            "category": "COVERAGE_GAP",
+            "objectRef": "SYSMAN.MGMT_ECM_MD_ALL_TBL_COLUMNS",
+            "message": "可见物化视图 SYSMAN.MGMT_ECM_MD_ALL_TBL_COLUMNS 属系统 Schema，未做 SQL 提取（INVENTORY_ONLY 策略）；如被 EDWCRM 依赖需补采",
+            "status": "OPEN",
+            "impactOnHermes": "系统Schema未做SQL提取，如果Hermes依赖的系统级视图被修改，可能影响数据一致性但不会被血缘追踪发现。"
+          },
+          {
+            "issueId": "issue_dbbd57efa9",
+            "severity": "INFO",
+            "category": "ARCHITECTURE_FINDING",
+            "objectRef": "all_scheduler_jobs",
+            "message": "EDWCRM 在 ALL_SCHEDULER_JOBS 中无作业（可见 4 个均为系统 Schema）。EDWCRM 加工链由外部 ETL 调度驱动：SP_* 过程为调度衔接入口（源码头注释自述『调度衔接调度包入口』），执行日志写入 DBETL.PACK_LOG_UTL（不可见）。",
+            "status": "OPEN",
+            "impactOnHermes": "EDWCRM由外部ETL调度驱动，Hermes中的数据刷新依赖于调度链路的完整性。如调度失败，Hermes可能显示过期的业务快照。"
+          }
+        ]
+      },
+      "status": "ACTIVE",
+      "createdAt": "2026-08-04T09:33:26Z"
+    }
+  ],
+  "metricAnnotations": [],
+  "lineageTraces": [
+    {
+      "tableName": "A_CUST_ANALYSYS_IFO",
+      "tableDescription": "客户分析信息表",
+      "hermesEntity": "customer",
+      "fieldLineageCount": 20,
+      "sampleLineage": [
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        }
+      ]
+    },
+    {
+      "tableName": "A_ZHCX_CUST_EXP",
+      "tableDescription": "客户财务报表",
+      "hermesEntity": "customer",
+      "fieldLineageCount": 196,
+      "sampleLineage": [
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        }
+      ]
+    },
+    {
+      "tableName": "F_CUST_CRC_IFO",
+      "tableDescription": "客户信用卡信息",
+      "hermesEntity": "customer",
+      "fieldLineageCount": 53,
+      "sampleLineage": [
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        }
+      ]
+    },
+    {
+      "tableName": "F_CUST_SIGN_IFO",
+      "tableDescription": "客户签约信息",
+      "hermesEntity": "customer",
+      "fieldLineageCount": 17,
+      "sampleLineage": [
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        }
+      ]
+    },
+    {
+      "tableName": "F_STATISTIC_CUSTINFO",
+      "tableDescription": "客户统计信息",
+      "hermesEntity": "customer",
+      "fieldLineageCount": 90,
+      "sampleLineage": [
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        }
+      ]
+    },
+    {
+      "tableName": "DM_CSP_ALL_CUST",
+      "tableDescription": "全量客户数据集市",
+      "hermesEntity": "customer",
+      "fieldLineageCount": 20,
+      "sampleLineage": [
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        },
+        {
+          "sourceField": null,
+          "targetField": null,
+          "transformation": null
+        }
+      ]
+    }
+  ],
+  "riskWarnings": [
+    {
+      "issueId": "issue_452b8dff7d",
+      "severity": "MAJOR",
+      "category": "DICT_ANOMALY",
+      "objectRef": "program_argument",
+      "message": "ALL_ARGUMENTS 无参数记录的过程: SP_F_CUST_SIGN_IFO, SP_F_STATISTIC_CUSTINFO, UP_CONTROL_PROCESS_SUB1；源码显式声明参数，Gate6 已改用 SOURCE_PARSE 并标注。需 DBA 侧确认字典异常原因。",
+      "status": "OPEN",
+      "impactOnHermes": "Oracle数据字典与源码不一致，可能导致Hermes中显示的指标值与数据仓库实际计算结果存在偏差。客户经理在Hermes界面看到的'逾期率'可能与后台报表不一致。"
+    },
+    {
+      "issueId": "issue_f5fc69d6bf",
+      "severity": "MAJOR",
+      "category": "PRIVILEGE_GAP",
+      "objectRef": "DBETL",
+      "message": "外部 Schema `DBETL` 被 EDWCRM 源码调用但 ALL_OBJECTS 不可见（ALL_DEPENDENCIES 亦无记录）→ 调度日志包血缘断点；需业务/DBA 确认是否另开权限",
+      "status": "OPEN",
+      "impactOnHermes": "DBETL Schema权限缺失导致调度日志血缘断点。Hermes中显示的'最近更新时间'可能无法追溯到具体的ETL作业执行记录。"
+    },
+    {
+      "issueId": "issue_aef5076292",
+      "severity": "MINOR",
+      "category": "COVERAGE_GAP",
+      "objectRef": "SYSMAN.MGMT_ECM_MD_ALL_TBL_COLUMNS",
+      "message": "可见物化视图 SYSMAN.MGMT_ECM_MD_ALL_TBL_COLUMNS 属系统 Schema，未做 SQL 提取（INVENTORY_ONLY 策略）；如被 EDWCRM 依赖需补采",
+      "status": "OPEN",
+      "impactOnHermes": "系统Schema未做SQL提取，如果Hermes依赖的系统级视图被修改，可能影响数据一致性但不会被血缘追踪发现。"
+    },
+    {
+      "issueId": "issue_dbbd57efa9",
+      "severity": "INFO",
+      "category": "ARCHITECTURE_FINDING",
+      "objectRef": "all_scheduler_jobs",
+      "message": "EDWCRM 在 ALL_SCHEDULER_JOBS 中无作业（可见 4 个均为系统 Schema）。EDWCRM 加工链由外部 ETL 调度驱动：SP_* 过程为调度衔接入口（源码头注释自述『调度衔接调度包入口』），执行日志写入 DBETL.PACK_LOG_UTL（不可见）。",
+      "status": "OPEN",
+      "impactOnHermes": "EDWCRM由外部ETL调度驱动，Hermes中的数据刷新依赖于调度链路的完整性。如调度失败，Hermes可能显示过期的业务快照。"
+    }
+  ]
+}

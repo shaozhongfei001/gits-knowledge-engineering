@@ -110,6 +110,25 @@
       "compatibility": "versioned_mapping",
       "consumers": ["oracle_mapping_spike", "semantic_runtime"],
       "generated": []
+    },
+    {
+      "id": "CTR-DATA-003",
+      "kind": "source_contract_instance",
+      "authority_source": "specs/data/src-oracle-metric-ontology.v0.1.json",
+      "owner": "data_mapping_owner",
+      "compatibility": "versioned_mapping",
+      "consumers": ["oracle_mapping_spike", "semantic_runtime", "operational_ontology"],
+      "generated": []
+    },
+    {
+      "id": "CTR-DATA-004",
+      "kind": "seed_claims",
+      "authority_source": "specs/data/oracle-seed-claims.v0.1.json",
+      "owner": "data_mapping_owner",
+      "compatibility": "versioned_mapping",
+      "consumers": ["operational_ontology", "semantic_runtime"],
+      "generated": [],
+      "note": "2505条Oracle元数据种子Claim：175指标+910字段血缘+234对象血缘+1182衍生字段+4风险信号"
     }
   ]
 }

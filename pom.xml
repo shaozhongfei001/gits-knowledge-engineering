@@ -28,8 +28,10 @@
     <module>modules/human-action</module>
     <module>modules/evaluation</module>
     <module>modules/scenario-customer-journey</module>
+    <module>modules/scenario-hermes</module>
     <module>adapters/semantic-jena</module>
     <module>adapters/persistence-relational</module>
+    <module>adapters/oracle-source</module>
     <module>apps/api</module>
     <module>apps/worker</module>
   </modules>

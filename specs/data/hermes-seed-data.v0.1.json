@@ -1,0 +1,1685 @@
+{
+  "version": "0.1.0",
+  "generatedAt": "2026-08-04T08:40:41Z",
+  "source": "HERMES_DEMO_DATA",
+  "sourceDirectory": "/home/szf/dev/data/Hermes演示数据包_V1.0",
+  "scenario": {
+    "scenario_id": "RM-CONTINUOUS-ENGAGEMENT-HDEG-001",
+    "scenario_name": "华东精工客户经理持续经营闭环",
+    "version": "V1.0",
+    "generated_at": "2026-08-03T00:06:00+08:00",
+    "synthetic_data": true,
+    "data_policy": "合成演示数据；企业、人员、账号、交易、外部事件均为虚构，用于Hermes演示。",
+    "basis": [
+      "客户经理持续经营案例",
+      "市场慧眼→客户洞察→访前报告→产品推荐→话术生成→客户建联→CRM回写",
+      "Customer Operating View / Interaction / Fact Reconciliation / Ontology"
+    ]
+  },
+  "summary": {
+    "totalOperatingCases": 1,
+    "totalInteractions": 23,
+    "totalCustomerJourneys": 15,
+    "totalClaims": 41,
+    "claimBreakdown": {
+      "interactionClaims": 10,
+      "eventClaims": 15,
+      "riskSignals": 13,
+      "reconciliationClaims": 3
+    }
+  },
+  "operatingCases": [
+    {
+      "caseId": "6d0698b1-6f32-5d34-aba3-db68adb9af22",
+      "caseType": "CUSTOMER_OPERATING",
+      "status": "ACTIVE",
+      "subject": {
+        "customerId": "CUST-CORP-0001",
+        "customerName": "华东精工装备集团有限公司",
+        "customerShortName": "华东精工",
+        "industry": "高端装备制造 / 智能制造 / 工业自动化设备",
+        "customerTier": "战略客户",
+        "enterpriseScale": "大型民营制造集团",
+        "region": "浙江杭州",
+        "riskLevel": "正常",
+        "relationshipSince": "2018-05-16",
+        "rmId": "RM-ZW-001",
+        "rmName": "张伟",
+        "managingBranch": "杭州分行公司金融一部",
+        "groupFlag": true,
+        "mainProducts": [
+          "工业机器人集成线",
+          "精密装备部件",
+          "自动化产线解决方案"
+        ],
+        "coreTags": [
+          "高端装备制造",
+          "智能制造升级",
+          "设备更新",
+          "本行战略客户",
+          "代发工资已开通",
+          "现金管理空白",
+          "供应链金融空白"
+        ],
+        "relationshipSummary": "合作8年，授信和结算基础较好；近三个月存款下滑、设备供应商付款增加，并出现智能制造二期项目线索。"
+      },
+      "evidence": {
+        "creditFacility": {
+          "scenario": {
+            "scenario_id": "RM-CONTINUOUS-ENGAGEMENT-HDEG-001",
+            "scenario_name": "华东精工客户经理持续经营闭环",
+            "version": "V1.0",
+            "generated_at": "2026-08-03T00:06:00+08:00",
+            "synthetic_data": true,
+            "data_policy": "合成演示数据；企业、人员、账号、交易、外部事件均为虚构，用于Hermes演示。",
+            "basis": [
+              "客户经理持续经营案例",
+              "市场慧眼→客户洞察→访前报告→产品推荐→话术生成→客户建联→CRM回写",
+              "Customer Operating View / Interaction / Fact Reconciliation / Ontology"
+            ]
+          },
+          "facility_id": "FAC-HDEG-2026",
+          "borrower_entity": "华东精工装备集团有限公司",
+          "approval_date": "2026-01-15",
+          "maturity_date": "2027-01-14",
+          "credit_total_cny": 150000000,
+          "used_credit_cny": 110000000,
+          "available_credit_cny": 40000000,
+          "current_loan_balance_cny": 85000000,
+          "bank_acceptance_bill_balance_cny": 16000000,
+          "guarantee_balance_cny": 9000000,
+          "collateral": "集团厂房抵押+实际控制人连带责任保证",
+          "purpose_allowed": [
+            "日常经营周转",
+            "采购原材料",
+            "短期订单资金周转"
+          ],
+          "purpose_restrictions": [
+            "不得直接用于固定资产投资，除非另行审批或调整用途",
+            "项目主体变更需重新核实授信结构与借款主体"
+          ],
+          "covenants": [
+            "保持主要结算在本行或提供结算说明",
+            "新增重大投资项目需及时告知银行"
+          ],
+          "reconciliation_note": "账面可用额度4000万元不等于智能制造二期项目可直接使用额度；需核实项目主体、用途、提款路径和审批条件。",
+          "evidence_ref": "EV-CREDIT-001"
+        },
+        "groupRelationship": {
+          "scenario": {
+            "scenario_id": "RM-CONTINUOUS-ENGAGEMENT-HDEG-001",
+            "scenario_name": "华东精工客户经理持续经营闭环",
+            "version": "V1.0",
+            "generated_at": "2026-08-03T00:06:00+08:00",
+            "synthetic_data": true,
+            "data_policy": "合成演示数据；企业、人员、账号、交易、外部事件均为虚构，用于Hermes演示。",
+            "basis": [
+              "客户经理持续经营案例",
+              "市场慧眼→客户洞察→访前报告→产品推荐→话术生成→客户建联→CRM回写",
+              "Customer Operating View / Interaction / Fact Reconciliation / Ontology"
+            ]
+          },
+          "group_id": "GRP-HDEG-001",
+          "canonical_group_name": "华东精工装备集团",
+          "entities": [
+            {
+              "entity_id": "ENT-GRP-0001",
+              "name": "华东精工装备集团有限公司",
+              "role": "集团本部/当前授信主体",
+              "ownership": "母公司",
+              "bank_customer_id": "CUST-CORP-0001",
+              "relationship_status": "正式客户",
+              "evidence_ref": "EV-BANK-001"
+            },
+            {
+              "entity_id": "ENT-SUB-0002",
+              "name": "华东精工智能制造有限公司",
+              "role": "疑似智能制造二期项目主体",
+              "ownership": "全资子公司",
+              "bank_customer_id": "CUST-CORP-0001-SUB02",
+              "relationship_status": "潜在项目主体/未完整建档",
+              "evidence_ref": "EV-EXT-001"
+            },
+            {
+              "entity_id": "ENT-SUB-0003",
+              "name": "华东精工自动化设备有限公司",
+              "role": "设备采购与生产主体之一",
+              "ownership": "控股子公司",
+              "bank_customer_id": "CUST-CORP-0001-SUB03",
+              "relationship_status": "关联客户",
+              "evidence_ref": "EV-BANK-002"
+            },
+            {
+              "entity_id": "ENT-SUB-0004",
+              "name": "华东精工进出口有限公司",
+              "role": "跨境结算主体",
+              "ownership": "全资子公司",
+              "bank_customer_id": "CUST-CORP-0001-SUB04",
+              "relationship_status": "关联客户/低频结算",
+              "evidence_ref": "EV-BANK-003"
+            },
+            {
+              "entity_id": "ENT-SUB-0005",
+              "name": "华东精工产业投资有限公司",
+              "role": "产业投资与项目持股主体",
+              "ownership": "全资子公司",
+              "bank_customer_id": "CUST-CORP-0001-SUB05",
+              "relationship_status": "未授信",
+              "evidence_ref": "EV-EXT-004"
+            }
+          ],
+          "relationships": [
+            {
+              "from": "ENT-GRP-0001",
+              "to": "ENT-SUB-0002",
+              "type": "OWNS",
+              "ratio": 100
+            },
+            {
+              "from": "ENT-GRP-0001",
+              "to": "ENT-SUB-0003",
+              "type": "OWNS",
+              "ratio": 80
+            },
+            {
+              "from": "ENT-GRP-0001",
+              "to": "ENT-SUB-0004",
+              "type": "OWNS",
+              "ratio": 100
+            },
+            {
+              "from": "ENT-GRP-0001",
+              "to": "ENT-SUB-0005",
+              "type": "OWNS",
+              "ratio": 100
+            }
+          ],
+          "key_governance_note": "集团本部、项目主体、付款主体和授信主体不完全一致。融资结构必须核实谁借款、谁用款、谁还款、谁担保。"
+        },
+        "operatingView": {
+          "scenario": {
+            "scenario_id": "RM-CONTINUOUS-ENGAGEMENT-HDEG-001",
+            "scenario_name": "华东精工客户经理持续经营闭环",
+            "version": "V1.0",
+            "generated_at": "2026-08-03T00:06:00+08:00",
+            "synthetic_data": true,
+            "data_policy": "合成演示数据；企业、人员、账号、交易、外部事件均为虚构，用于Hermes演示。",
+            "basis": [
+              "客户经理持续经营案例",
+              "市场慧眼→客户洞察→访前报告→产品推荐→话术生成→客户建联→CRM回写",
+              "Customer Operating View / Interaction / Fact Reconciliation / Ontology"
+            ]
+          },
+          "snapshot_id": "COV-HDEG-20260705",
+          "customer_id": "CUST-CORP-0001",
+          "as_of": "2026-07-05",
+          "view_type": "Customer Operating View",
+          "sections": {
+            "party_group": [
+              {
+                "object": "华东精工装备集团有限公司",
+                "type": "FACT",
+                "source_ref": "EV-BANK-001",
+                "confidence": 0.99
+              },
+              {
+                "object": "华东精工智能制造有限公司可能是二期项目主体",
+                "type": "SIGNAL",
+                "source_ref": "EV-EXT-001",
+                "confidence": 0.78
+              }
+            ],
+            "bank_relationship": [
+              {
+                "object": "合作8年，本行战略客户",
+                "type": "FACT",
+                "source_ref": "EV-BANK-001"
+              },
+              {
+                "object": "现金管理未开通，供应链金融未开通",
+                "type": "FACT",
+                "source_ref": "05_BANK_RELATIONSHIP_SNAPSHOT.csv"
+              }
+            ],
+            "funding_settlement": [
+              {
+                "object": "日均存款从约1.2亿元下降至7800万元",
+                "type": "FINDING",
+                "source_ref": "05_BANK_RELATIONSHIP_SNAPSHOT.csv"
+              },
+              {
+                "object": "近45天本行可见设备供应商付款增加约32%",
+                "type": "FINDING",
+                "source_ref": "EV-TXN-001",
+                "limitation": "仅本行可见账户交易，不代表客户全量资金流"
+              }
+            ],
+            "credit": [
+              {
+                "object": "综合授信1.5亿元，已用1.1亿元，账面可用4000万元",
+                "type": "FACT",
+                "source_ref": "EV-CREDIT-001"
+              },
+              {
+                "object": "4000万元账面可用额度是否可用于二期项目",
+                "type": "PENDING_CONFIRMATION",
+                "source_ref": "EV-CREDIT-001"
+              }
+            ],
+            "project_capex": [
+              {
+                "object": "智能制造二期项目备案总投资约4800万元",
+                "type": "SIGNAL",
+                "source_ref": "EV-EXT-001"
+              },
+              {
+                "object": "正式设备清单尚未取得",
+                "type": "PENDING_CONFIRMATION",
+                "source_ref": "EV-CRM-001"
+              }
+            ],
+            "interaction_memory": [
+              {
+                "object": "CFO曾表示下半年可能扩产线",
+                "type": "CLAIM",
+                "source_ref": "EV-CRM-001"
+              },
+              {
+                "object": "财务总经理称近期有设备款，但不是全部走本行",
+                "type": "CLAIM",
+                "source_ref": "EV-CRM-002"
+              }
+            ],
+            "needs_concerns": [
+              {
+                "object": "客户可能需要三年期左右融资结构建议",
+                "type": "INTENT",
+                "source_ref": "EV-CRM-003"
+              },
+              {
+                "object": "客户关注融资成本和短期负债比例",
+                "type": "PREFERENCE",
+                "source_ref": "EV-CRM-005"
+              }
+            ],
+            "commitments_tasks": [
+              {
+                "object": "客户承诺设备清单出来后提供",
+                "type": "COMMITMENT",
+                "status": "OVERDUE",
+                "due_date": "2026-03-31"
+              },
+              {
+                "object": "RM准备初步融资思路",
+                "type": "TASK",
+                "status": "DONE_NO_FORMAL_FEEDBACK"
+              }
+            ],
+            "opportunity_signals": [
+              {
+                "object": "设备更新贷款/固定资产贷款线索",
+                "type": "SIGNAL",
+                "source_ref": "EV-EXT-001"
+              },
+              {
+                "object": "现金管理机会",
+                "type": "SIGNAL",
+                "source_ref": "05_BANK_RELATIONSHIP_SNAPSHOT.csv"
+              },
+              {
+                "object": "供应链金融机会",
+                "type": "SIGNAL",
+                "source_ref": "EV-TXN-001"
+              }
+            ],
+            "next_actions": [
+              {
+                "object": "预约CFO和财务总经理拜访，核实二期项目主体、设备清单、3000万诉求语义",
+                "type": "NEXT_ACTION",
+                "source_ref": "EV-RM-001"
+              }
+            ]
+          }
+        },
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTables": [
+          "03_CUSTOMER_MASTER.json",
+          "07_CREDIT_FACILITY.json",
+          "04_GROUP_RELATIONSHIP.json",
+          "14_CUSTOMER_OPERATING_VIEW_SNAPSHOT.json"
+        ]
+      },
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "lastUpdated": "2026-08-03T00:06:00+08:00"
+    }
+  ],
+  "interactions": [
+    {
+      "interactionId": "f3bfadf6-9691-59f0-8ac5-eb218b452ea5",
+      "timestamp": "2026-03-12",
+      "type": "现场拜访",
+      "channel": "现场拜访",
+      "participants": [
+        "RM-ZW-001",
+        "CFO-LM-001",
+        "FIN-WQ-001"
+      ],
+      "content": {
+        "rawSummary": "李明提到集团下半年可能会扩一条产线，但规模没完全定，融资方式也没想好。",
+        "extractedObjects": [
+          {
+            "type": "CLAIM",
+            "content": "集团下半年可能扩一条产线",
+            "status": "PENDING"
+          },
+          {
+            "type": "CUSTOMER_COMMITMENT",
+            "content": "项目设备清单出来后提供",
+            "due_date": "2026-03-31",
+            "status": "OVERDUE"
+          }
+        ]
+      },
+      "evidenceRef": "EV-CRM-001",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl"
+    },
+    {
+      "interactionId": "201a608a-b579-5fc8-8dd3-01a53c14f78f",
+      "timestamp": "2026-05-25",
+      "type": "电话",
+      "channel": "电话",
+      "participants": [
+        "RM-ZW-001",
+        "FIN-WQ-001"
+      ],
+      "content": {
+        "rawSummary": "王强说最近确实有些设备款要付，但还不是全部走本行。",
+        "extractedObjects": [
+          {
+            "type": "CLAIM",
+            "content": "近期有设备款要支付",
+            "status": "PARTIALLY_SUPPORTED"
+          },
+          {
+            "type": "LIMITATION",
+            "content": "本行不是唯一结算行"
+          }
+        ]
+      },
+      "evidenceRef": "EV-CRM-002",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl"
+    },
+    {
+      "interactionId": "668aedf1-f6e9-504a-bb98-560098928a1c",
+      "timestamp": "2026-06-28",
+      "type": "电话",
+      "channel": "电话",
+      "participants": [
+        "RM-ZW-001",
+        "FIN-WQ-001"
+      ],
+      "content": {
+        "rawSummary": "王强表示二期项目内部还没完全定，希望银行先准备几个融资思路。",
+        "extractedObjects": [
+          {
+            "type": "NEED",
+            "content": "融资方案比较",
+            "status": "EXPLORATORY"
+          }
+        ]
+      },
+      "evidenceRef": "EV-CRM-003",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl"
+    },
+    {
+      "interactionId": "1f907835-6cb6-534d-9bab-8d1dfab4c076",
+      "timestamp": "2026-04-10",
+      "type": "电话/邮件/现场",
+      "channel": "电话/邮件/现场",
+      "participants": [
+        "RM-ZW-001",
+        "FIN-WQ-001"
+      ],
+      "content": {
+        "rawSummary": "王强询问设备款支付是否可以先走部分流贷提款。",
+        "extractedObjects": [
+          {
+            "type": "NOTE",
+            "content": "王强询问设备款支付是否可以先走部分流贷提款。",
+            "status": "ACTIVE"
+          }
+        ]
+      },
+      "evidenceRef": "EV-CRM-004",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl"
+    },
+    {
+      "interactionId": "c5b8d8d2-f534-5609-a8bb-4ae27ba837cb",
+      "timestamp": "2026-04-28",
+      "type": "电话/邮件/现场",
+      "channel": "电话/邮件/现场",
+      "participants": [
+        "RM-ZW-001",
+        "FIN-WQ-001"
+      ],
+      "content": {
+        "rawSummary": "李明强调今年融资成本要控制，最好不要增加太多短期负债。",
+        "extractedObjects": [
+          {
+            "type": "NOTE",
+            "content": "李明强调今年融资成本要控制，最好不要增加太多短期负债。",
+            "status": "ACTIVE"
+          }
+        ]
+      },
+      "evidenceRef": "EV-CRM-005",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl"
+    },
+    {
+      "interactionId": "e2de31e7-065a-5451-8de1-a4ea807b5cc2",
+      "timestamp": "2026-06-12",
+      "type": "电话/邮件/现场",
+      "channel": "电话/邮件/现场",
+      "participants": [
+        "RM-ZW-001",
+        "FIN-WQ-001"
+      ],
+      "content": {
+        "rawSummary": "陈涛提到关键设备和进口部件交期拉长。",
+        "extractedObjects": [
+          {
+            "type": "NOTE",
+            "content": "陈涛提到关键设备和进口部件交期拉长。",
+            "status": "ACTIVE"
+          }
+        ]
+      },
+      "evidenceRef": "EV-CRM-006",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl"
+    },
+    {
+      "interactionId": "3da864f8-cab6-58ec-ba6e-0771932d117a",
+      "timestamp": "2026-06-20",
+      "type": "电话/邮件/现场",
+      "channel": "电话/邮件/现场",
+      "participants": [
+        "RM-ZW-001",
+        "FIN-WQ-001"
+      ],
+      "content": {
+        "rawSummary": "王强发送粗略项目预算，但未包含正式设备清单。",
+        "extractedObjects": [
+          {
+            "type": "NOTE",
+            "content": "王强发送粗略项目预算，但未包含正式设备清单。",
+            "status": "ACTIVE"
+          }
+        ]
+      },
+      "evidenceRef": "EV-CRM-007",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl"
+    },
+    {
+      "interactionId": "226c90ee-05fc-5ca9-81da-9fa3f110e350",
+      "timestamp": "2026-07-02",
+      "type": "电话/邮件/现场",
+      "channel": "电话/邮件/现场",
+      "participants": [
+        "RM-ZW-001",
+        "FIN-WQ-001"
+      ],
+      "content": {
+        "rawSummary": "王强说CFO下周方便见面，希望银行准备一个三年左右结构。",
+        "extractedObjects": [
+          {
+            "type": "NOTE",
+            "content": "王强说CFO下周方便见面，希望银行准备一个三年左右结构。",
+            "status": "ACTIVE"
+          }
+        ]
+      },
+      "evidenceRef": "EV-CRM-008",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl"
+    },
+    {
+      "interactionId": "4e75f39d-a333-5a5c-80bb-33807469d5f9",
+      "timestamp": "2026-05-18",
+      "type": "EXTERNAL_EVENT",
+      "channel": "政府项目备案公示",
+      "content": {
+        "title": "智能制造二期项目备案",
+        "content": "华东精工智能制造有限公司智能制造二期项目，总投资约4800万元。",
+        "entity": "华东精工智能制造有限公司",
+        "confidence": "HIGH",
+        "possibleBusinessSignal": "项目融资/设备更新贷款线索",
+        "noGoStatement": "外部备案不等于客户正式融资需求。"
+      },
+      "linkedTheme": [
+        "T06",
+        "T16"
+      ],
+      "evidenceRef": "EV-EXT-001",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "10_EXTERNAL_EVENTS.jsonl"
+    },
+    {
+      "interactionId": "e084ab2e-dcdb-5015-814a-e3d52ae154cc",
+      "timestamp": "2026-06-03",
+      "type": "EXTERNAL_EVENT",
+      "channel": "中标公告",
+      "content": {
+        "title": "新能源设备产线项目中标",
+        "content": "中标金额约1.2亿元。",
+        "entity": "华东精工装备集团有限公司",
+        "confidence": "MEDIUM",
+        "possibleBusinessSignal": "订单融资/生产周转需求",
+        "noGoStatement": "中标公告不等于收入确认或融资申请。"
+      },
+      "linkedTheme": [
+        "T07",
+        "T16"
+      ],
+      "evidenceRef": "EV-EXT-002",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "10_EXTERNAL_EVENTS.jsonl"
+    },
+    {
+      "interactionId": "4228c027-b36c-56f4-8199-55ed178dc7d4",
+      "timestamp": "2026-06-20",
+      "type": "EXTERNAL_EVENT",
+      "channel": "行业资讯",
+      "content": {
+        "title": "伺服电机交付周期延长",
+        "content": "核心零部件价格上行，交付周期延长。",
+        "entity": "高端装备制造行业",
+        "confidence": "MEDIUM",
+        "possibleBusinessSignal": "预付款和存货资金占用上升",
+        "noGoStatement": "行业资讯只能作为背景。"
+      },
+      "linkedTheme": [
+        "T16",
+        "T19"
+      ],
+      "evidenceRef": "EV-EXT-003",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "10_EXTERNAL_EVENTS.jsonl"
+    },
+    {
+      "interactionId": "11534c6b-3275-5848-ac68-275801e928cd",
+      "timestamp": "2026-07-01",
+      "type": "EXTERNAL_EVENT",
+      "channel": "地方政策",
+      "content": {
+        "title": "设备更新贷款贴息政策",
+        "content": "地方支持符合条件制造业企业设备更新。",
+        "entity": "高端装备制造企业",
+        "confidence": "MEDIUM",
+        "possibleBusinessSignal": "设备更新贷款方案优化",
+        "noGoStatement": "是否享受贴息需核实政策适用条件。"
+      },
+      "linkedTheme": [
+        "T11",
+        "T23"
+      ],
+      "evidenceRef": "EV-EXT-005",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "10_EXTERNAL_EVENTS.jsonl"
+    },
+    {
+      "interactionId": "4e7e1cd5-a145-5042-b3a3-d96d5a5177a9",
+      "timestamp": "2026-05-16",
+      "type": "EXTERNAL_EVENT",
+      "channel": "行业/区域公开资讯",
+      "content": {
+        "title": "制造业设备更新动态-5",
+        "content": "区域内多家制造企业推进产线数字化和设备更新。",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      },
+      "linkedTheme": [
+        "T16",
+        "T22"
+      ],
+      "evidenceRef": "",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "10_EXTERNAL_EVENTS.jsonl"
+    },
+    {
+      "interactionId": "955b950f-bbaa-579c-9c50-67a8ec5b13c7",
+      "timestamp": "2026-05-19",
+      "type": "EXTERNAL_EVENT",
+      "channel": "行业/区域公开资讯",
+      "content": {
+        "title": "制造业设备更新动态-6",
+        "content": "区域内多家制造企业推进产线数字化和设备更新。",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      },
+      "linkedTheme": [
+        "T16",
+        "T22"
+      ],
+      "evidenceRef": "",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "10_EXTERNAL_EVENTS.jsonl"
+    },
+    {
+      "interactionId": "27828d80-f97d-5860-9691-8ca641af09f4",
+      "timestamp": "2026-05-22",
+      "type": "EXTERNAL_EVENT",
+      "channel": "行业/区域公开资讯",
+      "content": {
+        "title": "制造业设备更新动态-7",
+        "content": "区域内多家制造企业推进产线数字化和设备更新。",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      },
+      "linkedTheme": [
+        "T16",
+        "T22"
+      ],
+      "evidenceRef": "",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "10_EXTERNAL_EVENTS.jsonl"
+    },
+    {
+      "interactionId": "94a6bd20-20f4-504e-8321-8e9bc2ff5bde",
+      "timestamp": "2026-05-25",
+      "type": "EXTERNAL_EVENT",
+      "channel": "行业/区域公开资讯",
+      "content": {
+        "title": "制造业设备更新动态-8",
+        "content": "区域内多家制造企业推进产线数字化和设备更新。",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      },
+      "linkedTheme": [
+        "T16",
+        "T22"
+      ],
+      "evidenceRef": "",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "10_EXTERNAL_EVENTS.jsonl"
+    },
+    {
+      "interactionId": "dc985d43-7f50-5160-86a3-0360ced16f66",
+      "timestamp": "2026-05-28",
+      "type": "EXTERNAL_EVENT",
+      "channel": "行业/区域公开资讯",
+      "content": {
+        "title": "制造业设备更新动态-9",
+        "content": "区域内多家制造企业推进产线数字化和设备更新。",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      },
+      "linkedTheme": [
+        "T16",
+        "T22"
+      ],
+      "evidenceRef": "",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "10_EXTERNAL_EVENTS.jsonl"
+    },
+    {
+      "interactionId": "15370334-bec7-5bdf-9d5a-220fee564364",
+      "timestamp": "2026-05-31",
+      "type": "EXTERNAL_EVENT",
+      "channel": "行业/区域公开资讯",
+      "content": {
+        "title": "制造业设备更新动态-10",
+        "content": "区域内多家制造企业推进产线数字化和设备更新。",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      },
+      "linkedTheme": [
+        "T16",
+        "T22"
+      ],
+      "evidenceRef": "",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "10_EXTERNAL_EVENTS.jsonl"
+    },
+    {
+      "interactionId": "43a93c4d-632d-5376-846d-eda0a1ce04ee",
+      "timestamp": "2026-06-03",
+      "type": "EXTERNAL_EVENT",
+      "channel": "行业/区域公开资讯",
+      "content": {
+        "title": "制造业设备更新动态-11",
+        "content": "区域内多家制造企业推进产线数字化和设备更新。",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      },
+      "linkedTheme": [
+        "T16",
+        "T22"
+      ],
+      "evidenceRef": "",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "10_EXTERNAL_EVENTS.jsonl"
+    },
+    {
+      "interactionId": "94c62084-9e02-5afe-8105-384cb732cba9",
+      "timestamp": "2026-06-06",
+      "type": "EXTERNAL_EVENT",
+      "channel": "行业/区域公开资讯",
+      "content": {
+        "title": "制造业设备更新动态-12",
+        "content": "区域内多家制造企业推进产线数字化和设备更新。",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      },
+      "linkedTheme": [
+        "T16",
+        "T22"
+      ],
+      "evidenceRef": "",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "10_EXTERNAL_EVENTS.jsonl"
+    },
+    {
+      "interactionId": "ef097de6-4a0c-52ea-9d1e-c68548518681",
+      "timestamp": "2026-06-09",
+      "type": "EXTERNAL_EVENT",
+      "channel": "行业/区域公开资讯",
+      "content": {
+        "title": "制造业设备更新动态-13",
+        "content": "区域内多家制造企业推进产线数字化和设备更新。",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      },
+      "linkedTheme": [
+        "T16",
+        "T22"
+      ],
+      "evidenceRef": "",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "10_EXTERNAL_EVENTS.jsonl"
+    },
+    {
+      "interactionId": "67bcd4ae-57eb-5aad-af1a-d24d158c76c3",
+      "timestamp": "2026-06-12",
+      "type": "EXTERNAL_EVENT",
+      "channel": "行业/区域公开资讯",
+      "content": {
+        "title": "制造业设备更新动态-14",
+        "content": "区域内多家制造企业推进产线数字化和设备更新。",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      },
+      "linkedTheme": [
+        "T16",
+        "T22"
+      ],
+      "evidenceRef": "",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "10_EXTERNAL_EVENTS.jsonl"
+    },
+    {
+      "interactionId": "f886cbe0-1824-5ba6-af7c-058685ac9f41",
+      "timestamp": "2026-06-15",
+      "type": "EXTERNAL_EVENT",
+      "channel": "行业/区域公开资讯",
+      "content": {
+        "title": "制造业设备更新动态-15",
+        "content": "区域内多家制造企业推进产线数字化和设备更新。",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      },
+      "linkedTheme": [
+        "T16",
+        "T22"
+      ],
+      "evidenceRef": "",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "10_EXTERNAL_EVENTS.jsonl"
+    }
+  ],
+  "customerJourneys": [
+    {
+      "journeyId": "460cc26d-27f9-579e-9a30-cb8b66eaf656",
+      "timestamp": null,
+      "phase": "INTERACTION",
+      "milestone": "CFO首次提到下半年可能扩产",
+      "sourceRef": "EV-CRM-001",
+      "status": "COMPLETED",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "12_TIMELINE.csv"
+    },
+    {
+      "journeyId": "f152dee2-0015-572f-907c-d45ac3b4b826",
+      "timestamp": null,
+      "phase": "CUSTOMER_COMMITMENT_DUE",
+      "milestone": "客户承诺设备清单到期未提供",
+      "sourceRef": "EV-CRM-001",
+      "status": "COMPLETED",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "12_TIMELINE.csv"
+    },
+    {
+      "journeyId": "f58da2a5-be32-5d36-a908-2b46e62e1b65",
+      "timestamp": null,
+      "phase": "EXTERNAL_EVENT",
+      "milestone": "外部备案出现智能制造二期项目",
+      "sourceRef": "EV-EXT-001",
+      "status": "COMPLETED",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "12_TIMELINE.csv"
+    },
+    {
+      "journeyId": "f58da2a5-be32-5d36-a908-2b46e62e1b65",
+      "timestamp": null,
+      "phase": "EXTERNAL_EVENT",
+      "milestone": "外部中标公告出现",
+      "sourceRef": "EV-EXT-002",
+      "status": "COMPLETED",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "12_TIMELINE.csv"
+    },
+    {
+      "journeyId": "971176d7-3897-54c8-937d-8c81ab60ecc1",
+      "timestamp": null,
+      "phase": "BANK_TXN_SIGNAL",
+      "milestone": "本行可见设备供应商付款开始增加",
+      "sourceRef": "EV-TXN-001",
+      "status": "COMPLETED",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "12_TIMELINE.csv"
+    },
+    {
+      "journeyId": "7285784c-b9e8-5a8c-b4fe-3bde11834870",
+      "timestamp": null,
+      "phase": "AI_TRIGGER",
+      "milestone": "系统生成经营触发",
+      "sourceRef": "EV-TXN-001",
+      "status": "COMPLETED",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "12_TIMELINE.csv"
+    },
+    {
+      "journeyId": "753c4664-b1ab-5a7c-9428-d2d2856f5612",
+      "timestamp": null,
+      "phase": "RM_WORKBENCH",
+      "milestone": "RM进入工作台查看重点客户",
+      "sourceRef": "EV-BANK-001",
+      "status": "COMPLETED",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "12_TIMELINE.csv"
+    },
+    {
+      "journeyId": "e954e3c0-dce3-5947-8903-f2f242982b25",
+      "timestamp": null,
+      "phase": "AI_OUTPUT",
+      "milestone": "生成R1/R2访前报告",
+      "sourceRef": "EV-R1-001",
+      "status": "COMPLETED",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "12_TIMELINE.csv"
+    },
+    {
+      "journeyId": "00d58642-a9ed-5b3c-aaa3-904a6fa78b5c",
+      "timestamp": null,
+      "phase": "OUTREACH",
+      "milestone": "RM电话建联并预约拜访",
+      "sourceRef": "EV-OUT-001",
+      "status": "COMPLETED",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "12_TIMELINE.csv"
+    },
+    {
+      "journeyId": "7405692e-c4b7-5477-a2f8-04d7d7c38250",
+      "timestamp": null,
+      "phase": "MEETING",
+      "milestone": "RM现场拜访CFO和财务总经理",
+      "sourceRef": "EV-MTG-001",
+      "status": "COMPLETED",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "12_TIMELINE.csv"
+    },
+    {
+      "journeyId": "e954e3c0-dce3-5947-8903-f2f242982b25",
+      "timestamp": null,
+      "phase": "AI_OUTPUT",
+      "milestone": "系统生成R4/R5A/R5B",
+      "sourceRef": "EV-R5-001",
+      "status": "COMPLETED",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "12_TIMELINE.csv"
+    },
+    {
+      "journeyId": "35e5f86b-4b30-540d-bf8e-ef1b3749ddf8",
+      "timestamp": null,
+      "phase": "NEW_EVIDENCE",
+      "milestone": "客户发送设备清单",
+      "sourceRef": "EV-MAT-001",
+      "status": "COMPLETED",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "12_TIMELINE.csv"
+    },
+    {
+      "journeyId": "2668a5e6-1c73-5dea-87df-3f2eae1fd623",
+      "timestamp": null,
+      "phase": "PROFESSIONAL_REVIEW",
+      "milestone": "产品经理生成融资结构建议",
+      "sourceRef": "EV-PROD-REVIEW-001",
+      "status": "COMPLETED",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "12_TIMELINE.csv"
+    },
+    {
+      "journeyId": "3638e39b-0fe5-5fd6-862f-5652500fb5d5",
+      "timestamp": null,
+      "phase": "CUSTOMER_FEEDBACK",
+      "milestone": "CFO反馈三年期方案方向可接受",
+      "sourceRef": "EV-CUST-FEEDBACK-001",
+      "status": "COMPLETED",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "12_TIMELINE.csv"
+    },
+    {
+      "journeyId": "e954e3c0-dce3-5947-8903-f2f242982b25",
+      "timestamp": null,
+      "phase": "AI_OUTPUT",
+      "milestone": "系统生成R7和下一次R8",
+      "sourceRef": "EV-R7R8-001",
+      "status": "COMPLETED",
+      "sourceSystem": "HERMES_DEMO",
+      "sourceTable": "12_TIMELINE.csv"
+    }
+  ],
+  "claims": [
+    {
+      "claimId": "41f2c952-dcbb-591f-874b-bb5283f61911",
+      "claimType": "PROPOSAL",
+      "status": "PENDING",
+      "statement": "集团下半年可能扩一条产线",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl",
+        "interactionId": "INT-20260312",
+        "objectType": "CLAIM",
+        "dueDate": null
+      }
+    },
+    {
+      "claimId": "8f126e8f-e863-58df-9d7c-65b042ef03ce",
+      "claimType": "SYSTEM_FACT",
+      "status": "OVERDUE",
+      "statement": "项目设备清单出来后提供",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl",
+        "interactionId": "INT-20260312",
+        "objectType": "CUSTOMER_COMMITMENT",
+        "dueDate": "2026-03-31"
+      }
+    },
+    {
+      "claimId": "a2bbb9f9-999d-5215-aa73-f6f65a688f4f",
+      "claimType": "PROPOSAL",
+      "status": "PARTIALLY_SUPPORTED",
+      "statement": "近期有设备款要支付",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl",
+        "interactionId": "INT-20260525",
+        "objectType": "CLAIM",
+        "dueDate": null
+      }
+    },
+    {
+      "claimId": "65c6419a-97a0-50d2-aa9e-28c287df8904",
+      "claimType": "SYSTEM_FACT",
+      "status": "PENDING",
+      "statement": "本行不是唯一结算行",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl",
+        "interactionId": "INT-20260525",
+        "objectType": "LIMITATION",
+        "dueDate": null
+      }
+    },
+    {
+      "claimId": "5ba1c4a8-91f8-5d8b-bc83-cd0b0b7a0898",
+      "claimType": "SYSTEM_FACT",
+      "status": "EXPLORATORY",
+      "statement": "融资方案比较",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl",
+        "interactionId": "INT-20260628",
+        "objectType": "NEED",
+        "dueDate": null
+      }
+    },
+    {
+      "claimId": "85f82b60-7f98-5f23-9ad3-beb40be5eeff",
+      "claimType": "SYSTEM_FACT",
+      "status": "ACTIVE",
+      "statement": "王强询问设备款支付是否可以先走部分流贷提款。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl",
+        "interactionId": "INT-202604",
+        "objectType": "NOTE",
+        "dueDate": null
+      }
+    },
+    {
+      "claimId": "23e3c9bb-0013-5c91-8be0-41c88fd1649c",
+      "claimType": "SYSTEM_FACT",
+      "status": "ACTIVE",
+      "statement": "李明强调今年融资成本要控制，最好不要增加太多短期负债。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl",
+        "interactionId": "INT-202605",
+        "objectType": "NOTE",
+        "dueDate": null
+      }
+    },
+    {
+      "claimId": "ebf2fb51-2109-59ad-84e2-51788113e452",
+      "claimType": "SYSTEM_FACT",
+      "status": "ACTIVE",
+      "statement": "陈涛提到关键设备和进口部件交期拉长。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl",
+        "interactionId": "INT-202606",
+        "objectType": "NOTE",
+        "dueDate": null
+      }
+    },
+    {
+      "claimId": "3ee1e3f4-d3fd-5673-9dae-ec7472d102bd",
+      "claimType": "SYSTEM_FACT",
+      "status": "ACTIVE",
+      "statement": "王强发送粗略项目预算，但未包含正式设备清单。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl",
+        "interactionId": "INT-202607",
+        "objectType": "NOTE",
+        "dueDate": null
+      }
+    },
+    {
+      "claimId": "fe145217-4956-592b-8f7e-a89290c617fd",
+      "claimType": "SYSTEM_FACT",
+      "status": "ACTIVE",
+      "statement": "王强说CFO下周方便见面，希望银行准备一个三年左右结构。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "11_HISTORICAL_INTERACTIONS.jsonl",
+        "interactionId": "INT-202608",
+        "objectType": "NOTE",
+        "dueDate": null
+      }
+    },
+    {
+      "claimId": "84cd3e23-d19a-524f-8ad0-823ae99db787",
+      "claimType": "SYSTEM_FACT",
+      "status": "VERIFIED_FACT",
+      "statement": "[政府项目备案公示] 智能制造二期项目备案: 华东精工智能制造有限公司智能制造二期项目，总投资约4800万元。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "10_EXTERNAL_EVENTS.jsonl",
+        "eventId": "E-EXT-001",
+        "eventType": "政府项目备案公示",
+        "entity": "华东精工智能制造有限公司",
+        "confidence": "HIGH",
+        "reliability": "HIGH",
+        "possibleBusinessSignal": "项目融资/设备更新贷款线索",
+        "noGoStatement": "外部备案不等于客户正式融资需求。"
+      }
+    },
+    {
+      "claimId": "07249393-4a4a-593e-8bc1-3e85683fa9d5",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "[中标公告] 新能源设备产线项目中标: 中标金额约1.2亿元。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "10_EXTERNAL_EVENTS.jsonl",
+        "eventId": "E-EXT-002",
+        "eventType": "中标公告",
+        "entity": "华东精工装备集团有限公司",
+        "confidence": "MEDIUM",
+        "reliability": "MEDIUM",
+        "possibleBusinessSignal": "订单融资/生产周转需求",
+        "noGoStatement": "中标公告不等于收入确认或融资申请。"
+      }
+    },
+    {
+      "claimId": "1fdeb6b5-4c45-50ce-abef-213214a84031",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "[行业资讯] 伺服电机交付周期延长: 核心零部件价格上行，交付周期延长。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "10_EXTERNAL_EVENTS.jsonl",
+        "eventId": "E-EXT-003",
+        "eventType": "行业资讯",
+        "entity": "高端装备制造行业",
+        "confidence": "MEDIUM",
+        "reliability": "MEDIUM",
+        "possibleBusinessSignal": "预付款和存货资金占用上升",
+        "noGoStatement": "行业资讯只能作为背景。"
+      }
+    },
+    {
+      "claimId": "091ac18a-ed76-5b0e-9ba1-5e5b0176080d",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "[地方政策] 设备更新贷款贴息政策: 地方支持符合条件制造业企业设备更新。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "10_EXTERNAL_EVENTS.jsonl",
+        "eventId": "E-EXT-004",
+        "eventType": "地方政策",
+        "entity": "高端装备制造企业",
+        "confidence": "MEDIUM",
+        "reliability": "MEDIUM",
+        "possibleBusinessSignal": "设备更新贷款方案优化",
+        "noGoStatement": "是否享受贴息需核实政策适用条件。"
+      }
+    },
+    {
+      "claimId": "18114643-15b7-50ab-8043-54343b97703f",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "[行业/区域公开资讯] 制造业设备更新动态-5: 区域内多家制造企业推进产线数字化和设备更新。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "10_EXTERNAL_EVENTS.jsonl",
+        "eventId": "E-EXT-005",
+        "eventType": "行业/区域公开资讯",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "reliability": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      }
+    },
+    {
+      "claimId": "c1a73f4a-a953-5700-8dba-8d59848220db",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "[行业/区域公开资讯] 制造业设备更新动态-6: 区域内多家制造企业推进产线数字化和设备更新。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "10_EXTERNAL_EVENTS.jsonl",
+        "eventId": "E-EXT-006",
+        "eventType": "行业/区域公开资讯",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "reliability": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      }
+    },
+    {
+      "claimId": "7608965a-d1f1-5bed-ac9b-568a875180b5",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "[行业/区域公开资讯] 制造业设备更新动态-7: 区域内多家制造企业推进产线数字化和设备更新。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "10_EXTERNAL_EVENTS.jsonl",
+        "eventId": "E-EXT-007",
+        "eventType": "行业/区域公开资讯",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "reliability": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      }
+    },
+    {
+      "claimId": "9498a43b-ea3b-5dc7-a946-f8ec1749fb01",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "[行业/区域公开资讯] 制造业设备更新动态-8: 区域内多家制造企业推进产线数字化和设备更新。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "10_EXTERNAL_EVENTS.jsonl",
+        "eventId": "E-EXT-008",
+        "eventType": "行业/区域公开资讯",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "reliability": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      }
+    },
+    {
+      "claimId": "ef7580cd-6ada-5cda-a94d-ed16c2ff0628",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "[行业/区域公开资讯] 制造业设备更新动态-9: 区域内多家制造企业推进产线数字化和设备更新。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "10_EXTERNAL_EVENTS.jsonl",
+        "eventId": "E-EXT-009",
+        "eventType": "行业/区域公开资讯",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "reliability": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      }
+    },
+    {
+      "claimId": "b3827635-df28-560a-9b36-e04bbd1ec00a",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "[行业/区域公开资讯] 制造业设备更新动态-10: 区域内多家制造企业推进产线数字化和设备更新。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "10_EXTERNAL_EVENTS.jsonl",
+        "eventId": "E-EXT-010",
+        "eventType": "行业/区域公开资讯",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "reliability": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      }
+    },
+    {
+      "claimId": "50b7deab-a478-5663-9911-4cf4a2eae692",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "[行业/区域公开资讯] 制造业设备更新动态-11: 区域内多家制造企业推进产线数字化和设备更新。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "10_EXTERNAL_EVENTS.jsonl",
+        "eventId": "E-EXT-011",
+        "eventType": "行业/区域公开资讯",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "reliability": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      }
+    },
+    {
+      "claimId": "5486d0ec-aead-5c58-b9b4-a79321e3e0b9",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "[行业/区域公开资讯] 制造业设备更新动态-12: 区域内多家制造企业推进产线数字化和设备更新。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "10_EXTERNAL_EVENTS.jsonl",
+        "eventId": "E-EXT-012",
+        "eventType": "行业/区域公开资讯",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "reliability": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      }
+    },
+    {
+      "claimId": "d7337405-7330-5b20-af3a-a6fba3d87a2f",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "[行业/区域公开资讯] 制造业设备更新动态-13: 区域内多家制造企业推进产线数字化和设备更新。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "10_EXTERNAL_EVENTS.jsonl",
+        "eventId": "E-EXT-013",
+        "eventType": "行业/区域公开资讯",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "reliability": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      }
+    },
+    {
+      "claimId": "684d682f-5d5d-5019-8c3d-6281ff6e3ca1",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "[行业/区域公开资讯] 制造业设备更新动态-14: 区域内多家制造企业推进产线数字化和设备更新。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "10_EXTERNAL_EVENTS.jsonl",
+        "eventId": "E-EXT-014",
+        "eventType": "行业/区域公开资讯",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "reliability": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      }
+    },
+    {
+      "claimId": "eae19221-dbe4-5634-95e0-45ec5c3773c3",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "[行业/区域公开资讯] 制造业设备更新动态-15: 区域内多家制造企业推进产线数字化和设备更新。",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "10_EXTERNAL_EVENTS.jsonl",
+        "eventId": "E-EXT-015",
+        "eventType": "行业/区域公开资讯",
+        "entity": "高端装备制造行业",
+        "confidence": "LOW",
+        "reliability": "LOW",
+        "possibleBusinessSignal": "行业背景参考",
+        "noGoStatement": "行业趋势不可直接外推至单一客户。"
+      }
+    },
+    {
+      "claimId": "5cd3e5bf-30c7-53ce-aae8-1c48d2902c82",
+      "claimType": "RISK_SIGNAL",
+      "status": "PROPOSED",
+      "statement": "KYC部分已知风险: 近期设备款支付增加，但全量付款安排未知",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "15_KYC_GAP_PROFILE.json",
+        "customerId": "CUST-CORP-0001",
+        "category": "PARTIAL_KNOWN",
+        "description": "近期设备款支付增加，但全量付款安排未知"
+      }
+    },
+    {
+      "claimId": "95673e99-a658-5044-96e3-6b723411154e",
+      "claimType": "RISK_SIGNAL",
+      "status": "PROPOSED",
+      "statement": "KYC部分已知风险: 二期项目存在外部备案，但是否正式启动和融资安排未确认",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "15_KYC_GAP_PROFILE.json",
+        "customerId": "CUST-CORP-0001",
+        "category": "PARTIAL_KNOWN",
+        "description": "二期项目存在外部备案，但是否正式启动和融资安排未确认"
+      }
+    },
+    {
+      "claimId": "4e0e0b6b-63ba-5373-8b7f-7f431ad6a98c",
+      "claimType": "RISK_SIGNAL",
+      "status": "PROPOSED",
+      "statement": "KYC过期信息风险: 3月关于扩产线的初步表达已超过3个月",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "15_KYC_GAP_PROFILE.json",
+        "customerId": "CUST-CORP-0001",
+        "category": "STALE",
+        "description": "3月关于扩产线的初步表达已超过3个月"
+      }
+    },
+    {
+      "claimId": "1170469b-2c9c-599f-8bfb-0910ad8e3ae0",
+      "claimType": "RISK_SIGNAL",
+      "status": "PROPOSED",
+      "statement": "KYC冲突/模糊信息风险: 账面可用额度4000万元 vs 客户希望新增3000万左右支持",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "15_KYC_GAP_PROFILE.json",
+        "customerId": "CUST-CORP-0001",
+        "category": "CONFLICTING",
+        "description": "账面可用额度4000万元 vs 客户希望新增3000万左右支持"
+      }
+    },
+    {
+      "claimId": "03933e50-4504-541b-a0fe-f5bccff01ea4",
+      "claimType": "RISK_SIGNAL",
+      "status": "PROPOSED",
+      "statement": "KYC未知信息风险: 二期项目实际投资金额与设备金额口径",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "15_KYC_GAP_PROFILE.json",
+        "customerId": "CUST-CORP-0001",
+        "category": "UNKNOWN",
+        "description": "二期项目实际投资金额与设备金额口径"
+      }
+    },
+    {
+      "claimId": "7115daa9-bf3a-5c13-8efa-cc5b6341ffde",
+      "claimType": "RISK_SIGNAL",
+      "status": "PROPOSED",
+      "statement": "KYC未知信息风险: 项目主体和借款主体",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "15_KYC_GAP_PROFILE.json",
+        "customerId": "CUST-CORP-0001",
+        "category": "UNKNOWN",
+        "description": "项目主体和借款主体"
+      }
+    },
+    {
+      "claimId": "74d44357-f9f3-59af-b5a6-5300cd10141c",
+      "claimType": "RISK_SIGNAL",
+      "status": "PROPOSED",
+      "statement": "KYC未知信息风险: 付款节奏和已付/待付金额",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "15_KYC_GAP_PROFILE.json",
+        "customerId": "CUST-CORP-0001",
+        "category": "UNKNOWN",
+        "description": "付款节奏和已付/待付金额"
+      }
+    },
+    {
+      "claimId": "6f13455a-f081-5e8f-82cf-1597276cda3b",
+      "claimType": "RISK_SIGNAL",
+      "status": "PROPOSED",
+      "statement": "KYC未知信息风险: 资金来源和资本金比例",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "15_KYC_GAP_PROFILE.json",
+        "customerId": "CUST-CORP-0001",
+        "category": "UNKNOWN",
+        "description": "资金来源和资本金比例"
+      }
+    },
+    {
+      "claimId": "247e00c4-1376-5d48-9638-a038b04f5865",
+      "claimType": "RISK_SIGNAL",
+      "status": "PROPOSED",
+      "statement": "KYC未知信息风险: 是否使用现有额度",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "15_KYC_GAP_PROFILE.json",
+        "customerId": "CUST-CORP-0001",
+        "category": "UNKNOWN",
+        "description": "是否使用现有额度"
+      }
+    },
+    {
+      "claimId": "94a2c814-0b93-5eb5-808a-af0d0baf1a8c",
+      "claimType": "RISK_SIGNAL",
+      "status": "PROPOSED",
+      "statement": "KYC未知信息风险: 是否已有他行方案",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "15_KYC_GAP_PROFILE.json",
+        "customerId": "CUST-CORP-0001",
+        "category": "UNKNOWN",
+        "description": "是否已有他行方案"
+      }
+    },
+    {
+      "claimId": "b47ba6f3-0617-58ca-865c-f6eee7aaa63e",
+      "claimType": "RISK_SIGNAL",
+      "status": "PROPOSED",
+      "statement": "KYC未知信息风险: 供应商是否接受供应链金融或票据安排",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "15_KYC_GAP_PROFILE.json",
+        "customerId": "CUST-CORP-0001",
+        "category": "UNKNOWN",
+        "description": "供应商是否接受供应链金融或票据安排"
+      }
+    },
+    {
+      "claimId": "386e8d07-cb25-53f8-923b-5c5b67abc780",
+      "claimType": "RISK_SIGNAL",
+      "status": "PROPOSED",
+      "statement": "KYC未知信息风险: 集团资金归集意愿",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "15_KYC_GAP_PROFILE.json",
+        "customerId": "CUST-CORP-0001",
+        "category": "UNKNOWN",
+        "description": "集团资金归集意愿"
+      }
+    },
+    {
+      "claimId": "83129aad-de0a-5090-8064-db080206da40",
+      "claimType": "RISK_SIGNAL",
+      "status": "PROPOSED",
+      "statement": "KYC未知信息风险: 是否适用设备更新贴息政策",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "15_KYC_GAP_PROFILE.json",
+        "customerId": "CUST-CORP-0001",
+        "category": "UNKNOWN",
+        "description": "是否适用设备更新贴息政策"
+      }
+    },
+    {
+      "claimId": "196b57a1-cd89-5170-aa41-3e30a655d853",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "事实对账[3000万语义对账]: 账面可用额度4000万元 vs 客户希望银行增加3000万左右支持",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "23_FACT_RECONCILIATION_CASE.json",
+        "reconciliationId": "REC-001",
+        "topic": "3000万语义对账",
+        "structuredFact": {
+          "content": "账面可用额度4000万元",
+          "source_ref": "EV-CREDIT-001",
+          "ontology_object": "Facility.availableAmount"
+        },
+        "interactionClaim": {
+          "content": "客户希望银行增加3000万左右支持",
+          "source_ref": "EV-MTG-001",
+          "ontology_object": "CustomerIntent.financingSupportAmount"
+        },
+        "ontologyDistinction": [
+          "AvailableCreditLimit",
+          "NewCreditNeed",
+          "DrawdownNeed",
+          "PurposeChangeNeed",
+          "ProjectEntityFinancingNeed"
+        ]
+      }
+    },
+    {
+      "claimId": "fc0bfb2a-67b5-5da1-a6ee-e373479ca469",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "事实对账[项目金额口径对账]: 外部备案总投资约4800万元 vs 客户称第一阶段设备款三千多万",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "23_FACT_RECONCILIATION_CASE.json",
+        "reconciliationId": "REC-002",
+        "topic": "项目金额口径对账",
+        "structuredFact": {
+          "content": "外部备案总投资约4800万元",
+          "source_ref": "EV-EXT-001"
+        },
+        "interactionClaim": {
+          "content": "客户称第一阶段设备款三千多万",
+          "source_ref": "EV-MTG-001"
+        },
+        "ontologyDistinction": null
+      }
+    },
+    {
+      "claimId": "40a749ef-513a-5260-a8b1-d9d92d148eb4",
+      "claimType": "SYSTEM_FACT",
+      "status": "PROPOSED",
+      "statement": "事实对账[项目主体与授信主体对账]: 当前授信主体为集团本部 vs ",
+      "recordedAt": "2026-08-04T08:40:41Z",
+      "evidence": {
+        "sourceSystem": "HERMES_DEMO",
+        "sourceTable": "23_FACT_RECONCILIATION_CASE.json",
+        "reconciliationId": "REC-003",
+        "topic": "项目主体与授信主体对账",
+        "structuredFact": {
+          "content": "当前授信主体为集团本部",
+          "source_ref": "EV-CREDIT-001"
+        },
+        "interactionClaim": {},
+        "ontologyDistinction": null
+      }
+    }
+  ]
+}

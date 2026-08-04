@@ -1,4 +1,4 @@
-.PHONY: help bootstrap-check generate check contract-diff security-check framework-test tooling-test backend-test frontend-test db-check db-init verify new-loop memory-check evidence-check dry-run semantic-rule-gate
+.PHONY: help bootstrap-check generate check contract-diff contract-verify security-check security-verify framework-test tooling-test backend-test frontend-test db-check db-init verify new-loop memory-check evidence-check dry-run semantic-rule-gate docker-build docker-up docker-down coverage test-unit test-integration test-coverage smoke-test e2e-test
 
 PYTHON ?= python3
 MVNW ?= ./mvnw
@@ -78,3 +78,46 @@ evidence-check: ## 检查状态、命令和证据hash
 
 dry-run: generate check framework-test tooling-test semantic-rule-gate ## 不连接真实外部系统的机制Dry-run
 	@echo "DEV_SELF_CHECK_PASS: framework and repository mechanisms; independent QA still required"
+
+docker-build: ## 构建后端和前端Docker镜像
+	@docker build -t gits-api .
+	@docker build -t gits-frontend ./frontend
+
+docker-up: ## 启动Docker Compose服务
+	@docker compose -f compose.local.yaml up -d
+
+docker-down: ## 停止Docker Compose服务
+	@docker compose -f compose.local.yaml down
+
+coverage: ## 生成Jacoco覆盖率报告
+	@$(MVNW) --batch-mode --no-transfer-progress verify jacoco:report
+
+test-unit: ## 仅运行单元测试(排除IT)
+	@$(MVNW) --batch-mode --no-transfer-progress test -pl apps/api -Dtest="**/*Test" -DfailIfNoTests=false
+
+test-integration: ## 仅运行集成测试
+	@$(MVNW) --batch-mode --no-transfer-progress verify -pl apps/api -Dtest="**/*IT" -DfailIfNoTests=false
+
+test-coverage: ## 运行测试并生成JaCoCo覆盖率报告
+	@$(MVNW) --batch-mode --no-transfer-progress test -pl apps/api jacoco:report
+	@echo "Coverage report: apps/api/target/site/jacoco/index.html"
+
+security-verify: ## 验证安全配置(秘密扫描+权限检查+安全基线)
+	@$(PYTHON) scripts/secret_scan.py --root .
+	@$(PYTHON) scripts/sensitive_permissions.py --root .
+	@echo "security-verify: PASS"
+
+contract-verify: ## 运行合同合规验证(测试+脚本)
+	@$(MVNW) --batch-mode --no-transfer-progress test -pl apps/api -Dtest="com.gien.gits.api.contract.ContractComplianceTest" -DfailIfNoTests=false
+	@bash scripts/contract-verify.sh
+	@echo "contract-verify: PASS"
+
+smoke-test: ## 冒烟测试: 验证后端健康检查和前端首页可访问
+	@echo "Waiting for services to be ready..."
+	@sleep 10
+	@curl -sf http://localhost:8080/actuator/health | jq . || { echo "FAIL: api health check failed"; exit 2; }
+	@curl -sf -o /dev/null -w "%{http_code}" http://localhost:80 | grep -q "200" || { echo "FAIL: frontend homepage not accessible"; exit 2; }
+	@echo "smoke-test: PASS"
+
+e2e-test: ## 端到端测试(Playwright)
+	@cd frontend && npx playwright test

@@ -2,7 +2,7 @@
   "schema_version": "2.0",
   "loop_id": "P6-e2e-business-chain",
   "title": "End-to-End Business Chain — Spring Boot REST → H2 Persistence → M17→M22 Full Lifecycle",
-  "status": "implementation",
+  "status": "completed",
   "implementation_actor": "tech_lead",
   "objective": [
     "Bridge from domain-object skeleton + in-memory orchestration to Spring Boot application → REST API → H2 persistence → full business-chain closure.",
