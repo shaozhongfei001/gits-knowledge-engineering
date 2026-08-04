@@ -1,4 +1,49 @@
 services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${GITS_KEDB_NAME:-gits_ke}
+      SPRING_DATASOURCE_USERNAME: ${GITS_KEDB_USER:-ontos}
+      SPRING_DATASOURCE_PASSWORD: ${GITS_KEDB_PASSWORD:?set GITS_KEDB_PASSWORD outside the repository}
+      SPRING_PROFILES_ACTIVE: local
+    profiles: [local-db]
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    depends_on:
+      api:
+        condition: service_started
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${GITS_KEDB_NAME:-gits_ke}
+      SPRING_DATASOURCE_USERNAME: ${GITS_KEDB_USER:-ontos}
+      SPRING_DATASOURCE_PASSWORD: ${GITS_KEDB_PASSWORD:?set GITS_KEDB_PASSWORD outside the repository}
+      SPRING_PROFILES_ACTIVE: local
+      SERVER_PORT: "8090"
+    profiles: [local-db]
+
+  nginx:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    profiles: [local-db]
+
   mysql:
     image: mysql:8.4
     profiles: [local-db]
