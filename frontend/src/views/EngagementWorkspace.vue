@@ -169,25 +169,23 @@ async function selectCustomer(customer: Customer) {
 
   try {
     if (action === 'outreach') {
-      const result = await generateOutreachScript(customer.customerId)
+      const result = await generateOutreachScript(customer.customerId, customer.rmId)
       scriptType.value = 'OUTREACH'
       scriptContent.value = result.content
       message.success('外联脚本已生成')
     } else if (action === 'meeting') {
-      const result = await generateMeetingScript(customer.customerId)
+      const result = await generateMeetingScript(customer.customerId, customer.rmId)
       scriptType.value = 'MEETING'
       scriptContent.value = result.content
       message.success('会面脚本已生成')
     } else if (action === 'previsit') {
-      const result = await executePrevisit(customer.customerId)
-      reportMode.value = 'previsit'
-      reportContent.value = formatPrevisitReport(result)
-      message.success('访前报告已生成')
+      // 访前报告需要 journeyId，提示用户先启动旅程
+      message.warning('请先在旅程页面中执行访前报告')
+      return
     } else if (action === 'postvisit') {
-      const result = await executePostvisit(customer.customerId, '')
-      reportMode.value = 'postvisit'
-      reportContent.value = formatPostvisitReport(result)
-      message.success('访后分析已生成')
+      // 访后分析需要 journeyId，提示用户先启动旅程
+      message.warning('请先在旅程页面中执行访后分析')
+      return
     }
   } catch (e: any) {
     message.error(e.message || '操作失败')

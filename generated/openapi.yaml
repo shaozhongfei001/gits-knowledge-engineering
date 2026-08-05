@@ -1,0 +1,1404 @@
+openapi: 3.0.3
+info:
+  title: GITS 知识工程平台 API
+  description: |
+    GITS 知识工程平台 REST API 规范。提供客户上下文管理、持续经营旅程、
+    KYC洞察、知识规则、运营案例、主张管理、交互记录、评估评分等功能。
+  version: 0.1.0
+  contact:
+    name: GITS Engineering Team
+
+servers:
+  - url: http://localhost:8080
+    description: 开发环境
+  - url: https://staging.gits.example.com
+    description: Staging 环境
+  - url: https://api.gits.example.com
+    description: 生产环境
+
+security:
+  - ApiKeyAuth: []
+
+tags:
+  - name: 客户上下文
+    description: 客户信息、经营视图、交易流水与产品匹配
+  - name: 旅程管理
+    description: 持续经营旅程生命周期管理
+  - name: KYC洞察
+    description: KYC缺口画像与机会信号管理
+  - name: 知识规则
+    description: 产品目录、政策规则与外部事件管理
+  - name: 运营案例
+    description: 运营案例创建与查询
+  - name: 主张管理
+    description: 主张(Claim)创建、查询与状态变更
+  - name: 客户旅程
+    description: 客户旅程开户、查询与阶段推进
+  - name: 交互记录
+    description: 交互记录创建与查询
+  - name: 评估评分
+    description: 运营案例规则评分
+  - name: 种子数据
+    description: 场景种子数据加载与状态查询
+
+paths:
+  /api/v1/engagement/customer:
+    get:
+      tags: [客户上下文]
+      summary: 按RM查询客户列表
+      operationId: listCustomersByRm
+      parameters:
+        - name: rmId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 客户列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags: [客户上下文]
+      summary: 创建客户
+      operationId: createCustomer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '201':
+          description: 客户创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerCreatedResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/engagement/customer/{customerId}/operating-view:
+    get:
+      tags: [客户上下文]
+      summary: 获取客户经营视图
+      operationId: getOperatingView
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: 客户经营视图
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerOperatingView'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/engagement/customer/{customerId}/transactions:
+    get:
+      tags: [客户上下文]
+      summary: 获取客户交易流水
+      operationId: getTransactions
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: 交易流水列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+
+  /api/v1/engagement/customer/{customerId}/product-matching:
+    post:
+      tags: [客户上下文]
+      summary: 执行产品匹配
+      operationId: matchProducts
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: 产品匹配结果
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductMatch'
+
+  /api/v1/engagement/journey/start:
+    post:
+      tags: [旅程管理]
+      summary: 启动持续经营旅程
+      operationId: startJourney
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartJourneyRequest'
+      responses:
+        '201':
+          description: 旅程启动成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JourneyStartResponse'
+
+  /api/v1/engagement/journey/{journeyId}/previsit:
+    post:
+      tags: [旅程管理]
+      summary: 执行访前准备
+      operationId: executePrevisit
+      parameters:
+        - $ref: '#/components/parameters/JourneyId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrevisitRequest'
+      responses:
+        '200':
+          description: 访前准备完成
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrevisitExecutionResponse'
+
+  /api/v1/engagement/journey/{journeyId}/postvisit:
+    post:
+      tags: [旅程管理]
+      summary: 执行访后分析
+      operationId: executePostvisit
+      parameters:
+        - $ref: '#/components/parameters/JourneyId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostvisitRequest'
+      responses:
+        '200':
+          description: 访后分析完成
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostvisitExecutionResponse'
+
+  /api/v1/engagement/journey/{journeyId}/new-evidence:
+    post:
+      tags: [旅程管理]
+      summary: 处理新证据
+      operationId: handleNewEvidence
+      parameters:
+        - $ref: '#/components/parameters/JourneyId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewEvidenceRequest'
+      responses:
+        '200':
+          description: 新证据处理完成
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewEvidenceResponse'
+
+  /api/v1/engagement/journey/{journeyId}/complete:
+    post:
+      tags: [旅程管理]
+      summary: 完成旅程
+      operationId: completeJourney
+      parameters:
+        - $ref: '#/components/parameters/JourneyId'
+      responses:
+        '200':
+          description: 旅程已完成
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JourneyCompleteResponse'
+
+  /api/v1/engagement/journey/outreach-script:
+    post:
+      tags: [旅程管理]
+      summary: 生成外联脚本
+      operationId: generateOutreachScript
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OutreachScriptRequest'
+      responses:
+        '200':
+          description: 外联脚本生成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OutreachScript'
+
+  /api/v1/engagement/journey/meeting-script:
+    post:
+      tags: [旅程管理]
+      summary: 生成会面脚本
+      operationId: generateMeetingScript
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeetingScriptRequest'
+      responses:
+        '200':
+          description: 会面脚本生成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingScript'
+
+  /api/v1/engagement/journey/outreach-scripts:
+    get:
+      tags: [旅程管理]
+      summary: 查询客户外联脚本列表
+      operationId: listOutreachScripts
+      parameters:
+        - name: customerId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 外联脚本列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OutreachScript'
+
+  /api/v1/engagement/journey/meeting-scripts:
+    get:
+      tags: [旅程管理]
+      summary: 查询客户会面脚本列表
+      operationId: listMeetingScripts
+      parameters:
+        - name: customerId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 会面脚本列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MeetingScript'
+
+  /api/v1/engagement/kyc/{customerId}/gap-profile:
+    get:
+      tags: [KYC洞察]
+      summary: 获取KYC缺口画像
+      operationId: getKycGapProfile
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: KYC缺口画像
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KycGapProfile'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/engagement/kyc/gap-profile:
+    post:
+      tags: [KYC洞察]
+      summary: 创建KYC缺口画像
+      operationId: createKycGapProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KycGapProfile'
+      responses:
+        '201':
+          description: KYC缺口画像创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KycGapProfileCreatedResponse'
+
+  /api/v1/engagement/signal/{operatingCaseId}:
+    get:
+      tags: [KYC洞察]
+      summary: 获取运营案例的机会信号
+      operationId: getSignals
+      parameters:
+        - name: operatingCaseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 机会信号列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OpportunitySignal'
+
+  /api/v1/engagement/signal/{signalId}/confirm:
+    post:
+      tags: [KYC洞察]
+      summary: 确认机会信号
+      operationId: confirmSignal
+      parameters:
+        - name: signalId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 信号已确认
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignalConfirmResponse'
+
+  /api/v1/engagement/signal/{signalId}/dismiss:
+    post:
+      tags: [KYC洞察]
+      summary: 驳回机会信号
+      operationId: dismissSignal
+      parameters:
+        - name: signalId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 信号已驳回
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignalDismissResponse'
+
+  /api/v1/engagement/product:
+    get:
+      tags: [知识规则]
+      summary: 获取产品知识目录
+      operationId: listProducts
+      responses:
+        '200':
+          description: 产品知识卡片列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductKnowledgeCard'
+    post:
+      tags: [知识规则]
+      summary: 创建产品知识卡片
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductKnowledgeCard'
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductCreatedResponse'
+
+  /api/v1/engagement/policy-rule:
+    get:
+      tags: [知识规则]
+      summary: 获取政策规则列表
+      operationId: listPolicyRules
+      responses:
+        '200':
+          description: 政策规则列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PolicyRule'
+    post:
+      tags: [知识规则]
+      summary: 创建政策规则
+      operationId: createPolicyRule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicyRule'
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyRuleCreatedResponse'
+
+  /api/v1/engagement/external-event:
+    get:
+      tags: [知识规则]
+      summary: 获取近期外部事件
+      operationId: listRecentEvents
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+      responses:
+        '200':
+          description: 外部事件列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExternalEvent'
+    post:
+      tags: [知识规则]
+      summary: 创建外部事件
+      operationId: createExternalEvent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExternalEvent'
+      responses:
+        '201':
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalEventCreatedResponse'
+
+  /api/case:
+    post:
+      tags: [运营案例]
+      summary: 创建运营案例
+      operationId: createCase
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCaseRequest'
+      responses:
+        '200':
+          description: 运营案例创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperatingCaseResponse'
+
+  /api/case/{caseId}:
+    get:
+      tags: [运营案例]
+      summary: 查询运营案例
+      operationId: getCase
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 运营案例详情
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperatingCaseResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/claim:
+    post:
+      tags: [主张管理]
+      summary: 创建主张
+      operationId: createClaim
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Claim'
+      responses:
+        '200':
+          description: 主张创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Claim'
+
+  /api/claim/{claimId}:
+    get:
+      tags: [主张管理]
+      summary: 查询主张
+      operationId: getClaim
+      parameters:
+        - name: claimId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 主张详情
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Claim'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/claim/{claimId}/status:
+    post:
+      tags: [主张管理]
+      summary: 更新主张状态
+      operationId: updateClaimStatus
+      parameters:
+        - name: claimId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStatusRequest'
+      responses:
+        '200':
+          description: 状态更新成功
+
+  /api/journey/open:
+    post:
+      tags: [客户旅程]
+      summary: 开户-创建客户旅程
+      operationId: openJourney
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenJourneyRequest'
+      responses:
+        '200':
+          description: 旅程创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerJourney'
+
+  /api/journey/{journeyId}:
+    get:
+      tags: [客户旅程]
+      summary: 查询旅程详情
+      operationId: getJourney
+      parameters:
+        - name: journeyId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 旅程详情
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerJourney'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/journey/{journeyId}/advance:
+    post:
+      tags: [客户旅程]
+      summary: 推进旅程阶段
+      operationId: advancePhase
+      parameters:
+        - name: journeyId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdvancePhaseRequest'
+      responses:
+        '200':
+          description: 阶段推进成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerJourney'
+        '400':
+          description: 阶段推进不合法
+
+  /api/interaction:
+    post:
+      tags: [交互记录]
+      summary: 创建交互记录
+      operationId: createInteraction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Interaction'
+      responses:
+        '200':
+          description: 交互记录创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Interaction'
+    get:
+      tags: [交互记录]
+      summary: 按案例ID查询交互列表
+      operationId: listInteractionsByCaseId
+      parameters:
+        - name: caseId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 交互记录列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Interaction'
+
+  /api/interaction/{interactionId}:
+    get:
+      tags: [交互记录]
+      summary: 查询交互记录
+      operationId: getInteraction
+      parameters:
+        - name: interactionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 交互记录详情
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Interaction'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/evaluation/{caseId}:
+    get:
+      tags: [评估评分]
+      summary: 评估运营案例
+      operationId: evaluateCase
+      parameters:
+        - name: caseId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 评估结果
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/engagement/seed:
+    post:
+      tags: [种子数据]
+      summary: 加载种子数据
+      operationId: loadSeedData
+      responses:
+        '200':
+          description: 种子数据加载结果
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeedDataLoadResponse'
+
+  /api/v1/engagement/seed/status:
+    get:
+      tags: [种子数据]
+      summary: 查询种子数据状态
+      operationId: checkSeedStatus
+      responses:
+        '200':
+          description: 种子数据状态
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeedDataStatusResponse'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API 访问密钥（开发环境可为空）
+
+  parameters:
+    CustomerId:
+      name: customerId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 客户ID
+    JourneyId:
+      name: journeyId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 旅程ID
+
+  responses:
+    Unauthorized:
+      description: 未授权 - API Key 缺失或无效
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: 资源不存在
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        path:
+          type: string
+
+    Customer:
+      type: object
+      properties:
+        customerId:
+          type: string
+        customerName:
+          type: string
+        rmId:
+          type: string
+        tenantId:
+          type: string
+        kycLevel:
+          type: string
+        riskRating:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, CRITICAL]
+
+    CustomerCreatedResponse:
+      type: object
+      properties:
+        customerId:
+          type: string
+        status:
+          type: string
+
+    CustomerOperatingView:
+      type: object
+      properties:
+        customer:
+          $ref: '#/components/schemas/Customer'
+        kycGapProfile:
+          $ref: '#/components/schemas/KycGapProfile'
+        signals:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpportunitySignal'
+        recentTransactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        productMatches:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductMatch'
+
+    Transaction:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        customerId:
+          type: string
+        amount:
+          type: number
+        currency:
+          type: string
+        transactionType:
+          type: string
+        occurredAt:
+          type: string
+          format: date-time
+
+    ProductMatch:
+      type: object
+      properties:
+        productId:
+          type: string
+        productName:
+          type: string
+        matchScore:
+          type: number
+        matchReason:
+          type: string
+
+    StartJourneyRequest:
+      type: object
+      required: [customerId]
+      properties:
+        customerId:
+          type: string
+
+    JourneyStartResponse:
+      type: object
+      properties:
+        journeyId:
+          type: string
+        customerId:
+          type: string
+        phase:
+          type: string
+          enum: [KYC_COLLECT, INSIGHT_ANALYSIS, PRODUCT_MATCHING, PREVISIT_PREP, POSTVISIT_REVIEW, COMPLETED]
+        startedAt:
+          type: string
+
+    PrevisitRequest:
+      type: object
+      required: [customerId, operatingCaseId]
+      properties:
+        customerId:
+          type: string
+        operatingCaseId:
+          type: string
+        visitObjective:
+          type: string
+
+    PrevisitExecutionResponse:
+      type: object
+      properties:
+        previsitReport:
+          type: string
+        battleCard:
+          type: string
+
+    PostvisitRequest:
+      type: object
+      required: [customerId, operatingCaseId, rawTranscript]
+      properties:
+        customerId:
+          type: string
+        operatingCaseId:
+          type: string
+        rawTranscript:
+          type: string
+
+    PostvisitExecutionResponse:
+      type: object
+      properties:
+        transcriptId:
+          type: string
+        analysisId:
+          type: string
+        internalReportId:
+          type: string
+        crmReportId:
+          type: string
+        crmCommandCount:
+          type: integer
+        crmWritebackTriggered:
+          type: boolean
+
+    NewEvidenceRequest:
+      type: object
+      required: [customerId, operatingCaseId, evidenceDescription]
+      properties:
+        customerId:
+          type: string
+        operatingCaseId:
+          type: string
+        evidenceDescription:
+          type: string
+        previousReportId:
+          type: string
+
+    NewEvidenceResponse:
+      type: object
+      properties:
+        updatedReportId:
+          type: string
+        nextPrevisitReportId:
+          type: string
+
+    JourneyCompleteResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        journeyId:
+          type: string
+
+    OutreachScriptRequest:
+      type: object
+      required: [customerId, rmId, channel]
+      properties:
+        customerId:
+          type: string
+        rmId:
+          type: string
+        operatingCaseId:
+          type: string
+        journeyId:
+          type: string
+        channel:
+          type: string
+          enum: [PHONE, EMAIL, WECHAT, IN_PERSON]
+
+    OutreachScript:
+      type: object
+      properties:
+        scriptId:
+          type: string
+          format: uuid
+        customerId:
+          type: string
+        rmId:
+          type: string
+        channel:
+          type: string
+        content:
+          type: string
+        generatedAt:
+          type: string
+          format: date-time
+
+    MeetingScriptRequest:
+      type: object
+      required: [customerId, rmId]
+      properties:
+        customerId:
+          type: string
+        rmId:
+          type: string
+        operatingCaseId:
+          type: string
+        journeyId:
+          type: string
+
+    MeetingScript:
+      type: object
+      properties:
+        scriptId:
+          type: string
+          format: uuid
+        customerId:
+          type: string
+        rmId:
+          type: string
+        content:
+          type: string
+        generatedAt:
+          type: string
+          format: date-time
+
+    KycGapProfile:
+      type: object
+      properties:
+        profileId:
+          type: string
+        customerId:
+          type: string
+        gaps:
+          type: array
+          items:
+            type: object
+            properties:
+              dimension:
+                type: string
+              status:
+                type: string
+                enum: [COMPLETE, PARTIAL, MISSING]
+              lastUpdated:
+                type: string
+                format: date-time
+
+    KycGapProfileCreatedResponse:
+      type: object
+      properties:
+        profileId:
+          type: string
+        status:
+          type: string
+
+    OpportunitySignal:
+      type: object
+      properties:
+        signalId:
+          type: string
+          format: uuid
+        operatingCaseId:
+          type: string
+        signalType:
+          type: string
+        description:
+          type: string
+        confidence:
+          type: number
+        status:
+          type: string
+          enum: [PENDING, CONFIRMED, DISMISSED]
+
+    SignalConfirmResponse:
+      type: object
+      properties:
+        signalId:
+          type: string
+        status:
+          type: string
+
+    SignalDismissResponse:
+      type: object
+      properties:
+        signalId:
+          type: string
+        status:
+          type: string
+
+    ProductKnowledgeCard:
+      type: object
+      properties:
+        productId:
+          type: string
+        productName:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        eligibility:
+          type: string
+        riskLevel:
+          type: string
+
+    ProductCreatedResponse:
+      type: object
+      properties:
+        productId:
+          type: string
+        status:
+          type: string
+
+    PolicyRule:
+      type: object
+      properties:
+        ruleId:
+          type: string
+        ruleName:
+          type: string
+        severity:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, CRITICAL]
+        description:
+          type: string
+        condition:
+          type: string
+
+    PolicyRuleCreatedResponse:
+      type: object
+      properties:
+        ruleId:
+          type: string
+        status:
+          type: string
+
+    ExternalEvent:
+      type: object
+      properties:
+        eventId:
+          type: string
+        eventType:
+          type: string
+        description:
+          type: string
+        occurredAt:
+          type: string
+          format: date-time
+        source:
+          type: string
+
+    ExternalEventCreatedResponse:
+      type: object
+      properties:
+        eventId:
+          type: string
+        status:
+          type: string
+
+    CreateCaseRequest:
+      type: object
+      properties:
+        caseId:
+          type: string
+          format: uuid
+        caseType:
+          type: string
+          enum: [KYC_REVIEW, PRODUCT_MATCHING, COMPLIANCE_CHECK, ACCOUNT_OPENING]
+        status:
+          type: string
+          enum: [OPEN, IN_PROGRESS, CLOSED]
+        purpose:
+          type: string
+        validFrom:
+          type: string
+          format: date-time
+        validTo:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+
+    OperatingCaseResponse:
+      type: object
+      properties:
+        caseId:
+          type: string
+          format: uuid
+        caseType:
+          type: string
+        status:
+          type: string
+          enum: [OPEN, IN_PROGRESS, CLOSED]
+        purpose:
+          type: string
+        validFrom:
+          type: string
+          format: date-time
+        validTo:
+          type: string
+          format: date-time
+        recordedAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+
+    Claim:
+      type: object
+      properties:
+        claimId:
+          type: string
+          format: uuid
+        caseId:
+          type: string
+          format: uuid
+        content:
+          type: string
+        status:
+          type: string
+          enum: [CANDIDATE, VERIFIED_FACT, REJECTED, QUARANTINED]
+        source:
+          type: string
+        recordedAt:
+          type: string
+          format: date-time
+
+    UpdateStatusRequest:
+      type: object
+      required: [newStatus]
+      properties:
+        newStatus:
+          type: string
+          enum: [CANDIDATE, VERIFIED_FACT, REJECTED, QUARANTINED]
+
+    OpenJourneyRequest:
+      type: object
+      required: [operatingCaseId, customerId, customerName]
+      properties:
+        operatingCaseId:
+          type: string
+          format: uuid
+        customerId:
+          type: string
+        customerName:
+          type: string
+        signalDescription:
+          type: string
+
+    CustomerJourney:
+      type: object
+      properties:
+        journeyId:
+          type: string
+          format: uuid
+        customerId:
+          type: string
+        customerName:
+          type: string
+        operatingCaseId:
+          type: string
+          format: uuid
+        phase:
+          type: string
+          enum: [KYC_COLLECT, INSIGHT_ANALYSIS, PRODUCT_MATCHING, PREVISIT_PREP, POSTVISIT_REVIEW, COMPLETED]
+        startedAt:
+          type: string
+          format: date-time
+        signalDescription:
+          type: string
+
+    AdvancePhaseRequest:
+      type: object
+      required: [targetPhase]
+      properties:
+        targetPhase:
+          type: string
+          enum: [KYC_COLLECT, INSIGHT_ANALYSIS, PRODUCT_MATCHING, PREVISIT_PREP, POSTVISIT_REVIEW, COMPLETED]
+
+    Interaction:
+      type: object
+      properties:
+        interactionId:
+          type: string
+          format: uuid
+        caseId:
+          type: string
+          format: uuid
+        interactionType:
+          type: string
+        description:
+          type: string
+        occurredAt:
+          type: string
+          format: date-time
+
+    EvaluationResponse:
+      type: object
+      properties:
+        caseId:
+          type: string
+          format: uuid
+        compositeScore:
+          type: number
+        dimensions:
+          type: object
+          additionalProperties:
+            type: number
+        contextSummary:
+          $ref: '#/components/schemas/ContextSummary'
+        evaluatedAt:
+          type: string
+          format: date-time
+
+    ContextSummary:
+      type: object
+      properties:
+        evidenceCount:
+          type: integer
+        evidenceCompleteCount:
+          type: integer
+        lastDataUpdateAt:
+          type: string
+          format: date-time
+        ruleHitCount:
+          type: integer
+        totalRuleCount:
+          type: integer
+
+    SeedDataLoadResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [LOADED, ALREADY_LOADED]
+        message:
+          type: string
+
+    SeedDataStatusResponse:
+      type: object
+      properties:
+        loaded:
+          type: boolean

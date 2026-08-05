@@ -5,6 +5,7 @@ import com.gien.gits.ontology.PolicyRule;
 import com.gien.gits.ontology.ExternalEvent;
 import com.gien.gits.ontology.ProductKnowledgeCard;
 import com.gien.gits.api.service.KycInsightService;
+import com.gien.gits.action.port.AuditLogPort;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ class KnowledgeRuleControllerTest {
     @Autowired ObjectMapper objectMapper;
 
     @MockitoBean KycInsightService kycInsightService;
+    @MockitoBean AuditLogPort auditLogPort;
 
     @Test
     void testCreatePolicyRule() throws Exception {

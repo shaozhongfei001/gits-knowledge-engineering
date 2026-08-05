@@ -2,6 +2,7 @@ package com.gien.gits.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gien.gits.api.service.EngagementOrchestrator;
+import com.gien.gits.action.port.AuditLogPort;
 import com.gien.gits.api.service.MeetingScriptService;
 import com.gien.gits.api.service.OutreachScriptService;
 import com.gien.gits.customerjourney.CustomerJourney;
@@ -38,6 +39,7 @@ class EngagementJourneyControllerTest {
     @MockitoBean MeetingScriptService meetingScriptService;
     @MockitoBean OutreachScriptRepository outreachScriptRepository;
     @MockitoBean MeetingScriptRepository meetingScriptRepository;
+    @MockitoBean AuditLogPort auditLogPort;
 
     private CustomerJourney sampleJourney() {
         return new CustomerJourney(

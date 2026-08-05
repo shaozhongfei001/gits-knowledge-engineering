@@ -1,6 +1,8 @@
 package com.gien.gits.api.config;
 
+import com.gien.gits.action.port.AuditLogPort;
 import com.gien.gits.action.port.CrmWritebackChannel;
+import com.gien.gits.adapter.audit.LoggingAuditLogAdapter;
 import com.gien.gits.api.metrics.BusinessMetrics;
 import com.gien.gits.api.service.*;
 import com.gien.gits.api.service.report.CrmWritebackService;
@@ -91,6 +93,13 @@ public class EngagementConfig {
             claimReconciliationPort, domainEventPublisher, businessMetrics);
     }
 
+    // --- P16 G10: 审计日志 ---
+
+    @Bean
+    public AuditLogPort auditLogPort() {
+        return new LoggingAuditLogAdapter();
+    }
+
     // --- P11 G3: DMN决策引擎集成 ---
 
     @Bean
@@ -111,7 +120,16 @@ public class EngagementConfig {
                     env.getProperty("engagement.llm.base-url", "https://api.openai.com"),
                     env.getProperty("engagement.llm.api-key", ""),
                     env.getProperty("engagement.llm.model", "gpt-4o-mini"),
-                    Integer.parseInt(env.getProperty("engagement.llm.timeout", "30")),
+                    // P16 G2: 连接超时5s，读取超时30s
+                    Integer.parseInt(env.getProperty("engagement.llm.connect-timeout-ms", "5000")),
+                    Integer.parseInt(env.getProperty("engagement.llm.read-timeout-ms", "30000")),
+                    // P16 G2: 重试配置(3次，指数退避)
+                    Integer.parseInt(env.getProperty("engagement.llm.retry.max-attempts", "3")),
+                    Long.parseLong(env.getProperty("engagement.llm.retry.initial-delay-ms", "1000")),
+                    Double.parseDouble(env.getProperty("engagement.llm.retry.backoff-multiplier", "2")),
+                    // P16 G2: 熔断器配置(5次失败后开启，30s后半开)
+                    Integer.parseInt(env.getProperty("engagement.llm.circuit-breaker.failure-threshold", "5")),
+                    Long.parseLong(env.getProperty("engagement.llm.circuit-breaker.half-open-delay-ms", "30000")),
                     businessMetrics
             );
             default -> new MockLlmClient(businessMetrics);
@@ -131,9 +149,16 @@ public class EngagementConfig {
             RestClient.Builder restClientBuilder,
             @Value("${engagement.crm.writeback-url:}") String writebackUrl,
             @Value("${engagement.crm.auth-token:}") String authToken,
-            @Value("${engagement.crm.timeout:30}") int timeout,
+            Environment env,
             BusinessMetrics businessMetrics) {
-        return new HttpCrmWritebackChannel(restClientBuilder, writebackUrl, authToken, timeout, businessMetrics);
+        // P16 G3: 超时(5s连接，10s读取)、重试(2次)
+        return new HttpCrmWritebackChannel(
+                restClientBuilder, writebackUrl, authToken,
+                Integer.parseInt(env.getProperty("engagement.crm.connect-timeout-ms", "5000")),
+                Integer.parseInt(env.getProperty("engagement.crm.read-timeout-ms", "10000")),
+                Integer.parseInt(env.getProperty("engagement.crm.retry.max-attempts", "2")),
+                Long.parseLong(env.getProperty("engagement.crm.retry.delay-ms", "500")),
+                businessMetrics);
     }
 
     @Bean

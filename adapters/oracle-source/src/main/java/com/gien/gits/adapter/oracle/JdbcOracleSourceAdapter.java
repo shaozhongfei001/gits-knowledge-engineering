@@ -64,4 +64,35 @@ public class JdbcOracleSourceAdapter implements OracleSourcePort {
     public boolean isAvailable() {
         return available;
     }
+
+    /**
+     * 连接健康检查 — 验证Oracle数据源连接是否正常。
+     * 执行简单查询(SELECT 1 FROM DUAL)确认连接可用。
+     * @return HealthCheckResult 包含状态和描述信息
+     */
+    public HealthCheckResult checkHealth() {
+        if (!available) {
+            log.warn("Oracle source adapter is not available (available=false)");
+            return new HealthCheckResult(false, "Oracle source adapter is disabled");
+        }
+        try {
+            Integer result = jdbcTemplate.queryForObject("SELECT 1 FROM DUAL", Integer.class);
+            boolean healthy = result != null && result == 1;
+            if (healthy) {
+                log.debug("Oracle health check passed");
+                return new HealthCheckResult(true, "Oracle connection is healthy");
+            } else {
+                log.warn("Oracle health check failed: unexpected query result={}", result);
+                return new HealthCheckResult(false, "Oracle query returned unexpected result: " + result);
+            }
+        } catch (Exception e) {
+            log.error("Oracle health check failed: {}", e.getMessage());
+            return new HealthCheckResult(false, "Oracle connection failed: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 健康检查结果
+     */
+    public record HealthCheckResult(boolean healthy, String detail) {}
 }

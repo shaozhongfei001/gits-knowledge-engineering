@@ -5,6 +5,7 @@ import com.gien.gits.api.dto.KycGapProfileCreatedResponse;
 import com.gien.gits.api.dto.SignalConfirmResponse;
 import com.gien.gits.api.dto.SignalDismissResponse;
 import com.gien.gits.api.service.KycInsightService;
+import com.gien.gits.action.port.AuditLogPort;
 import com.gien.gits.ontology.KycGapProfile;
 
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,7 @@ class KycInsightControllerTest {
     @Autowired ObjectMapper objectMapper;
 
     @MockitoBean KycInsightService kycInsightService;
+    @MockitoBean AuditLogPort auditLogPort;
 
     private KycGapProfile sampleProfile() {
         return new KycGapProfile(

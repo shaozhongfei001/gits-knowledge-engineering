@@ -1,3 +1,6 @@
+# Production profile — 生产环境配置
+# 所有敏感配置通过环境变量注入，绝不硬编码密钥
+# 激活方式: SPRING_PROFILES_ACTIVE=prod
 spring:
   datasource:
     url: ${MYSQL_URL:jdbc:mysql://localhost:3306/gits_kno?useSSL=true&allowPublicKeyRetrieval=true}
@@ -7,65 +10,81 @@ spring:
     hikari:
       maximum-pool-size: ${HIKARI_MAX_POOL:20}
       minimum-idle: ${HIKARI_MIN_IDLE:5}
-      idle-timeout: ${HIKARI_IDLE_TIMEOUT:300000}
+      idle-timeout: ${HIKARI_IDLE_TIMEOUT:600000}
       connection-timeout: ${HIKARI_CONN_TIMEOUT:30000}
       max-lifetime: ${HIKARI_MAX_LIFETIME:1800000}
-      leak-detection-threshold: ${HIKARI_LEAK_DETECTION:60000}
+      leak-detection-threshold: ${HIKARI_LEAK_DETECTION:30000}
   h2:
     console:
-      enabled: false
+      enabled: false  # 生产环境禁用H2控制台
   flyway:
     enabled: true
     locations: classpath:db/migration/mysql
     baseline-on-migrate: true
     baseline-version: "0"
+    validate-on-migrate: true  # 生产环境强制校验迁移完整性
 
 gits:
   seed:
-    enabled: false  # No seed data in production
+    enabled: false  # 生产环境不加载种子数据
 
 engagement:
   scenario:
     enabled: true
   llm:
-    mode: ${LLM_MODE:mock}  # Default to mock; set 'real' only when LLM_API_KEY is configured
+    mode: ${LLM_MODE:real}
     base-url: ${LLM_BASE_URL:https://api.openai.com}
     api-key: ${LLM_API_KEY:}
     model: ${LLM_MODEL:gpt-4o-mini}
-    timeout: ${LLM_TIMEOUT:30s}
+    timeout: ${LLM_TIMEOUT:60}
+    retry:
+      max-attempts: ${LLM_RETRY_MAX_ATTEMPTS:3}
+      backoff-multiplier: ${LLM_RETRY_BACKOFF_MULTIPLIER:2}
+      initial-delay-ms: ${LLM_RETRY_INITIAL_DELAY_MS:1000}
+    circuit-breaker:
+      failure-threshold: ${LLM_CB_FAILURE_THRESHOLD:5}
+      half-open-delay-ms: ${LLM_CB_HALF_OPEN_DELAY_MS:60000}
+    connect-timeout-ms: ${LLM_CONNECT_TIMEOUT_MS:5000}
+    read-timeout-ms: ${LLM_READ_TIMEOUT_MS:60000}
   crm:
-    mode: ${CRM_MODE:logging}  # Default to logging; set 'http' only when CRM_BASE_URL is configured
+    mode: ${CRM_MODE:http}
     writeback-url: ${CRM_BASE_URL:}
     auth-token: ${CRM_AUTH_TOKEN:}
-    timeout: ${CRM_TIMEOUT:10s}
+    timeout: ${CRM_TIMEOUT:30}
+    connect-timeout-ms: ${CRM_CONNECT_TIMEOUT_MS:5000}
+    read-timeout-ms: ${CRM_READ_TIMEOUT_MS:30000}
+    retry:
+      max-attempts: ${CRM_RETRY_MAX_ATTEMPTS:3}
   security:
-    api-key: ${API_KEY:}  # Must be set in production to enable API key auth
+    api-key: ${API_KEY:}  # 生产环境必须配置
+    api-key-rotation: ${API_KEY_ROTATION:}
+    api-key-rotation-deadline: ${API_KEY_ROTATION_DEADLINE:}
     cors:
       allowed-origins: ${CORS_ALLOWED_ORIGINS:}
-  oracle:
-    source:
-      enabled: ${ORACLE_SOURCE_ENABLED:false}
-      jdbc-url: ${ORACLE_JDBC_URL:}
-      username: ${ORACLE_USER:}
-      password: ${ORACLE_PASSWORD:}
-      poll-interval: ${ORACLE_POLL_INTERVAL:60s}
+oracle:
+  source:
+    enabled: ${ORACLE_SOURCE_ENABLED:false}
+    jdbc-url: ${ORACLE_JDBC_URL:}
+    username: ${ORACLE_USER:}
+    password: ${ORACLE_PASSWORD:}
+    poll-interval: ${ORACLE_POLL_INTERVAL:120s}
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,prometheus  # Restrict in production
+        include: health,info,prometheus  # 生产环境最小暴露
   endpoint:
     health:
       probes:
         enabled: true
-      show-details: when-authorized
+      show-details: never  # 生产环境不暴露健康详情
   metrics:
     tags:
       application: gits-kno-api
   tracing:
     sampling:
-      probability: ${TRACE_SAMPLING:0.1}
+      probability: ${TRACE_SAMPLING:0.1}  # 生产环境低采样率
   zipkin:
     tracing:
       endpoint: ${ZIPKIN_URL:http://localhost:9411/api/v2/spans}
@@ -73,9 +92,26 @@ management:
 server:
   shutdown: graceful
   port: ${SERVER_PORT:8080}
+  tomcat:
+    max-threads: ${TOMCAT_MAX_THREADS:200}
+    min-spare-threads: ${TOMCAT_MIN_SPARE_THREADS:10}
+    max-connections: ${TOMCAT_MAX_CONNECTIONS:8192}
+    accept-count: ${TOMCAT_ACCEPT_COUNT:100}
 
 springdoc:
   api-docs:
-    enabled: ${SWAGGER_ENABLED:false}  # Disable Swagger UI in production by default
+    enabled: false  # 生产环境禁用Swagger
   swagger-ui:
-    enabled: ${SWAGGER_ENABLED:false}
+    enabled: false
+
+logging:
+  level:
+    root: ${LOG_LEVEL_ROOT:WARN}
+    com.gien.gits: ${LOG_LEVEL_APP:INFO}
+  file:
+    name: ${LOG_FILE:/var/log/gits-kno/api.log}
+  logback:
+    rollingpolicy:
+      max-file-size: ${LOG_MAX_FILE_SIZE:100MB}
+      max-history: ${LOG_MAX_HISTORY:30}
+      total-size-cap: ${LOG_TOTAL_SIZE_CAP:3GB}

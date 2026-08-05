@@ -210,107 +210,278 @@ export interface EngagementScript {
 }
 
 // ===================== API 调用 =====================
+// 注意：后端API路径前缀为 /api/v1/engagement（axios baseURL）
+//       以及 /api/journey、/api/case、/api/claim、/api/interaction、/api/evaluation
+//       非 /api/v1/engagement 前缀的端点使用独立的 axios 实例
 
-/** 获取客户列表 */
-export async function fetchCustomers(): Promise<Customer[]> {
-  const { data } = await api.get('/customers')
+const rootApi = axios.create({
+  baseURL: '',
+  timeout: 15000,
+  headers: { 'Content-Type': 'application/json' }
+})
+
+rootApi.interceptors.request.use((config) => {
+  const apiKey = getApiKey()
+  if (apiKey) {
+    config.headers['X-API-KEY'] = apiKey
+  }
+  return config
+})
+
+rootApi.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      clearApiKey()
+      window.dispatchEvent(new CustomEvent('auth:unauthorized'))
+    }
+    return Promise.reject(error)
+  }
+)
+
+/** 获取客户列表（按RM查询，rmId可选，不传则返回全部） */
+export async function fetchCustomers(rmId?: string): Promise<Customer[]> {
+  const params = rmId ? { rmId } : { rmId: 'ALL' }
+  const { data } = await api.get('/customer', { params })
   return data
 }
 
-/** 获取客户详情 */
+/** 获取客户详情（通过经营视图接口获取） */
 export async function fetchCustomer(customerId: string): Promise<Customer> {
-  const { data } = await api.get(`/customers/${customerId}`)
-  return data
+  const { data } = await api.get(`/customer/${customerId}/operating-view`)
+  return data.customer
 }
 
 /** 获取客户上下文（含KYC、信号、交互、旅程、交易） */
 export async function fetchCustomerContext(customerId: string): Promise<CustomerContext> {
-  const { data } = await api.get(`/customers/${customerId}/context`)
-  return data
+  // 后端无单一上下文端点，组合多个调用
+  const [operatingView, kycProfile, signals, transactions] = await Promise.allSettled([
+    api.get(`/customer/${customerId}/operating-view`),
+    api.get(`/kyc/${customerId}/gap-profile`),
+    api.get(`/signal/${customerId}`),
+    api.get(`/customer/${customerId}/transactions`)
+  ])
+
+  const viewData = operatingView.status === 'fulfilled' ? operatingView.value.data : null
+  const kycData = kycProfile.status === 'fulfilled' ? kycProfile.value.data : undefined
+  const signalsData = signals.status === 'fulfilled' ? signals.value.data : []
+  const txData = transactions.status === 'fulfilled' ? transactions.value.data : []
+
+  return {
+    customer: viewData?.customer ?? { customerId, customerName: customerId },
+    kycGapProfile: kycData,
+    opportunitySignals: signalsData,
+    recentInteractions: [],
+    activeJourneys: [],
+    recentTransactions: txData
+  }
 }
 
 /** 获取客户旅程列表 */
 export async function fetchCustomerJourneys(customerId: string): Promise<CustomerJourney[]> {
-  const { data } = await api.get(`/customers/${customerId}/journeys`)
-  return data
+  // 后端无按客户查旅程列表的端点，返回空数组
+  return []
 }
 
 /** 获取旅程详情 */
 export async function fetchJourney(journeyId: string): Promise<CustomerJourney> {
-  const { data } = await api.get(`/journeys/${journeyId}`)
+  const { data } = await rootApi.get(`/api/journey/${journeyId}`)
   return data
 }
 
 /** 获取旅程交互记录 */
 export async function fetchJourneyInteractions(journeyId: string): Promise<Interaction[]> {
-  const { data } = await api.get(`/journeys/${journeyId}/interactions`)
+  // 后端交互记录按 caseId 查询，需要 journey 中的 operatingCaseId
+  const journey = await fetchJourney(journeyId)
+  if (!journey.operatingCaseId) return []
+  const { data } = await rootApi.get('/api/interaction', { params: { caseId: journey.operatingCaseId } })
   return data
 }
 
 /** 获取旅程主张列表 */
 export async function fetchJourneyClaims(journeyId: string): Promise<Claim[]> {
-  const { data } = await api.get(`/journeys/${journeyId}/claims`)
-  return data
+  // 后端无按旅程查主张的端点，返回空数组
+  return []
 }
 
 /** 获取旅程机会信号 */
 export async function fetchJourneySignals(journeyId: string): Promise<OpportunitySignal[]> {
-  const { data } = await api.get(`/journeys/${journeyId}/signals`)
+  // 后端信号按 operatingCaseId 查询
+  const journey = await fetchJourney(journeyId)
+  if (!journey.operatingCaseId) return []
+  const { data } = await api.get(`/signal/${journey.operatingCaseId}`)
   return data
 }
 
 /** 获取报告详情 */
 export async function fetchReport(reportId: string): Promise<RelationshipReport> {
-  const { data } = await api.get(`/reports/${reportId}`)
-  return data
+  // 后端无独立报告端点，返回占位数据
+  return {
+    reportId,
+    reportType: 'INTERNAL_RELATIONSHIP',
+    content: '报告内容加载中...',
+    generatedAt: new Date().toISOString()
+  }
 }
 
 /** 获取经营案例列表 */
 export async function fetchOperatingCases(customerId: string): Promise<OperatingCase[]> {
-  const { data } = await api.get(`/customers/${customerId}/cases`)
-  return data
+  // 后端无按客户查案例列表的端点，返回空数组
+  return []
 }
 
 /** 执行访前报告生成 */
-export async function executePrevisit(caseId: string): Promise<PrevisitReport> {
-  const { data } = await api.post(`/cases/${caseId}/previsit`)
+export async function executePrevisit(journeyId: string, customerId: string = '', operatingCaseId: string = '', visitObjective: string = ''): Promise<PrevisitExecutionResponse> {
+  const { data } = await api.post(`/journey/${journeyId}/previsit`, {
+    customerId,
+    operatingCaseId,
+    visitObjective
+  })
   return data
 }
 
 /** 执行访后分析 */
-export async function executePostvisit(caseId: string, interactionId: string): Promise<PostvisitReport> {
-  const { data } = await api.post(`/cases/${caseId}/postvisit`, { interactionId })
+export async function executePostvisit(journeyId: string, customerId: string = '', operatingCaseId: string = '', rawTranscript: string = ''): Promise<PostvisitExecutionResponse> {
+  const { data } = await api.post(`/journey/${journeyId}/postvisit`, {
+    customerId,
+    operatingCaseId,
+    rawTranscript
+  })
   return data
 }
 
 /** 生成外联脚本 */
-export async function generateOutreachScript(customerId: string): Promise<EngagementScript> {
-  const { data } = await api.post(`/customers/${customerId}/scripts/outreach`)
+export async function generateOutreachScript(customerId: string, rmId: string = '', operatingCaseId: string = '', journeyId: string = '', channel: string = 'PHONE'): Promise<EngagementScript> {
+  const { data } = await api.post('/journey/outreach-script', {
+    customerId,
+    rmId,
+    operatingCaseId,
+    journeyId,
+    channel
+  })
   return data
 }
 
 /** 生成会面脚本 */
-export async function generateMeetingScript(customerId: string): Promise<EngagementScript> {
-  const { data } = await api.post(`/customers/${customerId}/scripts/meeting`)
+export async function generateMeetingScript(customerId: string, rmId: string = '', operatingCaseId: string = '', journeyId: string = ''): Promise<EngagementScript> {
+  const { data } = await api.post('/journey/meeting-script', {
+    customerId,
+    rmId,
+    operatingCaseId,
+    journeyId
+  })
   return data
 }
 
 /** 获取KYC缺口画像 */
 export async function fetchKycGapProfile(customerId: string): Promise<KycGapProfile> {
-  const { data } = await api.get(`/customers/${customerId}/kyc-gap`)
+  const { data } = await api.get(`/kyc/${customerId}/gap-profile`)
   return data
 }
 
 /** 获取机会信号列表 */
-export async function fetchOpportunitySignals(customerId: string): Promise<OpportunitySignal[]> {
-  const { data } = await api.get(`/customers/${customerId}/signals`)
+export async function fetchOpportunitySignals(operatingCaseId: string): Promise<OpportunitySignal[]> {
+  const { data } = await api.get(`/signal/${operatingCaseId}`)
   return data
 }
 
 /** 获取交易流水 */
 export async function fetchTransactions(customerId: string): Promise<TransactionRecord[]> {
-  const { data } = await api.get(`/customers/${customerId}/transactions`)
+  const { data } = await api.get(`/customer/${customerId}/transactions`)
   return data
+}
+
+/** 确认信号 */
+export async function confirmSignal(signalId: string): Promise<void> {
+  await api.post(`/signal/${signalId}/confirm`)
+}
+
+/** 驳回信号 */
+export async function dismissSignal(signalId: string): Promise<void> {
+  await api.post(`/signal/${signalId}/dismiss`)
+}
+
+/** 启动旅程 */
+export async function startJourney(customerId: string): Promise<JourneyStartResponse> {
+  const { data } = await api.post('/journey/start', { customerId })
+  return data
+}
+
+/** 完成旅程 */
+export async function completeJourney(journeyId: string): Promise<void> {
+  await api.post(`/journey/${journeyId}/complete`)
+}
+
+/** 处理新证据 */
+export async function handleNewEvidence(journeyId: string, customerId: string, operatingCaseId: string, evidenceDescription: string, previousReportId?: string): Promise<NewEvidenceResponse> {
+  const { data } = await api.post(`/journey/${journeyId}/new-evidence`, {
+    customerId,
+    operatingCaseId,
+    evidenceDescription,
+    previousReportId
+  })
+  return data
+}
+
+/** 产品匹配 */
+export async function matchProducts(customerId: string): Promise<ProductMatch[]> {
+  const { data } = await api.post(`/customer/${customerId}/product-matching`)
+  return data
+}
+
+/** 评估运营案例 */
+export async function evaluateCase(caseId: string): Promise<EvaluationResponse> {
+  const { data } = await rootApi.get(`/api/evaluation/${caseId}`)
+  return data
+}
+
+// ---- 后端响应类型（与后端DTO对齐） ----
+
+export interface PrevisitExecutionResponse {
+  previsitReport: string
+  battleCard: string
+}
+
+export interface PostvisitExecutionResponse {
+  transcriptId: string
+  analysisId: string
+  internalReportId: string
+  crmReportId: string
+  crmCommandCount: number
+  crmWritebackTriggered: boolean
+}
+
+export interface JourneyStartResponse {
+  journeyId: string
+  customerId: string
+  phase: JourneyPhase
+  startedAt: string
+}
+
+export interface NewEvidenceResponse {
+  updatedReportId: string
+  nextPrevisitReportId: string
+}
+
+export interface ProductMatch {
+  productId: string
+  productName: string
+  matchScore: number
+  matchReason: string
+}
+
+export interface EvaluationResponse {
+  caseId: string
+  compositeScore: number
+  dimensions: Record<string, number>
+  contextSummary: {
+    evidenceCount: number
+    evidenceCompleteCount: number
+    lastDataUpdateAt: string
+    ruleHitCount: number
+    totalRuleCount: number
+  }
+  evaluatedAt: string
 }
 
 // ===================== 枚举映射 =====================

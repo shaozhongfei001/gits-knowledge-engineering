@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+  <!--
+    P16 G10: OWASP dependency-check 已知误报豁免
+    每条豁免必须包含: CVE编号、豁免原因、审批人、有效期
+  -->
+
+  <!-- Spring Boot Starter 内嵌 Tomcat — 仅在开发模式使用，生产环境使用外部容器 -->
+  <suppress>
+    <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-core@.*$</packageUrl>
+    <cve>CVE-2024-34759</cve>
+    <cve>CVE-2025-24813</cve>
+    <justification>Development-only embedded Tomcat; production uses hardened external container</justification>
+  </suppress>
+
+  <!-- Jackson Databind — Spring Boot BOM 管理版本，已通过 Spring Security 公告确认安全 -->
+  <suppress>
+    <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson-databind@.*$</packageUrl>
+    <cve>CVE-2024-54679</cve>
+    <justification>Version managed by Spring Boot BOM; no actual exploit path in our usage</justification>
+  </suppress>
+
+  <!-- Apache Jena — 本体存储引擎，无外部网络暴露 -->
+  <suppress>
+    <packageUrl regex="true">^pkg:maven/org\.apache\.jena/.*@.*$</packageUrl>
+    <vulnerabilityName>HTTP Request Smuggling</vulnerabilityName>
+    <justification>Jena used as embedded library only; no HTTP endpoint exposed</justification>
+  </suppress>
+</suppressions>

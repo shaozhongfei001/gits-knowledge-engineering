@@ -3,6 +3,7 @@ package com.gien.gits.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gien.gits.api.service.CustomerContextService;
 import com.gien.gits.api.service.ProductMatchingService;
+import com.gien.gits.action.port.AuditLogPort;
 import com.gien.gits.ontology.Customer;
 import com.gien.gits.ontology.port.TransactionRepository;
 
@@ -32,6 +33,7 @@ class CustomerContextControllerTest {
     @MockitoBean CustomerContextService customerContextService;
     @MockitoBean TransactionRepository transactionRepo;
     @MockitoBean ProductMatchingService productMatchingService;
+    @MockitoBean AuditLogPort auditLogPort;
 
     private Customer sampleCustomer() {
         return new Customer("CUST-001", "Test Customer", null, null, null,

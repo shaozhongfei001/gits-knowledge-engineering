@@ -1,0 +1,96 @@
+# Staging profile — 真实外部环境对接验证
+# 所有敏感配置通过环境变量注入，不硬编码密钥
+spring:
+  datasource:
+    url: ${MYSQL_URL:jdbc:mysql://mysql:3306/gits_kno?useSSL=true&allowPublicKeyRetrieval=true}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: ${HIKARI_MAX_POOL:15}
+      minimum-idle: ${HIKARI_MIN_IDLE:3}
+      idle-timeout: ${HIKARI_IDLE_TIMEOUT:300000}
+      connection-timeout: ${HIKARI_CONN_TIMEOUT:30000}
+      max-lifetime: ${HIKARI_MAX_LIFETIME:1800000}
+      leak-detection-threshold: ${HIKARI_LEAK_DETECTION:60000}
+  h2:
+    console:
+      enabled: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration/mysql
+    baseline-on-migrate: true
+    baseline-version: "0"
+
+gits:
+  seed:
+    enabled: false  # No seed data in staging
+
+engagement:
+  scenario:
+    enabled: true
+  llm:
+    mode: ${LLM_MODE:real}
+    base-url: ${LLM_BASE_URL:https://api.openai.com}
+    api-key: ${LLM_API_KEY:}
+    model: ${LLM_MODEL:gpt-4o-mini}
+    timeout: ${LLM_TIMEOUT:30}
+    retry:
+      max-attempts: ${LLM_RETRY_MAX_ATTEMPTS:3}
+      backoff-multiplier: ${LLM_RETRY_BACKOFF_MULTIPLIER:2}
+      initial-delay-ms: ${LLM_RETRY_INITIAL_DELAY_MS:1000}
+    circuit-breaker:
+      failure-threshold: ${LLM_CB_FAILURE_THRESHOLD:5}
+      half-open-delay-ms: ${LLM_CB_HALF_OPEN_DELAY_MS:30000}
+    connect-timeout-ms: ${LLM_CONNECT_TIMEOUT_MS:5000}
+    read-timeout-ms: ${LLM_READ_TIMEOUT_MS:30000}
+  crm:
+    mode: ${CRM_MODE:http}
+    writeback-url: ${CRM_BASE_URL:}
+    auth-token: ${CRM_AUTH_TOKEN:}
+    timeout: ${CRM_TIMEOUT:10}
+    connect-timeout-ms: ${CRM_CONNECT_TIMEOUT_MS:5000}
+    read-timeout-ms: ${CRM_READ_TIMEOUT_MS:10000}
+    retry:
+      max-attempts: ${CRM_RETRY_MAX_ATTEMPTS:2}
+  security:
+    api-key: ${API_KEY:}
+    cors:
+      allowed-origins: ${CORS_ALLOWED_ORIGINS:}
+oracle:
+  source:
+    enabled: ${ORACLE_SOURCE_ENABLED:true}
+    jdbc-url: ${ORACLE_JDBC_URL:}
+    username: ${ORACLE_USER:}
+    password: ${ORACLE_PASSWORD:}
+    poll-interval: ${ORACLE_POLL_INTERVAL:60s}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: when-authorized
+  metrics:
+    tags:
+      application: gits-kno-api
+  tracing:
+    sampling:
+      probability: ${TRACE_SAMPLING:0.5}
+  zipkin:
+    tracing:
+      endpoint: ${ZIPKIN_URL:http://localhost:9411/api/v2/spans}
+
+server:
+  shutdown: graceful
+  port: ${SERVER_PORT:8080}
+
+springdoc:
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}

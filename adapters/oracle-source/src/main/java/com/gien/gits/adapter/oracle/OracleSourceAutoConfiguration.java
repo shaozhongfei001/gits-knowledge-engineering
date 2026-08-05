@@ -3,7 +3,7 @@ package com.gien.gits.adapter.oracle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -18,6 +18,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @ConditionalOnProperty(name = "oracle.source.enabled", havingValue = "true")
+@EnableConfigurationProperties(OracleSourceProperties.class)
 public class OracleSourceAutoConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(OracleSourceAutoConfiguration.class);
@@ -34,7 +35,13 @@ public class OracleSourceAutoConfiguration {
     }
 
     @Bean
-    public OracleSourcePort oracleSourcePort(DataSource oracleDataSource) {
+    public JdbcOracleSourceAdapter jdbcOracleSourceAdapter(DataSource oracleDataSource) {
+        log.info("Creating JdbcOracleSourceAdapter with Oracle DataSource");
         return new JdbcOracleSourceAdapter(oracleDataSource, true);
+    }
+
+    @Bean
+    public OracleSourcePort oracleSourcePort(JdbcOracleSourceAdapter jdbcOracleSourceAdapter) {
+        return jdbcOracleSourceAdapter;
     }
 }

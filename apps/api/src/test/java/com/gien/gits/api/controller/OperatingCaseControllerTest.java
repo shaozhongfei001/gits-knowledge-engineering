@@ -5,6 +5,7 @@ import com.gien.gits.ontology.CaseStatus;
 import com.gien.gits.ontology.CaseType;
 import com.gien.gits.ontology.OperatingCase;
 import com.gien.gits.ontology.port.WritableOperatingCaseRepository;
+import com.gien.gits.action.port.AuditLogPort;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ class OperatingCaseControllerTest {
     @Autowired ObjectMapper objectMapper;
 
     @MockitoBean WritableOperatingCaseRepository operatingCaseRepository;
+    @MockitoBean AuditLogPort auditLogPort;
 
     @Test
     void testCreateCase() throws Exception {

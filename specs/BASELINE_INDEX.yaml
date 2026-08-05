@@ -44,11 +44,23 @@
     }
   ],
   "explicit_non_claims": [
-    "CUSTOMER_CONFIRMED",
-    "PRODUCTION_READY",
-    "REAL_INTERFACE_CONNECTED",
-    "REAL_E2E_PASS",
-    "QA_PASS",
-    "FROZEN"
-  ]
+    "PRODUCTION_DEPLOYMENT_EXECUTION",
+    "QA_INDEPENDENT_SIGNOFF"
+  ],
+  "governance": {
+    "ccb_charter": {
+      "document": "docs/governance/CCB-CHARTER.md",
+      "status": "PUBLISHED",
+      "members_confirmed": true
+    },
+    "change_control_process": {
+      "document": "docs/governance/CHANGE-CONTROL-PROCESS.md",
+      "status": "PUBLISHED"
+    },
+    "freeze_signoff_template": {
+      "document": "docs/governance/FREEZE-SIGNOFF-TEMPLATE.md",
+      "status": "PUBLISHED"
+    },
+    "freeze_state": "FROZEN_2026_08_06"
+  }
 }

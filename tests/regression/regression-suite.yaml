@@ -1,0 +1,209 @@
+# GITS 知识工程项目 - 全量回归测试套件
+# 版本：V1.0
+# 日期：2026-08-05
+
+suite:
+  id: REGRESSION-SUITE-V1.0
+  name: GITS-KNO 全量回归测试套件
+  description: 覆盖14份合同合规校验及7个首期模块的功能回归
+  target_baseline: PRODUCT-BASELINE-V1.0
+
+# 全局通过/失败标准
+criteria:
+  pass_rate: 100        # 合同合规测试通过率要求100%
+  functional_pass_rate: 95  # 功能回归测试通过率要求95%
+  critical_defects: 0   # 严重缺陷数要求0
+  major_defects: 0      # 主要缺陷数要求0
+
+# 合同合规测试（14份合同）
+contract_compliance:
+  - contract_id: CTR-API-001
+    type: openapi
+    authority_source: specs/openapi/gits-kno-api.openapi.json
+    test_cases:
+      - TC-API-001-01: 验证所有API端点与OpenAPI规范一致
+      - TC-API-001-02: 验证请求/响应Schema与规范一致
+      - TC-API-001-03: 验证HTTP状态码与规范一致
+      - TC-API-001-04: 验证API路径前缀为 /gits/api/v1/
+      - TC-API-001-05: 验证分页参数与规范一致
+
+  - contract_id: CTR-EVENT-001
+    type: asyncapi
+    authority_source: specs/events/domain-events.asyncapi.json
+    test_cases:
+      - TC-EVT-001-01: 验证事件类型与AsyncAPI规范一致
+      - TC-EVT-001-02: 验证事件Payload Schema与规范一致
+      - TC-EVT-001-03: 验证事件发布时机正确
+      - TC-EVT-001-04: 验证DomainEventPublisher接口实现
+
+  - contract_id: CTR-SEM-001
+    type: linkml_subset
+    authority_source: specs/semantic/gits-core.linkml.yaml
+    test_cases:
+      - TC-SEM-001-01: 验证LinkML Schema可加载
+      - TC-SEM-001-02: 验证语义模型类与Schema一致
+      - TC-SEM-001-03: 验证生成产物(gits-core.schema.json)与源一致
+      - TC-SEM-001-04: 验证SHACL约束(gits-core.shacl.ttl)可加载
+
+  - contract_id: CTR-SEM-002
+    type: turtle
+    authority_source: specs/semantic/gits-core.owl.ttl
+    test_cases:
+      - TC-SEM-002-01: 验证OWL本体可加载到Jena
+      - TC-SEM-002-02: 验证本体命名空间正确
+      - TC-SEM-002-03: 验证核心类(Customer/LegalEntity等)存在
+      - TC-SEM-002-04: 验证SPARQL查询可执行
+
+  - contract_id: CTR-RULE-001
+    type: dmn
+    authority_source: specs/rules/claim-reconciliation.dmn
+    test_cases:
+      - TC-RULE-001-01: 验证DMN文件可被KIE运行时加载
+      - TC-RULE-001-02: 验证决策表输入参数与规范一致
+      - TC-RULE-001-03: 验证决策表输出参数与规范一致
+      - TC-RULE-001-04: 验证决策结果与预期一致（边界值测试）
+      - TC-RULE-001-05: 验证FallbackClaimReconciliationAdapter逻辑正确
+
+  - contract_id: CTR-SKILL-001
+    type: json_schema
+    authority_source: specs/skills/context-assembly.skill.schema.json
+    test_cases:
+      - TC-SKILL-001-01: 验证Skill Schema可加载
+      - TC-SKILL-001-02: 验证上下文装配输出符合Schema
+      - TC-SKILL-001-03: 验证生成产物与源Schema一致
+
+  - contract_id: CTR-ACTION-001
+    type: json_schema
+    authority_source: specs/actions/controlled-action.schema.json
+    test_cases:
+      - TC-ACT-001-01: 验证Action Schema可加载
+      - TC-ACT-001-02: 验证受控行动输出符合Schema
+      - TC-ACT-001-03: 验证生成产物与源Schema一致
+
+  - contract_id: CTR-DATA-001
+    type: json_schema
+    authority_source: specs/data/source-contract.schema.json
+    test_cases:
+      - TC-DAT-001-01: 验证源数据合同Schema可加载
+      - TC-DAT-001-02: 验证源数据合同实例符合Schema
+      - TC-DAT-001-03: 验证生成产物与源Schema一致
+
+  - contract_id: CTR-DATA-002
+    type: source_contract_instance
+    authority_source: specs/data/src-edwcrm-cust-base.v0.1.json
+    test_cases:
+      - TC-DAT-002-01: 验证EDWCRM客户基础数据合同可加载
+      - TC-DAT-002-02: 验证客户数据字段映射完整
+      - TC-DAT-002-03: 验证Oracle查询SQL与合同一致
+      - TC-DAT-002-04: 验证生成产物与源一致
+
+  - contract_id: CTR-EVIDENCE-001
+    type: json_schema
+    authority_source: specs/evidence/evidence-bundle.schema.json
+    test_cases:
+      - TC-EVD-001-01: 验证证据Bundle Schema可加载
+      - TC-EVD-001-02: 验证证据装配输出符合Schema
+      - TC-EVD-001-03: 验证生成产物与源Schema一致
+
+  - contract_id: CTR-EVAL-001
+    type: json_schema
+    authority_source: specs/evaluation/run-manifest.schema.json
+    test_cases:
+      - TC-EVL-001-01: 验证评测运行清单Schema可加载
+      - TC-EVL-001-02: 验证评测输出符合Schema
+      - TC-EVL-001-03: 验证生成产物与源Schema一致
+
+  - contract_id: CTR-MAP-001
+    type: turtle
+    authority_source: specs/data/customer-source-mapping.r2rml.ttl
+    test_cases:
+      - TC-MAP-001-01: 验证R2RML映射文件可加载
+      - TC-MAP-001-02: 验证映射逻辑与ADR-0010一致
+      - TC-MAP-001-03: 验证映射输出与语义模型一致
+
+  - contract_id: CTR-DATA-003
+    type: source_contract_instance
+    authority_source: specs/data/src-oracle-metric-ontology.v0.1.json
+    test_cases:
+      - TC-DAT-003-01: 验证Oracle指标本体合同可加载
+      - TC-DAT-003-02: 验证指标映射字段完整
+
+  - contract_id: CTR-DATA-004
+    type: seed_claims
+    authority_source: specs/data/oracle-seed-claims.v0.1.json
+    test_cases:
+      - TC-DAT-004-01: 验证种子声明文件可加载
+      - TC-DAT-004-02: 验证2505条种子声明完整性
+      - TC-DAT-004-03: 验证种子声明分类正确(175指标+910字段血缘+234对象血缘+1182衍生字段+4风险信号)
+
+# 按模块分组的功能回归测试
+module_regression:
+  - module: M01-semantic-runtime
+    test_cases:
+      - TC-M01-01: 语义本体加载与初始化
+      - TC-M01-02: SPARQL查询执行
+      - TC-M01-03: 语义推理结果正确性
+      - TC-M01-04: R2RML映射执行
+      - TC-M01-05: 种子声明加载与查询
+      - TC-M01-06: SHACL约束校验
+      - TC-M01-07: 语义投影重建
+
+  - module: M02-knowledge-asset
+    test_cases:
+      - TC-M02-01: 知识卡模板定义与加载
+      - TC-M02-02: 知识卡实例CRUD
+      - TC-M02-03: 知识资产版本管理
+      - TC-M02-04: 知识卡与场景关联
+
+  - module: M04-context-evidence
+    test_cases:
+      - TC-M04-01: 上下文装配编排
+      - TC-M04-02: 证据采集与绑定
+      - TC-M04-03: 证据完整性校验
+      - TC-M04-04: 证据Bundle序列化/反序列化
+      - TC-M04-05: 上下文快照管理
+
+  - module: M06-human-action
+    test_cases:
+      - TC-M06-01: 受控行动调度
+      - TC-M06-02: 人工确认流程
+      - TC-M06-03: CRM回写通道(HttpCrmWritebackChannel)
+      - TC-M06-04: CRM回写通道(LoggingCrmWritebackChannel)
+      - TC-M06-05: 回写重试与补偿
+
+  - module: M07-evaluation
+    test_cases:
+      - TC-M07-01: 评测运行清单管理
+      - TC-M07-02: 评测执行与结果记录
+      - TC-M07-03: 通过/失败判定
+      - TC-M07-04: 评测报告生成
+
+  - module: M17-M22-scenario-customer-journey
+    test_cases:
+      - TC-SCJ-01: 客户经营旅程启动(JourneyStarted)
+      - TC-SCJ-02: KYC差距分析
+      - TC-SCJ-03: Claim候选记录(ClaimCandidateRecorded)
+      - TC-SCJ-04: Claim对账(DMN决策)
+      - TC-SCJ-05: 访前报告生成(LLM辅助)
+      - TC-SCJ-06: 访后分析生成(LLM辅助)
+      - TC-SCJ-07: 产品推荐与组合
+      - TC-SCJ-08: 客户洞察分析
+      - TC-SCJ-09: 事件发布验证(PostvisitCompleted/NewEvidenceArrived)
+      - TC-SCJ-10: LLM Fallback机制(MockLlmClient/RealLlmClient切换)
+
+# 架构合规测试
+architecture_compliance:
+  - TC-ARCH-01: 验证六边形架构端口-适配器映射完整
+  - TC-ARCH-02: 验证模块间无直接依赖(仅通过Port接口)
+  - TC-ARCH-03: 验证包命名规范(com.gien.gits.*)
+  - TC-ARCH-04: 验证数据库表前缀(gits_)
+  - TC-ARCH-05: 验证Oracle数据源只读(无写操作)
+  - TC-ARCH-06: 验证领域事件发布机制
+  - TC-ARCH-07: 验证DMN引擎Fallback机制
+
+# 端到端场景测试
+e2e_scenarios:
+  - TC-E2E-01: 完整客户经营旅程(启动→KYC分析→访前→访后→回写)
+  - TC-E2E-02: Claim对账完整流程(检测→匹配→决策→记录)
+  - TC-E2E-03: 证据装配与评测闭环
+  - TC-E2E-04: LLM辅助报告生成与Fallback

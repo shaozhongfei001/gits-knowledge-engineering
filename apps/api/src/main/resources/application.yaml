@@ -40,6 +40,8 @@ engagement:
     timeout: 30
   security:
     api-key: ""  # Empty = disabled (dev mode). Set value to enable API key auth.
+    api-key-rotation: ""  # P16 G10: Rotation key — old key stays valid until deadline
+    api-key-rotation-deadline: ""  # P16 G10: ISO 8601 date, e.g. 2026-09-01
     cors:
       allowed-origins: "http://localhost:5173,http://localhost:8080"
 
