@@ -41,18 +41,6 @@ class InteractionExtractionTest {
     }
 
     @Test
-    void deprecatedStringConstruction() {
-        InteractionExtraction ie = new InteractionExtraction(
-                "OBJ-003", InteractionExtraction.ExtractionType.COMMITMENT,
-                "FINANCING_NEED", "Commitment content", "Speaker",
-                "EV-3", "CANDIDATE", BigDecimal.ONE,
-                false, false, null, null);
-
-        assertEquals(InteractionExtraction.ClaimType.FINANCING_NEED, ie.claimType());
-        assertEquals(InteractionExtraction.ExtractionStatus.CANDIDATE, ie.status());
-    }
-
-    @Test
     void blankObjectIdRejected() {
         assertThrows(IllegalArgumentException.class, () -> new InteractionExtraction(
                 "  ", InteractionExtraction.ExtractionType.CLAIM,

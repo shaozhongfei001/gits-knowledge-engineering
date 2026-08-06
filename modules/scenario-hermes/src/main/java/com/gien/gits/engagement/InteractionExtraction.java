@@ -80,28 +80,5 @@ public record InteractionExtraction(
              null, null);
     }
 
-    /**
-     * 兼容旧String参数的构造函数
-     */
-    @Deprecated
-    public InteractionExtraction(
-            String objectId,
-            ExtractionType type,
-            String claimType,
-            String content,
-            String speaker,
-            String evidenceRef,
-            String status,
-            BigDecimal confidence,
-            boolean notFact,
-            boolean requiresReconciliation,
-            String conflictWith,
-            String nextQuestion) {
-        this(objectId, type,
-             claimType != null ? ClaimType.valueOf(claimType) : null,
-             content, speaker, evidenceRef,
-             status != null ? ExtractionStatus.valueOf(status) : null,
-             confidence, notFact, requiresReconciliation,
-             conflictWith, nextQuestion);
-    }
+
 }

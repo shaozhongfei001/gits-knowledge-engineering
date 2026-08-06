@@ -51,30 +51,5 @@ public record CrmWritebackCommand(
         }
     }
 
-    /**
-     * 兼容旧String参数的构造函数
-     */
-    @Deprecated
-    public CrmWritebackCommand(
-            String commandId,
-            String objectType,
-            String operation,
-            String beforeValue,
-            String proposedValue,
-            String riskLevel,
-            boolean requiresHumanConfirm,
-            String rmAction,
-            String auditRef,
-            String idempotencyKey) {
-        this(commandId,
-             ObjectType.valueOf(objectType),
-             Operation.valueOf(operation),
-             beforeValue,
-             proposedValue,
-             riskLevel != null ? RiskLevel.valueOf(riskLevel) : null,
-             requiresHumanConfirm,
-             rmAction,
-             auditRef,
-             idempotencyKey);
-    }
+
 }
