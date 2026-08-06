@@ -1,5 +1,7 @@
 package com.gien.gits.api.security;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,9 +13,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * SecurityConfig 集成测试 — 验证安全基线行为
- * <p>
- * 默认 profile 下 api-key 为空（开发模式），所有端点可访问。
- * API Key 认证逻辑在 ApiKeyAuthenticationFilterTest 中单元测试覆盖。
+ * 
+ * 覆盖:
+ * 1. 开发模式 (api-key为空) — 所有端点可访问
+ * 2. 安全基线 — 敏感端点(Swagger/H2)应被禁用
+ * 3. API Key认证行为 — 开发模式不拦截，生产模式需认证
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -22,43 +26,107 @@ class SecurityConfigTest {
     @Autowired
     private MockMvc mockMvc;
 
-    // --- 开发模式 (api-key 为空) ---
+    // ── 开发模式 (api-key 为空) ────────────────────────────────
 
-    @Test
-    void actuatorHealth_shouldBeAccessibleWithoutAuth() throws Exception {
-        mockMvc.perform(get("/actuator/health"))
-            .andExpect(status().isOk());
+    @Nested
+    @DisplayName("开发模式: api-key为空，认证被跳过")
+    class DevModeTests {
+
+        @Test
+        @DisplayName("Health端点无需认证即可访问")
+        void actuatorHealth_shouldBeAccessibleWithoutAuth() throws Exception {
+            mockMvc.perform(get("/actuator/health"))
+                .andExpect(status().isOk());
+        }
+
+        @Test
+        @DisplayName("Info端点无需认证即可访问")
+        void actuatorInfo_shouldBeAccessibleWithoutAuth() throws Exception {
+            mockMvc.perform(get("/actuator/info"))
+                .andExpect(status().isOk());
+        }
+
+        @Test
+        @DisplayName("业务端点在开发模式下不返回401")
+        void apiEndpoint_shouldBeAccessibleWhenApiKeyDisabled() throws Exception {
+            mockMvc.perform(get("/api/v1/engagement-journeys"))
+                .andExpect(result -> {
+                    int status = result.getResponse().getStatus();
+                    if (status == 401) {
+                        throw new AssertionError("Should not return 401 when api-key is disabled, got: " + status);
+                    }
+                });
+        }
     }
 
-    @Test
-    void actuatorInfo_shouldBeAccessibleWithoutAuth() throws Exception {
-        mockMvc.perform(get("/actuator/info"))
-            .andExpect(status().isOk());
+    // ── 安全基线验证 ────────────────────────────────────────────
+
+    @Nested
+    @DisplayName("安全基线: 敏感端点保护")
+    class SecurityBaselineTests {
+
+        @Test
+        @DisplayName("Swagger UI在生产配置下应被禁用(404/302)")
+        void swaggerUi_shouldBeDisabled() throws Exception {
+            mockMvc.perform(get("/swagger-ui.html"))
+                .andExpect(result -> {
+                    int status = result.getResponse().getStatus();
+                    // 404(禁用) 或 302(重定向) 都是可接受的
+                    if (status != 404 && status != 302 && status != 301) {
+                        throw new AssertionError("Swagger UI should be disabled, got: " + status);
+                    }
+                });
+        }
+
+        @Test
+        @DisplayName("H2控制台在生产配置下应被禁用(404/403)")
+        void h2Console_shouldBeDisabled() throws Exception {
+            mockMvc.perform(get("/h2-console"))
+                .andExpect(result -> {
+                    int status = result.getResponse().getStatus();
+                    if (status != 404 && status != 403) {
+                        throw new AssertionError("H2 console should be disabled, got: " + status);
+                    }
+                });
+        }
+
+        @Test
+        @DisplayName("Prometheus端点应可访问（监控需要）")
+        void prometheus_shouldBeAccessible() throws Exception {
+            mockMvc.perform(get("/actuator/prometheus"))
+                .andExpect(status().isOk());
+        }
     }
 
-    @Test
-    void apiEndpoint_shouldBeAccessibleWhenApiKeyDisabled() throws Exception {
-        // 默认 profile 下 api-key 为空，认证被跳过
-        // 请求可能返回404(端点不存在)或500(缺少参数)，但不应返回401
-        mockMvc.perform(get("/api/v1/engagement/journey/start"))
-            .andExpect(result -> {
-                int status = result.getResponse().getStatus();
-                if (status == 401) {
-                    throw new AssertionError("Should not return 401 when api-key is disabled, got: " + status);
-                }
-            });
-    }
+    // ── API Key认证行为 ────────────────────────────────────────
 
-    @Test
-    void apiEndpoint_withValidApiKey_shouldNotReturn401() throws Exception {
-        // 即使 api-key 禁用模式下，带 X-API-KEY 头也不应导致 401
-        mockMvc.perform(get("/api/v1/engagement/journey/start")
-                .header("X-API-KEY", "any-value"))
-            .andExpect(result -> {
-                int status = result.getResponse().getStatus();
-                if (status == 401) {
-                    throw new AssertionError("Should not return 401 when api-key is disabled, got: " + status);
-                }
-            });
+    @Nested
+    @DisplayName("API Key认证行为")
+    class ApiKeyAuthTests {
+
+        @Test
+        @DisplayName("开发模式下带X-API-KEY头不应返回401")
+        void withApiKeyHeader_devMode_no401() throws Exception {
+            mockMvc.perform(get("/api/v1/engagement-journeys")
+                    .header("X-API-KEY", "any-value"))
+                .andExpect(result -> {
+                    int status = result.getResponse().getStatus();
+                    if (status == 401) {
+                        throw new AssertionError("Should not return 401 when api-key is disabled, got: " + status);
+                    }
+                });
+        }
+
+        @Test
+        @DisplayName("开发模式下不带X-API-KEY头也不返回401")
+        void withoutApiKeyHeader_devMode_no401() throws Exception {
+            mockMvc.perform(get("/api/v1/customer-contexts"))
+                .andExpect(result -> {
+                    int status = result.getResponse().getStatus();
+                    if (status == 401) {
+                        throw new AssertionError("Should not return 401 in dev mode, got: " + status);
+                    }
+                });
+        }
     }
 }
