@@ -1,0 +1,8 @@
+{
+  "status": "DRAFT_READY",
+  "outputs": [
+    "11_outputs/R4_POST_VISIT_ANALYSIS.md",
+    "11_outputs/R5A_INTERNAL_RELATIONSHIP_REPORT.md",
+    "11_outputs/R5B_CRM_CALL_REPORT.json"
+  ]
+}

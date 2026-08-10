@@ -28,4 +28,11 @@ public interface CustomerRepository {
      * @return 该客户经理名下的客户列表
      */
     List<Customer> findByRmId(String rmId);
+
+    /**
+     * 查找所有客户。
+     *
+     * @return 所有客户列表
+     */
+    List<Customer> findAll();
 }

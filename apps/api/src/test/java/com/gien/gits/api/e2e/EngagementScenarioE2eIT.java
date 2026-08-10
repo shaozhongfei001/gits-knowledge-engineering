@@ -257,8 +257,8 @@ class EngagementScenarioE2eIT {
     void prohibitionEnforcement() {
         // 禁令#1: CRM回写必须require_human_confirm
         assertThrows(IllegalArgumentException.class, () -> new CrmWritebackCommand(
-            "CMD-001", "Interaction", "CREATE",
-            "N/A", "test", "LOW",
+            "CMD-001", CrmWritebackCommand.ObjectType.INTERACTION, CrmWritebackCommand.Operation.CREATE,
+            "N/A", "test", CrmWritebackCommand.RiskLevel.LOW,
             false,  // requiresHumanConfirm = false → 应抛异常
             "test", "AUDIT-001", "IDEM-001"));
     }

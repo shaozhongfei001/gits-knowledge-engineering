@@ -40,6 +40,8 @@ public class JdbcCustomerRepository implements WritableCustomerRepository {
 
     private static final String FIND_BY_RM_SQL = FIND_BY_ID_SQL.replace("WHERE customer_id = ?", "WHERE rm_id = ?");
 
+    private static final String FIND_ALL_SQL = FIND_BY_ID_SQL.replace("WHERE customer_id = ?", "");
+
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcCustomerRepository(JdbcTemplate jdbcTemplate) {
@@ -64,6 +66,11 @@ public class JdbcCustomerRepository implements WritableCustomerRepository {
 
     public List<Customer> findByRmId(String rmId) {
         return jdbcTemplate.query(FIND_BY_RM_SQL, new CustomerRowMapper(), rmId);
+    }
+
+    @Override
+    public List<Customer> findAll() {
+        return jdbcTemplate.query(FIND_ALL_SQL, new CustomerRowMapper());
     }
 
     private static Customer toCustomer(ResultSet rs) throws SQLException {

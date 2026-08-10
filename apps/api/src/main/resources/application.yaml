@@ -24,6 +24,9 @@ gits:
   seed:
     enabled: true  # Enable seed data in dev/test; disabled by default in prod
 
+scenario:
+  data-root: "${SCENARIO_DATA_ROOT:}"  # V1.1: 外部场景数据根目录。空=使用classpath(V1.0兼容)
+
 engagement:
   scenario:
     enabled: true

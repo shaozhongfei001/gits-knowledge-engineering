@@ -1,0 +1,28 @@
+{
+  "review_id": "RMR-001",
+  "reviewer": "P-RISK-001",
+  "date": "2026-07-14",
+  "review_type": "PRELIMINARY_BANKABILITY_ONLY",
+  "paths": [
+    {
+      "path": "集团本部统筹",
+      "status": "CONDITIONALLY_ANALYZABLE",
+      "missing": [
+        "用途匹配",
+        "项目资金路径",
+        "现有额度占用"
+      ]
+    },
+    {
+      "path": "项目公司融资",
+      "status": "CONDITIONALLY_ANALYZABLE",
+      "missing": [
+        "项目主体正式决议",
+        "资本金",
+        "还款来源",
+        "集团支持安排"
+      ]
+    }
+  ],
+  "not_approval": true
+}

@@ -1,19 +1,33 @@
 <template>
   <div class="login-container">
-    <div class="login-card">
-      <h1 class="login-title">GITS 客户经营闭环</h1>
-      <p class="login-subtitle">请输入 API Key 以访问系统</p>
+    <div class="login-card surface-card-elevated">
+      <div class="login-brand">
+        <div class="brand-mark">G</div>
+        <div class="brand-info">
+          <h1 class="login-title">GITS 客户经营闭环</h1>
+          <p class="login-subtitle">Knowledge Engineering Platform</p>
+        </div>
+      </div>
       <form @submit.prevent="handleLogin" class="login-form">
-        <input
-          v-model="apiKey"
-          type="password"
-          placeholder="API Key"
-          class="login-input"
-          autofocus
-        />
+        <div class="form-field">
+          <label class="form-label">API Key</label>
+          <input
+            v-model="apiKey"
+            type="password"
+            placeholder="请输入 API Key"
+            class="login-input"
+            autofocus
+          />
+        </div>
         <p v-if="error" class="login-error">{{ error }}</p>
-        <button type="submit" class="login-btn" :disabled="!apiKey.trim()">
+        <button type="submit" class="btn btn-primary login-btn" :disabled="!apiKey.trim()">
           登录
+        </button>
+        <div class="login-divider">
+          <span>或</span>
+        </div>
+        <button type="button" class="btn btn-secondary dev-btn" @click="handleDevLogin">
+          开发模式直接进入
         </button>
       </form>
     </div>
@@ -23,7 +37,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { setApiKey, isAuthenticated } from '../api/auth'
+import { setApiKey } from '../api/auth'
 
 const router = useRouter()
 const apiKey = ref('')
@@ -36,7 +50,14 @@ function handleLogin() {
   }
   setApiKey(apiKey.value.trim())
   error.value = ''
-  router.push('/')
+  const redirect = (router.currentRoute.value.query.redirect as string) || '/'
+  router.push(redirect)
+}
+
+function handleDevLogin() {
+  setApiKey('dev-mode')
+  const redirect = (router.currentRoute.value.query.redirect as string) || '/'
+  router.push(redirect)
 }
 </script>
 
@@ -46,73 +67,132 @@ function handleLogin() {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #f0f2f5;
+  background: var(--bg-page);
 }
 
 .login-card {
-  background: #fff;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  width: 360px;
+  padding: var(--space-10);
+  width: 400px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+
+.brand-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--brand-primary);
+  color: var(--text-inverse);
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brand-info {
+  display: flex;
+  flex-direction: column;
 }
 
 .login-title {
-  text-align: center;
-  font-size: 20px;
-  margin-bottom: 8px;
-  color: #1a1a1a;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.3;
 }
 
 .login-subtitle {
-  text-align: center;
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 24px;
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  margin: 0;
+  letter-spacing: 0.5px;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-4);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.form-label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
 .login-input {
-  padding: 10px 12px;
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
-  font-size: 14px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-normal);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  background: var(--bg-surface);
   outline: none;
-  transition: border-color 0.3s;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .login-input:focus {
-  border-color: #1890ff;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px var(--brand-primary-lighter);
+}
+
+.login-input::placeholder {
+  color: var(--text-tertiary);
 }
 
 .login-error {
-  color: #ff4d4f;
-  font-size: 12px;
+  color: var(--color-danger);
+  font-size: var(--text-xs);
   margin: 0;
+  padding: var(--space-1) 0;
 }
 
 .login-btn {
-  padding: 10px;
-  background: #1890ff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.login-btn:hover:not(:disabled) {
-  background: #40a9ff;
+  width: 100%;
+  padding: var(--space-3);
+  font-size: var(--text-base);
+  margin-top: var(--space-1);
 }
 
 .login-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-light);
+}
+
+.dev-btn {
+  width: 100%;
+  padding: var(--space-3);
+  font-size: var(--text-sm);
 }
 </style>

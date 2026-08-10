@@ -189,94 +189,97 @@ onMounted(async () => {
 .journey-timeline {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 24px;
+  padding: var(--space-6);
 }
 .loading-state {
   display: flex;
   justify-content: center;
-  padding: 60px 0;
+  padding: var(--space-12) 0;
 }
 .journey-header-section {
-  margin-bottom: 24px;
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  margin-bottom: var(--space-6);
+  padding: var(--space-5);
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-xs);
 }
 .journey-title-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 8px;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
 }
 .journey-title-row h2 {
-  font-size: 20px;
-  color: #003366;
+  font-size: var(--text-xl);
+  color: var(--text-primary);
   margin: 0;
+  font-weight: 600;
 }
 .journey-meta-row {
   display: flex;
-  gap: 24px;
-  font-size: 13px;
-  color: #666;
-  margin-bottom: 16px;
+  gap: var(--space-6);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
 }
 .section-title {
-  font-size: 16px;
-  color: #003366;
-  margin: 0 0 12px 0;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #b8860b;
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 2px solid var(--brand-primary);
   display: inline-block;
+  font-weight: 600;
 }
 .timeline-section,
 .claims-section,
 .signals-section {
-  margin-bottom: 24px;
+  margin-bottom: var(--space-6);
 }
 .timeline {
-  padding-left: 8px;
+  padding-left: var(--space-2);
 }
 .interaction-detail {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-2);
 }
 .detail-row {
   display: flex;
-  gap: 8px;
-  font-size: 13px;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
 }
 .detail-label {
-  color: #8c8c8c;
+  color: var(--text-tertiary);
   min-width: 60px;
 }
 .claim-refs {
   display: flex;
-  gap: 4px;
+  gap: var(--space-1);
   flex-wrap: wrap;
 }
 .claims-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 .claim-card {
-  border-left: 3px solid #003366;
+  border-left: 3px solid var(--brand-primary);
 }
 .claim-header {
   display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
 }
 .claim-content {
-  font-size: 14px;
-  color: #333;
-  line-height: 1.5;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
 }
 .signal-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 </style>

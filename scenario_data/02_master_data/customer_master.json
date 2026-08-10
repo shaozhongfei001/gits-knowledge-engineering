@@ -1,0 +1,23 @@
+{
+  "customer_id": "CUST-001",
+  "canonical_name": "华东精工装备集团有限公司",
+  "industry": "高端装备制造/智能制造/工业自动化设备",
+  "region": "浙江杭州",
+  "established_date": "2008-04-22",
+  "registered_capital_cny": 280000000,
+  "relationship_since": "2018-05-16",
+  "customer_tier": "战略客户",
+  "rm_id": "P-RM-001",
+  "managing_org": "杭州分行公司金融一部",
+  "group_id": "GRP-HDEG-001",
+  "listed": false,
+  "risk_level": "正常",
+  "employees_group": 860,
+  "payroll_bank_employees": 486,
+  "main_products": [
+    "工业机器人集成线",
+    "精密装备部件",
+    "自动化产线解决方案"
+  ],
+  "relationship_summary": "合作8年；授信与结算基础较好；现金管理、供应链金融仍为空白；2026年二期智能制造项目形成新增经营机会。"
+}

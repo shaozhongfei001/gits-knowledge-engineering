@@ -1,5 +1,31 @@
 {
   "dependencies": {
     "docx": "^8.5.0"
-  }
+  },
+  "name": "gits-knowledge-engineering",
+  "version": "1.0.0",
+  "description": "杭州银行“知识工程体系和智能体基础能力建设项目”工程开发仓库候选骨架。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shaozhongfei001/gits-knowledge-engineering.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/shaozhongfei001/gits-knowledge-engineering/issues"
+  },
+  "homepage": "https://github.com/shaozhongfei001/gits-knowledge-engineering#readme"
 }

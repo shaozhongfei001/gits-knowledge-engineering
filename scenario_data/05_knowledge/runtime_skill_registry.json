@@ -1,0 +1,234 @@
+[
+  {
+    "runtime_skill_id": "RSK-01",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": false,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-02",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": false,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-03",
+    "version": "1.1.0",
+    "implementation_type": "RULE",
+    "llm_required": false,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-04",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": false,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-05",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-06",
+    "version": "1.1.0",
+    "implementation_type": "RULE",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-07",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-08",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-09",
+    "version": "1.1.0",
+    "implementation_type": "RULE",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-10",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-11",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-12",
+    "version": "1.1.0",
+    "implementation_type": "RULE",
+    "llm_required": false,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-13",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-14",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-15",
+    "version": "1.1.0",
+    "implementation_type": "RULE",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-16",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-17",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-18",
+    "version": "1.1.0",
+    "implementation_type": "RULE",
+    "llm_required": false,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-19",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-20",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-21",
+    "version": "1.1.0",
+    "implementation_type": "RULE",
+    "llm_required": false,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-22",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-23",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-24",
+    "version": "1.1.0",
+    "implementation_type": "RULE",
+    "llm_required": false,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-25",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-26",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-27",
+    "version": "1.1.0",
+    "implementation_type": "RULE",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-28",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  },
+  {
+    "runtime_skill_id": "RSK-29",
+    "version": "1.1.0",
+    "implementation_type": "RULE+MODEL",
+    "llm_required": true,
+    "side_effect_policy": "NONE",
+    "status": "ACTIVE"
+  }
+]

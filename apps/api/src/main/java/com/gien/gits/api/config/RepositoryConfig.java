@@ -9,14 +9,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.gien.gits.adapter.persistence.JdbcBankRelationshipSnapshotRepository;
 import com.gien.gits.adapter.persistence.JdbcClaimRepository;
-import com.gien.gits.adapter.persistence.JdbcCommitmentRepository;
+import com.gien.gits.adapter.persistence.v11.JdbcCommitmentRepository;
 import com.gien.gits.adapter.persistence.JdbcCreditFacilityRepository;
 import com.gien.gits.adapter.persistence.JdbcCustomerRepository;
-import com.gien.gits.adapter.persistence.JdbcExternalEventRepository;
+import com.gien.gits.adapter.persistence.v11.JdbcExternalEventRepository;
 import com.gien.gits.adapter.persistence.JdbcFactReconciliationRepository;
 import com.gien.gits.adapter.persistence.JdbcGroupRelationshipRepository;
 import com.gien.gits.adapter.persistence.JdbcInteractionRepository;
-import com.gien.gits.adapter.persistence.JdbcKycGapProfileRepository;
+import com.gien.gits.adapter.persistence.v11.JdbcKycGapProfileRepository;
 import com.gien.gits.adapter.persistence.JdbcLegalEntityRepository;
 import com.gien.gits.adapter.persistence.JdbcOperatingCaseRepository;
 import com.gien.gits.adapter.persistence.JdbcOpportunitySignalRepository;

@@ -34,6 +34,8 @@
     <dependency><groupId>org.wiremock</groupId><artifactId>wiremock-standalone</artifactId><version>3.9.1</version><scope>test</scope></dependency>
     <!-- P11 G3: DMN决策引擎 — 轻量级XML解析(不依赖KIE,避免与Spring Boot 3.x的jakarta冲突) -->
     <dependency><groupId>com.fasterxml.jackson.dataformat</groupId><artifactId>jackson-dataformat-xml</artifactId></dependency>
+    <!-- V1.1: YAML数据格式支持 -->
+    <dependency><groupId>com.fasterxml.jackson.dataformat</groupId><artifactId>jackson-dataformat-yaml</artifactId></dependency>
     <!-- G6: OpenAPI / Swagger UI -->
     <dependency><groupId>org.springdoc</groupId><artifactId>springdoc-openapi-starter-webmvc-ui</artifactId><version>2.6.0</version></dependency>
   </dependencies>

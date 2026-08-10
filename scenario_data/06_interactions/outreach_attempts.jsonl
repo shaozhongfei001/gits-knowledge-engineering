@@ -1,0 +1,5 @@
+{"attempt_id": "OA-001", "date": "2026-07-02", "time": "16:20", "target": "C-CFO-001", "channel": "电话", "purpose": "预约项目交流", "status": "CONNECTED", "customer_response": "下周可以安排，先和王强确认时间", "human_confirmed": true}
+{"attempt_id": "OA-002", "date": "2026-07-08", "time": "10:05", "target": "C-CFO-001", "channel": "电话", "purpose": "确认14:30拜访", "status": "NO_ANSWER", "customer_response": "", "human_confirmed": true}
+{"attempt_id": "OA-003", "date": "2026-07-08", "time": "10:12", "target": "C-CFO-001", "channel": "微信", "purpose": "说明来意并确认拜访", "status": "SENT_AFTER_RM_EDIT", "customer_response": "最近忙，什么事？", "human_confirmed": true}
+{"attempt_id": "OA-004", "date": "2026-07-08", "time": "10:18", "target": "C-CFO-001", "channel": "微信", "purpose": "说明不预设融资结论", "status": "SENT_AFTER_RM_EDIT", "customer_response": "可以，下午2:30，王总也在。", "human_confirmed": true}
+{"attempt_id": "OA-005", "date": "2026-07-08", "time": "10:28", "target": "C-FIN-001", "channel": "微信", "purpose": "确认参会和材料", "status": "CONNECTED", "customer_response": "没问题，采购陈涛可能后面过来。", "human_confirmed": true}

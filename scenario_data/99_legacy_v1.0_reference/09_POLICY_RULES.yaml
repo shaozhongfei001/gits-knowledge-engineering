@@ -1,0 +1,60 @@
+scenario:
+  scenario_id: RM-CONTINUOUS-ENGAGEMENT-HDEG-001
+  scenario_name: 华东精工客户经理持续经营闭环
+  version: V1.0
+  generated_at: "2026-08-03T00:06:00+08:00"
+  synthetic_data: true
+  data_policy: 合成演示数据；企业、人员、账号、交易、外部事件均为虚构，用于Hermes演示。
+  basis:
+    - 客户经理持续经营案例
+    - 市场慧眼→客户洞察→访前报告→产品推荐→话术生成→客户建联→CRM回写
+    - Customer Operating View / Interaction / Fact Reconciliation / Ontology
+rules:
+  -
+    rule_id: RULE-CREDIT-001
+    name: 可用额度不得自动推断为项目可用额度
+    severity: HIGH
+    logic: "available_credit_cny>0 AND project_purpose!=existing_facility_allowed_purpose => PendingVerification"
+    required_output: 需核实用途、主体、提款路径和审批条件。
+  -
+    rule_id: RULE-CREDIT-002
+    name: 新增额度、提款安排、用途调整必须区分
+    severity: HIGH
+    logic: "customer_says_amount AND facility_available_amount_exists => ask disambiguation"
+    required_output: 新增额度/现有额度提款/用途调整/项目主体变更四选一待确认。
+  -
+    rule_id: RULE-RISK-001
+    name: Bankability不是审批结论
+    severity: CRITICAL
+    logic: "approval certainty => block"
+    required_output: 仅可表述为初步可做性或待审批。
+  -
+    rule_id: RULE-DATA-001
+    name: 本行流水不代表全量现金流
+    severity: HIGH
+    logic: "bank_visible_transactions => append limitation"
+    required_output: 本分析仅基于本行可见交易。
+  -
+    rule_id: RULE-EVIDENCE-001
+    name: 外部公告不等于正式客户需求
+    severity: HIGH
+    logic: "external_event => opportunity_signal only"
+    required_output: 需客户确认。
+  -
+    rule_id: RULE-OUTREACH-001
+    name: AI不得自动发送客户消息
+    severity: CRITICAL
+    logic: "message_draft => human_confirm_required"
+    required_output: 等待RM确认。
+  -
+    rule_id: RULE-CRM-001
+    name: CRM写回必须人工确认
+    severity: CRITICAL
+    logic: "writeback => ACCEPT/EDIT/REJECT"
+    required_output: 生成WritebackCommand，不直接写源表。
+  -
+    rule_id: RULE-FACT-001
+    name: 客户口头表达不是事实
+    severity: HIGH
+    logic: "interaction claim => CLAIM/INTENT/PENDING"
+    required_output: 标记CLAIM/INTENT/PENDING。

@@ -1,0 +1,48 @@
+{
+  "assessment_id": "R6-PRODUCT-FIT-HDEG",
+  "as_of": "2026-07-08",
+  "customer_problem": "第一阶段设备款资金安排 + 三年左右期限 + 项目主体待确认 + 不希望增加过多短期负债",
+  "candidates": [
+    {
+      "product": "PROD-FAL V2.2",
+      "fit": "HIGH_CANDIDATE",
+      "reason": "期限和设备用途更匹配",
+      "missing": [
+        "最终项目主体",
+        "设备清单",
+        "项目总投资构成",
+        "资本金/还款来源"
+      ],
+      "not_approval": true
+    },
+    {
+      "product": "PROD-WCL V3.4",
+      "fit": "CAUTION",
+      "reason": "仅可用于合规经营周转，不得直接替代固定资产投资方案",
+      "missing": [
+        "现有额度用途安排"
+      ],
+      "not_approval": true
+    },
+    {
+      "product": "PROD-SCF V4.0",
+      "fit": "CONDITIONAL",
+      "reason": "三家设备供应商集中，但接受度不同",
+      "missing": [
+        "供应商接受度",
+        "真实贸易材料"
+      ],
+      "not_approval": true
+    },
+    {
+      "product": "PROD-CASH V5.1",
+      "fit": "PARALLEL_OPPORTUNITY",
+      "reason": "多主体资金调拨仍依赖手工",
+      "missing": [
+        "账户清单",
+        "集团统筹意愿"
+      ],
+      "not_approval": true
+    }
+  ]
+}

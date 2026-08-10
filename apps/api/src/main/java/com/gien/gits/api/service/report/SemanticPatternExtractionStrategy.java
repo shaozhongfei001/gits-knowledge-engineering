@@ -39,9 +39,9 @@ public class SemanticPatternExtractionStrategy implements TranscriptExtractionSt
     private static final Pattern FINANCING_INTENT_PATTERN =
         Pattern.compile("融资|贷款|借款|授信|额度|资金需求|增加支持|信贷|放款|支持|资金|lending|loan|credit|financing|support");
 
-    /** 承诺: "我会/我们承诺/保证" 等 */
+    /** 承诺: "我会/我们承诺/保证" 等 — 注意: 长匹配优先避免"我"抢先匹配"我们行" */
     private static final Pattern COMMITMENT_PATTERN =
-        Pattern.compile("(我|我们|我行|本行)\\s*(会|将|承诺|保证|一定|务必|务必|计划)\\s*[，,]?(.+?)([。；!！]|$)");
+        Pattern.compile("(我们行|我行|本行|我们|我)\\s*(会|将|承诺|保证|一定|务必|计划)\\s*[，,]?(.+?)([。；!！]|$)");
 
     /** 风险信号 */
     private static final Pattern RISK_SIGNAL_PATTERN =
@@ -59,9 +59,9 @@ public class SemanticPatternExtractionStrategy implements TranscriptExtractionSt
     private static final Pattern FOLLOW_UP_PATTERN =
         Pattern.compile("下次|后续|跟进|之后|回去后|回头|再联系|再沟通|follow.?up|next.?time|later");
 
-    /** 客户陈述事实 */
+    /** 客户陈述事实 — 支持复合主语(我们公司)和复合维度(目前营收) */
     private static final Pattern CUSTOMER_STATEMENT_PATTERN =
-        Pattern.compile("(我们|我司|公司|企业|厂里)\\s*(目前|现在|今年|去年|今年|营收|利润|产值|产能|员工|订单|客户)\\s*(是|有|达到|完成|约为|大约|大概|超过|接近)\\s*(.+?)([。；!！]|$)");
+        Pattern.compile("(我们公司|我们|我司|公司|企业|厂里)\\s*(目前|现在|今年|去年)?\\s*(营收|利润|产值|产能|员工|订单|客户|收入|资产|负债)\\s*(是|有|达到|完成|约为|大约|大概|超过|接近)\\s*(.+?)([。；!！]|$)");
 
     /** 产品兴趣 */
     private static final Pattern PRODUCT_INTEREST_PATTERN =
@@ -237,9 +237,12 @@ public class SemanticPatternExtractionStrategy implements TranscriptExtractionSt
         Matcher amountMatcher = FINANCING_AMOUNT_PATTERN.matcher(text);
         boolean hasIntent = FINANCING_INTENT_PATTERN.matcher(text).find();
 
+        // 先检查是否有金额匹配
+        boolean hasAmount = amountMatcher.find();
+        String amount = hasAmount ? amountMatcher.group(1) + amountMatcher.group(2) : null;
+
         // 金额+意图 → 高置信度
-        if (amountMatcher.find() && hasIntent) {
-            String amount = amountMatcher.group(1) + amountMatcher.group(2);
+        if (hasAmount && hasIntent) {
             extractions.add(new InteractionExtraction(
                 "EXT-" + UUID.randomUUID().toString().substring(0, 8),
                 ExtractionType.OPPORTUNITY_SIGNAL,
@@ -253,8 +256,7 @@ public class SemanticPatternExtractionStrategy implements TranscriptExtractionSt
         }
 
         // 仅金额 → 中等置信度
-        if (amountMatcher.find()) {
-            String amount = amountMatcher.group(1) + amountMatcher.group(2);
+        if (hasAmount) {
             extractions.add(new InteractionExtraction(
                 "EXT-" + UUID.randomUUID().toString().substring(0, 8),
                 ExtractionType.OPPORTUNITY_SIGNAL,
@@ -319,7 +321,7 @@ public class SemanticPatternExtractionStrategy implements TranscriptExtractionSt
             extractions.add(new InteractionExtraction(
                 "EXT-" + UUID.randomUUID().toString().substring(0, 8),
                 ExtractionType.BANK_COMMITMENT,
-                ClaimType.FOLLOW_UP,
+                ClaimType.RM_COMMITMENT,
                 "RM承诺尽快跟进方案",
                 "RM", "TR-RAW",
                 ExtractionStatus.DETECTED, new BigDecimal("0.90"),
@@ -411,18 +413,20 @@ public class SemanticPatternExtractionStrategy implements TranscriptExtractionSt
         Matcher matcher = CUSTOMER_STATEMENT_PATTERN.matcher(text);
         while (matcher.find()) {
             String subject = matcher.group(1);
-            String dimension = matcher.group(2);
-            String qualifier = matcher.group(3);
-            String value = matcher.group(4).trim();
+            String timeQual = matcher.group(2);  // 可选时间限定词
+            String dimension = matcher.group(3);
+            String qualifier = matcher.group(4);
+            String value = matcher.group(5).trim();
+            String fullDimension = (timeQual != null ? timeQual : "") + dimension;
             extractions.add(new InteractionExtraction(
                 "EXT-" + UUID.randomUUID().toString().substring(0, 8),
                 ExtractionType.FACT_CLAIM,
                 ClaimType.CUSTOMER_STATEMENT,
-                subject + dimension + qualifier + value,
+                subject + fullDimension + qualifier + value,
                 "客户方", "TR-RAW",
                 ExtractionStatus.DETECTED, new BigDecimal("0.65"),
                 true, true,
-                dimension, "与系统记录对账: " + dimension));
+                dimension, "与系统记录对账: " + fullDimension));
         }
     }
 

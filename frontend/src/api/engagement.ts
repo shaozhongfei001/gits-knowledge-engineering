@@ -201,13 +201,6 @@ export interface PostvisitReport {
   nextSteps: string[]
 }
 
-export interface EngagementScript {
-  scriptId: string
-  scriptType: 'OUTREACH' | 'MEETING'
-  customerId: string
-  content: string
-  generatedAt: string
-}
 
 // ===================== API 调用 =====================
 // 注意：后端API路径前缀为 /api/v1/engagement（axios baseURL）
@@ -279,8 +272,12 @@ export async function fetchCustomerContext(customerId: string): Promise<Customer
 
 /** 获取客户旅程列表 */
 export async function fetchCustomerJourneys(customerId: string): Promise<CustomerJourney[]> {
-  // 后端无按客户查旅程列表的端点，返回空数组
-  return []
+  try {
+    const { data } = await rootApi.get(`/api/journey/case/${customerId}`)
+    return data
+  } catch {
+    return []
+  }
 }
 
 /** 获取旅程详情 */
@@ -300,8 +297,14 @@ export async function fetchJourneyInteractions(journeyId: string): Promise<Inter
 
 /** 获取旅程主张列表 */
 export async function fetchJourneyClaims(journeyId: string): Promise<Claim[]> {
-  // 后端无按旅程查主张的端点，返回空数组
-  return []
+  try {
+    const journey = await fetchJourney(journeyId)
+    if (!journey.operatingCaseId) return []
+    const { data } = await rootApi.get(`/api/claim/case/${journey.operatingCaseId}`)
+    return data
+  } catch {
+    return []
+  }
 }
 
 /** 获取旅程机会信号 */
@@ -326,8 +329,12 @@ export async function fetchReport(reportId: string): Promise<RelationshipReport>
 
 /** 获取经营案例列表 */
 export async function fetchOperatingCases(customerId: string): Promise<OperatingCase[]> {
-  // 后端无按客户查案例列表的端点，返回空数组
-  return []
+  try {
+    const { data } = await rootApi.get('/api/case', { params: { customerId } })
+    return data
+  } catch {
+    return []
+  }
 }
 
 /** 执行访前报告生成 */
@@ -351,7 +358,7 @@ export async function executePostvisit(journeyId: string, customerId: string = '
 }
 
 /** 生成外联脚本 */
-export async function generateOutreachScript(customerId: string, rmId: string = '', operatingCaseId: string = '', journeyId: string = '', channel: string = 'PHONE'): Promise<EngagementScript> {
+export async function generateOutreachScript(customerId: string, rmId: string = '', operatingCaseId: string = '', journeyId: string = '', channel: string = 'PHONE'): Promise<OutreachScriptResponse> {
   const { data } = await api.post('/journey/outreach-script', {
     customerId,
     rmId,
@@ -363,7 +370,7 @@ export async function generateOutreachScript(customerId: string, rmId: string = 
 }
 
 /** 生成会面脚本 */
-export async function generateMeetingScript(customerId: string, rmId: string = '', operatingCaseId: string = '', journeyId: string = ''): Promise<EngagementScript> {
+export async function generateMeetingScript(customerId: string, rmId: string = '', operatingCaseId: string = '', journeyId: string = ''): Promise<MeetingScriptResponse> {
   const { data } = await api.post('/journey/meeting-script', {
     customerId,
     rmId,
@@ -437,9 +444,62 @@ export async function evaluateCase(caseId: string): Promise<EvaluationResponse> 
 
 // ---- 后端响应类型（与后端DTO对齐） ----
 
+export interface CustomerOverview {
+  industry: string
+  enterpriseScale: string
+  customerTier: string
+  registeredCapitalCny: number
+  riskLevel: string
+  relationshipSummary: string
+}
+
+export interface KycGapSummary {
+  knownItems: string[]
+  partialKnownItems: string[]
+  unknownItems: string[]
+  priorityQuestions: string[]
+}
+
+export interface ProductScheme {
+  productId: string
+  productName: string
+  matchReason: string
+  suggestedAmount: string
+  suggestedTerm: string
+  keyConditions: string[]
+  requiredMaterials: string[]
+  riskPoints: string[]
+}
+
+export interface PrevisitReportContent {
+  reportId: string
+  customerId: string
+  customerName: string
+  rmName: string
+  visitObjective: string
+  customerOverview: CustomerOverview
+  kycGapSummary: KycGapSummary
+  productSchemes: ProductScheme[]
+  keyQuestions: string[]
+  riskReminders: string[]
+  visitStrategy: string
+}
+
+export interface QuickBattleCard {
+  cardId: string
+  customerName: string
+  visitObjective: string
+  customerTier: string
+  riskLevel: string
+  keyPoints: string[]
+  productHints: string[]
+  dontForget: string[]
+  bottomLine: string
+}
+
 export interface PrevisitExecutionResponse {
-  previsitReport: string
-  battleCard: string
+  previsitReport: PrevisitReportContent
+  battleCard: QuickBattleCard
 }
 
 export interface PostvisitExecutionResponse {
@@ -448,7 +508,7 @@ export interface PostvisitExecutionResponse {
   internalReportId: string
   crmReportId: string
   crmCommandCount: number
-  crmWritebackTriggered: boolean
+  allCommandsRequireHumanConfirm: boolean
 }
 
 export interface JourneyStartResponse {
@@ -482,6 +542,78 @@ export interface EvaluationResponse {
     totalRuleCount: number
   }
   evaluatedAt: string
+}
+
+export interface TalkingPoint {
+  topic: string
+  detail: string
+  suggestedQuestion: string
+  priority: number
+}
+
+export interface OutreachScriptResponse {
+  scriptId: string
+  customerId: string
+  rmId: string
+  operatingCaseId: string
+  journeyId: string
+  channel: string
+  objective: string
+  openingLine: string
+  talkingPoints: TalkingPoint[]
+  riskReminders: string[]
+  closingLine: string
+  followUpAction: string
+  createdAt: string
+}
+
+export interface AgendaItem {
+  topic: string
+  durationMinutes: number
+  keyPoints: string
+  expectedOutcome: string
+}
+
+export interface KycQuestionItem {
+  gapArea: string
+  question: string
+  purpose: string
+  expectedAnswerType: string
+}
+
+export interface ProductDiscussionItem {
+  productId: string
+  productName: string
+  discussionAngle: string
+  keySellingPoints: string[]
+}
+
+export interface MeetingScriptResponse {
+  scriptId: string
+  customerId: string
+  rmId: string
+  operatingCaseId: string
+  journeyId: string
+  meetingObjective: string
+  previsitSummary: string
+  agendaItems: AgendaItem[]
+  kycQuestions: KycQuestionItem[]
+  productDiscussions: ProductDiscussionItem[]
+  riskPoints: string[]
+  closingSummary: string
+  createdAt: string
+}
+
+export interface PostvisitAnalysisContent {
+  analysisId: string
+  journeyId: string
+  visitSummary: string
+  keyFindings: { extractionType: string; content: string; confidence: number }[]
+  opportunitySignals: { signalType: string; description: string; confidence: number }[]
+  commitments: { content: string; deadline: string; owner: string }[]
+  reconciliationItems: { factDescription: string; previousClaim: string; newEvidence: string; reconciliationResult: string }[]
+  followUpActions: string[]
+  nextStepRecommendation: string
 }
 
 // ===================== 枚举映射 =====================

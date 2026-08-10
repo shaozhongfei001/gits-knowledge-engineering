@@ -1,6 +1,7 @@
 package com.gien.gits.api.service;
 
 import com.gien.gits.ontology.*;
+import com.gien.gits.ontology.port.ScenarioDataProvider;
 import com.gien.gits.ontology.port.WritableBankRelationshipSnapshotRepository;
 import com.gien.gits.ontology.port.WritableCreditFacilityRepository;
 import com.gien.gits.ontology.port.WritableCustomerRepository;
@@ -18,6 +19,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.annotation.PostConstruct;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -26,6 +29,11 @@ import java.util.*;
 
 /**
  * 场景种子数据加载器 — 华东精工经营闭环场景数据
+ * <p>
+ * V1.1升级：支持SCENARIO_DATA_ROOT外部数据源
+ * - filesystem provider: 从V1.1外部目录加载 (JSON/CSV/JSONL/YAML)
+ * - classpath provider: 使用V1.0内嵌硬编码数据 (兼容fallback)
+ * <p>
  * 加载: 客户主档 + 法人实体 + 集团关系 + 银行关系 + 授信 + 产品 + 政策 + 外部事件 + KYC缺口
  */
 public class ScenarioSeedDataService {
@@ -44,6 +52,7 @@ public class ScenarioSeedDataService {
     private final WritableExternalEventRepository externalEventRepo;
     private final WritableKycGapProfileRepository kycGapRepo;
     private final JdbcTemplate jdbcTemplate;
+    private final ScenarioDataProvider dataProvider;
 
     public ScenarioSeedDataService(
             WritableCustomerRepository customerRepo,
@@ -57,7 +66,8 @@ public class ScenarioSeedDataService {
             WritablePolicyRuleRepository policyRuleRepo,
             WritableExternalEventRepository externalEventRepo,
             WritableKycGapProfileRepository kycGapRepo,
-            JdbcTemplate jdbcTemplate) {
+            JdbcTemplate jdbcTemplate,
+            ScenarioDataProvider dataProvider) {
         this.customerRepo = customerRepo;
         this.legalEntityRepo = legalEntityRepo;
         this.groupRelRepo = groupRelRepo;
@@ -70,14 +80,66 @@ public class ScenarioSeedDataService {
         this.externalEventRepo = externalEventRepo;
         this.kycGapRepo = kycGapRepo;
         this.jdbcTemplate = jdbcTemplate;
+        this.dataProvider = dataProvider;
+    }
+
+    @PostConstruct
+    @Transactional
+    public void init() {
+        try {
+            loadAll();
+        } catch (Exception e) {
+            log.warn("Seed data auto-load skipped (may already exist): {}", e.getMessage());
+        }
     }
 
     /**
      * 加载全部场景种子数据
+     * <p>
+     * V1.1升级：根据ScenarioDataProvider类型自动选择数据源
+     * - filesystem: 从V1.1外部目录加载
+     * - classpath: 使用V1.0内嵌硬编码数据
      */
     @Transactional
     public void loadAll() {
-        log.info("=== Loading scenario seed data ===");
+        log.info("=== Loading scenario seed data (provider={}) ===", dataProvider.getProviderType());
+
+        if ("filesystem".equals(dataProvider.getProviderType())) {
+            loadFromV11Data();
+        } else {
+            loadFromV10Hardcoded();
+        }
+
+        log.info("=== Scenario seed data loaded successfully (provider={}) ===", dataProvider.getProviderType());
+    }
+
+    /**
+     * V1.1数据加载路径 — 从外部文件系统读取
+     */
+    private void loadFromV11Data() {
+        V11ScenarioDataLoader loader = new V11ScenarioDataLoader(
+            new V11ScenarioDataReader(dataProvider));
+
+        loader.loadCustomers().forEach(customerRepo::save);
+        loader.loadLegalEntities().forEach(legalEntityRepo::save);
+        loader.loadGroupRelationships().forEach(groupRelRepo::save);
+        loader.loadBankRelationshipSnapshot().ifPresent(bankRelRepo::save);
+        loader.loadCreditFacilities().forEach(creditFacilityRepo::save);
+        loader.loadProductKnowledgeCards().forEach(productCatalogRepo::save);
+        loadPolicyRules();  // 政策规则暂保留硬编码（V1.1无对应数据文件）
+        loader.loadExternalEvents().forEach(externalEventRepo::save);
+        loader.loadKycGapProfile().ifPresent(kycGapRepo::save);
+        loader.loadHistoricalInteractions().forEach(i -> {
+            // 历史交互暂存为Interaction，不映射为Transaction
+        });
+
+        log.info("[V11] Loaded data from external source: {}", dataProvider.getRootDescription());
+    }
+
+    /**
+     * V1.0数据加载路径 — 使用硬编码数据（classpath fallback）
+     */
+    private void loadFromV10Hardcoded() {
         loadCustomerMaster();
         loadLegalEntities();
         loadGroupRelationships();
@@ -88,7 +150,6 @@ public class ScenarioSeedDataService {
         loadExternalEvents();
         loadKycGapProfile();
         loadTransactions();
-        log.info("=== Scenario seed data loaded successfully ===");
     }
 
     /**

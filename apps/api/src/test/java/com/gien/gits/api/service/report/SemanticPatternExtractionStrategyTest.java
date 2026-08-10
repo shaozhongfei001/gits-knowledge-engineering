@@ -17,7 +17,10 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * SemanticPatternExtractionStrategy 严谨测试
@@ -36,8 +39,8 @@ class SemanticPatternExtractionStrategyTest {
     @BeforeEach
     void setUp() {
         llmClient = mock(LlmClient.class);
-        when(llmClient.complete(anyString(), anyString()))
-            .thenThrow(new LlmClientException("mock failure"));
+        // 默认让LLM返回空patterns，触发fallback到正则
+        doReturn("{\"patterns\":[]}").when(llmClient).complete(anyString(), anyString());
         strategy = new SemanticPatternExtractionStrategy(llmClient);
     }
 
@@ -241,7 +244,7 @@ class SemanticPatternExtractionStrategyTest {
             String llmResponse = """
                 {"patterns":[{"objectId":"EXT-LLM001","type":"RISK_INDICATOR","claimType":"RISK_SIGNAL","content":"LLM提取的风险信号","speaker":"客户方","evidenceRef":"TR-RAW","status":"DETECTED","confidence":0.92,"notFact":true,"requiresReconciliation":true,"conflictWith":null,"nextQuestion":"核实风险"}]}
                 """;
-            when(llmClient.complete(anyString(), anyString())).thenReturn(llmResponse);
+            doReturn(llmResponse).when(llmClient).complete(anyString(), anyString());
 
             List<InteractionExtraction> result = strategy.extract("客户存在逾期风险");
 
@@ -253,8 +256,8 @@ class SemanticPatternExtractionStrategyTest {
         @Test
         @DisplayName("LLM抛出LlmClientException → fallback到正则")
         void llmClientException_fallsBackToRegex() {
-            when(llmClient.complete(anyString(), anyString()))
-                .thenThrow(new LlmClientException("connection refused"));
+            doThrow(new LlmClientException("connection refused"))
+                .when(llmClient).complete(anyString(), anyString());
 
             List<InteractionExtraction> result = strategy.extract("客户存在逾期风险");
 
@@ -265,7 +268,7 @@ class SemanticPatternExtractionStrategyTest {
         @Test
         @DisplayName("LLM返回空patterns → fallback到正则")
         void llmEmptyPatterns_fallsBackToRegex() {
-            when(llmClient.complete(anyString(), anyString())).thenReturn("{\"patterns\":[]}");
+            doReturn("{\"patterns\":[]}").when(llmClient).complete(anyString(), anyString());
 
             List<InteractionExtraction> result = strategy.extract("客户存在逾期风险");
 
@@ -276,7 +279,7 @@ class SemanticPatternExtractionStrategyTest {
         @Test
         @DisplayName("LLM返回无效JSON → fallback到正则")
         void llmInvalidJson_fallsBackToRegex() {
-            when(llmClient.complete(anyString(), anyString())).thenReturn("not valid json");
+            doReturn("not valid json").when(llmClient).complete(anyString(), anyString());
 
             List<InteractionExtraction> result = strategy.extract("客户存在逾期风险");
 

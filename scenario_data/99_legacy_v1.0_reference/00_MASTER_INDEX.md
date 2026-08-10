@@ -1,0 +1,50 @@
+# 00 MASTER INDEX
+
+场景ID：RM-CONTINUOUS-ENGAGEMENT-HDEG-001
+
+## 推荐运行顺序
+1. `01_SCENARIO_BIBLE.md` — 剧情圣经
+2. `02_PERSONA_ROLE_CARD.json` — 人物卡
+3. `03_CUSTOMER_MASTER.json` — 客户主数据
+4. `04_GROUP_RELATIONSHIP.json` — 集团关系
+5. `05_BANK_RELATIONSHIP_SNAPSHOT.csv` — 行内合作快照
+6. `06_TRANSACTION_LEDGER_SAMPLE.csv` — 交易流水
+7. `07_CREDIT_FACILITY.json` — 授信数据
+8. `08_PRODUCT_KNOWLEDGE_CARDS.yaml` — 产品知识卡
+9. `09_POLICY_RULES.yaml` — 政策规则
+10. `10_EXTERNAL_EVENTS.jsonl` — 外部事件
+11. `11_HISTORICAL_INTERACTIONS.jsonl` — 历史Interaction
+12. `12_TIMELINE.csv` — 时间线
+13. `13_RM_WORKBENCH_INPUT.json` — 工作台输入
+14. `14_CUSTOMER_OPERATING_VIEW_SNAPSHOT.json` — 客户经营视图
+15. `15_KYC_GAP_PROFILE.json` — KYC Gap
+16. `16_PRE_VISIT_REQUEST.json` — 访前请求
+17. `17_R1_PRE_VISIT_REPORT_EXPECTED.md` — R1
+18. `18_R2_60秒作战卡.md` — R2
+19. `19_OUTREACH_SCRIPT.json` — 触达话术
+20. `20_MEETING_SCRIPT_FULL.md` — 会中剧本
+21. `21_MEETING_TRANSCRIPT_RAW.txt` — 原始Transcript
+22. `22_INTERACTION_EXTRACTION_EXPECTED.json` — 抽取期望
+23. `23_FACT_RECONCILIATION_CASE.json` — 事实对账
+24. `24_R4_POST_VISIT_ANALYSIS.md` — R4
+25. `25_R5A_INTERNAL_RELATIONSHIP_REPORT.md` — R5A
+26. `26_R5B_CRM_CALL_REPORT.json` — R5B
+27. `27_CRM_WRITEBACK_COMMANDS.jsonl` — CRM写回
+28. `28_NEW_EVIDENCE_20260710.json` — 新证据
+29. `29_R7_UPDATED_RELATIONSHIP_REPORT.md` — R7
+30. `30_R8_NEXT_PRE_VISIT_REPORT.md` — R8
+31. `31_SKILL_INVOCATION_TRACE.jsonl` — Skill轨迹
+32. `32_AGENT_RUN_TRACE.json` — Agent轨迹
+33. `33_UI_STORYBOARD.md` — UI脚本
+34. `34_ACCEPTANCE_TESTS.yaml` — 验收
+35. `35_DEMO_NARRATION_SCRIPT.md` — 讲稿
+36. `36_HERMES_SCENARIO_CONFIG.yaml` — Hermes配置
+37. `37_DATA_DICTIONARY.md` — 数据字典
+38. `38_EVIDENCE_REGISTER.json` — 证据登记
+39. `39_ONTOLOGY_OBJECT_MAPPING.json` — 本体映射
+
+## 核心链路
+客户经理登录 → 重点客户 → Customer Operating View → 访前报告 → 触达 → 拜访 → Interaction抽取 → Fact Reconciliation → 访后报告 → CRM写回 → 新Evidence → R7/R8。
+
+## 数据声明
+全部为合成演示数据。

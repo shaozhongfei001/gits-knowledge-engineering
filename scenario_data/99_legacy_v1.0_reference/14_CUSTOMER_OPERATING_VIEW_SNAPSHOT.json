@@ -1,0 +1,145 @@
+{
+  "scenario": {
+    "scenario_id": "RM-CONTINUOUS-ENGAGEMENT-HDEG-001",
+    "scenario_name": "华东精工客户经理持续经营闭环",
+    "version": "V1.0",
+    "generated_at": "2026-08-03T00:06:00+08:00",
+    "synthetic_data": true,
+    "data_policy": "合成演示数据；企业、人员、账号、交易、外部事件均为虚构，用于Hermes演示。",
+    "basis": [
+      "客户经理持续经营案例",
+      "市场慧眼→客户洞察→访前报告→产品推荐→话术生成→客户建联→CRM回写",
+      "Customer Operating View / Interaction / Fact Reconciliation / Ontology"
+    ]
+  },
+  "snapshot_id": "COV-HDEG-20260705",
+  "customer_id": "CUST-CORP-0001",
+  "as_of": "2026-07-05",
+  "view_type": "Customer Operating View",
+  "sections": {
+    "party_group": [
+      {
+        "object": "华东精工装备集团有限公司",
+        "type": "FACT",
+        "source_ref": "EV-BANK-001",
+        "confidence": 0.99
+      },
+      {
+        "object": "华东精工智能制造有限公司可能是二期项目主体",
+        "type": "SIGNAL",
+        "source_ref": "EV-EXT-001",
+        "confidence": 0.78
+      }
+    ],
+    "bank_relationship": [
+      {
+        "object": "合作8年，本行战略客户",
+        "type": "FACT",
+        "source_ref": "EV-BANK-001"
+      },
+      {
+        "object": "现金管理未开通，供应链金融未开通",
+        "type": "FACT",
+        "source_ref": "05_BANK_RELATIONSHIP_SNAPSHOT.csv"
+      }
+    ],
+    "funding_settlement": [
+      {
+        "object": "日均存款从约1.2亿元下降至7800万元",
+        "type": "FINDING",
+        "source_ref": "05_BANK_RELATIONSHIP_SNAPSHOT.csv"
+      },
+      {
+        "object": "近45天本行可见设备供应商付款增加约32%",
+        "type": "FINDING",
+        "source_ref": "EV-TXN-001",
+        "limitation": "仅本行可见账户交易，不代表客户全量资金流"
+      }
+    ],
+    "credit": [
+      {
+        "object": "综合授信1.5亿元，已用1.1亿元，账面可用4000万元",
+        "type": "FACT",
+        "source_ref": "EV-CREDIT-001"
+      },
+      {
+        "object": "4000万元账面可用额度是否可用于二期项目",
+        "type": "PENDING_CONFIRMATION",
+        "source_ref": "EV-CREDIT-001"
+      }
+    ],
+    "project_capex": [
+      {
+        "object": "智能制造二期项目备案总投资约4800万元",
+        "type": "SIGNAL",
+        "source_ref": "EV-EXT-001"
+      },
+      {
+        "object": "正式设备清单尚未取得",
+        "type": "PENDING_CONFIRMATION",
+        "source_ref": "EV-CRM-001"
+      }
+    ],
+    "interaction_memory": [
+      {
+        "object": "CFO曾表示下半年可能扩产线",
+        "type": "CLAIM",
+        "source_ref": "EV-CRM-001"
+      },
+      {
+        "object": "财务总经理称近期有设备款，但不是全部走本行",
+        "type": "CLAIM",
+        "source_ref": "EV-CRM-002"
+      }
+    ],
+    "needs_concerns": [
+      {
+        "object": "客户可能需要三年期左右融资结构建议",
+        "type": "INTENT",
+        "source_ref": "EV-CRM-003"
+      },
+      {
+        "object": "客户关注融资成本和短期负债比例",
+        "type": "PREFERENCE",
+        "source_ref": "EV-CRM-005"
+      }
+    ],
+    "commitments_tasks": [
+      {
+        "object": "客户承诺设备清单出来后提供",
+        "type": "COMMITMENT",
+        "status": "OVERDUE",
+        "due_date": "2026-03-31"
+      },
+      {
+        "object": "RM准备初步融资思路",
+        "type": "TASK",
+        "status": "DONE_NO_FORMAL_FEEDBACK"
+      }
+    ],
+    "opportunity_signals": [
+      {
+        "object": "设备更新贷款/固定资产贷款线索",
+        "type": "SIGNAL",
+        "source_ref": "EV-EXT-001"
+      },
+      {
+        "object": "现金管理机会",
+        "type": "SIGNAL",
+        "source_ref": "05_BANK_RELATIONSHIP_SNAPSHOT.csv"
+      },
+      {
+        "object": "供应链金融机会",
+        "type": "SIGNAL",
+        "source_ref": "EV-TXN-001"
+      }
+    ],
+    "next_actions": [
+      {
+        "object": "预约CFO和财务总经理拜访，核实二期项目主体、设备清单、3000万诉求语义",
+        "type": "NEXT_ACTION",
+        "source_ref": "EV-RM-001"
+      }
+    ]
+  }
+}

@@ -39,6 +39,18 @@ const router = createRouter({
       name: 'EngagementWorkspace',
       component: () => import('../views/EngagementWorkspace.vue'),
       meta: { title: '持续经营工作台' }
+    },
+    {
+      path: '/commitments',
+      name: 'CommitmentDashboard',
+      component: () => import('../views/CommitmentDashboard.vue'),
+      meta: { title: '承诺与任务管理' }
+    },
+    {
+      path: '/external-events',
+      name: 'ExternalEventMonitor',
+      component: () => import('../views/ExternalEventMonitor.vue'),
+      meta: { title: '外部事件监控' }
     }
   ]
 })

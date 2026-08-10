@@ -1,0 +1,3 @@
+﻿id,facility_id,type,provider_entity,estimated_value_cny,status,note
+COL-001,FAC-001,厂房抵押,ENT-001,120000000,VALID,合成演示
+GUA-001,FAC-001,连带责任保证,,,VALID,合成演示

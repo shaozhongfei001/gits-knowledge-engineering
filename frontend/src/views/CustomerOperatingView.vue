@@ -239,118 +239,121 @@ onMounted(async () => {
 .customer-view {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 24px;
+  padding: var(--space-6);
 }
 .loading-state {
   display: flex;
   justify-content: center;
-  padding: 60px 0;
+  padding: var(--space-12) 0;
 }
 .section {
-  margin-bottom: 24px;
+  margin-bottom: var(--space-6);
 }
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: var(--space-4);
 }
 .section-header h2 {
-  font-size: 22px;
-  color: #003366;
+  font-size: var(--text-2xl);
+  color: var(--text-primary);
   margin: 0;
+  font-weight: 600;
 }
 .section-title {
-  font-size: 16px;
-  color: #003366;
-  margin: 0 0 12px 0;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #b8860b;
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 2px solid var(--brand-primary);
   display: inline-block;
+  font-weight: 600;
 }
 .customer-info-section {
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  padding: var(--space-5);
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-xs);
 }
 .info-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
 }
 .info-label {
-  font-size: 12px;
-  color: #8c8c8c;
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
 }
 .info-value {
-  font-size: 14px;
-  color: #333;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
   font-weight: 500;
 }
 .info-value.tier {
-  color: #b8860b;
+  color: var(--brand-accent);
 }
 .summary-row {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #f0f0f0;
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-light);
   display: flex;
-  gap: 12px;
+  gap: var(--space-3);
   align-items: flex-start;
 }
 .summary-text {
-  font-size: 14px;
-  color: #333;
-  line-height: 1.6;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-relaxed);
 }
 .gap-card {
   text-align: center;
 }
 .gap-count {
-  font-size: 28px;
+  font-size: var(--text-3xl);
   font-weight: 700;
 }
-.gap-unknown .gap-count { color: #cf1322; }
-.gap-partial .gap-count { color: #d46b08; }
-.gap-stale .gap-count { color: #003366; }
+.gap-unknown .gap-count { color: var(--color-danger); }
+.gap-partial .gap-count { color: var(--color-warning); }
+.gap-stale .gap-count { color: var(--brand-primary); }
 .gap-label {
-  font-size: 13px;
-  color: #666;
-  margin: 4px 0 8px;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin: var(--space-1) 0 var(--space-2);
 }
 .gap-items {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: var(--space-1);
   justify-content: center;
 }
 .priority-questions {
-  margin-top: 12px;
-  padding: 12px;
-  background: #fffbe6;
-  border-radius: 6px;
-  border-left: 3px solid #b8860b;
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-warning-bg);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-warning);
 }
 .priority-questions ul {
-  margin: 4px 0 0;
-  padding-left: 20px;
-  font-size: 13px;
-  color: #333;
+  margin: var(--space-1) 0 0;
+  padding-left: var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
 }
 .signal-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 .journey-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 12px;
+  gap: var(--space-3);
 }
 .journey-card {
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform var(--transition-fast);
 }
 .journey-card:hover {
   transform: translateY(-1px);
@@ -361,13 +364,13 @@ onMounted(async () => {
   align-items: center;
 }
 .journey-id {
-  font-family: monospace;
-  font-size: 13px;
-  color: #666;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
 }
 .journey-meta {
-  margin-top: 8px;
-  font-size: 12px;
-  color: #999;
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
 }
 </style>

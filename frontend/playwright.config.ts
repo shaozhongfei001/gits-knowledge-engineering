@@ -5,13 +5,15 @@ export default defineConfig({
   timeout: 30000,
   retries: 1,
   use: {
-    baseURL: 'http://localhost:80',
+    baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
   },
   webServer: {
-    command: 'cd .. && docker compose -f compose.local.yaml up --build',
-    port: 80,
+    command: 'npm run dev',
+    port: 5173,
     reuseExistingServer: true,
-    timeout: 120000,
+    timeout: 30000,
   },
 });

@@ -1,0 +1,30 @@
+{
+  "page_id": "PAGE-09",
+  "title": "客户触达｜为什么现在找客户",
+  "time": "10:12",
+  "p0_refs": [],
+  "purpose": "AI只生成触达草稿，RM必须编辑确认。",
+  "data_refs": [
+    "06_interactions/outreach_attempts.jsonl"
+  ],
+  "sections": [
+    {
+      "name": "电话状态",
+      "example": "10:05未接"
+    },
+    {
+      "name": "微信草稿",
+      "example": "不预设融资结论，想先核实项目主体、设备计划和资金安排"
+    },
+    {
+      "name": "客户回复",
+      "example": "“最近忙，什么事？” → 进一步说明后约14:30"
+    }
+  ],
+  "actions": [
+    "编辑",
+    "确认发送",
+    "取消"
+  ],
+  "human_required": true
+}

@@ -1,0 +1,34 @@
+{
+  "page_id": "PAGE-16",
+  "title": "R7/R8｜新Evidence与下一轮经营",
+  "time": "2026-07-10/20",
+  "p0_refs": [
+    "PP-F06"
+  ],
+  "purpose": "新材料进入后更新判断，同时保留历史版本并滚入下一次拜访。",
+  "data_refs": [
+    "12_new_evidence/equipment_list_20260710.csv",
+    "11_outputs/R7_UPDATED_RELATIONSHIP_REPORT.md",
+    "11_outputs/R8_NEXT_PRE_VISIT_REPORT.md"
+  ],
+  "sections": [
+    {
+      "name": "新Evidence",
+      "example": "设备清单3280万，抬头ENT-002；付款30/40/30"
+    },
+    {
+      "name": "修正",
+      "example": "4800万=项目总投资；3280万=设备部分；不冲突"
+    },
+    {
+      "name": "下次要问",
+      "example": "项目主体正式决议、其余投资构成、现有额度用途"
+    }
+  ],
+  "actions": [
+    "接受修正",
+    "查看版本差异",
+    "生成下次访前"
+  ],
+  "human_required": true
+}

@@ -91,29 +91,31 @@ onMounted(loadCustomers)
 .dashboard {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 24px;
+  padding: var(--space-6);
 }
 .page-header {
-  margin-bottom: 24px;
+  margin-bottom: var(--space-6);
 }
 .page-header h1 {
-  font-size: 24px;
-  color: #003366;
-  margin: 0 0 4px 0;
+  font-size: var(--text-2xl);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-1);
+  font-weight: 600;
 }
 .subtitle {
-  color: #8c8c8c;
-  font-size: 14px;
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
   margin: 0;
 }
 .stats-bar {
   display: flex;
-  gap: 24px;
-  margin-bottom: 24px;
-  padding: 16px 24px;
-  background: linear-gradient(135deg, #003366, #004d99);
-  border-radius: 8px;
-  color: #fff;
+  gap: var(--space-6);
+  margin-bottom: var(--space-6);
+  padding: var(--space-5) var(--space-6);
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-light));
+  border-radius: var(--radius-lg);
+  color: var(--text-inverse);
+  box-shadow: var(--shadow-md);
 }
 .stat-item {
   display: flex;
@@ -122,28 +124,28 @@ onMounted(loadCustomers)
   min-width: 80px;
 }
 .stat-value {
-  font-size: 28px;
+  font-size: var(--text-3xl);
   font-weight: 700;
 }
 .stat-label {
-  font-size: 12px;
-  opacity: 0.8;
+  font-size: var(--text-xs);
+  opacity: 0.85;
   margin-top: 2px;
 }
 .customer-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
+  gap: var(--space-4);
 }
 .loading-state {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 60px 0;
-  color: #8c8c8c;
+  gap: var(--space-3);
+  padding: var(--space-12) 0;
+  color: var(--text-tertiary);
 }
 .error-state {
-  padding: 40px 0;
+  padding: var(--space-10) 0;
 }
 </style>

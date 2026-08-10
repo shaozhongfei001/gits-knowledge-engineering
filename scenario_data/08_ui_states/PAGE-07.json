@@ -1,0 +1,36 @@
+{
+  "page_id": "PAGE-07",
+  "title": "R1｜访前作战报告",
+  "time": "09:28",
+  "p0_refs": [
+    "PP-C01",
+    "PP-C02",
+    "PP-C03",
+    "PP-C06"
+  ],
+  "purpose": "一页内回答为什么见、见谁、问什么、准备什么、不能说什么。",
+  "data_refs": [
+    "11_outputs/R1_PRE_VISIT_REPORT.md",
+    "11_outputs/R2_60SEC_BATTLE_CARD.md"
+  ],
+  "sections": [
+    {
+      "name": "主目标",
+      "example": "核实二期项目主体和第一阶段设备款资金安排语义"
+    },
+    {
+      "name": "副目标",
+      "example": "探索供应商付款和现金管理机会"
+    },
+    {
+      "name": "No-Go",
+      "example": "不能说现有4000万一定可用；不能说审批肯定通过"
+    }
+  ],
+  "actions": [
+    "确认Mission",
+    "编辑问题",
+    "查看证据"
+  ],
+  "human_required": true
+}

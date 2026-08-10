@@ -1,0 +1,276 @@
+{
+  "scenario": {
+    "scenario_id": "RM-CONTINUOUS-ENGAGEMENT-HDEG-001",
+    "scenario_name": "华东精工客户经理持续经营闭环",
+    "version": "V1.0",
+    "generated_at": "2026-08-03T00:06:00+08:00",
+    "synthetic_data": true,
+    "data_policy": "合成演示数据；企业、人员、账号、交易、外部事件均为虚构，用于Hermes演示。",
+    "basis": [
+      "客户经理持续经营案例",
+      "市场慧眼→客户洞察→访前报告→产品推荐→话术生成→客户建联→CRM回写",
+      "Customer Operating View / Interaction / Fact Reconciliation / Ontology"
+    ]
+  },
+  "package_name": "客户经理持续经营场景_Hermes演示数据包_V1.0",
+  "created_at": "2026-08-03T00:06:00+08:00",
+  "file_count_excluding_manifest": 41,
+  "required_execution_order": [
+    "01_SCENARIO_BIBLE.md",
+    "02_PERSONA_ROLE_CARD.json",
+    "03_CUSTOMER_MASTER.json",
+    "04_GROUP_RELATIONSHIP.json",
+    "05_BANK_RELATIONSHIP_SNAPSHOT.csv",
+    "06_TRANSACTION_LEDGER_SAMPLE.csv",
+    "07_CREDIT_FACILITY.json",
+    "08_PRODUCT_KNOWLEDGE_CARDS.yaml",
+    "09_POLICY_RULES.yaml",
+    "10_EXTERNAL_EVENTS.jsonl",
+    "11_HISTORICAL_INTERACTIONS.jsonl",
+    "12_TIMELINE.csv",
+    "13_RM_WORKBENCH_INPUT.json",
+    "14_CUSTOMER_OPERATING_VIEW_SNAPSHOT.json",
+    "15_KYC_GAP_PROFILE.json",
+    "16_PRE_VISIT_REQUEST.json",
+    "17_R1_PRE_VISIT_REPORT_EXPECTED.md",
+    "18_R2_60秒作战卡.md",
+    "19_OUTREACH_SCRIPT.json",
+    "20_MEETING_SCRIPT_FULL.md",
+    "21_MEETING_TRANSCRIPT_RAW.txt",
+    "22_INTERACTION_EXTRACTION_EXPECTED.json",
+    "23_FACT_RECONCILIATION_CASE.json",
+    "24_R4_POST_VISIT_ANALYSIS.md",
+    "25_R5A_INTERNAL_RELATIONSHIP_REPORT.md",
+    "26_R5B_CRM_CALL_REPORT.json",
+    "27_CRM_WRITEBACK_COMMANDS.jsonl",
+    "28_NEW_EVIDENCE_20260710.json",
+    "29_R7_UPDATED_RELATIONSHIP_REPORT.md",
+    "30_R8_NEXT_PRE_VISIT_REPORT.md",
+    "31_SKILL_INVOCATION_TRACE.jsonl",
+    "32_AGENT_RUN_TRACE.json",
+    "33_UI_STORYBOARD.md",
+    "34_ACCEPTANCE_TESTS.yaml",
+    "35_DEMO_NARRATION_SCRIPT.md",
+    "36_HERMES_SCENARIO_CONFIG.yaml",
+    "37_DATA_DICTIONARY.md",
+    "38_EVIDENCE_REGISTER.json",
+    "39_ONTOLOGY_OBJECT_MAPPING.json"
+  ],
+  "quality_checks": {
+    "has_customer_master": true,
+    "has_transaction_sample": true,
+    "has_meeting_script": true,
+    "has_fact_reconciliation": true,
+    "has_acceptance_tests": true,
+    "crm_writeback_human_gate_required": true,
+    "outreach_human_gate_required": true,
+    "synthetic_data": true
+  },
+  "files": [
+    {
+      "file": "00_MASTER_INDEX.md",
+      "size": 2288,
+      "sha256": "4c13bfd59f2548691b7b2d938976e5f6f607f23b826c0881c62306e67a71cb2f"
+    },
+    {
+      "file": "01_SCENARIO_BIBLE.md",
+      "size": 616,
+      "sha256": "fa75110f8ed81f5c9144f62d0c74fa01a231caab8fe4b934159a6715c2d886ee"
+    },
+    {
+      "file": "02_PERSONA_ROLE_CARD.json",
+      "size": 4010,
+      "sha256": "2b30f5cd31edb301c1ca857a5e090f75727339e9002213046f868a804298769f"
+    },
+    {
+      "file": "03_CUSTOMER_MASTER.json",
+      "size": 1879,
+      "sha256": "fcb2dab021def4ffeb2244fc87c211aa581eb466147cde3debbf4bf3f68f8b73"
+    },
+    {
+      "file": "04_GROUP_RELATIONSHIP.json",
+      "size": 2989,
+      "sha256": "2714e358498e6c02582a65900e431546161036bc5b8b9ca72d775e322cf9b6fd"
+    },
+    {
+      "file": "05_BANK_RELATIONSHIP_SNAPSHOT.csv",
+      "size": 1401,
+      "sha256": "dd602b73e1db064218efdeeef96720f4fb84f5a1b4d6232c77e9533ee3a6d520"
+    },
+    {
+      "file": "06_TRANSACTION_LEDGER_SAMPLE.csv",
+      "size": 20818,
+      "sha256": "000850d864605ecb365e5b9f391600d3402e797b0a8f729e9f674ada9c19457c"
+    },
+    {
+      "file": "07_CREDIT_FACILITY.json",
+      "size": 1711,
+      "sha256": "538139f04fd6cac13173e9252ba0dbcdf04e37230cd93df55ebbcc479e3fd4a7"
+    },
+    {
+      "file": "08_PRODUCT_KNOWLEDGE_CARDS.yaml",
+      "size": 5285,
+      "sha256": "65ad7ab9f443c8da2eccdaac22ba46a20e1d56f3e8768a7412cb6fdacd902dc6"
+    },
+    {
+      "file": "09_POLICY_RULES.yaml",
+      "size": 2395,
+      "sha256": "93f22f11e85644b0e1fd3ea76723ce8849eb11ef51c3aedead1caf05811a9b49"
+    },
+    {
+      "file": "10_EXTERNAL_EVENTS.jsonl",
+      "size": 8724,
+      "sha256": "1bb9441cac33ecbe4ed3279124a6b8534c7ab118bf56368112a5467345fe8691"
+    },
+    {
+      "file": "11_HISTORICAL_INTERACTIONS.jsonl",
+      "size": 3320,
+      "sha256": "84adac242ff5832a6188958d0b73829dd7ba9e15348fe2e71c896bb13f5826cf"
+    },
+    {
+      "file": "12_TIMELINE.csv",
+      "size": 1100,
+      "sha256": "3dc480a916d4f18c3a8f535e49a8cb2b7b2c72633d4b6c33a718c54d722edf36"
+    },
+    {
+      "file": "13_RM_WORKBENCH_INPUT.json",
+      "size": 2195,
+      "sha256": "53d22c81f2438f070c4b00c4ba7640f755599bc040692def6d01aa4fb90a1bd8"
+    },
+    {
+      "file": "14_CUSTOMER_OPERATING_VIEW_SNAPSHOT.json",
+      "size": 4290,
+      "sha256": "b00b7bb683c408ea6884f27dc875daab9be91acd55e7cb2092a18431479acd94"
+    },
+    {
+      "file": "15_KYC_GAP_PROFILE.json",
+      "size": 2016,
+      "sha256": "63681e24486416f4834c15997a0659d402adaaabcab89de497003beab129f7a6"
+    },
+    {
+      "file": "16_PRE_VISIT_REQUEST.json",
+      "size": 1214,
+      "sha256": "63d9fd43da4f78002a563569fc901a64446b3fbccb0f6cf7f3571cbb8f3ad234"
+    },
+    {
+      "file": "17_R1_PRE_VISIT_REPORT_EXPECTED.md",
+      "size": 2262,
+      "sha256": "0310a357e5aed5a9b853ff459d6c3212c1285334ab81fecb0cdbf49e89eeffb3"
+    },
+    {
+      "file": "18_R2_60秒作战卡.md",
+      "size": 671,
+      "sha256": "94163fddae3fa1d1dd99588b0d73e098f69176562e3c8478c3a683887ca857ca"
+    },
+    {
+      "file": "19_OUTREACH_SCRIPT.json",
+      "size": 1972,
+      "sha256": "142bd7a5cb309e5604736bf95276a3d8834826bf7548c337f43a83a3d8e15091"
+    },
+    {
+      "file": "20_MEETING_SCRIPT_FULL.md",
+      "size": 3088,
+      "sha256": "49b67b997d947cf57b831e9f2a724111ddecaa612fdc5a37c0a80f02e53342d7"
+    },
+    {
+      "file": "21_MEETING_TRANSCRIPT_RAW.txt",
+      "size": 1373,
+      "sha256": "9e84f0dd64578d9cce6552f890d53a1b0d816d19bada7b31fa3c6873506675d0"
+    },
+    {
+      "file": "22_INTERACTION_EXTRACTION_EXPECTED.json",
+      "size": 3571,
+      "sha256": "7712425fb3d473d2fa44f6a2fa863916ddcdee6edc2e9ab89166aa600dc5f857"
+    },
+    {
+      "file": "23_FACT_RECONCILIATION_CASE.json",
+      "size": 3078,
+      "sha256": "6ff0c61fc3a6c5ad94603915d62aeb7e6c8994ed774a98b7de460c0e8226071d"
+    },
+    {
+      "file": "24_R4_POST_VISIT_ANALYSIS.md",
+      "size": 944,
+      "sha256": "7f67a1993c5d39cde8740e8a76e479ff38242279fa60fcf98423c49f3fdea79a"
+    },
+    {
+      "file": "25_R5A_INTERNAL_RELATIONSHIP_REPORT.md",
+      "size": 858,
+      "sha256": "f889725f7e3759e7f0975fe388593a142de734d00b7c9b397f10129c898286e2"
+    },
+    {
+      "file": "26_R5B_CRM_CALL_REPORT.json",
+      "size": 1221,
+      "sha256": "7e530d13cb92ae2090bc593ec9ece7c86e8eac6da8805c025c4c0a6fb2e913f2"
+    },
+    {
+      "file": "27_CRM_WRITEBACK_COMMANDS.jsonl",
+      "size": 2015,
+      "sha256": "d8384d337c39672d3f77f33668acf4821ef4901e17b7e236e22d392a87ac25d0"
+    },
+    {
+      "file": "28_NEW_EVIDENCE_20260710.json",
+      "size": 2388,
+      "sha256": "2b4c0ad969454d961d4b379f4ad607a731701bb1ed1b38e8335743fab0c078b0"
+    },
+    {
+      "file": "29_R7_UPDATED_RELATIONSHIP_REPORT.md",
+      "size": 497,
+      "sha256": "3e90584a66d5b1b759a97d4a444acdc19a3834f392a917dd85e176c1480cb127"
+    },
+    {
+      "file": "30_R8_NEXT_PRE_VISIT_REPORT.md",
+      "size": 533,
+      "sha256": "d8c4ba00d56be44a3b9613f52a87264da171c494f50d98c120f074dc0371258a"
+    },
+    {
+      "file": "31_SKILL_INVOCATION_TRACE.jsonl",
+      "size": 5874,
+      "sha256": "9763985e48ffb17c3177c53bc44c139e03f7a31a42837d388db135a4acb4a013"
+    },
+    {
+      "file": "32_AGENT_RUN_TRACE.json",
+      "size": 2240,
+      "sha256": "0e17023337b2d402c54d132eec87d88b27fed9e0294ec85436046a2c9bc299c0"
+    },
+    {
+      "file": "33_UI_STORYBOARD.md",
+      "size": 681,
+      "sha256": "9700c6041beff8c4980ba5efb7244176181788c60b3243c6aec155cb66a9cd09"
+    },
+    {
+      "file": "34_ACCEPTANCE_TESTS.yaml",
+      "size": 2143,
+      "sha256": "38dcfa74dee462c7008031581ca5935c6b610a77fbe6e87a53e5b4dc4f01e6b4"
+    },
+    {
+      "file": "35_DEMO_NARRATION_SCRIPT.md",
+      "size": 519,
+      "sha256": "4498f3f908d69ebe1708ce0a5559d6c133d4d9ae148cf435a6395607dbb56e36"
+    },
+    {
+      "file": "36_HERMES_SCENARIO_CONFIG.yaml",
+      "size": 988,
+      "sha256": "0406d59722720121532c66e9dc0b6f03b174aa39ea22f0421c7438f0f7c4bf06"
+    },
+    {
+      "file": "37_DATA_DICTIONARY.md",
+      "size": 553,
+      "sha256": "37ad49b31632da6d8fedf0e7b6138391450c68da285a9d2ef277ff3853dd4897"
+    },
+    {
+      "file": "38_EVIDENCE_REGISTER.json",
+      "size": 7538,
+      "sha256": "b75616fceb97ce2ac2f059ae4e753ce90568715a934d4c9c79f1980c7aa0e670"
+    },
+    {
+      "file": "39_ONTOLOGY_OBJECT_MAPPING.json",
+      "size": 2570,
+      "sha256": "a3daf842bd67b08ad0b6f33222f3f1f0b356c70ae76e95b92e8d6382021f2629"
+    },
+    {
+      "file": "README_FOR_HERMES.md",
+      "size": 329,
+      "sha256": "c2cfffaf61cf2f2e0a7018f8529df5b88f3bda5b9cac942f2c55df2256271ac6"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "page_id": "PAGE-15",
+  "title": "CRM写回｜逐条Accept / Edit / Reject",
+  "time": "17:20",
+  "p0_refs": [
+    "PP-F05",
+    "PP-A03"
+  ],
+  "purpose": "阻止AI推断、敏感判断和未确认商机直接进入CRM。",
+  "data_refs": [
+    "11_outputs/CRM_WRITEBACK_COMMANDS.jsonl",
+    "10_human_gates/human_gate_decisions.jsonl"
+  ],
+  "sections": [
+    {
+      "name": "拜访活动",
+      "example": "ACCEPT"
+    },
+    {
+      "name": "客户承诺",
+      "example": "ACCEPT"
+    },
+    {
+      "name": "正式商机创建",
+      "example": "EDIT → 只保留OpportunitySignal"
+    },
+    {
+      "name": "项目主体",
+      "example": "“智能制造公司（待确认）”，不能写Confirmed"
+    }
+  ],
+  "actions": [
+    "ACCEPT",
+    "EDIT",
+    "REJECT"
+  ],
+  "human_required": true
+}

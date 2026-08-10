@@ -1,0 +1,18 @@
+{
+  "input": {
+    "customer_id": "CUST-001",
+    "permission_context": "RM_AUTHORIZED"
+  },
+  "output": {
+    "entities": [
+      "ENT-001",
+      "ENT-002",
+      "ENT-003"
+    ],
+    "relationship_state": "ACTIVE_STRATEGIC",
+    "open_items": [
+      "project_entity",
+      "equipment_list"
+    ]
+  }
+}

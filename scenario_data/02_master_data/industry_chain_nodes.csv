@@ -1,0 +1,6 @@
+﻿node_id,industry_code,role,node_name,typical_financial_need
+CHAIN-01,I-121,上游,伺服系统供应,预付款、备货、进口采购
+CHAIN-02,I-122,上游,精密传动部件,预付款、库存、账期
+CHAIN-03,I-112,中游,数控/加工装备,设备更新、订单周转
+CHAIN-04,I-111,中游,自动化产线集成,项目融资、订单融资、供应链付款
+CHAIN-05,END-NEWENERGY,下游,新能源制造客户,项目建设、设备采购

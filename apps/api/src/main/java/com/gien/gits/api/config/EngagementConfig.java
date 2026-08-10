@@ -2,7 +2,13 @@ package com.gien.gits.api.config;
 
 import com.gien.gits.action.port.AuditLogPort;
 import com.gien.gits.action.port.CrmWritebackChannel;
+import com.gien.gits.action.port.WritableRecordingConsentRepository;
+import com.gien.gits.action.port.WritableTaskRepository;
 import com.gien.gits.adapter.audit.LoggingAuditLogAdapter;
+import com.gien.gits.adapter.persistence.v11.JdbcOpportunityRepository;
+import com.gien.gits.adapter.persistence.v11.JdbcProductKnowledgeVersionRepository;
+import com.gien.gits.adapter.persistence.v11.JdbcRecordingConsentRepository;
+import com.gien.gits.adapter.persistence.v11.JdbcTaskRepository;
 import com.gien.gits.api.metrics.BusinessMetrics;
 import com.gien.gits.api.service.*;
 import com.gien.gits.api.service.report.CrmWritebackService;
@@ -19,6 +25,7 @@ import com.gien.gits.adapter.persistence.scenario.JdbcMeetingScriptRepository;
 import com.gien.gits.customerjourney.port.WritableCustomerJourneyRepository;
 import com.gien.gits.ontology.port.ClaimReconciliationPort;
 import com.gien.gits.ontology.port.DomainEventPublisher;
+import com.gien.gits.ontology.port.ScenarioDataProvider;
 import com.gien.gits.ontology.port.WritableBankRelationshipSnapshotRepository;
 import com.gien.gits.ontology.port.WritableCommitmentRepository;
 import com.gien.gits.ontology.port.WritableCreditFacilityRepository;
@@ -29,8 +36,10 @@ import com.gien.gits.ontology.port.WritableGroupRelationshipRepository;
 import com.gien.gits.ontology.port.WritableKycGapProfileRepository;
 import com.gien.gits.ontology.port.WritableLegalEntityRepository;
 import com.gien.gits.ontology.port.WritableOperatingCaseRepository;
+import com.gien.gits.ontology.port.WritableOpportunityRepository;
 import com.gien.gits.ontology.port.WritableOpportunitySignalRepository;
 import com.gien.gits.ontology.port.WritablePolicyRuleRepository;
+import com.gien.gits.ontology.port.WritableProductKnowledgeVersionRepository;
 import com.gien.gits.engagement.port.LlmClient;
 import com.gien.gits.engagement.port.PostvisitAnalysisContentRepository;
 import com.gien.gits.engagement.port.WritablePostvisitAnalysisContentRepository;
@@ -245,12 +254,13 @@ public class EngagementConfig {
             WritablePolicyRuleRepository policyRuleRepo,
             WritableExternalEventRepository externalEventRepo,
             WritableKycGapProfileRepository kycGapRepo,
-            JdbcTemplate jdbcTemplate) {
+            JdbcTemplate jdbcTemplate,
+            ScenarioDataProvider dataProvider) {
         return new ScenarioSeedDataService(
             customerRepo, legalEntityRepo, groupRelRepo,
             bankRelRepo, creditFacilityRepo, transactionRepo,
             transactionFlowRepo, productCatalogRepo, policyRuleRepo,
-            externalEventRepo, kycGapRepo, jdbcTemplate);
+            externalEventRepo, kycGapRepo, jdbcTemplate, dataProvider);
     }
 
     // --- P13 G6: Oracle只读管道 (默认不可用) ---
@@ -335,5 +345,63 @@ public class EngagementConfig {
     @Bean
     public EvaluationPort evaluationPort() {
         return new DefaultEvaluator();
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // V1.1 新增服务Bean
+    // ═══════════════════════════════════════════════════════════════
+
+    // --- V1.1 JDBC仓储适配器 (仅新增的，其余在RepositoryConfig中注册) ---
+
+    @Bean
+    public WritableOpportunityRepository jdbcOpportunityRepository(JdbcTemplate jdbc, ObjectMapper objectMapper) {
+        return new JdbcOpportunityRepository(jdbc, objectMapper);
+    }
+
+    @Bean
+    public WritableTaskRepository jdbcTaskRepository(JdbcTemplate jdbc, ObjectMapper objectMapper) {
+        return new JdbcTaskRepository(jdbc, objectMapper);
+    }
+
+    @Bean
+    public WritableRecordingConsentRepository jdbcRecordingConsentRepository(JdbcTemplate jdbc) {
+        return new JdbcRecordingConsentRepository(jdbc);
+    }
+
+    @Bean
+    public WritableProductKnowledgeVersionRepository jdbcProductKnowledgeVersionRepository(JdbcTemplate jdbc, ObjectMapper objectMapper) {
+        return new JdbcProductKnowledgeVersionRepository(jdbc, objectMapper);
+    }
+
+    // --- V1.1 业务服务 ---
+
+    @Bean
+    public CommitmentService commitmentService(WritableCommitmentRepository commitmentRepo) {
+        return new CommitmentService(commitmentRepo);
+    }
+
+    @Bean
+    public TaskService taskService(WritableTaskRepository taskRepo) {
+        return new TaskService(taskRepo);
+    }
+
+    @Bean
+    public OpportunityService opportunityService(WritableOpportunityRepository opportunityRepo) {
+        return new OpportunityService(opportunityRepo);
+    }
+
+    @Bean
+    public ExternalEventService externalEventService(WritableExternalEventRepository externalEventRepo) {
+        return new ExternalEventService(externalEventRepo);
+    }
+
+    @Bean
+    public ProductKnowledgeVersionService productKnowledgeVersionService(WritableProductKnowledgeVersionRepository versionRepo) {
+        return new ProductKnowledgeVersionService(versionRepo);
+    }
+
+    @Bean
+    public RecordingConsentService recordingConsentService(WritableRecordingConsentRepository consentRepo) {
+        return new RecordingConsentService(consentRepo);
     }
 }

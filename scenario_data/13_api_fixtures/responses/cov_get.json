@@ -1,0 +1,48 @@
+{
+  "status": "OK",
+  "page_state": {
+    "page_id": "PAGE-03",
+    "title": "Customer Operating View｜客户经营视图",
+    "time": "08:42",
+    "p0_refs": [
+      "PP-B01",
+      "PP-B02",
+      "PP-B03",
+      "PP-B04",
+      "PP-B05",
+      "PP-B06"
+    ],
+    "purpose": "围绕下一步经营动作组织客户事实、变化、表达、信号、承诺和未决问题。",
+    "data_refs": [
+      "02_master_data/customer_master.json",
+      "02_master_data/legal_entities.csv",
+      "03_bank_data/bank_relationship_monthly.csv",
+      "03_bank_data/credit_facilities.csv",
+      "06_interactions/historical_interactions.jsonl"
+    ],
+    "sections": [
+      {
+        "name": "最近发生了什么",
+        "example": "日均存款约1.2亿→7800万；设备供应商付款近45天+32%（仅本行可见）"
+      },
+      {
+        "name": "项目与主体",
+        "example": "外部备案ENT-002；当前授信主体ENT-001；关系需确认"
+      },
+      {
+        "name": "历史经营记忆",
+        "example": "3月客户承诺设备清单，已逾期"
+      },
+      {
+        "name": "未决问题",
+        "example": "3000万资金语义、项目主体、现有额度可用性"
+      }
+    ],
+    "actions": [
+      "看主体关系",
+      "看历史Interaction",
+      "生成KYC Gap"
+    ],
+    "human_required": false
+  }
+}

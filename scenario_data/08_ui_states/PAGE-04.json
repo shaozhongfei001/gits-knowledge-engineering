@@ -1,0 +1,36 @@
+{
+  "page_id": "PAGE-04",
+  "title": "主体关系｜谁借、谁用、谁还、谁担保",
+  "time": "08:47",
+  "p0_refs": [
+    "PP-B06",
+    "PP-B05"
+  ],
+  "purpose": "防止集团简称、项目公司、授信主体和付款主体混成一个对象。",
+  "data_refs": [
+    "02_master_data/legal_entities.csv",
+    "02_master_data/group_relationships.csv",
+    "03_bank_data/credit_facilities.csv",
+    "04_external_data/entity_resolution_candidates.json"
+  ],
+  "sections": [
+    {
+      "name": "集团本部",
+      "example": "ENT-001；当前本行综合授信借款主体"
+    },
+    {
+      "name": "智能制造公司",
+      "example": "ENT-002；二期项目潜在项目主体"
+    },
+    {
+      "name": "关系状态",
+      "example": "项目主体倾向ENT-002，但正式确认=OPEN"
+    }
+  ],
+  "actions": [
+    "确认实体关系",
+    "标待核实",
+    "加入访前问题"
+  ],
+  "human_required": true
+}

@@ -1,0 +1,52 @@
+{
+  "rules": [
+    {
+      "id": "DQ-01",
+      "check": "P0_COVERAGE_REGISTER.coverage count == 27 and all FULLY_BOUND"
+    },
+    {
+      "id": "DQ-02",
+      "check": "legal_entities.entity_id unique"
+    },
+    {
+      "id": "DQ-03",
+      "check": "transactions.transaction_id unique"
+    },
+    {
+      "id": "DQ-04",
+      "check": "daily_account_balances primary key(date, account_id) unique"
+    },
+    {
+      "id": "DQ-05",
+      "check": "equipment_list sum(amount_cny) == 32800000"
+    },
+    {
+      "id": "DQ-06",
+      "check": "payment_schedule ratios sum == 1.0 and amounts sum == 32800000"
+    },
+    {
+      "id": "DQ-07",
+      "check": "equipment payment recent/prior change within 31%-33%"
+    },
+    {
+      "id": "DQ-08",
+      "check": "all P0 coverage refs resolve to actual page/gate/call/test records"
+    },
+    {
+      "id": "DQ-09",
+      "check": "CRM command idempotency_key unique"
+    },
+    {
+      "id": "DQ-10",
+      "check": "PROD-FAL current active version is 2.2 and 2.1 is retired"
+    },
+    {
+      "id": "DQ-11",
+      "check": "recording consent gate decision == DECLINE_RECORDING"
+    },
+    {
+      "id": "DQ-12",
+      "check": "gold transcript marked production_input=false"
+    }
+  ]
+}

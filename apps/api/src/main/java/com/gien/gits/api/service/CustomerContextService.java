@@ -63,6 +63,9 @@ public class CustomerContextService {
     }
 
     public List<Customer> findCustomersByRm(String rmId) {
+        if ("ALL".equalsIgnoreCase(rmId)) {
+            return customerRepo.findAll();
+        }
         return customerRepo.findByRmId(rmId);
     }
 

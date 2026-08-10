@@ -1,0 +1,186 @@
+scenario:
+  scenario_id: RM-CONTINUOUS-ENGAGEMENT-HDEG-001-V11
+  scenario_name: 华东精工客户经理持续经营闭环—痛点增强运行场景
+  version: V1.1
+  baseline: V1.0 + Pain Point Delta V1.0
+  scenario_clock: Asia/Shanghai
+  primary_business_day: 2026-07-08
+  extended_arc: 2026-05-18 ~ 2026-07-20
+  synthetic: true
+  synthetic_statement: 本包全部企业、人员、交易、授信、事件、制度细节与对话均为合成演示数据；仅用于系统开发、演示和测试，不代表真实客户或真实银行事实。
+  random_seed: 20260708
+  governance: V1.0保持只读；V1.1以Delta方式增强，不回写覆盖原始V1.0。
+products:
+  -
+    product_id: PROD-WCL
+    version: 3.4
+    name: 流动资金贷款
+    effective_from: 2026-06-15
+    effective_to: null
+    status: ACTIVE
+    owner: 公司金融产品管理部
+    business_problem: 日常生产经营周转
+    key_conditions:
+      - 用途为经营周转
+      - 还款来源清晰
+      - 授信用途匹配
+    not_suitable:
+      - 固定资产建设直接投资
+    required_materials:
+      - 财务报表
+      - 采购/订单合同
+      - 用途说明
+    prohibited:
+      - 不得承诺审批
+      - 不得把设备投资直接写成流贷用途
+    scenario_fit: 谨慎候选
+  -
+    product_id: PROD-FAL
+    version: 2.2
+    name: 固定资产/设备更新贷款
+    effective_from: 2026-07-01
+    effective_to: null
+    status: ACTIVE
+    owner: 公司金融产品管理部
+    business_problem: 设备购置、技术改造、固定资产项目
+    key_conditions:
+      - 项目/设备用途明确
+      - 项目主体明确
+      - 资本金/还款来源清楚
+    not_suitable:
+      - 主体和用途未核实
+    required_materials:
+      - 项目备案
+      - 设备清单
+      - 采购合同
+      - 付款计划
+      - 资本金/还款来源
+    prohibited:
+      - 不得承诺审批或政策资格
+    scenario_fit: 主候选
+  -
+    product_id: PROD-FAL
+    version: 2.1
+    name: 固定资产贷款（旧版）
+    effective_from: 2025-11-01
+    effective_to: 2026-06-30
+    status: RETIRED
+    owner: 公司金融产品管理部
+    business_problem: 固定资产项目
+    key_conditions:
+      - 旧版条件
+    not_suitable:
+
+    required_materials:
+      - 旧版材料清单
+    prohibited:
+      - 失效版本不得作为当前推荐依据
+    scenario_fit: NO_USE
+  -
+    product_id: PROD-SCF
+    version: 4.0
+    name: 供应链金融
+    effective_from: 2026-05-10
+    effective_to: null
+    status: ACTIVE
+    owner: 交易银行部
+    business_problem: 供应商付款和贸易链资金周转
+    key_conditions:
+      - 贸易背景真实
+      - 供应商接受度
+      - 交易可核验
+    not_suitable:
+      - 无真实贸易背景
+    required_materials:
+      - 供应商清单
+      - 采购合同
+      - 发票/收货记录
+    prohibited:
+      - 不得承诺供应商接受
+    scenario_fit: 条件候选
+  -
+    product_id: PROD-CASH
+    version: 5.1
+    name: 集团现金管理
+    effective_from: 2026-04-01
+    effective_to: null
+    status: ACTIVE
+    owner: 交易银行部
+    business_problem: 多主体资金归集、账户可视和付款管理
+    key_conditions:
+      - 集团授权
+      - 账户清单
+      - 资金规则
+    not_suitable:
+      - 无集团统筹意愿
+    required_materials:
+      - 集团架构
+      - 账户清单
+      - 授权文件
+    prohibited:
+      - 不得自动调拨客户资金
+    scenario_fit: 并行机会
+  -
+    product_id: PROD-BA
+    version: 3.7
+    name: 银行承兑汇票/票据服务
+    effective_from: 2026-02-01
+    effective_to: null
+    status: ACTIVE
+    owner: 交易银行部
+    business_problem: 采购付款工具优化
+    key_conditions:
+      - 真实贸易背景
+      - 额度匹配
+      - 供应商接受
+    not_suitable:
+      - 供应商拒绝票据
+    required_materials:
+      - 采购合同
+      - 发票
+      - 供应商名单
+    prohibited:
+      - 不得脱离贸易背景开票
+    scenario_fit: 条件候选
+  -
+    product_id: PROD-ORDER
+    version: 1.8
+    name: 订单融资
+    effective_from: 2026-03-01
+    effective_to: null
+    status: ACTIVE
+    owner: 公司金融产品管理部
+    business_problem: 基于真实订单/中标合同的阶段性周转
+    key_conditions:
+      - 合同真实
+      - 回款路径清楚
+    not_suitable:
+      - 只有新闻无合同
+    required_materials:
+      - 中标通知/合同
+      - 交付计划
+      - 回款安排
+    prohibited:
+      - 中标不等于可融资
+    scenario_fit: 弱候选
+  -
+    product_id: PROD-CROSS
+    version: 2.5
+    name: 跨境结算便利化
+    effective_from: 2026-01-01
+    effective_to: null
+    status: ACTIVE
+    owner: 国际业务部
+    business_problem: 进出口结算/结售汇/单证
+    key_conditions:
+      - 真实贸易背景
+      - 单证合规
+    not_suitable:
+      - 无真实贸易背景
+    required_materials:
+      - 合同
+      - 发票
+      - 报关/物流材料
+    prohibited:
+      - 不得规避监管
+    scenario_fit: 非主线

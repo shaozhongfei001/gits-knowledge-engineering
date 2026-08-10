@@ -1,0 +1,37 @@
+{
+  "page_id": "PAGE-01",
+  "title": "我的今天｜重点客户与待办",
+  "time": "08:35",
+  "p0_refs": [
+    "PP-A01",
+    "PP-A02",
+    "PP-A03"
+  ],
+  "purpose": "让张伟先知道今天为什么要关注华东精工，而不是只收到一个黑盒分数。",
+  "data_refs": [
+    "02_master_data/rm_day_queue.csv",
+    "03_bank_data/analytical_findings.jsonl",
+    "04_external_data/external_events.jsonl"
+  ],
+  "sections": [
+    {
+      "name": "今日重点客户",
+      "example": "华东精工 Top1；触发：存款下降、设备付款增加、二期项目备案、历史承诺逾期"
+    },
+    {
+      "name": "为什么是今天",
+      "example": "项目与付款时点接近；客户已预约可拜访；历史承诺未闭环"
+    },
+    {
+      "name": "建议动作",
+      "example": "查看Customer Operating View → 生成访前准备 → 确认14:30拜访"
+    }
+  ],
+  "actions": [
+    "查看客户经营视图",
+    "标记不适用",
+    "稍后处理",
+    "生成访前准备"
+  ],
+  "human_required": true
+}

@@ -1,0 +1,12 @@
+{
+  "method": "POST",
+  "path": "/api/v1/interactions/extract",
+  "body": {
+    "interaction_id": "INT-20260708",
+    "input_mode": [
+      "RM_NOTES",
+      "POST_VISIT_DEBRIEF"
+    ],
+    "recording_consent": "DECLINED"
+  }
+}

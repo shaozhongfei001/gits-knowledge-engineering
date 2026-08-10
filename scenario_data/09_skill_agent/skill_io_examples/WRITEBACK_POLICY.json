@@ -1,0 +1,10 @@
+{
+  "input": {
+    "commands_ref": "11_outputs/CRM_WRITEBACK_COMMANDS.jsonl"
+  },
+  "output": {
+    "mode": "PROPOSE_ONLY",
+    "human_gate": "HG-F05",
+    "direct_crm_write": false
+  }
+}

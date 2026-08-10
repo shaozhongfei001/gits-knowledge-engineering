@@ -1,68 +1,269 @@
 package com.gien.gits.worker.handlers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
+import com.gien.gits.ontology.Claim;
+import com.gien.gits.ontology.ClaimStatus;
+import com.gien.gits.ontology.ClaimType;
 import com.gien.gits.ontology.event.CloudEvent;
 import com.gien.gits.ontology.event.DomainEventType;
+import com.gien.gits.ontology.port.ClaimReconciliationPort;
+import com.gien.gits.ontology.port.ClaimReconciliationPort.ReconciliationResult;
+import com.gien.gits.ontology.port.ClaimReconciliationPort.ReconciliationStatus;
+import com.gien.gits.ontology.port.DomainEventPublisher;
+import com.gien.gits.ontology.port.WritableClaimRepository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationEventPublisher;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.mockito.Mockito.when;
 
 /**
- * Test for ClaimCandidateRecordedHandler: verifies that the handler
- * receives CloudEvent with the correct type and processes it.
+ * Tests for ClaimCandidateRecordedHandler business logic.
+ *
+ * <p>Verifies:
+ * <ul>
+ *   <li>Event data extraction → Claim construction and persistence</li>
+ *   <li>ClaimReconciliationPort.reconcile() called with correct parameters</li>
+ *   <li>VERIFIED_FACT result → claim status updated to VERIFIED_FACT</li>
+ *   <li>CONFLICT result → claim status updated to CONFLICT</li>
+ *   <li>CANDIDATE_CLAIM result → claim status stays CANDIDATE</li>
+ *   <li>Domain event published after reconciliation</li>
+ *   <li>Empty event data → handler skips gracefully</li>
+ * </ul>
+ *
+ * <p>Rule #6: Claim≠Fact — a claim only becomes a fact after reconciliation confirms it.
  */
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class ClaimCandidateRecordedHandlerTest {
 
-    @Autowired
-    ApplicationEventPublisher publisher;
+    @Mock
+    private WritableClaimRepository claimRepository;
 
-    @Autowired
-    ClaimCandidateRecordedHandler handler;
+    @Mock
+    private ClaimReconciliationPort claimReconciliationPort;
 
-    private CloudEvent sampleClaimEvent(String id) {
+    @Mock
+    private DomainEventPublisher domainEventPublisher;
+
+    @Captor
+    private ArgumentCaptor<Claim> claimCaptor;
+
+    @Captor
+    private ArgumentCaptor<CloudEvent> eventCaptor;
+
+    private ClaimCandidateRecordedHandler handler;
+
+    @BeforeEach
+    void setUp() {
+        handler = new ClaimCandidateRecordedHandler(
+                claimRepository, claimReconciliationPort, domainEventPublisher);
+    }
+
+    private CloudEvent sampleClaimEvent(Map<String, Object> data) {
         return CloudEvent.builder()
-                .specversion("1.0")
-                .id(id)
-                .source("/gits/kno/worker/test")
+                .id("evt-claim-001")
+                .source("/gits/kno/test")
                 .type(DomainEventType.CLAIM_CANDIDATE_RECORDED)
                 .time(Instant.now().toString())
-                .subject("claim-1")
-                .datacontenttype("application/json")
-                .data(Map.of("note", "test claim event"))
+                .subject("case:" + UUID.randomUUID())
+                .data(data)
                 .build();
     }
 
     @Test
-    void handlerReceivesClaimCandidateRecordedEvent() {
-        CloudEvent event = sampleClaimEvent("evt-claim-handler-001");
-        // Publishing should not throw — handler processes the event
-        publisher.publishEvent(event);
-        // If we reach here without exception, the handler received and processed the event
-        assertThat(event.type()).isEqualTo(DomainEventType.CLAIM_CANDIDATE_RECORDED);
+    void persistsClaim_fromEventData() {
+        UUID claimId = UUID.randomUUID();
+        UUID caseId = UUID.randomUUID();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("claimId", claimId.toString());
+        data.put("caseId", caseId.toString());
+        data.put("claimType", "CUSTOMER_STATEMENT");
+        data.put("statement", "客户表示年营收约3000万元");
+
+        when(claimReconciliationPort.reconcile(false, false, false))
+                .thenReturn(new ReconciliationResult(ReconciliationStatus.CANDIDATE_CLAIM, "Rule-3"));
+
+        handler.handle(sampleClaimEvent(data));
+
+        verify(claimRepository).save(claimCaptor.capture());
+        Claim saved = claimCaptor.getValue();
+        assertThat(saved.claimId()).isEqualTo(claimId);
+        assertThat(saved.caseId()).isEqualTo(caseId);
+        assertThat(saved.claimType()).isEqualTo(ClaimType.CUSTOMER_STATEMENT);
+        assertThat(saved.statement()).isEqualTo("客户表示年营收约3000万元");
+        assertThat(saved.status()).isEqualTo(ClaimStatus.CANDIDATE);
     }
 
     @Test
-    void handlerIgnoresOtherEventTypes() {
-        CloudEvent otherEvent = CloudEvent.builder()
-                .specversion("1.0")
-                .id("evt-other-001")
-                .source("/gits/kno/worker/test")
-                .type(DomainEventType.CONTROLLED_ACTION_REQUESTED)
+    void updatesToVerifiedFact_whenReconciliationConfirms() {
+        when(claimReconciliationPort.reconcile(false, true, true))
+                .thenReturn(new ReconciliationResult(ReconciliationStatus.VERIFIED_FACT, "Rule-2"));
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("claimId", UUID.randomUUID().toString());
+        data.put("caseId", UUID.randomUUID().toString());
+        data.put("claimType", "SYSTEM_FACT");
+        data.put("statement", "工商登记信息确认");
+        data.put("conflictDetected", false);
+        data.put("authoritativeMatch", true);
+        data.put("evidenceComplete", true);
+
+        handler.handle(sampleClaimEvent(data));
+
+        ArgumentCaptor<ClaimStatus> statusCaptor = ArgumentCaptor.forClass(ClaimStatus.class);
+        verify(claimRepository).updateStatus(any(UUID.class), statusCaptor.capture());
+        assertThat(statusCaptor.getValue()).isEqualTo(ClaimStatus.VERIFIED_FACT);
+    }
+
+    @Test
+    void updatesToConflict_whenConflictDetected() {
+        when(claimReconciliationPort.reconcile(true, false, false))
+                .thenReturn(new ReconciliationResult(
+                        ReconciliationStatus.CONFLICT_REQUIRES_HUMAN_REVIEW, "Rule-1"));
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("claimId", UUID.randomUUID().toString());
+        data.put("caseId", UUID.randomUUID().toString());
+        data.put("claimType", "CUSTOMER_STATEMENT");
+        data.put("statement", "矛盾陈述");
+        data.put("conflictDetected", true);
+        data.put("authoritativeMatch", false);
+        data.put("evidenceComplete", false);
+
+        handler.handle(sampleClaimEvent(data));
+
+        ArgumentCaptor<ClaimStatus> statusCaptor = ArgumentCaptor.forClass(ClaimStatus.class);
+        verify(claimRepository).updateStatus(any(UUID.class), statusCaptor.capture());
+        assertThat(statusCaptor.getValue()).isEqualTo(ClaimStatus.CONFLICT);
+    }
+
+    @Test
+    void staysCandidate_whenReconciliationReturnsCandidate() {
+        when(claimReconciliationPort.reconcile(false, false, false))
+                .thenReturn(new ReconciliationResult(ReconciliationStatus.CANDIDATE_CLAIM, "Rule-3"));
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("claimId", UUID.randomUUID().toString());
+        data.put("caseId", UUID.randomUUID().toString());
+        data.put("claimType", "OPPORTUNITY");
+        data.put("statement", "潜在融资需求");
+        data.put("conflictDetected", false);
+        data.put("authoritativeMatch", false);
+        data.put("evidenceComplete", false);
+
+        handler.handle(sampleClaimEvent(data));
+
+        verify(claimRepository, never()).updateStatus(any(), any());
+    }
+
+    @Test
+    void publishesControlledActionRequest_whenConflictDetected() {
+        when(claimReconciliationPort.reconcile(true, false, false))
+                .thenReturn(new ReconciliationResult(
+                        ReconciliationStatus.CONFLICT_REQUIRES_HUMAN_REVIEW, "Rule-1"));
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("claimId", UUID.randomUUID().toString());
+        data.put("caseId", UUID.randomUUID().toString());
+        data.put("claimType", "CUSTOMER_STATEMENT");
+        data.put("statement", "矛盾陈述");
+        data.put("conflictDetected", true);
+        data.put("authoritativeMatch", false);
+        data.put("evidenceComplete", false);
+
+        handler.handle(sampleClaimEvent(data));
+
+        verify(domainEventPublisher).publish(eventCaptor.capture());
+        CloudEvent published = eventCaptor.getValue();
+        assertThat(published.type()).isEqualTo(DomainEventType.CONTROLLED_ACTION_REQUESTED);
+        assertThat(published.data()).containsEntry("targetObjectId", data.get("claimId"));
+    }
+
+    @Test
+    void noEventPublished_whenReconciliationVerified() {
+        when(claimReconciliationPort.reconcile(false, true, true))
+                .thenReturn(new ReconciliationResult(ReconciliationStatus.VERIFIED_FACT, "Rule-2"));
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("claimId", UUID.randomUUID().toString());
+        data.put("caseId", UUID.randomUUID().toString());
+        data.put("claimType", "SYSTEM_FACT");
+        data.put("statement", "已验证事实");
+        data.put("conflictDetected", false);
+        data.put("authoritativeMatch", true);
+        data.put("evidenceComplete", true);
+
+        handler.handle(sampleClaimEvent(data));
+
+        verify(domainEventPublisher, never()).publish(any());
+    }
+
+    @Test
+    void noEventPublished_whenReconciliationCandidate() {
+        when(claimReconciliationPort.reconcile(false, false, false))
+                .thenReturn(new ReconciliationResult(ReconciliationStatus.CANDIDATE_CLAIM, "Rule-3"));
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("claimId", UUID.randomUUID().toString());
+        data.put("caseId", UUID.randomUUID().toString());
+        data.put("claimType", "OPPORTUNITY");
+        data.put("statement", "潜在需求");
+        data.put("conflictDetected", false);
+        data.put("authoritativeMatch", false);
+        data.put("evidenceComplete", false);
+
+        handler.handle(sampleClaimEvent(data));
+
+        verify(domainEventPublisher, never()).publish(any());
+    }
+
+    @Test
+    void skipsGracefully_onEmptyEventData() {
+        CloudEvent emptyDataEvent = CloudEvent.builder()
+                .id("evt-empty")
+                .source("/gits/kno/test")
+                .type(DomainEventType.CLAIM_CANDIDATE_RECORDED)
                 .time(Instant.now().toString())
-                .subject("action-1")
-                .datacontenttype("application/json")
-                .data(Map.of("note", "not a claim event"))
+                .subject("test")
+                .data(Map.of())
                 .build();
-        // Publishing a different event type should not trigger the claim handler
-        publisher.publishEvent(otherEvent);
-        // No exception means the condition filter worked
-        assertThat(otherEvent.type()).isNotEqualTo(DomainEventType.CLAIM_CANDIDATE_RECORDED);
+
+        assertThatNoException().isThrownBy(() -> handler.handle(emptyDataEvent));
+        verify(claimRepository, never()).save(any());
+        verify(claimReconciliationPort, never()).reconcile(any(Boolean.class), any(Boolean.class), any(Boolean.class));
+    }
+
+    @Test
+    void defaultsToCustomerStatement_forUnknownClaimType() {
+        when(claimReconciliationPort.reconcile(false, false, false))
+                .thenReturn(new ReconciliationResult(ReconciliationStatus.CANDIDATE_CLAIM, "Rule-3"));
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("claimId", UUID.randomUUID().toString());
+        data.put("caseId", UUID.randomUUID().toString());
+        data.put("claimType", "NONEXISTENT_TYPE");
+        data.put("statement", "test");
+
+        handler.handle(sampleClaimEvent(data));
+
+        verify(claimRepository).save(claimCaptor.capture());
+        assertThat(claimCaptor.getValue().claimType()).isEqualTo(ClaimType.CUSTOMER_STATEMENT);
     }
 }
