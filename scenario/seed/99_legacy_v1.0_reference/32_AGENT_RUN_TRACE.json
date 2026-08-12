@@ -1,0 +1,79 @@
+{
+  "scenario": {
+    "scenario_id": "RM-CONTINUOUS-ENGAGEMENT-HDEG-001",
+    "scenario_name": "华东精工客户经理持续经营闭环",
+    "version": "V1.0",
+    "generated_at": "2026-08-03T00:06:00+08:00",
+    "synthetic_data": true,
+    "data_policy": "合成演示数据；企业、人员、账号、交易、外部事件均为虚构，用于Hermes演示。",
+    "basis": [
+      "客户经理持续经营案例",
+      "市场慧眼→客户洞察→访前报告→产品推荐→话术生成→客户建联→CRM回写",
+      "Customer Operating View / Interaction / Fact Reconciliation / Ontology"
+    ]
+  },
+  "run_id": "AG-RM-HDEG-20260705-20260720",
+  "primary_agent": "AG-01 RM经营作战Agent",
+  "goal": "帮助RM张伟完成华东精工从经营触发、访前准备、拜访、访后分析、CRM写回到R7/R8更新的持续经营闭环。",
+  "allowed_skills": [
+    "SP-01",
+    "SP-02",
+    "SP-03",
+    "SP-04",
+    "SP-05",
+    "SP-06",
+    "SP-07",
+    "SP-08",
+    "SP-10",
+    "SP-15",
+    "SP-17"
+  ],
+  "tool_calls": [
+    "CRM_READ",
+    "BANK_TXN_ANALYTIC",
+    "CREDIT_READ",
+    "KNOWLEDGE_RETRIEVAL",
+    "ASR_TRANSCRIPT_PARSE",
+    "CRM_WRITEBACK_COMMAND_DRAFT"
+  ],
+  "policy_gates": [
+    {
+      "gate": "Permission",
+      "result": "PASS"
+    },
+    {
+      "gate": "Outreach",
+      "result": "HUMAN_CONFIRM_REQUIRED"
+    },
+    {
+      "gate": "Writeback",
+      "result": "HUMAN_CONFIRM_REQUIRED"
+    },
+    {
+      "gate": "Risk Boundary",
+      "result": "PASS_WITH_LIMITATION"
+    }
+  ],
+  "draft_outputs": [
+    "17_R1_PRE_VISIT_REPORT_EXPECTED.md",
+    "18_R2_60秒作战卡.md",
+    "24_R4_POST_VISIT_ANALYSIS.md",
+    "25_R5A_INTERNAL_RELATIONSHIP_REPORT.md",
+    "29_R7_UPDATED_RELATIONSHIP_REPORT.md",
+    "30_R8_NEXT_PRE_VISIT_REPORT.md"
+  ],
+  "human_decisions": [
+    {
+      "object": "OUTREACH_SCRIPT",
+      "decision": "EDIT_AND_SEND",
+      "by": "RM-ZW-001"
+    },
+    {
+      "object": "OPPORTUNITY_SIGNAL",
+      "decision": "EDIT_NOT_FORMAL_OPPORTUNITY",
+      "by": "RM-ZW-001"
+    }
+  ],
+  "writeback_commands_file": "27_CRM_WRITEBACK_COMMANDS.jsonl",
+  "outcome": "完成一次从触发到R7/R8的持续经营闭环；未直接写CRM；未直接发送客户消息。"
+}

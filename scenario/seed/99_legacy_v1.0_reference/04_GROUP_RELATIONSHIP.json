@@ -1,0 +1,91 @@
+{
+  "scenario": {
+    "scenario_id": "RM-CONTINUOUS-ENGAGEMENT-HDEG-001",
+    "scenario_name": "华东精工客户经理持续经营闭环",
+    "version": "V1.0",
+    "generated_at": "2026-08-03T00:06:00+08:00",
+    "synthetic_data": true,
+    "data_policy": "合成演示数据；企业、人员、账号、交易、外部事件均为虚构，用于Hermes演示。",
+    "basis": [
+      "客户经理持续经营案例",
+      "市场慧眼→客户洞察→访前报告→产品推荐→话术生成→客户建联→CRM回写",
+      "Customer Operating View / Interaction / Fact Reconciliation / Ontology"
+    ]
+  },
+  "group_id": "GRP-HDEG-001",
+  "canonical_group_name": "华东精工装备集团",
+  "entities": [
+    {
+      "entity_id": "ENT-GRP-0001",
+      "name": "华东精工装备集团有限公司",
+      "role": "集团本部/当前授信主体",
+      "ownership": "母公司",
+      "bank_customer_id": "CUST-CORP-0001",
+      "relationship_status": "正式客户",
+      "evidence_ref": "EV-BANK-001"
+    },
+    {
+      "entity_id": "ENT-SUB-0002",
+      "name": "华东精工智能制造有限公司",
+      "role": "疑似智能制造二期项目主体",
+      "ownership": "全资子公司",
+      "bank_customer_id": "CUST-CORP-0001-SUB02",
+      "relationship_status": "潜在项目主体/未完整建档",
+      "evidence_ref": "EV-EXT-001"
+    },
+    {
+      "entity_id": "ENT-SUB-0003",
+      "name": "华东精工自动化设备有限公司",
+      "role": "设备采购与生产主体之一",
+      "ownership": "控股子公司",
+      "bank_customer_id": "CUST-CORP-0001-SUB03",
+      "relationship_status": "关联客户",
+      "evidence_ref": "EV-BANK-002"
+    },
+    {
+      "entity_id": "ENT-SUB-0004",
+      "name": "华东精工进出口有限公司",
+      "role": "跨境结算主体",
+      "ownership": "全资子公司",
+      "bank_customer_id": "CUST-CORP-0001-SUB04",
+      "relationship_status": "关联客户/低频结算",
+      "evidence_ref": "EV-BANK-003"
+    },
+    {
+      "entity_id": "ENT-SUB-0005",
+      "name": "华东精工产业投资有限公司",
+      "role": "产业投资与项目持股主体",
+      "ownership": "全资子公司",
+      "bank_customer_id": "CUST-CORP-0001-SUB05",
+      "relationship_status": "未授信",
+      "evidence_ref": "EV-EXT-004"
+    }
+  ],
+  "relationships": [
+    {
+      "from": "ENT-GRP-0001",
+      "to": "ENT-SUB-0002",
+      "type": "OWNS",
+      "ratio": 100
+    },
+    {
+      "from": "ENT-GRP-0001",
+      "to": "ENT-SUB-0003",
+      "type": "OWNS",
+      "ratio": 80
+    },
+    {
+      "from": "ENT-GRP-0001",
+      "to": "ENT-SUB-0004",
+      "type": "OWNS",
+      "ratio": 100
+    },
+    {
+      "from": "ENT-GRP-0001",
+      "to": "ENT-SUB-0005",
+      "type": "OWNS",
+      "ratio": 100
+    }
+  ],
+  "key_governance_note": "集团本部、项目主体、付款主体和授信主体不完全一致。融资结构必须核实谁借款、谁用款、谁还款、谁担保。"
+}

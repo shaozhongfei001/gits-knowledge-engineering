@@ -1,0 +1,36 @@
+scenario_id: RM-CONTINUOUS-ENGAGEMENT-HDEG-001
+scenario_name: 华东精工客户经理持续经营闭环
+entrypoint: 00_MASTER_INDEX.md
+primary_agent: AG-01_RM经营作战Agent
+support_agents:
+  - AG-04_交易银行专题Agent
+  - AG-05_风险可做性辅助Agent
+  - AG-03_公司金融产品协同Agent
+  - AG-08_知识运营Agent
+workflow:
+  - load_customer_context
+  - detect_trigger
+  - build_customer_operating_view
+  - generate_kyc_gap
+  - generate_pre_visit_report
+  - generate_outreach_script
+  - simulate_meeting
+  - extract_interaction
+  - reconcile_facts
+  - generate_post_visit_reports
+  - propose_crm_writeback
+  - ingest_new_evidence
+  - update_r7_r8
+human_gate_required:
+  - outreach_send
+  - crm_writeback
+  - opportunity_create
+  - customer_material_approve
+  - bankability_statement
+run_mode: offline_synthetic_demo
+prohibited_actions:
+  - direct_crm_writeback
+  - auto_send_customer_message
+  - approval_commitment
+  - truth_score
+  - infer_full_cashflow_from_bank_txn

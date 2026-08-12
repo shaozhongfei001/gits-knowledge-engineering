@@ -1,0 +1,1575 @@
+{
+  "package_name": "客户经理持续经营场景_智能体演示数据包_V1.1_痛点增强运行版",
+  "version": "V1.1",
+  "status": "COMPLETE",
+  "quality_gate": "SYNTHETIC_DATA_PACKAGE_PASS",
+  "synthetic": true,
+  "metrics": {
+    "pain_points_total": 39,
+    "p0_total": 27,
+    "p0_fully_bound": 27,
+    "transactions": 3600,
+    "daily_balances": 1512,
+    "external_events": 160,
+    "historical_interactions": 40,
+    "gold_utterances": 107,
+    "ui_pages": 18,
+    "skill_calls": 39,
+    "human_gates": 27,
+    "runtime_events": 102,
+    "acceptance_tests": 37,
+    "negative_tests": 12,
+    "p0_scene_files": 27,
+    "extension_scene_files": 12,
+    "file_count_before_manifest": 252
+  },
+  "validation": {
+    "package_validator": "PASS",
+    "unit_tests": "3/3 PASS",
+    "structured_json_jsonl_csv_parse": "PASS",
+    "mock_api_python_compile": "PASS",
+    "p0_coverage": "27/27 FULLY_BOUND",
+    "equipment_payment_change_pct": 32.0,
+    "equipment_list_total_cny": 32800000,
+    "recording_consent_model": "DECLINED_RECORDING -> RM_NOTES + POST_VISIT_DEBRIEF",
+    "static_replay_note": "本包验收为Synthetic/Static/Mock级，不代表真实银行SIT/UAT或生产验收。"
+  },
+  "files": [
+    {
+      "path": "00_README_FIRST.md",
+      "size": 1896,
+      "sha256": "baf0eb4880a35f9f20d61c72e4662046aebc382f9445da4e6f4e31028f3268fd",
+      "rows": null
+    },
+    {
+      "path": "00_governance/P0_COVERAGE_REGISTER.json",
+      "size": 16492,
+      "sha256": "f14cd18f4ee25b099705f43a14083f2273ff39a8b73273a32f321e23711bcedf",
+      "rows": null
+    },
+    {
+      "path": "00_governance/data_lineage.yaml",
+      "size": 607,
+      "sha256": "3bf1365edb20b8f1e3d6046904c3acfab2baea1e07974d63231d5cdfa530b81b",
+      "rows": null
+    },
+    {
+      "path": "00_governance/no_go_rules.yaml",
+      "size": 1859,
+      "sha256": "e6ed4b922b9ebdf546ecbad20ec8049bc639f6036277053c003b4f235b246852",
+      "rows": null
+    },
+    {
+      "path": "00_governance/scenario_invariants.yaml",
+      "size": 1379,
+      "sha256": "e2e8ebaf368b94b6d76aa1f2379445af3d82c1de42ff546d09a9dbce8470ab31",
+      "rows": null
+    },
+    {
+      "path": "00_governance/source_basis_register.json",
+      "size": 3444,
+      "sha256": "00086c49c2b30f10f543303755c43c644b2c1af5a016296dd298ad1f2e767f6c",
+      "rows": null
+    },
+    {
+      "path": "00_governance/synthetic_data_policy.md",
+      "size": 808,
+      "sha256": "4e42ecc4d14422dd6c1bba02dab05f6b23e23d77e478985c56a9f53a978c7c13",
+      "rows": null
+    },
+    {
+      "path": "01_MASTER_INDEX.md",
+      "size": 2203,
+      "sha256": "bed7a774160764f51a75dc40bbe9dc4f427634121817f27d0e9b0ec28652e427",
+      "rows": null
+    },
+    {
+      "path": "01_story/01_SCENARIO_BIBLE_V1.1.md",
+      "size": 1804,
+      "sha256": "26fe38d48a6e3f1e9567a15557758cb8468c1a3382ac91394c52340974bfa214",
+      "rows": null
+    },
+    {
+      "path": "01_story/02_ZHANGWEI_FULL_DAY_20260708.md",
+      "size": 6251,
+      "sha256": "a8dabf28a4fc120c7e8bbc0b85273574bcb4a58e84e5ce7536355c61beff3733",
+      "rows": null
+    },
+    {
+      "path": "01_story/03_MULTI_DAY_ARC_20260312_20260720.md",
+      "size": 1198,
+      "sha256": "d27c472db470fbc4a0ca9f0b1b393812640735ac02b990e3b88ed27c1ec234da",
+      "rows": null
+    },
+    {
+      "path": "01_story/07_CHARACTER_CARDS.json",
+      "size": 3024,
+      "sha256": "8163d302b82edc16f7a4fd50b076ca9576358920df93c64926d811f3623383a5",
+      "rows": null
+    },
+    {
+      "path": "01_story/09_ZHANGWEI_DAY_CALENDAR_20260708.csv",
+      "size": 3980,
+      "sha256": "0abf89ad7b88fc9321ee5e56cf7279bf631f141f5aec4a26e4de24bf4dbc88f5",
+      "rows": 36
+    },
+    {
+      "path": "01_story/10_INTERRUPTION_LOG.jsonl",
+      "size": 873,
+      "sha256": "85a396bf7e0bc8810f683297664ed03881655a75ed5c12ae5b611124577aa53a",
+      "rows": 4
+    },
+    {
+      "path": "02_V1.0_TO_V1.1_CHANGELOG.md",
+      "size": 1460,
+      "sha256": "57d4d220dcf4605606cbe83331805f2b6a19c62b442ada92950cfadc0ea1778c",
+      "rows": null
+    },
+    {
+      "path": "02_master_data/customer_industry_mapping.csv",
+      "size": 227,
+      "sha256": "8be312c98fe60b52fea0007a0c27e338792b74be05cd8f49a3699ec65a8a32f1",
+      "rows": 3
+    },
+    {
+      "path": "02_master_data/customer_master.json",
+      "size": 841,
+      "sha256": "b53ec6e5e8fb138080ae89471dcdf4412892a76628a4e1a187e4b2d7edb73251",
+      "rows": null
+    },
+    {
+      "path": "02_master_data/group_relationships.csv",
+      "size": 371,
+      "sha256": "182fbbd816a90b2ea36c9f869201f88fa5ae2042967e2823f4c826b4f58d7e9e",
+      "rows": 4
+    },
+    {
+      "path": "02_master_data/industry_chain_nodes.csv",
+      "size": 453,
+      "sha256": "26542ad1ae836f5fcba0ee4a54f8efa555eb29250070c0e6969314d5c3bb9a87",
+      "rows": 5
+    },
+    {
+      "path": "02_master_data/industry_taxonomy.csv",
+      "size": 280,
+      "sha256": "f956ab7a5c03d3c999a90402ac0aef8411bca00b5f5b9c7a45109444e0a25135",
+      "rows": 7
+    },
+    {
+      "path": "02_master_data/legal_entities.csv",
+      "size": 767,
+      "sha256": "be5c3e32af88f2fa81c1af5dcce9adaae9411084320d79af513cd47340c3cbaf",
+      "rows": 5
+    },
+    {
+      "path": "02_master_data/rm_day_queue.csv",
+      "size": 1147,
+      "sha256": "55dd05f1a757727c402e0c796275a31f443138773d0e838063b5951e53ebaf4a",
+      "rows": 8
+    },
+    {
+      "path": "02_master_data/rm_goals_kpi.csv",
+      "size": 360,
+      "sha256": "84d4125c2a79ab16b607406272b646193a29a29691baf1b9ade5e45a3e4befe0",
+      "rows": 4
+    },
+    {
+      "path": "02_master_data/rm_portfolio.csv",
+      "size": 2455,
+      "sha256": "fef3630a407b55e07427b0bd83092b99185e6ee87c8b3ee13b206b2208a58af1",
+      "rows": 24
+    },
+    {
+      "path": "02_master_data/stakeholder_directory.csv",
+      "size": 622,
+      "sha256": "cb0017a36e6a5bcce3c05891d7e84131d4a3006b17803e7614ed80dde8d9036a",
+      "rows": 4
+    },
+    {
+      "path": "03_DATA_DICTIONARY.md",
+      "size": 1634,
+      "sha256": "6f73d823e2032a87d761181c614191a709375e35cade7eeb7ac1415236176fba",
+      "rows": null
+    },
+    {
+      "path": "03_bank_data/accounts.csv",
+      "size": 734,
+      "sha256": "d82c167eae1018f71c04517f9aa3340917a65f5277cf232de3aa0f687b7f6874",
+      "rows": 9
+    },
+    {
+      "path": "03_bank_data/analytical_findings.jsonl",
+      "size": 629,
+      "sha256": "b15ce355e8194b8155b8c642167ebd888eff7b50f64cbb387b2a917362a0d93f",
+      "rows": 2
+    },
+    {
+      "path": "03_bank_data/bank_relationship_monthly.csv",
+      "size": 1729,
+      "sha256": "d9b2db86b4b02ec64fc6c648ce3748bbfeb66737fdf9d480c1df69c4352cb41a",
+      "rows": 18
+    },
+    {
+      "path": "03_bank_data/collateral_and_guarantees.csv",
+      "size": 196,
+      "sha256": "2d5d8d283c375a667324a72c95a4b69d91027db8d6e403677c30b0e2d967cd65",
+      "rows": 2
+    },
+    {
+      "path": "03_bank_data/counterparty_master.csv",
+      "size": 1110,
+      "sha256": "3d193b546b14fa6043cdfd4eff14371b1db60b373da6160304f6dba393b73ad4",
+      "rows": 19
+    },
+    {
+      "path": "03_bank_data/credit_facilities.csv",
+      "size": 738,
+      "sha256": "38e4031f756352ab09a43e076dc224f11fb8893e24a9d7a14ad88fd8d277c197",
+      "rows": 3
+    },
+    {
+      "path": "03_bank_data/customer_profitability_monthly.csv",
+      "size": 777,
+      "sha256": "0221c1dbe50bafd8576c4c5c067c8e91bfb0e7ae32e153a1ee16737d2721c50b",
+      "rows": 6
+    },
+    {
+      "path": "03_bank_data/daily_account_balances.csv",
+      "size": 115519,
+      "sha256": "39f8b607f560d3174472654c851a5edf3e08b04947f82e675a7f9a097fc167e3",
+      "rows": 1512
+    },
+    {
+      "path": "03_bank_data/drawdowns.csv",
+      "size": 332,
+      "sha256": "05e3244835d32a715335d4849a8554d81209105d25b6f4d67dbd33cfef06006b",
+      "rows": 3
+    },
+    {
+      "path": "03_bank_data/financial_ratios.csv",
+      "size": 474,
+      "sha256": "a03bd614f1bf79f49e156321c93b692862d1ea5a7c35222eb1956c9b50d599a4",
+      "rows": 4
+    },
+    {
+      "path": "03_bank_data/financial_statements_long.csv",
+      "size": 5177,
+      "sha256": "4490747f48b78e5c2d50d5a1869a9de2449ff0759eb09245dfea0bba7ab9e74a",
+      "rows": 80
+    },
+    {
+      "path": "03_bank_data/monthly_transaction_summary.csv",
+      "size": 629,
+      "sha256": "f9a92cc534bf6cf8a47bf1e73f321b1df2df075f299b9c98682396445a448c63",
+      "rows": 7
+    },
+    {
+      "path": "03_bank_data/payables_aging.csv",
+      "size": 2213,
+      "sha256": "79d45147042fba4c020b034e26cee9cb7a9fec3b3a6badb991bdbbf795c65729",
+      "rows": 30
+    },
+    {
+      "path": "03_bank_data/product_holdings.csv",
+      "size": 574,
+      "sha256": "6283a3010b3d0d0e308fcd099c337e61967bcd22b094f70a8de6185379162d2e",
+      "rows": 8
+    },
+    {
+      "path": "03_bank_data/receivables_aging.csv",
+      "size": 2210,
+      "sha256": "209eeaffb2321ddc783e7679e21846e900680f2f87a2d192655ad4d73867be16",
+      "rows": 30
+    },
+    {
+      "path": "03_bank_data/top_counterparties.csv",
+      "size": 1493,
+      "sha256": "2fb94533d2e2407deaa531a1e54e8afe66e135f40801a3e1630e36f850080532",
+      "rows": 19
+    },
+    {
+      "path": "03_bank_data/transactions_20260101_20260708.csv",
+      "size": 556340,
+      "sha256": "2ead285e6e65c64b61a7f7f66f2e7f0515eed61d7bb464ca44cf2cb582160039",
+      "rows": 3600
+    },
+    {
+      "path": "04_DATA_COMPLETENESS_REPORT.md",
+      "size": 1674,
+      "sha256": "64e1665cc3b9dbea9b40fd88ee3e48cdefb71d454315d02164a1bb19774f1d57",
+      "rows": null
+    },
+    {
+      "path": "04_external_data/entity_resolution_candidates.json",
+      "size": 718,
+      "sha256": "cd3fa1f9274b888b292685cc5392ffd2fb2020ecb25140bbe014d98ac6b7c9de",
+      "rows": null
+    },
+    {
+      "path": "04_external_data/external_events.jsonl",
+      "size": 81506,
+      "sha256": "475e373df99cb0d6701e4612198c141103c57ee261cd0daa369eecf6bb26c261",
+      "rows": 160
+    },
+    {
+      "path": "04_external_data/source_licenses.csv",
+      "size": 247,
+      "sha256": "7019fcb6eba6889dd06a6d514a988550dea76bb36030ae34dbc64c036e46c985",
+      "rows": 3
+    },
+    {
+      "path": "05_DEVELOPMENT_ENTRY.md",
+      "size": 724,
+      "sha256": "f31c89cf0242396dfba7dc282dc797c289679ffa1bfe87092f36f87d246f1de7",
+      "rows": null
+    },
+    {
+      "path": "05_knowledge/evidence_policy.yaml",
+      "size": 507,
+      "sha256": "4748bc96f7e8643d5177910098b28e2e4108f6b7058032b66be0f4c902d5b2d3",
+      "rows": null
+    },
+    {
+      "path": "05_knowledge/knowledge_asset_registry.csv",
+      "size": 533,
+      "sha256": "88c56676ff8b48f0b7ed16536baae1ff9f4fac6860d422bd10fae7720da2b3e5",
+      "rows": 5
+    },
+    {
+      "path": "05_knowledge/kyc_question_library.jsonl",
+      "size": 23092,
+      "sha256": "47b8cf5f9c0fccb3a8d00052c621a961f3f1dc75290202b394f9c9d04c0548d5",
+      "rows": 80
+    },
+    {
+      "path": "05_knowledge/ontology_seed.json",
+      "size": 975,
+      "sha256": "b044cd4f7de1000ef1a9d3a9d5aee0860f295c217aff7f72894a4cb3797c048e",
+      "rows": null
+    },
+    {
+      "path": "05_knowledge/product_knowledge_cards.yaml",
+      "size": 5107,
+      "sha256": "2b904248867a03f034136f195732394b7d5fc24417747397d723aae756c41c90",
+      "rows": null
+    },
+    {
+      "path": "05_knowledge/product_rule_versions.jsonl",
+      "size": 1237,
+      "sha256": "9d43b1cbbadfeb8eebe943bed46aa8341b76e58f60e36d454b103a8c8dc81c12",
+      "rows": 8
+    },
+    {
+      "path": "05_knowledge/runtime_skill_registry.json",
+      "size": 5495,
+      "sha256": "7e0503efd9460dd5495fd681252d25026d75adba32c78dc8736a03aaa4b19714",
+      "rows": null
+    },
+    {
+      "path": "05_knowledge/skill_product_registry.json",
+      "size": 5222,
+      "sha256": "af5d16919c3a7bb3f384afd001f6946721cb9e7a839b9566e052bf7afc267732",
+      "rows": null
+    },
+    {
+      "path": "05_knowledge/tacit_knowledge_candidates.jsonl",
+      "size": 551,
+      "sha256": "02c31512c2b3b446145a2f4e6f89a991de57f1989126e0d642dfa11c6f3fb264",
+      "rows": 2
+    },
+    {
+      "path": "05_knowledge/visit_sop.yaml",
+      "size": 727,
+      "sha256": "4ca68915cfc7068fc14fb678eac29fe52931a7f27fdcc1559fd8d2b0a90eadb4",
+      "rows": null
+    },
+    {
+      "path": "06_FINAL_VALIDATION_REPORT.md",
+      "size": 667,
+      "sha256": "660e5542649385bdc76d4e367fdfde221bffc1c77cbe298532df544c293a7163",
+      "rows": null
+    },
+    {
+      "path": "06_interactions/claim_assessments.jsonl",
+      "size": 1112,
+      "sha256": "4d61170c757e31946c1b6d02acd8336d0db94aac247c7cfabc44fd7d93718aa9",
+      "rows": 3
+    },
+    {
+      "path": "06_interactions/commitments.jsonl",
+      "size": 557,
+      "sha256": "0571ac2c87078ad4214989aa3cdb8950da0bf8e48de58b86c77ee5d368d2fe91",
+      "rows": 3
+    },
+    {
+      "path": "06_interactions/historical_interactions.jsonl",
+      "size": 13404,
+      "sha256": "5821a0ac2be3f2c62d95f214964712eabaa2c7644c8cf28500dbbbd244d23ccf",
+      "rows": 40
+    },
+    {
+      "path": "06_interactions/interaction_objects_20260708.jsonl",
+      "size": 2205,
+      "sha256": "4f7fe73087fe5db246d8a237adec854b4b7b281f9b764969b2c49e61ef204df3",
+      "rows": 10
+    },
+    {
+      "path": "06_interactions/meeting_gold_transcript.txt",
+      "size": 9010,
+      "sha256": "7b1cd284233e742c3b921efea1cc81efebb596718bdb18369fcbe8a2b5aaea93",
+      "rows": null
+    },
+    {
+      "path": "06_interactions/meeting_utterances_gold.jsonl",
+      "size": 30230,
+      "sha256": "6ac110ee1545997ae9541f59c1108289ca72123699990bb23b1d5528745e8cbf",
+      "rows": 107
+    },
+    {
+      "path": "06_interactions/open_questions.jsonl",
+      "size": 942,
+      "sha256": "644d63af555833fee70c09d1e3c11e26136da517844c0910aa2f486bb82a1675",
+      "rows": 5
+    },
+    {
+      "path": "06_interactions/outreach_attempts.jsonl",
+      "size": 1259,
+      "sha256": "86d19f8b17ca4eb379e52a242b5a2787d4e44f38971783ac6e92fd96666602fd",
+      "rows": 5
+    },
+    {
+      "path": "06_interactions/post_visit_debrief_raw.txt",
+      "size": 1450,
+      "sha256": "a7ccfe36951c2d3a868aba34b18ac33f8efa49cf712799aa9631a6a29568b9ec",
+      "rows": null
+    },
+    {
+      "path": "06_interactions/rm_notes_during_meeting.jsonl",
+      "size": 1141,
+      "sha256": "7e133491a73956bbad9c639520290c1041bd6aeea81e7380eb9b064094902dde",
+      "rows": 8
+    },
+    {
+      "path": "06_interactions/tasks.jsonl",
+      "size": 1032,
+      "sha256": "52572c1c0a924545a6f013b1b67783d0c06b41fa1943f47b0a6c61472a773f0c",
+      "rows": 5
+    },
+    {
+      "path": "07_pain_point_scenes/00_P0_SCENE_INDEX.md",
+      "size": 2392,
+      "sha256": "fdd96eb10dfd4293b96875b98e1c45192f62a3e43121ec9be8f6523b815ad68b",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/01_P1_P2_EXTENSION_INDEX.md",
+      "size": 2236,
+      "sha256": "a1fb20bc9558ab81246660bdae666c3e118ab6d4c37c106fc4282ea59bc64cab",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-A01_外部行业、政策和企业事件太分散，客户经理很难长期盯住.md",
+      "size": 1923,
+      "sha256": "7c2ff58514b0716930cec53861667c30c1adc4fd2404106a08750a4b8fe839b9",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-A02_看到了行业机会，也不知道到底影响哪些客户、该由谁跟.md",
+      "size": 1851,
+      "sha256": "fd670b037d9d07d15353b7f14d0022039796ed46956ef662143b4f14c90b1efb",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-A03_机会信号、客户真实需求和正式商机容易被混成一件事.md",
+      "size": 1767,
+      "sha256": "db8bc3a7868fd835c18fa08b6619329366c458eae0ced9b6c2f3afec97350e12",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-B01_客户信息散在多个系统和材料里，拜访前要自己一项项拼.md",
+      "size": 1809,
+      "sha256": "7b7c85d0728ce1486890c50340cbcf17fb9ae50866f77c7746062c21c4a9b278",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-B02_现有360视图看得到很多字段，却回答不了“最近发生了什么.md",
+      "size": 1826,
+      "sha256": "96b1b20b2cfd66e7592e0249f6974c699ff426e51b8a535acb638aa55bbda8c0",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-B03_历史拜访有记录，但没有形成可连续使用的客户记忆链.md",
+      "size": 1780,
+      "sha256": "a831ae2d98bb56160e9c235e019b1035c01e44766ec1b378861d45198288c40f",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-B04_客户原话经过复述和录入后容易变味.md",
+      "size": 1751,
+      "sha256": "b1659428505b779921b737d02cbddf6ed989bf03b781e757d35c084af96bc1b6",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-B05_同一客户在不同系统里的名称、时间和口径不一致，直接汇总容.md",
+      "size": 1825,
+      "sha256": "c8c28e23b2afc1737364ff3a3acdc91c0c53944099459456f93c4c812fa38248",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-B06_集团客户里“客户、法人、项目主体、借款主体、付款主体”很.md",
+      "size": 1807,
+      "sha256": "af471c257b182f45fda6a6c53a438326ed72aa579242f5d8fcf74f1856850084",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-C01_访前报告越来越长、越来越像，但看完还是不知道今天要解决什.md",
+      "size": 1669,
+      "sha256": "763ed53a5491a22301f8871567d7d22b12948e985e03f9d0bbc517cf3522eabc",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-C02_本次拜访目标容易写成“维护关系、了解需求”，回来也不知道.md",
+      "size": 1710,
+      "sha256": "2e2a5943042f0b5809256cdc15f71e656287e6a6ddf43fb699923d6bbd7978c3",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-C03_上次问过什么、客户答应过什么，没有稳定带进这次访前.md",
+      "size": 1727,
+      "sha256": "747ab0b560e5c05c16a7a5f54d92d7d774395ec3bea91f60a1e649550730e3de",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-C04_KYC材料常常列很多“知道什么”，却没有告诉客户经理“还.md",
+      "size": 1786,
+      "sha256": "16f83b55ece1c9a694c12f0dce56347f8ec898099fdfbe52f0c8f4bdcf0c4dfe",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-C05_不同拜访目标、不同受访人，却经常套同一套KYC问题.md",
+      "size": 1738,
+      "sha256": "ffa0bb796b3900eb54c3a429c4cfc7acb6697ca228ed765c85f193d58011cbb8",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-C06_公开信息、客户私域信息和系统推断混在一起，报告看起来完整.md",
+      "size": 1716,
+      "sha256": "b8ccc5a01421f51afa6cc9522426a658f5cb51a8df31f04b36bd3cf598e47f69",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-D01_产品太多、分类颗粒度不一致，客户经理想找产品时常常搜不准.md",
+      "size": 1787,
+      "sha256": "bf46870e539cd37575b95d74a0a73935aa9df7095a46b8e24f06d1a88e85c492",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-D02_客户讲的是业务难题，银行讲的是产品术语，两边语言对不上.md",
+      "size": 1796,
+      "sha256": "1fa0ee56ad9bce085b908ad79bb8460e12ca104f65fe33f5f22316da1f069c86",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-D03_产品和制度变化靠群通知、培训传递，客户经理容易拿旧规则去.md",
+      "size": 1754,
+      "sha256": "a32394db852268553af66e9a2a100347d21b25b4d8e07d1d47316b82674612cc",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-E01_客户现场表达常常很含糊，一顺着听就容易把“想法”记成“正.md",
+      "size": 1797,
+      "sha256": "d5b8bec56193c8341469c040fa5d247f1a5cf95bb3666d53903951805ab90f14",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-E03_客户答应什么、银行答应什么，谈着谈着容易漏，责任和截止时.md",
+      "size": 1781,
+      "sha256": "84e7a8fb329299d7f406a99bc04f4cc96ae3f6d22ff1eefc2816e7cee91f1488",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-E04_不能假设所有拜访都能全程录音，尤其敏感或贷前场景.md",
+      "size": 1883,
+      "sha256": "0ac63727f518dab31e4a4dd59f6e6432bcb2cab463c3c4a7aa4172d6e43fa56a",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-F01_访后记录经常只剩“日常拜访、上门服务”，真正有价值的信息.md",
+      "size": 1746,
+      "sha256": "afb7cc0ac98256b4466e32d621ea8f807a782bc194ea2ce834aa0bed2e360c1b",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-F02_客户原话、已确认事实、客户经理判断和AI分析混在一起，后.md",
+      "size": 1822,
+      "sha256": "8af1b2dce4dd019418bb663b66e85ff9bc957f3f8edd0c1c6d8beeb2b6f92802",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-F03_访前准备了问题，回来后没人自动检查哪些关键问题其实没问到.md",
+      "size": 1701,
+      "sha256": "ae253f2bb270d8b3c5879c165b167e489a9fb477aa93a8f7f6cdf72b107d1c59",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-F04_拜访结束后还要整理需求、建任务、通知产品部门、更新客户状.md",
+      "size": 1770,
+      "sha256": "4ccde117bcfe01dfa72f741c9b5d6d87e8430a4ad81dc77a67a38577fe08d999",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-F05_如果AI直接写CRM，模型错误、推断或敏感内部判断可能变.md",
+      "size": 1660,
+      "sha256": "477953d8b91d72207e3fccd4a2cb360e1321a07bc9b26cce3cfe2ab258066d7e",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/PP-F06_一场拜访做完就结束，过几周再见客户又从头翻资料.md",
+      "size": 1786,
+      "sha256": "b7884e5382dd1b9f434bbef7588b457e612cb681f6aa64b1a7a0f6d76ee7ab93",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/extension/PP-A04_系统推了名单，但客户经理不知道为什么值得跟，也不知道第一步做什么.md",
+      "size": 1189,
+      "sha256": "4a0d6211715a0b8d9e5ae17056bebf93cc68e0f1ccd2af9d7029f89b3e16f5d9",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/extension/PP-A05_客户、待办、主管要求和临时事件挤在一起，今天先做谁主要靠个人经验.md",
+      "size": 1208,
+      "sha256": "91b2b1e986b56350651b6cf6dc6580f5cc6c31338341b42066249534afdda3cd",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/extension/PP-B07_只看余额或利润，容易把客户价值和经营质量看偏.md",
+      "size": 1070,
+      "sha256": "c4a6f82ae5d9749da7dc941e181e631ba0eae3f980c1e9c363a42283c343adc6",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/extension/PP-D04_一个客户的综合方案跨公司、交易银行、风险等多条线，靠客户经理自己.md",
+      "size": 1223,
+      "sha256": "7717d24a917fccb0ccf74db058ca06df7fe76ec79dccd3c317fa88721aa16128",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/extension/PP-D05_真正难的是用一句话说清楚“为什么现在找你”，不是生成一段漂亮话术.md",
+      "size": 1157,
+      "sha256": "a08d7715b0b23ea84f5213c7b93284db8c29ef5699f6bdb6235bfdc60b5c4721",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/extension/PP-D06_客户没接电话、只回一句“忙”，后面的触达往往靠客户经理自己记.md",
+      "size": 1127,
+      "sha256": "dc3882870e1d59014df8ed7416f5ecde33de047fa6b7a74103dee7f9371b2be8",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/extension/PP-E02_访前问题是静态的，客户现场一说新情况，固定提纲很快就跟不上.md",
+      "size": 1152,
+      "sha256": "e76619e97159f119d5cfd3a010dcd7f70804e74a2425920cde8a247b25ac61d5",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/extension/PP-E05_两名客户经理一起拜访时，各自看到的重点不同，系统没有把差异摊开核.md",
+      "size": 1128,
+      "sha256": "c14a0e16071f8682e9cf8abb42866f8bb37f4aa80e959b3a36f4d99a69860907",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/extension/PP-F07_主管看得到结果和CRM记录，却看不到拜访过程到底好不好、漏了什么.md",
+      "size": 1211,
+      "sha256": "7a2241e4e58822d6188222134fb3b70436666659e3df863f5f67ad3c8b9d7cfb",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/extension/PP-G01_优秀客户经理的追问方式和经营经验长期留在个人脑子里.md",
+      "size": 1136,
+      "sha256": "17fb2a3af89bd766765d35c2be86febe11f432a5ec5c1adfac72627d472be4d2",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/extension/PP-G02_客户经理经常修改AI内容，但修改没有持续反哺Skill评测和版本.md",
+      "size": 1121,
+      "sha256": "10ad721b6758f05d7291ccbb805ce2adb2d4bb72277c7e410c099218d1463847",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/extension/PP-G03_数据缺失、接口慢或外部源不可用时，系统不能靠“硬生成”装成完整.md",
+      "size": 1175,
+      "sha256": "84786d5d3cf70ad5c2da23e8abd7b9d3a8f95a6bcb72b35bc2a13aea88b65e88",
+      "rows": null
+    },
+    {
+      "path": "07_pain_point_scenes/p0_scene_contracts.jsonl",
+      "size": 24208,
+      "sha256": "062c86046d230bc68f250fbd38e161ef4afed640bb97ffcfd9f086e22ffd151f",
+      "rows": 27
+    },
+    {
+      "path": "08_ui_states/PAGE-01.json",
+      "size": 1045,
+      "sha256": "1dbc03469e5a784ee93f4621b8ec0c78531fd302f653209fa01b3f61914706e5",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-02.json",
+      "size": 1048,
+      "sha256": "15343f0c338f5721ee3f9da137ba92daf6eec7bc539659a487b3c7b5826abe9e",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-03.json",
+      "size": 1232,
+      "sha256": "8d0c9f69658a39b36ff3109690e7dec616e875924530a534563bc9738cdfc928",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-04.json",
+      "size": 933,
+      "sha256": "4b480f9170df9b291101b7e24bbcdb8552ba5f5524f7e65b93d81b19a9fb78d7",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-05.json",
+      "size": 882,
+      "sha256": "430c07f83ab06e3347e07e616ec18da92616310c9b2c81fed9e3a03d660ff7be",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-06.json",
+      "size": 997,
+      "sha256": "aa287a1ee3b19a562e7007616cbaf4972d0a6394c67078b4c3a0c31ae0bc21a9",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-07.json",
+      "size": 837,
+      "sha256": "97a599e8e2c8e23aab04a4ce6d6a0ac00bdfd1059af7f4abb3812f27d162a99c",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-08.json",
+      "size": 903,
+      "sha256": "d32bee1ae71bc70053d735bdfc21e3b65807d7ed348b0eb23394674c30711f39",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-09.json",
+      "size": 702,
+      "sha256": "6abdc92f179b2231a4b448fa7c10c1ca1870f52e7d811f84f2bdaccbc21be031",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-10.json",
+      "size": 867,
+      "sha256": "70332e0f557c39e6e36ac690a0ae89f07d717369dd75673e364016bd550e5241",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-11.json",
+      "size": 987,
+      "sha256": "53cced026fbd22bca73a4dfab414f696abd8f1752f731cc53663ef11dacfa36b",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-12.json",
+      "size": 730,
+      "sha256": "bdbbb2767d6e9b8876ae38cf07c2b57c6a494e7d7fbd4630a807832115fa039e",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-13.json",
+      "size": 888,
+      "sha256": "3e4bc782a049f05f087fd32b2693d2121f7ce2d8054c59a1b54f8d264d19735b",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-14.json",
+      "size": 867,
+      "sha256": "60e3a920c4ec02b69227daf955cd5a87b48d03d759ee0d7e7c598ec77d499107",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-15.json",
+      "size": 816,
+      "sha256": "be08b4ae401c98cc3573d384a26954f53777ef45b89a64602465b9fe451d353c",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-16.json",
+      "size": 904,
+      "sha256": "43413d3ed76cc686a52e0cac83b246fe96e3f4d1f8073204c29dabd622df6398",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-17.json",
+      "size": 805,
+      "sha256": "19bb0fbe678178cb00fd25bbb24553d513b178bd9db2cfb77c1bcd52e5ac5839",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/PAGE-18.json",
+      "size": 706,
+      "sha256": "9f552ab1d08af318b135a9793364c35e34382bc1d4cee2529aac36fb89cad045",
+      "rows": null
+    },
+    {
+      "path": "08_ui_states/ui_state_sequence.jsonl",
+      "size": 13673,
+      "sha256": "2dc178f5af249a135905e1312f8ee3a69f12acf97a8e2ef9cc28e27bf4a381b0",
+      "rows": 18
+    },
+    {
+      "path": "09_skill_agent/agent_run_trace.json",
+      "size": 3070,
+      "sha256": "65c599eb7e899e159d9621e382a209c378bfbba745745e06254ecb8098776f5f",
+      "rows": null
+    },
+    {
+      "path": "09_skill_agent/eval_feedback.jsonl",
+      "size": 549,
+      "sha256": "9e07c4b6660f0c0a0a8ce7a26fb17bfb02fb22ea0819f2595e4f077c7edc2aa9",
+      "rows": 2
+    },
+    {
+      "path": "09_skill_agent/runtime_event_stream.jsonl",
+      "size": 21177,
+      "sha256": "64cf55f791475b5e5aaed1c958fa129a9a3a201c7b707621dbf4e1034b82a566",
+      "rows": 102
+    },
+    {
+      "path": "09_skill_agent/skill_invocation_trace.jsonl",
+      "size": 19013,
+      "sha256": "cb4be2ec2b2649800a7b59d580b5b879e57ae22637ab6652bd707cdba53d4f8b",
+      "rows": 39
+    },
+    {
+      "path": "09_skill_agent/skill_io_examples/SP-01.json",
+      "size": 344,
+      "sha256": "a23a6932c0e47946e12d30abb59b7b9dead216eaffa1e24aa53a72cfd77e8cb5",
+      "rows": null
+    },
+    {
+      "path": "09_skill_agent/skill_io_examples/SP-02.json",
+      "size": 306,
+      "sha256": "596efd8217c9d1154fb005204c752c4d559f17037471e196accd285a543dbc3a",
+      "rows": null
+    },
+    {
+      "path": "09_skill_agent/skill_io_examples/SP-05.json",
+      "size": 360,
+      "sha256": "1f4f7da1ce6b15d366b9f09431ebc8dae2089873661db55a0f3bac32e6ebe9fa",
+      "rows": null
+    },
+    {
+      "path": "09_skill_agent/skill_io_examples/SP-06.json",
+      "size": 284,
+      "sha256": "fe6b4039fe7b3b9039ebc743f58a65932d9b3e9f843845fa57caf93b2e464c06",
+      "rows": null
+    },
+    {
+      "path": "09_skill_agent/skill_io_examples/SP-07.json",
+      "size": 311,
+      "sha256": "61441de9e714b1f0c12cd93fe4f92105e070a089d0775db5b747890764a09ef4",
+      "rows": null
+    },
+    {
+      "path": "09_skill_agent/skill_io_examples/SP-10.json",
+      "size": 287,
+      "sha256": "f0366eccc2a1e7bca3e8fa4cdd63e133010fbee0776607fac2f566b00425ff58",
+      "rows": null
+    },
+    {
+      "path": "09_skill_agent/skill_io_examples/SP-15.json",
+      "size": 332,
+      "sha256": "f282651dc7ede72efa80a6a99aa7bd331319258abe49218be6ac61cb6fefaf68",
+      "rows": null
+    },
+    {
+      "path": "09_skill_agent/skill_io_examples/WRITEBACK_POLICY.json",
+      "size": 187,
+      "sha256": "18153970a574c35986df98439bacc6eb5fdec586324f13cfc61d4cdbd6343b82",
+      "rows": null
+    },
+    {
+      "path": "09_skill_agent/workflow_state_transitions.jsonl",
+      "size": 1788,
+      "sha256": "967c64c1d2d62f6622d47b50b87e437596aeabaf55db9064022f1f17bc262641",
+      "rows": 14
+    },
+    {
+      "path": "10_human_gates/consent_records.jsonl",
+      "size": 267,
+      "sha256": "a1dd31ae33eab9881289987c5ad1c64a915eb83e81dcbd18d25c4bcab0dca10d",
+      "rows": 1
+    },
+    {
+      "path": "10_human_gates/human_gate_decisions.jsonl",
+      "size": 9566,
+      "sha256": "55212d1df2f1531907ddb59d77e52efbb3a25b06f46406ace38fba3bcf678e89",
+      "rows": 27
+    },
+    {
+      "path": "10_human_gates/product_manager_review.json",
+      "size": 515,
+      "sha256": "f54ac89c4e06ffc8269a9adbcfd427f93293eef31741ebe3e5905a3e07bf2c57",
+      "rows": null
+    },
+    {
+      "path": "10_human_gates/risk_manager_review.json",
+      "size": 603,
+      "sha256": "ab3e19e6d85f4fb62d22bccdc19158137b4333a661c768942f3baef89343d9f9",
+      "rows": null
+    },
+    {
+      "path": "10_human_gates/writeback_approval_log.jsonl",
+      "size": 1276,
+      "sha256": "1f69ed7615a56b6134cad114c6a5e9075194776ad2b0bcb6e494a3af544fbcfe",
+      "rows": 10
+    },
+    {
+      "path": "11_outputs/CRM_WRITEBACK_COMMANDS.jsonl",
+      "size": 2778,
+      "sha256": "f822eba08e85679d4356e78e63db9a56dcfbd7f0c1f4d0efc1c7a9778bd63ceb",
+      "rows": 10
+    },
+    {
+      "path": "11_outputs/R0_DAILY_OPERATING_BRIEF.md",
+      "size": 768,
+      "sha256": "78be7ddfd6f99d46ca6b4fb4b36ac096c865347a0f2b11db6b97363079b760a7",
+      "rows": null
+    },
+    {
+      "path": "11_outputs/R1_PRE_VISIT_REPORT.md",
+      "size": 1813,
+      "sha256": "ae98a8918c6615493dc0699a4aef10009a6640a5866f62e32bd71d29f9576f78",
+      "rows": null
+    },
+    {
+      "path": "11_outputs/R2_60SEC_BATTLE_CARD.md",
+      "size": 570,
+      "sha256": "d21c1382a4923dc3fb0c43b6082ead76be29db3d103ca3f7467246f8802a3092",
+      "rows": null
+    },
+    {
+      "path": "11_outputs/R3_OUTREACH_PLAN.json",
+      "size": 794,
+      "sha256": "59cc484875e94e0cc197878dd5f11d3f44dec4103b3ee1c5b6a58924028ee986",
+      "rows": null
+    },
+    {
+      "path": "11_outputs/R4_POST_VISIT_ANALYSIS.md",
+      "size": 903,
+      "sha256": "c2f078cfa40b993e5b6bff15da280c0c6a9e59b1792436c705fac5214df25169",
+      "rows": null
+    },
+    {
+      "path": "11_outputs/R5A_INTERNAL_RELATIONSHIP_REPORT.md",
+      "size": 1368,
+      "sha256": "240e5585a8f9387bfd3c08cb8be7166f5d99a2ffd101729d748f790f6f208555",
+      "rows": null
+    },
+    {
+      "path": "11_outputs/R5B_CRM_CALL_REPORT.json",
+      "size": 1114,
+      "sha256": "f6aecfbe6c321882740a2a89d69a09b99f1b18997e3755cd5715c6bf7613d146",
+      "rows": null
+    },
+    {
+      "path": "11_outputs/R6_PRODUCT_FIT_ASSESSMENT.json",
+      "size": 1296,
+      "sha256": "2f98ad858fcdd99aed6fd316df3cb8760425d93ab08695931cdee5f236f33e06",
+      "rows": null
+    },
+    {
+      "path": "11_outputs/R6_PRODUCT_MANAGER_FACT_PACK.md",
+      "size": 353,
+      "sha256": "afdabe6d21d557a605cb3075e0de2febb6596e2baa3ca79033b16b0efd42691c",
+      "rows": null
+    },
+    {
+      "path": "11_outputs/R6_RISK_FACT_PACK.md",
+      "size": 297,
+      "sha256": "ab29158d5eb2e75c5e58ef31d09b35b1c732739157ada984bcb92ed2b33df63a",
+      "rows": null
+    },
+    {
+      "path": "11_outputs/R6_TRANSACTION_BANKING_FACT_PACK.md",
+      "size": 309,
+      "sha256": "62c194095532fcb42985e4ee1bada5cf1dcf919cc54af88f4f0c34bfab6ca31c",
+      "rows": null
+    },
+    {
+      "path": "11_outputs/R7_UPDATED_RELATIONSHIP_REPORT.md",
+      "size": 909,
+      "sha256": "da3d55edd231f0188961df07ed5c27e4228c00a4e8546732b5a452877b05f66f",
+      "rows": null
+    },
+    {
+      "path": "11_outputs/R8_NEXT_PRE_VISIT_REPORT.md",
+      "size": 808,
+      "sha256": "57595aae6bd4730c6efd058aef3beaf8b892855e4ed4bdbe93a094e9509bf11b",
+      "rows": null
+    },
+    {
+      "path": "11_outputs/report_version_chain.json",
+      "size": 1118,
+      "sha256": "61c04c1d1eff5d715b5e74d3a013f1223b1367c1f2c4e949d214e71b05c5ee3b",
+      "rows": null
+    },
+    {
+      "path": "12_new_evidence/customer_message_20260710.txt",
+      "size": 340,
+      "sha256": "591485dd7cde69086cfabdeab4938056710dc9544ae3f6e47a487f38d1a911a4",
+      "rows": null
+    },
+    {
+      "path": "12_new_evidence/equipment_list_20260710.csv",
+      "size": 599,
+      "sha256": "a9e2ce5f923af72601dbf7f88a4253447cbc833d9049781a9d4e474700e3b7e4",
+      "rows": 6
+    },
+    {
+      "path": "12_new_evidence/evidence_metadata_20260710.json",
+      "size": 759,
+      "sha256": "3296dbf7fed0f790c0d7bd95b588b65e84060e0fd5d85381e943cca83da99469",
+      "rows": null
+    },
+    {
+      "path": "12_new_evidence/payment_schedule_20260710.csv",
+      "size": 204,
+      "sha256": "4d7783f7f7dcfde4bf4936abac70e7b377880e4fc1d8868f9fcfe8e14e57af12",
+      "rows": 3
+    },
+    {
+      "path": "12_new_evidence/supplier_payment_acceptance.csv",
+      "size": 370,
+      "sha256": "e54814c3dc162b6055deb02559f6a4929da43b182ddec164dffa91ac5401f947",
+      "rows": 4
+    },
+    {
+      "path": "13_api_fixtures/__pycache__/mock_api_server.cpython-313.pyc",
+      "size": 6530,
+      "sha256": "6ad24c534dcc321b8dc3af557dfa4f01cb77ee561fc1820da05af05e98603830",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/mock_api_server.py",
+      "size": 3362,
+      "sha256": "d94d795a2940490ae06ebb82e39f5d95872493913f6c71eb1f80178c588c827e",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/openapi_stub.yaml",
+      "size": 2484,
+      "sha256": "a9e57b7250eb09e3f78d555a40144fe8016902b082f71b554f9d4b5e6ac95e7d",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/postman_collection.json",
+      "size": 9406,
+      "sha256": "bb4d53114afab9020c9fdbb83afa311ae18d6ac2bf1cac9c24552e333fb357ab",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/requests/cov_get.json",
+      "size": 93,
+      "sha256": "0ea149120def899b21db1624c08a49fbc12b398273e51985659f95deef0cc6a1",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/requests/evidence.json",
+      "size": 210,
+      "sha256": "9ab958a9acd9da3e00b731d1e05c7dc2ef7d514e80ccccc836ee4d2e336965d6",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/requests/exit_confirm.json",
+      "size": 122,
+      "sha256": "20c388d53904155f013dd24cd84d9bb775c98cfcbfdc3357f8007ab89969c9f0",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/requests/extract.json",
+      "size": 227,
+      "sha256": "2c5674f0ab605db1e88888993dc534139bd8278f932ae95a63fdee84c08b8414",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/requests/gate.json",
+      "size": 206,
+      "sha256": "c78aaff47a27e263703428d552d0190596cb18ff2c2d01aaeb67cd11f3c2a6f8",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/requests/kyc_get.json",
+      "size": 91,
+      "sha256": "bf6724a16a02731dd8e4362166308c5f997711ea812b6dea9fe35fcf4afde8cf",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/requests/outreach.json",
+      "size": 189,
+      "sha256": "188e26be62511549abb47f6962386d1d372e12338f543ea80b3ae8ccc2c3b7b7",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/requests/post_visit.json",
+      "size": 177,
+      "sha256": "47f137768f51057c441e1961904559769cacab861d596df9852242a7e72bb528",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/requests/r7r8.json",
+      "size": 77,
+      "sha256": "c59ef6522f33ccd861f8e26b740a406cbfff598e88520978881a442e3fa9e717",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/requests/reconcile.json",
+      "size": 183,
+      "sha256": "596021b67140c4f3cf88b52792dd60e60992ff4bc1288f67c4a7ee72312df8c8",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/requests/rm_day_get.json",
+      "size": 80,
+      "sha256": "19df3e828812749382e2dffc866c5dad9da46a08230b76795776836a23b574db",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/requests/visit_prep.json",
+      "size": 269,
+      "sha256": "9d8941b96fff7fab3accd015cfa1d4e40f25a0dd71fdd1f4adf95c7d4e150d1c",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/requests/writeback.json",
+      "size": 146,
+      "sha256": "45214e4250cdc24c7bb2d4440cf1639a8d8d6744417563ec24aeee1a4b94bb32",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/requirements_mock.txt",
+      "size": 29,
+      "sha256": "0cda6f4d5791d369303c8d2c4497d28136f5e03d25655cb41a6275dcfcfde1a3",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/responses/cov_get.json",
+      "size": 1358,
+      "sha256": "ea38dc8a7e16b274f12b525dcb8885118d0f4921746bf44351d77098de714c8e",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/responses/evidence.json",
+      "size": 102,
+      "sha256": "b554933c3b089706c9aed046289d5fb1f434b8cc186a0b805ff3c064489d5fe6",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/responses/exit_confirm.json",
+      "size": 114,
+      "sha256": "4cb7d11521ba33261d29030c5d6ae95b714a3f5bc47b223761d58e3cd4daa1c9",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/responses/extract.json",
+      "size": 131,
+      "sha256": "83c5e6abc88650cc1d4fc5d9a7d827340f884583a440176a7e04c48212280be4",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/responses/gate.json",
+      "size": 104,
+      "sha256": "4f9179c40c50d6f893bb283d88bda17dcfdf9bc4bc47c17430802f41ed108042",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/responses/kyc_get.json",
+      "size": 1107,
+      "sha256": "ce9974d53505045922fde978455f536e84a67a27e73211dacbfda3607ef67323",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/responses/outreach.json",
+      "size": 114,
+      "sha256": "b9b8a450a4706a649f6c0220872f0c662955db58dcaae3d1877ef7df0c72f9a4",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/responses/post_visit.json",
+      "size": 189,
+      "sha256": "f3d0bfc70044cfdeb56b4bbd48beef69925f5ae99976ae245a48c30c5c8e7090",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/responses/r7r8.json",
+      "size": 136,
+      "sha256": "68691b8175b39dacd2bff3915adb3d51068bf581290ce7b22e381a0641eb56d4",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/responses/reconcile.json",
+      "size": 94,
+      "sha256": "325a80a44e209c993e1f69aafbf1ca9f1015eccea58dcf857bf9ee8f74e77eba",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/responses/rm_day_get.json",
+      "size": 3594,
+      "sha256": "b5be834cedcab3d4dea5726b4bc6f8c5e74dc85d77b1a6d33b9d87eb78e284d1",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/responses/visit_prep.json",
+      "size": 156,
+      "sha256": "701241fdcf3a921909f76d99e165e597a05677cb60ee735e183ce87f1f7ea821",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/responses/writeback.json",
+      "size": 118,
+      "sha256": "5c557eab656b65d5a7036ec42de530894f77229ee59e3bacf354ba09df2412c5",
+      "rows": null
+    },
+    {
+      "path": "13_api_fixtures/run_mock_api.sh",
+      "size": 135,
+      "sha256": "1be04f0a8fcc300493e39aa77992ac4432f0182b0442089a65c26b4b20f7bb8d",
+      "rows": null
+    },
+    {
+      "path": "14_database/DATA_MODEL_NOTES.md",
+      "size": 668,
+      "sha256": "303add96b5e6d036fae37e27190df8740d9a93b8ee3649730a1fd0c5ce1a273c",
+      "rows": null
+    },
+    {
+      "path": "14_database/mysql8_load_examples.sql",
+      "size": 946,
+      "sha256": "eba390255a2d4af61be4942dba26c8b953747ba017caa560ecb415c2a498ca02",
+      "rows": null
+    },
+    {
+      "path": "14_database/mysql8_schema.sql",
+      "size": 4954,
+      "sha256": "d9365a2c41c9333482f1950cb4b80d82668ebaa6c2dc95ce7bb390b0ce6cabc0",
+      "rows": null
+    },
+    {
+      "path": "14_database/mysql8_seed_core.sql",
+      "size": 1644,
+      "sha256": "f4123fa51b508b92aec681918d2448fe4a3c1528c5ca84b83d0799bf4138b142",
+      "rows": null
+    },
+    {
+      "path": "15_tests/__pycache__/test_scenario_data.cpython-313.pyc",
+      "size": 2346,
+      "sha256": "3cc38f3d91b2bace2d4d595679561f13e4b71880a43fac60a79d5a384f3c9da4",
+      "rows": null
+    },
+    {
+      "path": "15_tests/acceptance_tests.jsonl",
+      "size": 13575,
+      "sha256": "dfda6d27420e5802ae38ec463a4c4ac68c1dc1f22700281997e28cee69ec2b1d",
+      "rows": 37
+    },
+    {
+      "path": "15_tests/data_quality_rules.json",
+      "size": 1238,
+      "sha256": "88f58670623ce14b2ff77ce1a859612d3015b79c2fd3facc0cd8fa2fc4c3824f",
+      "rows": null
+    },
+    {
+      "path": "15_tests/negative_tests.jsonl",
+      "size": 1147,
+      "sha256": "575cb8e6c59dcae3b6d174abb8f5338b4081a1aef63c13c74365b17ec74af132",
+      "rows": 12
+    },
+    {
+      "path": "15_tests/test_scenario_data.py",
+      "size": 837,
+      "sha256": "1d624442af6b9509d568d9379f7b21acf30e1853d46ac7d87177aae0b746c0fc",
+      "rows": null
+    },
+    {
+      "path": "15_tests/validate_package.py",
+      "size": 3753,
+      "sha256": "15f0ae9bf4d2f48067ae6e716d6b1846f5e46161507cafbec3441499a711c91d",
+      "rows": null
+    },
+    {
+      "path": "16_dev_handoff/CODING_AGENT_MASTER_PROMPT.md",
+      "size": 1387,
+      "sha256": "cfee0b8edcff2edac9fe2080cadea200799e937f20dac29259b70a8bd1648a35",
+      "rows": null
+    },
+    {
+      "path": "16_dev_handoff/CURSOR_CODEX_CODEBUDDY_HANDOFF.md",
+      "size": 1336,
+      "sha256": "5b3e94121c2b2eeb1ccea700a5f6a256235dabea6226a02fbe6054e9b1bf31d8",
+      "rows": null
+    },
+    {
+      "path": "16_dev_handoff/DATA_LOADING_ORDER.md",
+      "size": 813,
+      "sha256": "2f4e92fa11c970daad4943165fb2108e1789064edd793bc3feeb4824b06a9045",
+      "rows": null
+    },
+    {
+      "path": "16_dev_handoff/DEMO_RUNBOOK.md",
+      "size": 841,
+      "sha256": "eba930dbfa6fcc6bcfbc5c7bfba1634ee8e325c01198f9ed8be8eecadec14580",
+      "rows": null
+    },
+    {
+      "path": "16_dev_handoff/FEATURE_BUILD_ORDER.md",
+      "size": 801,
+      "sha256": "8b63207933e60969fe03c4ca62d23974833de3521278429a3eedcca1efa45e2c",
+      "rows": null
+    },
+    {
+      "path": "16_dev_handoff/SCENE_SCREEN_SKILL_API_TRACE.md",
+      "size": 1177,
+      "sha256": "5c73ae32b346becf85af85017cc4d90c78ab40488b14a81ba439f745dc2c548d",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/00_MASTER_INDEX.md",
+      "size": 2288,
+      "sha256": "4c13bfd59f2548691b7b2d938976e5f6f607f23b826c0881c62306e67a71cb2f",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/01_SCENARIO_BIBLE.md",
+      "size": 616,
+      "sha256": "fa75110f8ed81f5c9144f62d0c74fa01a231caab8fe4b934159a6715c2d886ee",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/02_PERSONA_ROLE_CARD.json",
+      "size": 4010,
+      "sha256": "2b30f5cd31edb301c1ca857a5e090f75727339e9002213046f868a804298769f",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/03_CUSTOMER_MASTER.json",
+      "size": 1879,
+      "sha256": "fcb2dab021def4ffeb2244fc87c211aa581eb466147cde3debbf4bf3f68f8b73",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/04_GROUP_RELATIONSHIP.json",
+      "size": 2989,
+      "sha256": "2714e358498e6c02582a65900e431546161036bc5b8b9ca72d775e322cf9b6fd",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/05_BANK_RELATIONSHIP_SNAPSHOT.csv",
+      "size": 1401,
+      "sha256": "dd602b73e1db064218efdeeef96720f4fb84f5a1b4d6232c77e9533ee3a6d520",
+      "rows": 12
+    },
+    {
+      "path": "99_legacy_v1.0_reference/06_TRANSACTION_LEDGER_SAMPLE.csv",
+      "size": 20818,
+      "sha256": "000850d864605ecb365e5b9f391600d3402e797b0a8f729e9f674ada9c19457c",
+      "rows": 120
+    },
+    {
+      "path": "99_legacy_v1.0_reference/07_CREDIT_FACILITY.json",
+      "size": 1711,
+      "sha256": "538139f04fd6cac13173e9252ba0dbcdf04e37230cd93df55ebbcc479e3fd4a7",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/08_PRODUCT_KNOWLEDGE_CARDS.yaml",
+      "size": 5285,
+      "sha256": "65ad7ab9f443c8da2eccdaac22ba46a20e1d56f3e8768a7412cb6fdacd902dc6",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/09_POLICY_RULES.yaml",
+      "size": 2395,
+      "sha256": "93f22f11e85644b0e1fd3ea76723ce8849eb11ef51c3aedead1caf05811a9b49",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/10_EXTERNAL_EVENTS.jsonl",
+      "size": 8724,
+      "sha256": "1bb9441cac33ecbe4ed3279124a6b8534c7ab118bf56368112a5467345fe8691",
+      "rows": 15
+    },
+    {
+      "path": "99_legacy_v1.0_reference/11_HISTORICAL_INTERACTIONS.jsonl",
+      "size": 3320,
+      "sha256": "84adac242ff5832a6188958d0b73829dd7ba9e15348fe2e71c896bb13f5826cf",
+      "rows": 8
+    },
+    {
+      "path": "99_legacy_v1.0_reference/14_CUSTOMER_OPERATING_VIEW_SNAPSHOT.json",
+      "size": 4290,
+      "sha256": "b00b7bb683c408ea6884f27dc875daab9be91acd55e7cb2092a18431479acd94",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/15_KYC_GAP_PROFILE.json",
+      "size": 2016,
+      "sha256": "63681e24486416f4834c15997a0659d402adaaabcab89de497003beab129f7a6",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/17_R1_PRE_VISIT_REPORT_EXPECTED.md",
+      "size": 2262,
+      "sha256": "0310a357e5aed5a9b853ff459d6c3212c1285334ab81fecb0cdbf49e89eeffb3",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/18_R2_60秒作战卡.md",
+      "size": 671,
+      "sha256": "94163fddae3fa1d1dd99588b0d73e098f69176562e3c8478c3a683887ca857ca",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/20_MEETING_SCRIPT_FULL.md",
+      "size": 3088,
+      "sha256": "49b67b997d947cf57b831e9f2a724111ddecaa612fdc5a37c0a80f02e53342d7",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/21_MEETING_TRANSCRIPT_RAW.txt",
+      "size": 1373,
+      "sha256": "9e84f0dd64578d9cce6552f890d53a1b0d816d19bada7b31fa3c6873506675d0",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/22_INTERACTION_EXTRACTION_EXPECTED.json",
+      "size": 3571,
+      "sha256": "7712425fb3d473d2fa44f6a2fa863916ddcdee6edc2e9ab89166aa600dc5f857",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/23_FACT_RECONCILIATION_CASE.json",
+      "size": 3078,
+      "sha256": "6ff0c61fc3a6c5ad94603915d62aeb7e6c8994ed774a98b7de460c0e8226071d",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/24_R4_POST_VISIT_ANALYSIS.md",
+      "size": 944,
+      "sha256": "7f67a1993c5d39cde8740e8a76e479ff38242279fa60fcf98423c49f3fdea79a",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/25_R5A_INTERNAL_RELATIONSHIP_REPORT.md",
+      "size": 858,
+      "sha256": "f889725f7e3759e7f0975fe388593a142de734d00b7c9b397f10129c898286e2",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/26_R5B_CRM_CALL_REPORT.json",
+      "size": 1221,
+      "sha256": "7e530d13cb92ae2090bc593ec9ece7c86e8eac6da8805c025c4c0a6fb2e913f2",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/27_CRM_WRITEBACK_COMMANDS.jsonl",
+      "size": 2015,
+      "sha256": "d8384d337c39672d3f77f33668acf4821ef4901e17b7e236e22d392a87ac25d0",
+      "rows": 6
+    },
+    {
+      "path": "99_legacy_v1.0_reference/28_NEW_EVIDENCE_20260710.json",
+      "size": 2388,
+      "sha256": "2b4c0ad969454d961d4b379f4ad607a731701bb1ed1b38e8335743fab0c078b0",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/29_R7_UPDATED_RELATIONSHIP_REPORT.md",
+      "size": 497,
+      "sha256": "3e90584a66d5b1b759a97d4a444acdc19a3834f392a917dd85e176c1480cb127",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/30_R8_NEXT_PRE_VISIT_REPORT.md",
+      "size": 533,
+      "sha256": "d8c4ba00d56be44a3b9613f52a87264da171c494f50d98c120f074dc0371258a",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/31_SKILL_INVOCATION_TRACE.jsonl",
+      "size": 5874,
+      "sha256": "9763985e48ffb17c3177c53bc44c139e03f7a31a42837d388db135a4acb4a013",
+      "rows": 14
+    },
+    {
+      "path": "99_legacy_v1.0_reference/32_AGENT_RUN_TRACE.json",
+      "size": 2240,
+      "sha256": "0e17023337b2d402c54d132eec87d88b27fed9e0294ec85436046a2c9bc299c0",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/33_UI_STORYBOARD.md",
+      "size": 681,
+      "sha256": "9700c6041beff8c4980ba5efb7244176181788c60b3243c6aec155cb66a9cd09",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/34_ACCEPTANCE_TESTS.yaml",
+      "size": 2143,
+      "sha256": "38dcfa74dee462c7008031581ca5935c6b610a77fbe6e87a53e5b4dc4f01e6b4",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/35_DEMO_NARRATION_SCRIPT.md",
+      "size": 519,
+      "sha256": "4498f3f908d69ebe1708ce0a5559d6c133d4d9ae148cf435a6395607dbb56e36",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/36_HERMES_SCENARIO_CONFIG.yaml",
+      "size": 988,
+      "sha256": "0406d59722720121532c66e9dc0b6f03b174aa39ea22f0421c7438f0f7c4bf06",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/39_ONTOLOGY_OBJECT_MAPPING.json",
+      "size": 2570,
+      "sha256": "a3daf842bd67b08ad0b6f33222f3f1f0b356c70ae76e95b92e8d6382021f2629",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/40_SCENARIO_MANIFEST.json",
+      "size": 9134,
+      "sha256": "b5cc01a73171674fa9266926c2ec4091616ecc409ab8e72f5c95ea267e0c4938",
+      "rows": null
+    },
+    {
+      "path": "99_legacy_v1.0_reference/README_FOR_HERMES.md",
+      "size": 329,
+      "sha256": "c2cfffaf61cf2f2e0a7018f8529df5b88f3bda5b9cac942f2c55df2256271ac6",
+      "rows": null
+    },
+    {
+      "path": "V1.1_开发索引与P0覆盖矩阵.xlsx",
+      "size": 46171,
+      "sha256": "6e0ee44e01c7fa4684a0568f64bf8ed8fcd24b7d2c52b30799c3827279e87049",
+      "rows": null
+    },
+    {
+      "path": "V1.1_开发索引预览.png",
+      "size": 136278,
+      "sha256": "68a7d72cd73d9be23ede02b181a3f5da10fb233f3b9a48ea4ceb3ff34e4b83bc",
+      "rows": null
+    },
+    {
+      "path": "package_metrics.json",
+      "size": 433,
+      "sha256": "7b8827919f3b90308a20ff2daed548a05c708fd01fc4e0d050f9db02a705ae3e",
+      "rows": null
+    }
+  ]
+}

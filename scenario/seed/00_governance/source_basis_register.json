@@ -1,0 +1,89 @@
+{
+  "scenario": {
+    "scenario_id": "RM-CONTINUOUS-ENGAGEMENT-HDEG-001-V11",
+    "scenario_name": "华东精工客户经理持续经营闭环—痛点增强运行场景",
+    "version": "V1.1",
+    "baseline": "V1.0 + Pain Point Delta V1.0",
+    "scenario_clock": "Asia/Shanghai",
+    "primary_business_day": "2026-07-08",
+    "extended_arc": "2026-05-18 ~ 2026-07-20",
+    "synthetic": true,
+    "synthetic_statement": "本包全部企业、人员、交易、授信、事件、制度细节与对话均为合成演示数据；仅用于系统开发、演示和测试，不代表真实客户或真实银行事实。",
+    "random_seed": 20260708,
+    "governance": "V1.0保持只读；V1.1以Delta方式增强，不回写覆盖原始V1.0。"
+  },
+  "sources": [
+    {
+      "source_id": "SRC-01",
+      "authority": "E1",
+      "name": "0722需求细化与实现方案V0.1—客户洞察",
+      "usage": "客户信息分散、记忆链、原话失真、多源冲突、经营视图"
+    },
+    {
+      "source_id": "SRC-02",
+      "authority": "E1",
+      "name": "0722需求细化与实现方案V0.1—客户KYC",
+      "usage": "KYC Gap、按对象/目标动态问题、非财务认知"
+    },
+    {
+      "source_id": "SRC-03",
+      "authority": "E1",
+      "name": "0722需求细化与实现方案V0.1—访前报告",
+      "usage": "报告同质化、历史承诺装配、产品建议、证据与引用"
+    },
+    {
+      "source_id": "SRC-04",
+      "authority": "E1",
+      "name": "0722需求细化与实现方案V0.1—产品解读",
+      "usage": "产品分类、客户语言映射、版本治理、跨条线协同"
+    },
+    {
+      "source_id": "SRC-05",
+      "authority": "E1",
+      "name": "0722需求细化与实现方案V0.1—访后分析",
+      "usage": "原话保留、访后补问、任务、录音授权、CRM受控写回"
+    },
+    {
+      "source_id": "SRC-06",
+      "authority": "E1",
+      "name": "对公场景验证业务需求说明书V0.1—市场慧眼",
+      "usage": "外部信号采集、客户映射、事实与观点分层"
+    },
+    {
+      "source_id": "SRC-07",
+      "authority": "E1",
+      "name": "20260709项目推进会/对公验证方案",
+      "usage": "产业链到商机、内外部数据交叉验证、优秀RM经验沉淀"
+    },
+    {
+      "source_id": "SRC-08",
+      "authority": "E2",
+      "name": "融合方案V0.2/研发规划",
+      "usage": "MVP主流程和单兵作战定位"
+    },
+    {
+      "source_id": "SRC-09",
+      "authority": "E2",
+      "name": "客户经理持续经营场景_Hermes演示数据包_V1.0",
+      "usage": "华东精工事实、3000万语义、R1-R8、CRM写回"
+    },
+    {
+      "source_id": "SRC-10",
+      "authority": "E2",
+      "name": "PB-L06-C1 Skill Product/Runtime Skill",
+      "usage": "Skill双层能力映射"
+    },
+    {
+      "source_id": "REF-IND-01",
+      "authority": "REFERENCE_ONLY",
+      "name": "宁波银行公司业务客户经理岗位营销手册（2018）",
+      "usage": "仅作为行业岗位作业参考：日程管理、访前准备、后续拜访、离场确认、Call Report；不得写成杭州银行现行制度"
+    },
+    {
+      "source_id": "REF-IND-02",
+      "authority": "REFERENCE_ONLY",
+      "name": "宁波银行对公营销咨询项目_E客户拜访指引",
+      "usage": "仅作为拜访作业参考：由宽到窄追问、重述客户需求、达成下一步、会后纪要"
+    }
+  ]
+}

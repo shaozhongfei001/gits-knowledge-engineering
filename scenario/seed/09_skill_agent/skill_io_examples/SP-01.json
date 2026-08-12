@@ -1,0 +1,17 @@
+{
+  "input": {
+    "rm_id": "P-RM-001",
+    "date": "2026-07-08",
+    "portfolio_ref": "02_master_data/rm_portfolio.csv"
+  },
+  "output": {
+    "top_customer": "CUST-001",
+    "reasons": [
+      "deposit_down",
+      "equipment_payment_up",
+      "project_filing",
+      "overdue_commitment"
+    ],
+    "next_action": "GENERATE_PRE_VISIT"
+  }
+}

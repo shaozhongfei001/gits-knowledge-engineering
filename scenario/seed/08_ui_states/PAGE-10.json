@@ -1,0 +1,35 @@
+{
+  "page_id": "PAGE-10",
+  "title": "会中助手｜笔记与轻量追问",
+  "time": "14:30-15:43",
+  "p0_refs": [
+    "PP-E01",
+    "PP-E03",
+    "PP-E04"
+  ],
+  "purpose": "客户拒绝录音时仍能工作；轻量提示歧义和承诺。",
+  "data_refs": [
+    "06_interactions/rm_notes_during_meeting.jsonl",
+    "06_interactions/meeting_gold_transcript.txt"
+  ],
+  "sections": [
+    {
+      "name": "记录模式",
+      "example": "Recording Consent=DECLINED；生产输入=现场笔记+访后口述"
+    },
+    {
+      "name": "待核实表达",
+      "example": "“增加3000万左右支持”被标为Ambiguous Intent"
+    },
+    {
+      "name": "承诺候选",
+      "example": "客户7/10设备清单；银行7/14三年期结构"
+    }
+  ],
+  "actions": [
+    "记录笔记",
+    "稍后追问",
+    "加入离场确认"
+  ],
+  "human_required": true
+}

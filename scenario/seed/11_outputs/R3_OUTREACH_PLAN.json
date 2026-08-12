@@ -1,0 +1,25 @@
+{
+  "outreach_plan_id": "R3-HDEG-20260708",
+  "target": "李明 CFO",
+  "purpose": "确认14:30拜访并说明来意",
+  "attempts": [
+    {
+      "channel": "电话",
+      "time": "10:05",
+      "status": "NO_ANSWER"
+    },
+    {
+      "channel": "微信",
+      "time": "10:12",
+      "draft": "李总您好，结合前期您提到的产线扩建设想，我们想先把二期项目主体、设备计划和资金安排听清楚，不预设融资结论，避免后续方案跑偏。下午2:30方便吗？",
+      "human_action": "EDIT_AND_SEND"
+    },
+    {
+      "channel": "微信",
+      "time": "10:18",
+      "customer_response": "可以，下午2:30，王总也在。",
+      "status": "APPOINTMENT_CONFIRMED"
+    }
+  ],
+  "policy": "AI不得自动发送；所有消息由RM确认。"
+}

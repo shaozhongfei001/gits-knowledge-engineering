@@ -1,0 +1,102 @@
+{"stream_id": "STREAM-0001", "timestamp": "2026-07-08T08:25:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-001", "payload": {"event": "张伟到岗，查看手机未读消息和当天日程", "type": "CONTEXT"}}
+{"stream_id": "STREAM-0002", "timestamp": "2026-07-08T08:35:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-002", "payload": {"event": "RM工作台生成今日经营队列，华东精工进入Top 1", "type": "WORKBENCH"}}
+{"stream_id": "STREAM-0003", "timestamp": "2026-07-08T08:42:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-003", "payload": {"event": "张伟打开华东精工Customer Operating View", "type": "COV"}}
+{"stream_id": "STREAM-0004", "timestamp": "2026-07-08T08:42:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-004", "payload": {"skill": "SP-02", "event_id": "EVT-003", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0005", "timestamp": "2026-07-08T08:42:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-005", "payload": {"skill": "SP-02+SP-08", "event_id": "EVT-003", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0006", "timestamp": "2026-07-08T08:42:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-029", "payload": {"skill": "SP-02", "event_id": "EVT-003", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0007", "timestamp": "2026-07-08T08:42:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-B01", "payload": {"decision": "PASS", "pain_point": "PP-B01"}}
+{"stream_id": "STREAM-0008", "timestamp": "2026-07-08T08:42:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-B02", "payload": {"decision": "ACCEPT", "pain_point": "PP-B02"}}
+{"stream_id": "STREAM-0009", "timestamp": "2026-07-08T08:50:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-004", "payload": {"event": "晨会：主管陈晓峰要求说明本周重点客户推进情况", "type": "MORNING_MEETING"}}
+{"stream_id": "STREAM-0010", "timestamp": "2026-07-08T08:58:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-005", "payload": {"event": "系统解释设备更新政策和华东精工客户匹配链", "type": "MARKET_SIGNAL"}}
+{"stream_id": "STREAM-0011", "timestamp": "2026-07-08T08:58:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-001", "payload": {"skill": "SP-16", "event_id": "EVT-005", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0012", "timestamp": "2026-07-08T08:58:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-002", "payload": {"skill": "SP-16+SP-02", "event_id": "EVT-005", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0013", "timestamp": "2026-07-08T08:58:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-003", "payload": {"skill": "SP-01+SP-07", "event_id": "EVT-005", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0014", "timestamp": "2026-07-08T08:58:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-A01", "payload": {"decision": "ACCEPT", "pain_point": "PP-A01"}}
+{"stream_id": "STREAM-0015", "timestamp": "2026-07-08T08:58:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-A02", "payload": {"decision": "ACCEPT", "pain_point": "PP-A02"}}
+{"stream_id": "STREAM-0016", "timestamp": "2026-07-08T08:58:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-A03", "payload": {"decision": "HOLD", "pain_point": "PP-A03"}}
+{"stream_id": "STREAM-0017", "timestamp": "2026-07-08T09:08:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-006", "payload": {"event": "生成KYC Gap，发现项目主体/资金语义/付款节奏等缺口", "type": "KYC_GAP"}}
+{"stream_id": "STREAM-0018", "timestamp": "2026-07-08T09:08:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-013", "payload": {"skill": "SP-05", "event_id": "EVT-006", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0019", "timestamp": "2026-07-08T09:08:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-014", "payload": {"skill": "SP-04+SP-05+SP-14", "event_id": "EVT-006", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0020", "timestamp": "2026-07-08T09:08:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-030", "payload": {"skill": "SP-05", "event_id": "EVT-006", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0021", "timestamp": "2026-07-08T09:08:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-C04", "payload": {"decision": "ACCEPT_WITH_EDIT", "pain_point": "PP-C04"}}
+{"stream_id": "STREAM-0022", "timestamp": "2026-07-08T09:08:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-C05", "payload": {"decision": "ACCEPT", "pain_point": "PP-C05"}}
+{"stream_id": "STREAM-0023", "timestamp": "2026-07-08T09:18:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-007", "payload": {"event": "系统恢复3月设备清单承诺和历史客户原话", "type": "MEMORY"}}
+{"stream_id": "STREAM-0024", "timestamp": "2026-07-08T09:18:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-006", "payload": {"skill": "SP-02+SP-08+SP-10", "event_id": "EVT-007", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0025", "timestamp": "2026-07-08T09:18:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-007", "payload": {"skill": "SP-06+SP-07", "event_id": "EVT-007", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0026", "timestamp": "2026-07-08T09:18:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-012", "payload": {"skill": "SP-02+SP-08+SP-04", "event_id": "EVT-007", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0027", "timestamp": "2026-07-08T09:18:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-B03", "payload": {"decision": "ACCEPT", "pain_point": "PP-B03"}}
+{"stream_id": "STREAM-0028", "timestamp": "2026-07-08T09:18:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-B04", "payload": {"decision": "ACCEPT_WITH_NOTE", "pain_point": "PP-B04"}}
+{"stream_id": "STREAM-0029", "timestamp": "2026-07-08T09:18:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-C03", "payload": {"decision": "ACCEPT", "pain_point": "PP-C03"}}
+{"stream_id": "STREAM-0030", "timestamp": "2026-07-08T09:28:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-008", "payload": {"event": "生成R1访前报告和R2 60秒作战卡", "type": "PRE_VISIT"}}
+{"stream_id": "STREAM-0031", "timestamp": "2026-07-08T09:28:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-010", "payload": {"skill": "SP-04+SP-10", "event_id": "EVT-008", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0032", "timestamp": "2026-07-08T09:28:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-011", "payload": {"skill": "SP-04", "event_id": "EVT-008", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0033", "timestamp": "2026-07-08T09:28:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-015", "payload": {"skill": "SP-07+SP-10", "event_id": "EVT-008", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0034", "timestamp": "2026-07-08T09:28:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-031", "payload": {"skill": "SP-10", "event_id": "EVT-008", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0035", "timestamp": "2026-07-08T09:28:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-C01", "payload": {"decision": "ACCEPT_WITH_EDIT", "pain_point": "PP-C01"}}
+{"stream_id": "STREAM-0036", "timestamp": "2026-07-08T09:28:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-C02", "payload": {"decision": "ACCEPT", "pain_point": "PP-C02"}}
+{"stream_id": "STREAM-0037", "timestamp": "2026-07-08T09:28:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-C06", "payload": {"decision": "PASS", "pain_point": "PP-C06"}}
+{"stream_id": "STREAM-0038", "timestamp": "2026-07-08T09:38:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-009", "payload": {"event": "产品知识校验：设备更新贷款使用V2.2，旧V2.1被阻断", "type": "PRODUCT_VERSION"}}
+{"stream_id": "STREAM-0039", "timestamp": "2026-07-08T09:38:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-016", "payload": {"skill": "SP-15", "event_id": "EVT-009", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0040", "timestamp": "2026-07-08T09:38:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-017", "payload": {"skill": "SP-06+SP-15", "event_id": "EVT-009", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0041", "timestamp": "2026-07-08T09:38:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-018", "payload": {"skill": "SP-15+PRODUCT_VERSION_POLICY", "event_id": "EVT-009", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0042", "timestamp": "2026-07-08T09:38:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-032", "payload": {"skill": "SP-15", "event_id": "EVT-009", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0043", "timestamp": "2026-07-08T09:38:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-D01", "payload": {"decision": "ACCEPT", "pain_point": "PP-D01"}}
+{"stream_id": "STREAM-0044", "timestamp": "2026-07-08T09:38:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-D02", "payload": {"decision": "ACCEPT_WITH_EDIT", "pain_point": "PP-D02"}}
+{"stream_id": "STREAM-0045", "timestamp": "2026-07-08T09:38:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-D03", "payload": {"decision": "PASS", "pain_point": "PP-D03"}}
+{"stream_id": "STREAM-0046", "timestamp": "2026-07-08T09:50:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-010", "payload": {"event": "张伟与赵敏内部沟通：现有流贷能否用于设备款？", "type": "INTERNAL_COLLAB"}}
+{"stream_id": "STREAM-0047", "timestamp": "2026-07-08T10:05:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-011", "payload": {"event": "第一次致电CFO未接，系统仅记录触达状态", "type": "OUTREACH"}}
+{"stream_id": "STREAM-0048", "timestamp": "2026-07-08T10:12:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-012", "payload": {"event": "张伟发微信简短说明，等待客户回复", "type": "OUTREACH"}}
+{"stream_id": "STREAM-0049", "timestamp": "2026-07-08T10:28:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-013", "payload": {"event": "王强回复并确认下午14:30拜访", "type": "OUTREACH"}}
+{"stream_id": "STREAM-0050", "timestamp": "2026-07-08T10:40:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-014", "payload": {"event": "张伟确认拜访对象：CFO、财务总经理；采购负责人可能后半程加入", "type": "VISIT_PLAN"}}
+{"stream_id": "STREAM-0051", "timestamp": "2026-07-08T11:05:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-015", "payload": {"event": "交易银行王彬补充供应商付款和现金管理准备项", "type": "INTERNAL_COLLAB"}}
+{"stream_id": "STREAM-0052", "timestamp": "2026-07-08T11:40:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-016", "payload": {"event": "张伟处理另一客户紧急电话，华东精工任务保持不丢失", "type": "INTERRUPTION"}}
+{"stream_id": "STREAM-0053", "timestamp": "2026-07-08T12:00:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-028", "payload": {"skill": "SP-01", "event_id": "EVT-002", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0054", "timestamp": "2026-07-08T13:35:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-017", "payload": {"event": "出发前R2卡再次提醒3000万语义、项目主体、No-Go", "type": "MOBILE_PREP"}}
+{"stream_id": "STREAM-0055", "timestamp": "2026-07-08T14:25:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-018", "payload": {"event": "到达客户现场，客户拒绝全程录音，选择现场笔记+访后口述", "type": "CONSENT"}}
+{"stream_id": "STREAM-0056", "timestamp": "2026-07-08T14:25:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-021", "payload": {"skill": "SP-06+SP-09+CONSENT_POLICY", "event_id": "EVT-018", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0057", "timestamp": "2026-07-08T14:25:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-033", "payload": {"skill": "CONSENT_POLICY", "event_id": "EVT-018", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0058", "timestamp": "2026-07-08T14:25:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-E04", "payload": {"decision": "DECLINE_RECORDING", "pain_point": "PP-E04"}}
+{"stream_id": "STREAM-0059", "timestamp": "2026-07-08T14:30:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-019", "payload": {"event": "拜访开场：重述上次沟通和本次目标", "type": "MEETING"}}
+{"stream_id": "STREAM-0060", "timestamp": "2026-07-08T14:42:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-020", "payload": {"event": "客户确认二期项目推进，但项目主体尚未最终过会", "type": "MEETING"}}
+{"stream_id": "STREAM-0061", "timestamp": "2026-07-08T14:42:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-009", "payload": {"skill": "SP-02+SP-13", "event_id": "EVT-020", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0062", "timestamp": "2026-07-08T14:42:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-B06", "payload": {"decision": "PENDING", "pain_point": "PP-B06"}}
+{"stream_id": "STREAM-0063", "timestamp": "2026-07-08T14:53:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-021", "payload": {"event": "王强说“希望银行增加3000万左右支持”", "type": "MEETING"}}
+{"stream_id": "STREAM-0064", "timestamp": "2026-07-08T14:54:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-022", "payload": {"event": "系统将该表达标为Ambiguous Intent，张伟追问四种语义", "type": "FACT_RECONCILIATION"}}
+{"stream_id": "STREAM-0065", "timestamp": "2026-07-08T14:54:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-008", "payload": {"skill": "SP-07+SP-13", "event_id": "EVT-022", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0066", "timestamp": "2026-07-08T14:54:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-019", "payload": {"skill": "SP-06+SP-07+SP-13", "event_id": "EVT-022", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0067", "timestamp": "2026-07-08T14:54:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-034", "payload": {"skill": "SP-07", "event_id": "EVT-022", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0068", "timestamp": "2026-07-08T14:54:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-B05", "payload": {"decision": "HOLD", "pain_point": "PP-B05"}}
+{"stream_id": "STREAM-0069", "timestamp": "2026-07-08T14:54:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-E01", "payload": {"decision": "EDIT", "pain_point": "PP-E01"}}
+{"stream_id": "STREAM-0070", "timestamp": "2026-07-08T14:58:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-023", "payload": {"event": "CFO澄清为第一阶段设备款资金安排，不等同正式新增授信申请", "type": "FACT_RECONCILIATION"}}
+{"stream_id": "STREAM-0071", "timestamp": "2026-07-08T15:08:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-024", "payload": {"event": "客户说明设备清单三千多万、付款30/40/30", "type": "MEETING"}}
+{"stream_id": "STREAM-0072", "timestamp": "2026-07-08T15:22:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-025", "payload": {"event": "采购负责人加入，说明三家供应商交期和预付款压力", "type": "MEETING"}}
+{"stream_id": "STREAM-0073", "timestamp": "2026-07-08T15:33:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-026", "payload": {"event": "交易银行机会：供应商付款工具；客户强调不要过度复杂", "type": "MEETING"}}
+{"stream_id": "STREAM-0074", "timestamp": "2026-07-08T15:40:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-027", "payload": {"event": "现金管理话题：子公司资金调拨仍靠手工协调", "type": "MEETING"}}
+{"stream_id": "STREAM-0075", "timestamp": "2026-07-08T15:50:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-028", "payload": {"event": "离场前确认双方承诺和截止日", "type": "EXIT_CONFIRM"}}
+{"stream_id": "STREAM-0076", "timestamp": "2026-07-08T15:50:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-020", "payload": {"skill": "SP-06+SP-04", "event_id": "EVT-028", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0077", "timestamp": "2026-07-08T15:50:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-035", "payload": {"skill": "SP-06", "event_id": "EVT-028", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0078", "timestamp": "2026-07-08T15:50:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-E03", "payload": {"decision": "ACCEPT", "pain_point": "PP-E03"}}
+{"stream_id": "STREAM-0079", "timestamp": "2026-07-08T16:10:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-029", "payload": {"event": "回程中张伟做3分20秒访后口述", "type": "DEBRIEF"}}
+{"stream_id": "STREAM-0080", "timestamp": "2026-07-08T16:35:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-030", "payload": {"event": "系统对照访前问题，发现“他行方案细节”未获得", "type": "POST_VISIT"}}
+{"stream_id": "STREAM-0081", "timestamp": "2026-07-08T16:35:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-024", "payload": {"skill": "SP-09", "event_id": "EVT-030", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0082", "timestamp": "2026-07-08T16:35:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-036", "payload": {"skill": "SP-09", "event_id": "EVT-030", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0083", "timestamp": "2026-07-08T16:35:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-F03", "payload": {"decision": "ACCEPT", "pain_point": "PP-F03"}}
+{"stream_id": "STREAM-0084", "timestamp": "2026-07-08T16:50:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-031", "payload": {"event": "生成Interaction对象、Claim/Commitment/Task/Signal", "type": "POST_VISIT"}}
+{"stream_id": "STREAM-0085", "timestamp": "2026-07-08T16:50:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-022", "payload": {"skill": "SP-06+SP-10", "event_id": "EVT-031", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0086", "timestamp": "2026-07-08T16:50:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-023", "payload": {"skill": "SP-06+SP-07", "event_id": "EVT-031", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0087", "timestamp": "2026-07-08T16:50:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-F01", "payload": {"decision": "ACCEPT_WITH_EDIT", "pain_point": "PP-F01"}}
+{"stream_id": "STREAM-0088", "timestamp": "2026-07-08T16:50:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-F02", "payload": {"decision": "ACCEPT", "pain_point": "PP-F02"}}
+{"stream_id": "STREAM-0089", "timestamp": "2026-07-08T17:05:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-032", "payload": {"event": "生成R4、R5-A、R5-B及专业协同Fact Pack", "type": "REPORT"}}
+{"stream_id": "STREAM-0090", "timestamp": "2026-07-08T17:05:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-025", "payload": {"skill": "SP-10+SP-15+SP-17", "event_id": "EVT-032", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0091", "timestamp": "2026-07-08T17:05:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-037", "payload": {"skill": "SP-10", "event_id": "EVT-032", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0092", "timestamp": "2026-07-08T17:05:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-F04", "payload": {"decision": "ACCEPT", "pain_point": "PP-F04"}}
+{"stream_id": "STREAM-0093", "timestamp": "2026-07-08T17:20:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-033", "payload": {"event": "RM审核CRM写回；正式Opportunity创建建议被EDIT为Signal", "type": "HUMAN_GATE"}}
+{"stream_id": "STREAM-0094", "timestamp": "2026-07-08T17:20:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-026", "payload": {"skill": "WRITEBACK_POLICY", "event_id": "EVT-033", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0095", "timestamp": "2026-07-08T17:20:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-038", "payload": {"skill": "WRITEBACK_POLICY", "event_id": "EVT-033", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0096", "timestamp": "2026-07-08T17:20:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-F05", "payload": {"decision": "EDIT", "pain_point": "PP-F05"}}
+{"stream_id": "STREAM-0097", "timestamp": "2026-07-08T17:35:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-034", "payload": {"event": "赵敏、王彬、李晨分别收到专业协同Task", "type": "COLLAB"}}
+{"stream_id": "STREAM-0098", "timestamp": "2026-07-08T18:00:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-035", "payload": {"event": "主管看到过程状态：设备清单承诺未完成、风险会商待办", "type": "MANAGEMENT"}}
+{"stream_id": "STREAM-0099", "timestamp": "2026-07-08T19:10:00+08:00", "event_class": "BUSINESS_EVENT", "ref_id": "EVT-036", "payload": {"event": "张伟日终查看未决事项和次日提醒", "type": "END_OF_DAY"}}
+{"stream_id": "STREAM-0100", "timestamp": "2026-07-20T09:10:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-027", "payload": {"skill": "SP-07+SP-08+SP-10", "event_id": "EVT-036", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0101", "timestamp": "2026-07-20T09:10:00+08:00", "event_class": "SKILL_CALL", "ref_id": "SCALL-039", "payload": {"skill": "SP-10", "event_id": "EVT-036", "status": "SUCCESS"}}
+{"stream_id": "STREAM-0102", "timestamp": "2026-07-20T09:10:00+08:00", "event_class": "HUMAN_GATE", "ref_id": "HG-F06", "payload": {"decision": "ACCEPT", "pain_point": "PP-F06"}}

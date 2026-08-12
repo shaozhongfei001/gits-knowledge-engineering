@@ -1,0 +1,22 @@
+{
+  "review_id": "PMR-001",
+  "reviewer": "P-PM-001",
+  "date": "2026-07-08",
+  "decisions": [
+    {
+      "item": "PROD-FAL V2.2",
+      "decision": "CURRENT_ACTIVE_VERSION",
+      "note": "可用于方案准备，不代表审批"
+    },
+    {
+      "item": "PROD-FAL V2.1",
+      "decision": "RETIRED_BLOCKED",
+      "note": "不得用于当前客户方案"
+    },
+    {
+      "item": "PROD-WCL V3.4",
+      "decision": "CAUTION",
+      "note": "经营周转用途，不直接用于固定资产投资"
+    }
+  ]
+}

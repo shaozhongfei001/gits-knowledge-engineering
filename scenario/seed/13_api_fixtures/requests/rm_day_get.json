@@ -1,0 +1,4 @@
+{
+  "method": "GET",
+  "path": "/api/v1/rm/day?rm_id=P-RM-001&date=2026-07-08"
+}

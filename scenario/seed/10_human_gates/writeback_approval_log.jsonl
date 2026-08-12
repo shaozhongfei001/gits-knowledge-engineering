@@ -1,0 +1,10 @@
+{"command_id": "CMD-001", "decision": "ACCEPT", "gate": "HG-F05", "executed_to_real_crm": false, "audit_ref": "AUD-WB-CMD-001"}
+{"command_id": "CMD-002", "decision": "ACCEPT", "gate": "HG-F05", "executed_to_real_crm": false, "audit_ref": "AUD-WB-CMD-002"}
+{"command_id": "CMD-003", "decision": "ACCEPT", "gate": "HG-F05", "executed_to_real_crm": false, "audit_ref": "AUD-WB-CMD-003"}
+{"command_id": "CMD-004", "decision": "EDIT", "gate": "HG-F05", "executed_to_real_crm": false, "audit_ref": "AUD-WB-CMD-004"}
+{"command_id": "CMD-005", "decision": "EDIT", "gate": "HG-F05", "executed_to_real_crm": false, "audit_ref": "AUD-WB-CMD-005"}
+{"command_id": "CMD-006", "decision": "ACCEPT", "gate": "HG-F05", "executed_to_real_crm": false, "audit_ref": "AUD-WB-CMD-006"}
+{"command_id": "CMD-007", "decision": "ACCEPT", "gate": "HG-F05", "executed_to_real_crm": false, "audit_ref": "AUD-WB-CMD-007"}
+{"command_id": "CMD-008", "decision": "ACCEPT", "gate": "HG-F05", "executed_to_real_crm": false, "audit_ref": "AUD-WB-CMD-008"}
+{"command_id": "CMD-009", "decision": "ACCEPT", "gate": "HG-F05", "executed_to_real_crm": false, "audit_ref": "AUD-WB-CMD-009"}
+{"command_id": "CMD-010", "decision": "ACCEPT", "gate": "HG-F05", "executed_to_real_crm": false, "audit_ref": "AUD-WB-CMD-010"}

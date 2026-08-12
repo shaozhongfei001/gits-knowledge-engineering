@@ -1,0 +1,10 @@
+{
+  "method": "POST",
+  "path": "/api/v1/outreach/draft",
+  "body": {
+    "customer_id": "CUST-001",
+    "target": "C-CFO-001",
+    "channel": "WECHAT",
+    "purpose": "CONFIRM_VISIT"
+  }
+}

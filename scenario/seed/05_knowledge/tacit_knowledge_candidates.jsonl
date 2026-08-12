@@ -1,0 +1,2 @@
+{"candidate_id": "TK-001", "source_interaction": "INT-20260708", "pattern": "金额语义四分法追问", "example": "新增额度 / 现有额度提款 / 用途调整 / 项目公司融资", "outcome": "客户澄清3000万为第一阶段设备款安排", "status": "PENDING_EXPERT_REVIEW"}
+{"candidate_id": "TK-002", "source_interaction": "INT-20260708", "pattern": "离场前双方承诺复述", "example": "客户材料、银行方案、专业协同三类责任分别确认", "outcome": "承诺Owner和Due明确", "status": "PENDING_EXPERT_REVIEW"}

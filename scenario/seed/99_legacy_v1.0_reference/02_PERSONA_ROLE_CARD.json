@@ -1,0 +1,126 @@
+{
+  "scenario": {
+    "scenario_id": "RM-CONTINUOUS-ENGAGEMENT-HDEG-001",
+    "scenario_name": "华东精工客户经理持续经营闭环",
+    "version": "V1.0",
+    "generated_at": "2026-08-03T00:06:00+08:00",
+    "synthetic_data": true,
+    "data_policy": "合成演示数据；企业、人员、账号、交易、外部事件均为虚构，用于Hermes演示。",
+    "basis": [
+      "客户经理持续经营案例",
+      "市场慧眼→客户洞察→访前报告→产品推荐→话术生成→客户建联→CRM回写",
+      "Customer Operating View / Interaction / Fact Reconciliation / Ontology"
+    ]
+  },
+  "roles": [
+    {
+      "role_id": "RM-ZW-001",
+      "name": "张伟",
+      "org": "杭州分行公司金融一部",
+      "role": "对公客户经理",
+      "profile": "服务华东精工8年，关系基础稳固，但对交易银行和复杂方案组合需要专业协同。",
+      "decision_authority": [
+        "确认经营计划",
+        "确认访前目标",
+        "确认触达内容",
+        "确认CRM写回",
+        "发起商机候选"
+      ],
+      "not_authorized": [
+        "授信审批",
+        "最终风险结论",
+        "最终定价承诺",
+        "AI自动外发"
+      ]
+    },
+    {
+      "role_id": "SUP-CXF-001",
+      "name": "陈晓峰",
+      "org": "杭州分行公司金融一部",
+      "role": "RM主管/团队长",
+      "profile": "关注重点客户、重点商机和过程质量。",
+      "decision_authority": [
+        "确认团队重点客户",
+        "分配协同资源",
+        "确认管理Task"
+      ],
+      "not_authorized": [
+        "替代RM确认客户事实",
+        "替代风险审批"
+      ]
+    },
+    {
+      "role_id": "TB-WB-001",
+      "name": "王彬",
+      "org": "交易银行部",
+      "role": "交易银行经理",
+      "profile": "熟悉现金管理、供应链金融和跨境结算。",
+      "decision_authority": [
+        "确认交易银行机会假设",
+        "提出Discovery Questions"
+      ],
+      "not_authorized": [
+        "凭本行流水认定全量现金流",
+        "替代后台专业处理"
+      ]
+    },
+    {
+      "role_id": "RISK-LC-001",
+      "name": "李晨",
+      "org": "风险管理协同岗",
+      "role": "风险经理",
+      "profile": "参与营销前端可做性讨论，但保持审批独立。",
+      "decision_authority": [
+        "确认Preliminary Bankability边界",
+        "指出材料和风险缺口"
+      ],
+      "not_authorized": [
+        "出具最终审批结论",
+        "承诺审批通过"
+      ]
+    },
+    {
+      "role_id": "PM-ZM-001",
+      "name": "赵敏",
+      "org": "公司金融产品管理部",
+      "role": "公司金融产品经理",
+      "profile": "负责流贷、固定资产贷款、项目融资和供应链融资产品规则。",
+      "decision_authority": [
+        "确认Product Fit",
+        "确认产品约束"
+      ],
+      "not_authorized": [
+        "替代审批",
+        "承诺最终利率"
+      ]
+    },
+    {
+      "role_id": "CFO-LM-001",
+      "name": "李明",
+      "org": "华东精工装备集团有限公司",
+      "role": "CFO",
+      "profile": "谨慎务实，对融资成本、提款灵活性和集团资金调度敏感。"
+    },
+    {
+      "role_id": "FIN-WQ-001",
+      "name": "王强",
+      "org": "华东精工装备集团有限公司",
+      "role": "财务总经理",
+      "profile": "银行日常对接人，掌握账户、付款、设备清单和材料节奏。"
+    },
+    {
+      "role_id": "PUR-CT-001",
+      "name": "陈涛",
+      "org": "华东精工装备集团有限公司",
+      "role": "采购负责人",
+      "profile": "熟悉设备供应商、交付周期和付款节点。"
+    },
+    {
+      "role_id": "SUB-ZQ-001",
+      "name": "周倩",
+      "org": "华东精工智能制造有限公司",
+      "role": "子公司财务经理",
+      "profile": "负责二期项目日常财务配合，尚未完整进入银行联系人体系。"
+    }
+  ]
+}

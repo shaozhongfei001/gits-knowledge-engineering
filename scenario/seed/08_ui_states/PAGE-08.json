@@ -1,0 +1,35 @@
+{
+  "page_id": "PAGE-08",
+  "title": "产品适配｜客户问题到产品能力",
+  "time": "09:38",
+  "p0_refs": [
+    "PP-D01",
+    "PP-D02",
+    "PP-D03"
+  ],
+  "purpose": "把客户自然语言和最新产品规则连接起来，避免目录式推荐和旧规则。",
+  "data_refs": [
+    "05_knowledge/product_knowledge_cards.yaml",
+    "05_knowledge/product_rule_versions.jsonl"
+  ],
+  "sections": [
+    {
+      "name": "客户问题",
+      "example": "第一阶段设备款、三年左右、不要增加太多短期负债"
+    },
+    {
+      "name": "候选",
+      "example": "设备更新/固定资产贷款=主候选；流贷=用途边界谨慎；供应链=条件候选"
+    },
+    {
+      "name": "版本",
+      "example": "PROD-FAL V2.2 ACTIVE；V2.1 RETIRED"
+    }
+  ],
+  "actions": [
+    "选择候选",
+    "查看材料缺口",
+    "发起专业会商"
+  ],
+  "human_required": true
+}

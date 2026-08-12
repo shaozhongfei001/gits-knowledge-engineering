@@ -1,0 +1,4 @@
+﻿drawdown_id,facility_id,start_date,maturity_date,amount_cny,outstanding_cny,purpose,status
+DD-001,FAC-001,2026-01-20,2026-10-20,35000000,35000000,原材料采购,ACTIVE
+DD-002,FAC-001,2026-03-10,2027-03-09,30000000,30000000,订单生产周转,ACTIVE
+DD-003,FAC-001,2026-05-05,2027-05-04,20000000,20000000,经营周转,ACTIVE

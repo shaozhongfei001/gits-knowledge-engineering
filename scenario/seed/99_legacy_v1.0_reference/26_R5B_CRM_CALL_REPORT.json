@@ -1,0 +1,45 @@
+{
+  "activity_id": "ACT-HDEG-20260708",
+  "activity_type": "客户拜访",
+  "visit_date": "2026-07-08",
+  "customer_id": "CUST-CORP-0001",
+  "participants_bank": [
+    "张伟",
+    "王彬"
+  ],
+  "participants_customer": [
+    "李明",
+    "王强",
+    "陈涛"
+  ],
+  "visit_purpose": "核实智能制造二期项目融资需求。",
+  "key_topics": [
+    "项目主体可能为智能制造公司",
+    "3000万为第一阶段设备款安排，不等同正式新增授信申请",
+    "客户7月10日前提供设备清单",
+    "银行7月14日前准备三年期融资结构建议",
+    "现金管理和供应链金融存在空间"
+  ],
+  "customer_commitments": [
+    {
+      "content": "提供设备清单和付款节奏",
+      "owner": "王强",
+      "due_date": "2026-07-10"
+    }
+  ],
+  "bank_commitments": [
+    {
+      "content": "准备三年期融资结构建议",
+      "owner": "张伟",
+      "due_date": "2026-07-14"
+    }
+  ],
+  "next_task": "组织产品、风险、交易银行会商。",
+  "opportunity_signal": [
+    "设备更新贷款/固定资产贷款",
+    "现金管理",
+    "供应链金融"
+  ],
+  "writeback_status": "PENDING_RM_CONFIRM",
+  "audit_ref": "AUDIT-HDEG-20260709-CRM-001"
+}

@@ -1,0 +1,31 @@
+{
+  "page_id": "PAGE-18",
+  "title": "AI运营｜知识候选与Skill反馈",
+  "time": "2026-07-20",
+  "p0_refs": [],
+  "extension_refs": [
+    "PP-G01",
+    "PP-G02"
+  ],
+  "purpose": "将成功追问和用户编辑转为候选知识与评测样本，必须人工审核。",
+  "sections": [
+    {
+      "name": "Tacit Knowledge Candidate",
+      "value": "“3000万”四类语义追问模式"
+    },
+    {
+      "name": "Eval Case",
+      "value": "AI建议创建Opportunity被RM EDIT成Signal"
+    },
+    {
+      "name": "待评审",
+      "value": "Knowledge Owner/Skill Owner"
+    }
+  ],
+  "actions": [
+    "批准为知识候选",
+    "加入评测集",
+    "拒绝"
+  ],
+  "human_required": true
+}

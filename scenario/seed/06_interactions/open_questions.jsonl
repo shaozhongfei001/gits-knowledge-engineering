@@ -1,0 +1,5 @@
+{"question_id": "OQ-001", "question": "二期项目最终法人主体是谁？", "priority": "P0", "owner": "P-RM-001", "status": "OPEN", "next_target": "C-CFO-001"}
+{"question_id": "OQ-002", "question": "现有4000万账面可用额度中，多少可合规用于项目相关安排？", "priority": "P0", "owner": "P-PM-001", "status": "OPEN", "next_target": "内部产品/风险"}
+{"question_id": "OQ-003", "question": "3280万设备金额以外，4800万项目总投资的其余构成是什么？", "priority": "P0", "owner": "P-RM-001", "status": "OPEN", "next_target": "C-FIN-001"}
+{"question_id": "OQ-004", "question": "他行方案是集团额度还是项目公司路径？", "priority": "P1", "owner": "P-RM-001", "status": "OPEN", "next_target": "C-CFO-001"}
+{"question_id": "OQ-005", "question": "三家供应商分别接受哪些付款工具？", "priority": "P1", "owner": "P-TB-001", "status": "OPEN", "next_target": "C-PUR-001"}

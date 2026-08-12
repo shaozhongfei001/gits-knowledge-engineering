@@ -1,0 +1,12 @@
+{
+  "method": "POST",
+  "path": "/api/v1/reports/post-visit",
+  "body": {
+    "interaction_id": "INT-20260708",
+    "outputs": [
+      "R4",
+      "R5A",
+      "R5B"
+    ]
+  }
+}

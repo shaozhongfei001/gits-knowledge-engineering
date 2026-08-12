@@ -1,0 +1,40 @@
+{
+  "status": "OK",
+  "page_state": {
+    "page_id": "PAGE-06",
+    "title": "KYC Gap｜本次还不知道什么",
+    "time": "09:08",
+    "p0_refs": [
+      "PP-C03",
+      "PP-C04",
+      "PP-C05",
+      "PP-C06"
+    ],
+    "purpose": "不是重复客户介绍，而是明确本次必须核实的缺口。",
+    "data_refs": [
+      "03_bank_data/credit_facilities.csv",
+      "06_interactions/historical_interactions.jsonl",
+      "05_knowledge/kyc_question_library.jsonl"
+    ],
+    "sections": [
+      {
+        "name": "CONFLICTING",
+        "example": "客户将说“3000万支持”，但集团账面可用额度仍有4000万，语义需核实"
+      },
+      {
+        "name": "UNKNOWN",
+        "example": "二期项目最终主体、4800万投资构成、现有额度用途、他行结构"
+      },
+      {
+        "name": "按对象问题",
+        "example": "CFO问融资结构；采购负责人问供应商付款；财务总经理问设备清单"
+      }
+    ],
+    "actions": [
+      "选择问题",
+      "调整措辞",
+      "生成拜访Mission"
+    ],
+    "human_required": true
+  }
+}

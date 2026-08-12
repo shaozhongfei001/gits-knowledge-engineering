@@ -1,0 +1,5 @@
+﻿stakeholder_id,person_id,entity_id,role,influence,attitude,bank_relationship,decision_topics,preferred_channel,last_contact
+STK-001,C-CFO-001,ENT-001,CFO,HIGH,NEUTRAL_POSITIVE,STRONG,集团融资结构/资金统筹/董事会沟通,电话+微信,2026-07-02
+STK-002,C-FIN-001,ENT-001,财务总经理,HIGH,POSITIVE,STRONG,材料/账户/付款安排/日常对接,微信+电话,2026-07-02
+STK-003,C-PUR-001,ENT-001,采购负责人,MEDIUM,NEUTRAL,WEAK,供应商/设备/付款节点,电话,2026-06-12
+STK-004,C-SUBFIN-001,ENT-002,子公司财务经理,MEDIUM,UNKNOWN,NEW,项目公司材料/账户/融资落地,待确认,

@@ -1,0 +1,41 @@
+{
+  "scenario": {
+    "scenario_id": "RM-CONTINUOUS-ENGAGEMENT-HDEG-001",
+    "scenario_name": "华东精工客户经理持续经营闭环",
+    "version": "V1.0",
+    "generated_at": "2026-08-03T00:06:00+08:00",
+    "synthetic_data": true,
+    "data_policy": "合成演示数据；企业、人员、账号、交易、外部事件均为虚构，用于Hermes演示。",
+    "basis": [
+      "客户经理持续经营案例",
+      "市场慧眼→客户洞察→访前报告→产品推荐→话术生成→客户建联→CRM回写",
+      "Customer Operating View / Interaction / Fact Reconciliation / Ontology"
+    ]
+  },
+  "facility_id": "FAC-HDEG-2026",
+  "borrower_entity": "华东精工装备集团有限公司",
+  "approval_date": "2026-01-15",
+  "maturity_date": "2027-01-14",
+  "credit_total_cny": 150000000,
+  "used_credit_cny": 110000000,
+  "available_credit_cny": 40000000,
+  "current_loan_balance_cny": 85000000,
+  "bank_acceptance_bill_balance_cny": 16000000,
+  "guarantee_balance_cny": 9000000,
+  "collateral": "集团厂房抵押+实际控制人连带责任保证",
+  "purpose_allowed": [
+    "日常经营周转",
+    "采购原材料",
+    "短期订单资金周转"
+  ],
+  "purpose_restrictions": [
+    "不得直接用于固定资产投资，除非另行审批或调整用途",
+    "项目主体变更需重新核实授信结构与借款主体"
+  ],
+  "covenants": [
+    "保持主要结算在本行或提供结算说明",
+    "新增重大投资项目需及时告知银行"
+  ],
+  "reconciliation_note": "账面可用额度4000万元不等于智能制造二期项目可直接使用额度；需核实项目主体、用途、提款路径和审批条件。",
+  "evidence_ref": "EV-CREDIT-001"
+}

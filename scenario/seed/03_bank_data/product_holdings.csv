@@ -1,0 +1,9 @@
+﻿holding_id,product_id,name,status,since,coverage
+PH-001,PROD-WCL,流动资金贷款,ACTIVE,2019-06-01,集团本部
+PH-002,PROD-BA,银行承兑汇票,ACTIVE,2020-03-15,集团本部
+PH-003,PROD-PAYROLL,代发工资,ACTIVE,2021-01-01,集团本部486人
+PH-004,PROD-SETTLE,企业结算,ACTIVE,2018-05-16,集团+部分子公司
+PH-005,PROD-ECHANNEL,企业网银/银企直联,ACTIVE,2019-01-01,集团本部
+PH-006,PROD-CASH,现金管理,NOT_HELD,,
+PH-007,PROD-SCF,供应链金融,NOT_HELD,,
+PH-008,PROD-CROSS,跨境结算便利化,LOW_USAGE,2024-06-01,进出口公司

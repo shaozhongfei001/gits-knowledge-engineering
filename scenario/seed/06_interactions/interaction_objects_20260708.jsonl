@@ -1,0 +1,10 @@
+{"object_id": "CLM-001", "type": "CLAIM", "content": "二期项目正在推进", "speaker": "C-CFO-001", "status": "CUSTOMER_STATED", "evidence_refs": ["NOTE-001", "DEBRIEF"], "crm_fact_allowed": false}
+{"object_id": "CLM-002", "type": "CLAIM", "content": "项目主体更倾向华东精工智能制造有限公司", "speaker": "C-CFO-001", "status": "PENDING_CONFIRMATION", "evidence_refs": ["NOTE-001", "EXT-001"], "crm_fact_allowed": false}
+{"object_id": "INTENT-001", "type": "INTENT", "content": "希望银行对第一阶段设备款提供约3000万元资金安排", "speaker": "C-CFO-001", "status": "CLARIFIED_INTENT", "evidence_refs": ["NOTE-003", "DEBRIEF"], "crm_fact_allowed": false}
+{"object_id": "PREF-001", "type": "PREFERENCE", "content": "倾向三年左右、期限匹配项目；控制融资成本和短期负债", "speaker": "C-CFO-001", "status": "ACTIVE", "evidence_refs": ["INT-20260428", "DEBRIEF"], "crm_fact_allowed": true}
+{"object_id": "CONCERN-001", "type": "CONCERN", "content": "方案不要过度复杂，不要影响设备交付", "speaker": "C-CFO-001", "status": "ACTIVE", "evidence_refs": ["NOTE-006"], "crm_fact_allowed": true}
+{"object_id": "COM-CUST-001", "type": "CUSTOMER_COMMITMENT", "content": "2026-07-10前提供设备清单和付款节奏", "owner": "C-FIN-001", "due": "2026-07-10", "status": "OPEN", "evidence_refs": ["NOTE-008"], "crm_fact_allowed": true}
+{"object_id": "COM-BANK-001", "type": "BANK_COMMITMENT", "content": "2026-07-14前提供三年期融资结构建议", "owner": "P-RM-001", "due": "2026-07-14", "status": "OPEN", "evidence_refs": ["NOTE-008"], "crm_fact_allowed": true}
+{"object_id": "SIG-001", "type": "OPPORTUNITY_SIGNAL", "content": "设备更新/固定资产融资线索", "status": "SIGNAL_PENDING_CONFIRMATION", "evidence_refs": ["EXT-001", "INTENT-001"], "crm_fact_allowed": false}
+{"object_id": "SIG-002", "type": "OPPORTUNITY_SIGNAL", "content": "供应链付款工具机会", "status": "SIGNAL", "evidence_refs": ["NOTE-006"], "crm_fact_allowed": false}
+{"object_id": "SIG-003", "type": "OPPORTUNITY_SIGNAL", "content": "集团现金管理机会", "status": "SIGNAL", "evidence_refs": ["NOTE-007"], "crm_fact_allowed": false}

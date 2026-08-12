@@ -1,0 +1,39 @@
+{
+  "page_id": "PAGE-11",
+  "title": "Fact Reconciliation｜3000万到底是什么",
+  "time": "14:48",
+  "p0_refs": [
+    "PP-B05",
+    "PP-B06",
+    "PP-E01"
+  ],
+  "purpose": "把结构化事实、客户表达和业务对象放在同一对账页。",
+  "data_refs": [
+    "03_bank_data/credit_facilities.csv",
+    "06_interactions/claim_assessments.jsonl"
+  ],
+  "sections": [
+    {
+      "name": "结构化事实",
+      "example": "FAC-001 available=4000万，borrower=ENT-001"
+    },
+    {
+      "name": "客户表达",
+      "example": "“希望银行增加3000万左右支持”"
+    },
+    {
+      "name": "可选业务语义",
+      "example": "新增额度 / 现有额度提款 / 用途调整 / 项目公司融资"
+    },
+    {
+      "name": "结论",
+      "example": "第一阶段设备款资金安排待确认；不创建正式新增授信需求"
+    }
+  ],
+  "actions": [
+    "现场追问",
+    "保留待核实",
+    "人工确认解释"
+  ],
+  "human_required": true
+}

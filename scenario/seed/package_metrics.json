@@ -1,0 +1,19 @@
+{
+  "pain_points_total": 39,
+  "p0_total": 27,
+  "p0_fully_bound": 27,
+  "transactions": 3600,
+  "daily_balances": 1512,
+  "external_events": 160,
+  "historical_interactions": 40,
+  "gold_utterances": 107,
+  "ui_pages": 18,
+  "skill_calls": 39,
+  "human_gates": 27,
+  "runtime_events": 102,
+  "acceptance_tests": 37,
+  "negative_tests": 12,
+  "p0_scene_files": 27,
+  "extension_scene_files": 12,
+  "file_count_before_manifest": 252
+}

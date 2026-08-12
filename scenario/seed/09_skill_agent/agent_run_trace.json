@@ -1,0 +1,118 @@
+{
+  "run_id": "AG-RM-HDEG-V11-RUN001",
+  "primary_agent": "AG-01 RM经营作战Agent",
+  "goal": "支持张伟完成华东精工从机会触发到下一轮经营的连续闭环。",
+  "allowed_side_effects": "NONE_DIRECT",
+  "steps": [
+    {
+      "step_id": "AGSTEP-01",
+      "event_id": "EVT-002",
+      "time": "08:35",
+      "action": "选择今日优先客户",
+      "mode": "RM_PRIORITY",
+      "status": "SUCCESS",
+      "side_effect": "NONE"
+    },
+    {
+      "step_id": "AGSTEP-02",
+      "event_id": "EVT-003",
+      "time": "08:42",
+      "action": "装配客户经营视图",
+      "mode": "CONTEXT",
+      "status": "SUCCESS",
+      "side_effect": "NONE"
+    },
+    {
+      "step_id": "AGSTEP-03",
+      "event_id": "EVT-006",
+      "time": "09:08",
+      "action": "识别KYC Gap",
+      "mode": "KYC",
+      "status": "SUCCESS",
+      "side_effect": "NONE"
+    },
+    {
+      "step_id": "AGSTEP-04",
+      "event_id": "EVT-008",
+      "time": "09:28",
+      "action": "生成访前报告和作战卡",
+      "mode": "PRE_VISIT",
+      "status": "SUCCESS",
+      "side_effect": "NONE"
+    },
+    {
+      "step_id": "AGSTEP-05",
+      "event_id": "EVT-009",
+      "time": "09:38",
+      "action": "产品适配与版本检查",
+      "mode": "PRODUCT",
+      "status": "SUCCESS",
+      "side_effect": "NONE"
+    },
+    {
+      "step_id": "AGSTEP-06",
+      "event_id": "EVT-018",
+      "time": "14:25",
+      "action": "记录录音授权结果",
+      "mode": "CONSENT",
+      "status": "SUCCESS",
+      "side_effect": "NONE"
+    },
+    {
+      "step_id": "AGSTEP-07",
+      "event_id": "EVT-022",
+      "time": "14:54",
+      "action": "处理3000万语义冲突",
+      "mode": "RECONCILIATION",
+      "status": "SUCCESS",
+      "side_effect": "NONE"
+    },
+    {
+      "step_id": "AGSTEP-08",
+      "event_id": "EVT-028",
+      "time": "15:50",
+      "action": "生成离场承诺确认",
+      "mode": "COMMITMENT",
+      "status": "SUCCESS",
+      "side_effect": "NONE"
+    },
+    {
+      "step_id": "AGSTEP-09",
+      "event_id": "EVT-031",
+      "time": "16:50",
+      "action": "形成Interaction对象",
+      "mode": "INTERACTION",
+      "status": "SUCCESS",
+      "side_effect": "NONE"
+    },
+    {
+      "step_id": "AGSTEP-10",
+      "event_id": "EVT-032",
+      "time": "17:05",
+      "action": "生成多出口报告",
+      "mode": "REPORT",
+      "status": "SUCCESS",
+      "side_effect": "NONE"
+    },
+    {
+      "step_id": "AGSTEP-11",
+      "event_id": "EVT-033",
+      "time": "17:20",
+      "action": "生成CRM写回建议并等待人工决策",
+      "mode": "WRITEBACK",
+      "status": "SUCCESS",
+      "side_effect": "PROPOSE_ONLY"
+    },
+    {
+      "step_id": "AGSTEP-12",
+      "event_id": "EVT-036",
+      "time": "09:10",
+      "action": "新Evidence更新R7/R8",
+      "mode": "CONTINUOUS",
+      "status": "SUCCESS",
+      "side_effect": "NONE"
+    }
+  ],
+  "human_gate_policy": "所有对客发送、正式商机、CRM写回、录音授权、专业结论均需相应Human Gate。",
+  "status": "STATIC_SYNTHETIC_RUN"
+}
