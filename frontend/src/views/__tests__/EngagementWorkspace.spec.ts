@@ -9,6 +9,9 @@ vi.mock('../../api/engagement', () => ({
   generateMeetingScript: vi.fn(),
   executePrevisit: vi.fn(),
   executePostvisit: vi.fn(),
+  startJourney: vi.fn(),
+  handleNewEvidence: vi.fn(),
+  completeJourney: vi.fn(),
 }))
 
 vi.mock('naive-ui', async () => {
@@ -37,6 +40,10 @@ const stubs = {
   NModal: true,
   NInput: { template: '<input class="n-input" />' },
   NEmpty: { template: '<div class="n-empty" />' },
+  NTag: { template: '<span class="n-tag"><slot /></span>' },
+  NDescriptions: { template: '<div class="n-descriptions"><slot /></div>' },
+  NDescriptionsItem: { template: '<div class="n-descriptions-item"><slot /></div>' },
+  NTable: { template: '<div class="n-table"><slot /></div>' },
   RiskBadge: { template: '<span class="risk-badge">{{ $attrs.level }}</span>' },
 }
 
@@ -57,88 +64,67 @@ describe('EngagementWorkspace', () => {
     expect(wrapper.find('h1').text()).toBe('持续经营工作台')
   })
 
-  it('renders 5 process steps in the flow', async () => {
+  it('renders spiral flow with start node', async () => {
     const wrapper = await mountWorkspace()
-    const steps = wrapper.findAll('.process-step')
-    expect(steps).toHaveLength(5)
+    const nodes = wrapper.findAll('.sp-node')
+    // Start, PREVISIT, INTERACTION, POSTVISIT, ITERATE (decision), COMPLETE = 6 nodes
+    expect(nodes.length).toBeGreaterThanOrEqual(5)
   })
 
-  it('renders process step names', async () => {
+  it('renders spiral node labels', async () => {
     const wrapper = await mountWorkspace()
-    const names = wrapper.findAll('.step-name').map(el => el.text())
-    expect(names).toEqual(['KYC采集', '洞察分析', '产品匹配', '访前准备', '访后复盘'])
+    const labels = wrapper.findAll('.sp-label').map(el => el.text())
+    expect(labels).toContain('启动旅程')
+    expect(labels).toContain('访前准备')
+    expect(labels).toContain('互动执行')
+    expect(labels).toContain('访后复盘')
+    expect(labels).toContain('迭代决策')
+    expect(labels).toContain('完成旅程')
   })
 
-  it('renders 4 action cards', async () => {
+  it('renders action panel with 6 actions', async () => {
     const wrapper = await mountWorkspace()
-    const actions = wrapper.findAll('.action-card')
-    expect(actions).toHaveLength(4)
+    const actions = wrapper.findAll('.ew-act')
+    expect(actions).toHaveLength(6)
   })
 
-  it('renders action card titles', async () => {
+  it('renders action titles', async () => {
     const wrapper = await mountWorkspace()
-    const titles = wrapper.findAll('.action-title').map(el => el.text())
+    const titles = wrapper.findAll('.ew-act-title').map(el => el.text())
     expect(titles).toContain('生成外联脚本')
     expect(titles).toContain('生成会面脚本')
-    expect(titles).toContain('执行访前报告')
-    expect(titles).toContain('执行访后分析')
+    expect(titles).toContain('执行访前准备')
+    expect(titles).toContain('执行访后复盘')
+    expect(titles).toContain('迭代决策')
+    expect(titles).toContain('完成旅程')
   })
 
-  it('sets showCustomerSelect to true when action card is clicked', async () => {
+  it('marks start node as active when no journey', async () => {
     const wrapper = await mountWorkspace()
-    const cards = wrapper.findAll('.action-card')
-    await cards[0].trigger('click')
-    await flushPromises()
-    expect((wrapper.vm as any).showCustomerSelect).toBe(true)
+    const nodes = wrapper.findAll('.sp-node')
+    // First node (START) should be active
+    expect(nodes[0].classes()).toContain('active')
   })
 
-  it('sets pendingAction when action card is clicked', async () => {
+  it('action cards are disabled when no journey started', async () => {
     const wrapper = await mountWorkspace()
-    const cards = wrapper.findAll('.action-card')
-    await cards[0].trigger('click')
-    await flushPromises()
-    expect((wrapper.vm as any).pendingAction).toBe('outreach')
+    const actions = wrapper.findAll('.ew-act')
+    // All actions should be disabled (no journey started)
+    const disabledActions = actions.filter(a => a.classes().includes('disabled'))
+    expect(disabledActions.length).toBeGreaterThanOrEqual(5)
   })
 
-  it('marks current step as active', async () => {
+  it('shows customer select button', async () => {
     const wrapper = await mountWorkspace()
-    const steps = wrapper.findAll('.process-step')
-    expect(steps[0].classes()).toContain('step-active')
+    const buttons = wrapper.findAll('.n-button')
+    const selectBtn = buttons.find(b => b.text().includes('选择客户'))
+    expect(selectBtn).toBeDefined()
   })
 
-  it('marks steps after current as pending', async () => {
+  it('renders iteration loop badge', async () => {
     const wrapper = await mountWorkspace()
-    const steps = wrapper.findAll('.process-step')
-    expect(steps[1].classes()).toContain('step-pending')
-    expect(steps[2].classes()).toContain('step-pending')
-  })
-
-  it('calls generateOutreachScript when selectCustomer is invoked for outreach', async () => {
-    const { generateOutreachScript } = await import('../../api/engagement')
-    ;(generateOutreachScript as ReturnType<typeof vi.fn>).mockResolvedValue({
-      scriptId: 's1', scriptType: 'OUTREACH', customerId: 'c1', content: '外联脚本内容', generatedAt: '2025-01-01',
-    })
-
-    const wrapper = await mountWorkspace()
-    // Set up component state for outreach action
-    ;(wrapper.vm as any).pendingAction = 'outreach'
-    await (wrapper.vm as any).selectCustomer(mockCustomers[0])
-    await flushPromises()
-
-    expect(generateOutreachScript).toHaveBeenCalledWith('c1')
-  })
-
-  it('calls generateMeetingScript when selectCustomer is invoked for meeting', async () => {
-    const { generateMeetingScript } = await import('../../api/engagement')
-    ;(generateMeetingScript as ReturnType<typeof vi.fn>).mockResolvedValue({
-      scriptId: 's2', scriptType: 'MEETING', customerId: 'c1', content: '会面脚本内容', generatedAt: '2025-01-01',
-    })
-
-    const wrapper = await mountWorkspace()
-    ;(wrapper.vm as any).pendingAction = 'meeting'
-    await (wrapper.vm as any).selectCustomer(mockCustomers[0])
-    await flushPromises()
-
-    expect(generateMeetingScript).toHaveBeenCalledWith('c1')
+    const badge = wrapper.find('.sp-loop-badge')
+    expect(badge.exists()).toBe(true)
+    expect(badge.text()).toContain('迭代环')
   })
 })

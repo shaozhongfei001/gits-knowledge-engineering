@@ -11,8 +11,8 @@
         <span class="stat-label">事件总数</span>
       </div>
       <div class="stat-item">
-        <span class="stat-value">{{ eventStore.criticalEvents.length }}</span>
-        <span class="stat-label">高严重度</span>
+        <span class="stat-value">{{ eventStore.highConfidenceEvents.length }}</span>
+        <span class="stat-label">高置信度</span>
       </div>
       <div class="stat-item">
         <span class="stat-value">{{ eventStore.bankUsableEvents.length }}</span>

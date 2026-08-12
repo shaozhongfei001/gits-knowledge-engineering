@@ -51,6 +51,18 @@ const router = createRouter({
       name: 'ExternalEventMonitor',
       component: () => import('../views/ExternalEventMonitor.vue'),
       meta: { title: '外部事件监控' }
+    },
+    {
+      path: '/in-meeting/:id?',
+      name: 'InMeetingAssistant',
+      component: () => import('../views/InMeetingAssistant.vue'),
+      meta: { title: '会中助手' }
+    },
+    {
+      path: '/audit-trace',
+      name: 'AuditTrace',
+      component: () => import('../views/AuditTraceView.vue'),
+      meta: { title: '审计追踪' }
     }
   ]
 })

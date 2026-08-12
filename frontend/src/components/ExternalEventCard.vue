@@ -2,7 +2,8 @@
   <div class="event-card" :class="`event-${severityClass}`">
     <div class="event-header">
       <span class="source-badge">{{ sourceLabel }}</span>
-      <span class="severity-badge" :class="`sev-${severityClass}`">{{ severityLabel }}</span>
+      <span class="severity-badge" :class="`sev-${severityClass}`">{{ confidenceLabel }}</span>
+      <span v-if="event.reliability" class="reliability-badge">{{ reliabilityLabel }}</span>
     </div>
     <div class="event-title">{{ event.title }}</div>
     <div class="event-content">{{ event.content }}</div>
@@ -21,8 +22,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { ExternalEvent, ExternalEventType, ExternalEventSeverity } from '../api/v11'
-import { EXTERNAL_EVENT_TYPE_LABELS, EXTERNAL_EVENT_SEVERITY_LABELS } from '../api/v11'
+import type { ExternalEvent, ExternalEventType, ExternalEventConfidence } from '../api/v11'
+import { EXTERNAL_EVENT_TYPE_LABELS, EXTERNAL_EVENT_CONFIDENCE_LABELS, EXTERNAL_EVENT_RELIABILITY_LABELS } from '../api/v11'
 
 const props = defineProps<{
   event: ExternalEvent
@@ -31,8 +32,11 @@ const props = defineProps<{
 const sourceLabel = computed(() =>
   EXTERNAL_EVENT_TYPE_LABELS[props.event.sourceType as ExternalEventType] || props.event.sourceType
 )
-const severityLabel = computed(() =>
-  EXTERNAL_EVENT_SEVERITY_LABELS[(props.event.confidence as ExternalEventSeverity)] || props.event.confidence || '中'
+const confidenceLabel = computed(() =>
+  EXTERNAL_EVENT_CONFIDENCE_LABELS[(props.event.confidence as ExternalEventConfidence)] || props.event.confidence || '中'
+)
+const reliabilityLabel = computed(() =>
+  EXTERNAL_EVENT_RELIABILITY_LABELS[props.event.reliability!] || props.event.reliability || ''
 )
 const severityClass = computed(() => {
   const sev = props.event.confidence?.toLowerCase() || 'medium'
@@ -86,6 +90,14 @@ const formattedDate = computed(() => {
 .sev-high { background: #fff2e8; color: #fa541c; }
 .sev-medium { background: #fff7e6; color: #faad14; }
 .sev-low { background: #f6ffed; color: #52c41a; }
+.reliability-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #f9f0ff;
+  color: #722ed1;
+  font-weight: 500;
+}
 .event-title {
   font-size: 14px;
   font-weight: 600;

@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import {
   fetchExternalEvents, fetchRecentExternalEvents, createExternalEvent,
-  type ExternalEvent, type ExternalEventSeverity, type ExternalEventType
+  type ExternalEvent, type ExternalEventConfidence, type ExternalEventType
 } from '../api/v11'
 
 export const useExternalEventStore = defineStore('externalEvent', () => {
@@ -11,8 +11,8 @@ export const useExternalEventStore = defineStore('externalEvent', () => {
   const loading = ref(false)
   const error = ref('')
 
-  const criticalEvents = computed(() =>
-    events.value.filter(e => e.confidence === 'HIGH' || e.confidence === 'CRITICAL')
+  const highConfidenceEvents = computed(() =>
+    events.value.filter(e => e.confidence === 'HIGH')
   )
 
   const bankUsableEvents = computed(() =>
@@ -23,7 +23,7 @@ export const useExternalEventStore = defineStore('externalEvent', () => {
     eventType?: ExternalEventType
     customerId?: string
     industry?: string
-    severity?: ExternalEventSeverity
+    confidence?: ExternalEventConfidence
   }) {
     loading.value = true
     error.value = ''
@@ -57,7 +57,7 @@ export const useExternalEventStore = defineStore('externalEvent', () => {
 
   return {
     events, recentEvents, loading, error,
-    criticalEvents, bankUsableEvents,
+    highConfidenceEvents, bankUsableEvents,
     loadEvents, loadRecentEvents, addEvent
   }
 })

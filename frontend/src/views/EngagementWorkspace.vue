@@ -1,40 +1,132 @@
 <template>
   <div class="ew">
-    <div class="ew-header"><h1>持续经营工作台</h1><p>闭环流程管理，驱动客户关系持续深化</p></div>
+    <div class="ew-header"><h1>持续经营工作台</h1><p>螺旋迭代闭环，驱动客户关系持续深化</p></div>
 
     <!-- 状态栏 -->
     <div class="ew-bar">
       <span>当前客户：<n-tag v-if="sc" type="info">{{ sc.customerName }}</n-tag><em v-else>未选择</em></span>
       <span>旅程：<n-tag v-if="jid" :type="jpTag">{{ jpLabel }}</n-tag><em v-else>未启动</em></span>
+      <span v-if="jid">迭代轮次：<n-tag type="warning">Round {{ round }}</n-tag></span>
       <span class="ew-bar-r">
         <n-button size="small" @click="showCS=true">{{ sc?'切换客户':'选择客户' }}</n-button>
         <n-button v-if="sc&&!jid" type="warning" size="small" @click="doStart" :loading="ld">启动旅程</n-button>
+        <n-button v-if="jid&&roundDone.has('POSTVISIT')" type="success" size="small" @click="doComplete" :loading="ld">完成旅程</n-button>
       </span>
     </div>
 
-    <!-- 流程条 -->
-    <div class="ew-flow">
-      <div v-for="(s,i) in steps" :key="s.k" class="ew-step" :class="{active:cur===s.k,done:isDone(s.k)}" @click="clickStep(s.k)">
-        <div class="ew-step-icon">{{isDone(s.k)?'✓':s.icon}}</div>
-        <div class="ew-step-name">{{s.name}}</div>
-        <div class="ew-step-desc">{{s.desc}}</div>
-        <div v-if="i<steps.length-1" class="ew-arrow">→</div>
+    <!-- 螺旋迭代流程图 -->
+    <div class="ew-spiral">
+      <!-- 启动节点 -->
+      <div class="sp-node" :class="{active:curPhase==='START',done:!!jid}" @click="clickPhase('START')">
+        <div class="sp-icon">{{ jid ? '✓' : '🚀' }}</div>
+        <div class="sp-label">启动旅程</div>
+        <div class="sp-sub">选择客户，KYC洞察</div>
+      </div>
+      <div class="sp-arrow" :class="{lit:!!jid}">→</div>
+
+      <!-- 迭代环 -->
+      <div class="sp-loop" :class="{active:!!jid}">
+        <div class="sp-loop-badge">迭代环 Round {{ round }}</div>
+        <div class="sp-loop-nodes">
+          <div class="sp-node" :class="{active:curPhase==='PREVISIT',done:isDone('PREVISIT')}" @click="clickPhase('PREVISIT')">
+            <div class="sp-icon">{{ isDone('PREVISIT') ? '✓' : '📋' }}</div>
+            <div class="sp-label">访前准备</div>
+            <div class="sp-sub">R1报告 + R2速战卡</div>
+          </div>
+          <div class="sp-arrow" :class="{lit:isDone('PREVISIT')}">→</div>
+          <div class="sp-node" :class="{active:curPhase==='INTERACTION',done:isDone('INTERACTION')}" @click="clickPhase('INTERACTION')">
+            <div class="sp-icon">{{ isDone('INTERACTION') ? '✓' : '🤝' }}</div>
+            <div class="sp-label">互动执行</div>
+            <div class="sp-sub">外联/会面脚本</div>
+          </div>
+          <div class="sp-arrow" :class="{lit:isDone('INTERACTION')}">→</div>
+          <div class="sp-node" :class="{active:curPhase==='POSTVISIT',done:isDone('POSTVISIT')}" @click="clickPhase('POSTVISIT')">
+            <div class="sp-icon">{{ isDone('POSTVISIT') ? '✓' : '📊' }}</div>
+            <div class="sp-label">访后复盘</div>
+            <div class="sp-sub">R4分析 + R5报告</div>
+          </div>
+          <div class="sp-arrow" :class="{lit:isDone('POSTVISIT')}">→</div>
+          <div class="sp-node sp-decision" :class="{active:curPhase==='ITERATE',done:isDone('ITERATE')}" @click="clickPhase('ITERATE')">
+            <div class="sp-icon">{{ isDone('ITERATE') ? '✓' : '🔄' }}</div>
+            <div class="sp-label">迭代决策</div>
+            <div class="sp-sub">R7更新 + R8下轮访前</div>
+          </div>
+        </div>
+        <!-- 回环箭头 -->
+        <div v-if="jid && isDone('ITERATE')" class="sp-loopback" @click="doNextRound">
+          <div class="sp-loopback-arrow">↺</div>
+          <div class="sp-loopback-label">进入 Round {{ round + 1 }}</div>
+        </div>
+      </div>
+
+      <div class="sp-arrow" :class="{lit:isDone('ITERATE')}">→</div>
+
+      <!-- 完成 -->
+      <div class="sp-node" :class="{active:curPhase==='COMPLETE',done:isDone('COMPLETE')}" @click="clickPhase('COMPLETE')">
+        <div class="sp-icon">{{ isDone('COMPLETE') ? '✓' : '🏁' }}</div>
+        <div class="sp-label">完成旅程</div>
+        <div class="sp-sub">CRM回写确认</div>
+      </div>
+    </div>
+
+    <!-- 迭代历史时间线 -->
+    <div v-if="roundHistory.length > 0" class="ew-timeline">
+      <h3>迭代历史</h3>
+      <div class="tl-track">
+        <div v-for="(rh, idx) in roundHistory" :key="idx" class="tl-round" :class="{current: idx === roundHistory.length - 1}">
+          <div class="tl-badge">R{{ idx + 1 }}</div>
+          <div class="tl-detail">
+            <div class="tl-phase">{{ rh.summary }}</div>
+            <div class="tl-time">{{ rh.time }}</div>
+            <div v-if="rh.evidenceCount > 0" class="tl-evidence">+{{ rh.evidenceCount }} 条新证据</div>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- 操作面板 -->
     <div class="ew-actions">
-      <h3>操作面板</h3>
+      <h3>操作面板 <span v-if="jid" class="ew-actions-round">Round {{ round }}</span></h3>
       <n-grid :cols="2" :x-gap="12" :y-gap="12">
-        <n-gi v-for="a in actions" :key="a.k">
-          <n-card hoverable class="ew-act" :class="{disabled:!jid}" @click="a.fn">
+        <n-gi v-for="a in currentActions" :key="a.k">
+          <n-card hoverable class="ew-act" :class="{disabled:!a.enabled}" @click="a.enabled && a.fn()">
             <div class="ew-act-icon">{{a.icon}}</div>
             <div class="ew-act-title">{{a.title}}</div>
             <div class="ew-act-desc">{{a.desc}}</div>
-            <div class="ew-act-hint"><span v-if="!jid">需先启动旅程</span><span v-else-if="a.done">已生成 ✓</span></div>
+            <div class="ew-act-hint">
+              <span v-if="!jid">需先启动旅程</span>
+              <span v-else-if="a.done">已完成 ✓</span>
+              <span v-else-if="a.roundHint" class="ew-act-round-hint">{{ a.roundHint }}</span>
+            </div>
           </n-card>
         </n-gi>
       </n-grid>
+    </div>
+
+    <!-- 迭代决策面板 -->
+    <div v-if="showIteratePanel" class="ew-result">
+      <h3>迭代决策 — 新证据录入 <n-tag size="small" type="info">Round {{ round }} → {{ round + 1 }}</n-tag> <n-button text size="small" @click="showIteratePanel=false">关闭</n-button></h3>
+      <n-card>
+        <div class="sf"><b>当前轮次：</b>Round {{ round }} — 访后分析已完成，可录入新证据触发下一轮迭代</div>
+        <div class="sf"><b>迭代逻辑：</b>新证据 → R7 更新关系报告 → R8 下一轮访前报告 → 自动进入 Round {{ round + 1 }}</div>
+        <div class="sf">
+          <b>新证据描述：</b>
+          <n-input v-model:value="newEvidenceDesc" type="textarea" placeholder="描述新获取的证据信息，例如：客户CFO确认Q3有5000万设备采购预算..." :rows="3" />
+        </div>
+        <div class="sf" style="margin-top:12px">
+          <n-button type="primary" @click="doIterate" :loading="ld" :disabled="!newEvidenceDesc.trim()">
+            🔄 录入新证据，进入 Round {{ round + 1 }}
+          </n-button>
+          <n-button style="margin-left:12px" @click="doComplete" :loading="ld">
+            🏁 无需迭代，完成旅程
+          </n-button>
+        </div>
+        <div v-if="iterR" class="sf" style="margin-top:12px">
+          <n-tag type="success">迭代成功</n-tag>
+          R7 更新报告ID: {{ iterR.updatedReportId?.substring(0,8) }}...
+          <br/>R8 下轮访前报告ID: {{ iterR.nextPrevisitReportId?.substring(0,8) }}...
+        </div>
+      </n-card>
     </div>
 
     <!-- 外联脚本 -->
@@ -89,7 +181,7 @@
 
     <!-- 访前报告 -->
     <div v-if="preR" class="ew-result">
-      <h3>访前报告 & 速战卡 <n-button text size="small" @click="preR=null">关闭</n-button></h3>
+      <h3>访前报告 & 速战卡 <n-tag size="small" type="info">Round {{ round }}</n-tag> <n-button text size="small" @click="preR=null">关闭</n-button></h3>
       <n-grid :cols="2" :x-gap="12" :y-gap="12">
         <n-gi><n-card title="访前报告" size="small">
           <div class="sf"><b>拜访目标：</b>{{preR.previsitReport.visitObjective}}</div>
@@ -139,7 +231,7 @@
 
     <!-- 访后分析 -->
     <div v-if="postR" class="ew-result">
-      <h3>访后分析 <n-button text size="small" @click="postR=null">关闭</n-button></h3>
+      <h3>访后分析 <n-tag size="small" type="info">Round {{ round }}</n-tag> <n-button text size="small" @click="postR=null">关闭</n-button></h3>
       <n-card>
         <div class="sf"><b>拜访摘要：</b>{{postR.visitSummary}}</div>
         <div v-if="postR.keyFindings?.length" class="sf"><b>关键发现：</b>
@@ -186,8 +278,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { NGrid, NGi, NCard, NButton, NModal, NInput, NEmpty, NTag, NDescriptions, NDescriptionsItem, NTable, useMessage } from 'naive-ui'
 import RiskBadge from '../components/RiskBadge.vue'
-import { fetchCustomers, generateOutreachScript, generateMeetingScript, executePrevisit, executePostvisit, startJourney } from '../api/engagement'
-import type { Customer, OutreachScriptResponse, MeetingScriptResponse, PrevisitExecutionResponse, PostvisitAnalysisContent } from '../api/engagement'
+import { fetchCustomers, generateOutreachScript, generateMeetingScript, executePrevisit, executePostvisit, startJourney, handleNewEvidence, completeJourney } from '../api/engagement'
+import type { Customer, OutreachScriptResponse, MeetingScriptResponse, PrevisitExecutionResponse, PostvisitAnalysisContent, NewEvidenceResponse } from '../api/engagement'
 
 const msg = useMessage()
 const ld = ref(false)
@@ -198,19 +290,19 @@ const showCS = ref(false)
 const showCH = ref(false)
 const jid = ref('')
 const jph = ref('')
+const oid = ref('') // operatingCaseId
 const outR = ref<OutreachScriptResponse|null>(null)
 const meetR = ref<MeetingScriptResponse|null>(null)
 const preR = ref<PrevisitExecutionResponse|null>(null)
 const postR = ref<PostvisitAnalysisContent|null>(null)
-const done = ref<Set<string>>(new Set())
+const iterR = ref<NewEvidenceResponse|null>(null)
+const showIteratePanel = ref(false)
+const newEvidenceDesc = ref('')
 
-const steps = [
-  {k:'START',name:'启动旅程',desc:'选择客户，启动经营旅程',icon:'1'},
-  {k:'OUTREACH',name:'外联触达',desc:'生成外联脚本，主动触达客户',icon:'2'},
-  {k:'PREVISIT',name:'访前准备',desc:'生成访前报告和速战卡',icon:'3'},
-  {k:'MEETING',name:'会面执行',desc:'生成会面脚本，执行拜访',icon:'4'},
-  {k:'POSTVISIT',name:'访后复盘',desc:'分析结果，事实对账',icon:'5'}
-]
+// 迭代轮次追踪
+const round = ref(1)
+const roundDone = ref<Set<string>>(new Set())
+const roundHistory = ref<{summary: string; time: string; evidenceCount: number}[]>([])
 
 const channels = [
   {v:'PHONE',label:'电话',icon:'📞',desc:'电话外联，适合首次触达'},
@@ -219,80 +311,168 @@ const channels = [
   {v:'FACE_TO_FACE',label:'面谈',icon:'🤝',desc:'当面拜访，适合深度沟通'}
 ]
 
-const actions = computed(() => [
-  {k:'outreach',title:'生成外联脚本',desc:'基于客户画像和机会信号，生成电话/微信/邮件/面谈外联沟通脚本',icon:'✉',fn:handleOutreach,done:!!outR.value},
-  {k:'meeting',title:'生成会面脚本',desc:'基于访前报告和KYC缺口，生成结构化会面提纲',icon:'📋',fn:handleMeeting,done:!!meetR.value},
-  {k:'previsit',title:'执行访前报告',desc:'汇总客户信息、KYC缺口、产品方案，生成访前报告和速战卡',icon:'📈',fn:handlePrevisit,done:!!preR.value},
-  {k:'postvisit',title:'执行访后分析',desc:'分析交互记录，提取关键发现、机会信号和事实对账',icon:'📊',fn:handlePostvisit,done:!!postR.value}
-])
+function isDone(phase: string): boolean {
+  if (phase === 'START') return !!jid.value
+  if (phase === 'COMPLETE') return roundHistory.value.some(h => h.summary.includes('旅程完成'))
+  return roundDone.value.has(phase)
+}
 
-const cur = computed(() => {
+const curPhase = computed(() => {
   if (!jid.value) return 'START'
-  if (!done.value.has('OUTREACH')) return 'OUTREACH'
-  if (!done.value.has('PREVISIT')) return 'PREVISIT'
-  if (!done.value.has('MEETING')) return 'MEETING'
-  return 'POSTVISIT'
+  if (!roundDone.value.has('PREVISIT')) return 'PREVISIT'
+  if (!roundDone.value.has('INTERACTION')) return 'INTERACTION'
+  if (!roundDone.value.has('POSTVISIT')) return 'POSTVISIT'
+  if (!roundDone.value.has('ITERATE')) return 'ITERATE'
+  return 'COMPLETE'
 })
 
-const jpLabel = computed(() => ({PRE_VISIT:'访前',IN_VISIT:'拜访中',POST_VISIT:'访后',CONTINUOUS_ENGAGEMENT:'持续经营',COMPLETED:'已完成'}[jph.value]||jph.value))
-const jpTag = computed(() => ({PRE_VISIT:'warning',IN_VISIT:'info',POST_VISIT:'success',CONTINUOUS_ENGAGEMENT:'info',COMPLETED:'success'}[jph.value] as string||'default') as 'warning'|'info'|'success'|'default')
+const jpLabel = computed(() => ({PRE_VISIT:'访前',IN_VISIT:'拜访中',POST_VISIT:'访后',CONTINUOUS_ENGAGEMENT:'持续经营',COMPLETED:'已完成',KYC_COLLECT:'KYC采集',INSIGHT_ANALYSIS:'洞察分析',PRODUCT_MATCHING:'产品匹配',PREVISIT_PREP:'访前准备',POSTVISIT_REVIEW:'访后复盘'}[jph.value]||jph.value))
+const jpTag = computed(() => ({PRE_VISIT:'warning',IN_VISIT:'info',POST_VISIT:'success',CONTINUOUS_ENGAGEMENT:'info',COMPLETED:'success',PREVISIT_PREP:'warning',POSTVISIT_REVIEW:'success'}[jph.value] as string||'default') as 'warning'|'info'|'success'|'default')
 const fc = computed(() => { if(!sq.value) return custs.value.slice(0,20); const q=sq.value.toLowerCase(); return custs.value.filter(c=>c.customerName.toLowerCase().includes(q)).slice(0,20) })
 
-function isDone(k:string) { return k==='START'?!!jid.value:done.value.has(k) }
 function chLabel(v:string) { return channels.find(c=>c.v===v)?.label||v }
 
-function clickStep(k:string) {
-  if(k==='START'){if(!sc.value)showCS.value=true;else if(!jid.value)doStart()}
-  else if(k==='OUTREACH')handleOutreach()
-  else if(k==='PREVISIT')handlePrevisit()
-  else if(k==='MEETING')handleMeeting()
-  else if(k==='POSTVISIT')handlePostvisit()
+// 操作面板：根据当前阶段动态展示
+const currentActions = computed(() => {
+  const actions = [
+    {k:'outreach',title:'生成外联脚本',desc:'基于客户画像和机会信号，生成电话/微信/邮件/面谈外联沟通脚本',icon:'✉',fn:handleOutreach,done:isDone('INTERACTION'),enabled:!!jid.value,roundHint: isDone('INTERACTION') ? `Round ${round.value} 已完成` : ''},
+    {k:'meeting',title:'生成会面脚本',desc:'基于访前报告和KYC缺口，生成结构化会面提纲',icon:'📋',fn:handleMeeting,done:isDone('INTERACTION'),enabled:!!jid.value,roundHint: ''},
+    {k:'previsit',title:'执行访前准备',desc:'生成R1访前报告 + R2速战卡',icon:'📈',fn:handlePrevisit,done:isDone('PREVISIT'),enabled:!!jid.value,roundHint: isDone('PREVISIT') ? `Round ${round.value} 已完成` : (round.value > 1 ? `R8 下轮访前已就绪` : '')},
+    {k:'postvisit',title:'执行访后复盘',desc:'R4分析 + R5A内部报告 + R5B CRM报告 + 事实对账',icon:'📊',fn:handlePostvisit,done:isDone('POSTVISIT'),enabled:!!jid.value && isDone('PREVISIT'),roundHint: !isDone('PREVISIT') ? '需先完成访前准备' : ''},
+    {k:'iterate',title:'迭代决策',desc:'录入新证据 → R7更新报告 → R8下轮访前 → 进入下一轮',icon:'🔄',fn:handleIterate,done:isDone('ITERATE'),enabled:!!jid.value && isDone('POSTVISIT'),roundHint: !isDone('POSTVISIT') ? '需先完成访后复盘' : (round.value > 1 ? '可继续迭代或完成旅程' : '')},
+    {k:'complete',title:'完成旅程',desc:'确认CRM回写，关闭经营旅程',icon:'🏁',fn:doComplete,done:isDone('COMPLETE'),enabled:!!jid.value && isDone('POSTVISIT'),roundHint: ''}
+  ]
+  return actions
+})
+
+function clickPhase(phase: string) {
+  if (phase === 'START') { if(!sc.value) showCS.value=true; else if(!jid.value) doStart() }
+  else if (phase === 'PREVISIT') handlePrevisit()
+  else if (phase === 'INTERACTION') handleOutreach()
+  else if (phase === 'POSTVISIT') handlePostvisit()
+  else if (phase === 'ITERATE') handleIterate()
+  else if (phase === 'COMPLETE') doComplete()
 }
 
 async function pickCustomer(c:Customer) {
   sc.value=c; showCS.value=false
-  jid.value=''; jph.value=''; outR.value=null; meetR.value=null; preR.value=null; postR.value=null; done.value=new Set()
+  resetJourney()
   msg.info(`已选择客户：${c.customerName}，请点击"启动旅程"开始经营流程`)
+}
+
+function resetJourney() {
+  jid.value=''; jph.value=''; oid.value=''
+  outR.value=null; meetR.value=null; preR.value=null; postR.value=null; iterR.value=null
+  round.value=1; roundDone.value=new Set(); roundHistory.value=[]
+  showIteratePanel.value=false; newEvidenceDesc.value=''
 }
 
 async function doStart() {
   if(!sc.value){msg.warning('请先选择客户');showCS.value=true;return}
   ld.value=true
-  try{const r=await startJourney(sc.value.customerId);jid.value=r.journeyId;jph.value=r.phase;done.value.add('START');msg.success(`旅程已启动 (ID: ${r.journeyId.substring(0,8)}...)`)}
-  catch(e:any){msg.error(`启动旅程失败：${e.message||'未知错误'}`)}
+  try{
+    const r=await startJourney(sc.value.customerId)
+    jid.value=r.journeyId; jph.value=r.phase; oid.value=r.operatingCaseId
+    roundDone.value.add('START')
+    const kycHint = r.kycGapSummary ? ` | KYC: ${r.kycGapSummary}` : ''
+    msg.success(`旅程已启动 (ID: ${r.journeyId.substring(0,8)}...)${kycHint}`)
+  }catch(e:any){msg.error(`启动旅程失败：${e.message||'未知错误'}`)}
   finally{ld.value=false}
 }
 
-function handleOutreach(){if(!jid.value){msg.warning('请先选择客户并启动旅程');return}showCH.value=true}
+function handleOutreach(){if(!jid.value){msg.warning('请先启动旅程');return}showCH.value=true}
 
 async function doOutreach(ch:string) {
   showCH.value=false; if(!sc.value||!jid.value)return; ld.value=true
-  try{const r=await generateOutreachScript(sc.value.customerId,sc.value.rmId,'',jid.value,ch);outR.value=r;done.value.add('OUTREACH');msg.success('外联脚本已生成')}
+  try{const r=await generateOutreachScript(sc.value.customerId,sc.value.rmId,oid.value,jid.value,ch);outR.value=r;roundDone.value.add('INTERACTION');msg.success('外联脚本已生成')}
   catch(e:any){msg.error(`生成外联脚本失败：${e.message||'未知错误'}`)}
   finally{ld.value=false}
 }
 
 async function handleMeeting() {
-  if(!jid.value){msg.warning('请先选择客户并启动旅程');return} ld.value=true
-  try{const r=await generateMeetingScript(sc.value!.customerId,sc.value!.rmId,'',jid.value);meetR.value=r;done.value.add('MEETING');msg.success('会面脚本已生成')}
+  if(!jid.value){msg.warning('请先启动旅程');return}
+  if(!sc.value){msg.warning('请先选择客户');return}
+  ld.value=true
+  try{const r=await generateMeetingScript(sc.value.customerId,sc.value.rmId,oid.value,jid.value);meetR.value=r;roundDone.value.add('INTERACTION');msg.success('会面脚本已生成')}
   catch(e:any){msg.error(`生成会面脚本失败：${e.message||'未知错误'}`)}
   finally{ld.value=false}
 }
 
 async function handlePrevisit() {
-  if(!jid.value){msg.warning('请先选择客户并启动旅程');return} ld.value=true
-  try{const r=await executePrevisit(jid.value,sc.value!.customerId);preR.value=r;done.value.add('PREVISIT');msg.success('访前报告已生成')}
+  if(!jid.value){msg.warning('请先启动旅程');return}
+  if(!sc.value){msg.warning('请先选择客户');return}
+  ld.value=true
+  try{const r=await executePrevisit(jid.value,sc.value.customerId,oid.value,`Round ${round.value} 访前调研`);preR.value=r;roundDone.value.add('PREVISIT');msg.success(`Round ${round.value} 访前报告已生成`)}
   catch(e:any){msg.error(`执行访前报告失败：${e.message||'未知错误'}`)}
   finally{ld.value=false}
 }
 
 async function handlePostvisit() {
-  if(!jid.value){msg.warning('请先选择客户并启动旅程');return} ld.value=true
+  if(!jid.value){msg.warning('请先启动旅程');return}
+  if(!sc.value){msg.warning('请先选择客户');return}
+  if(!isDone('PREVISIT')){msg.warning('请先完成访前准备');return}
+  ld.value=true
   try{
-    const r=await executePostvisit(jid.value,sc.value!.customerId)
+    const r=await executePostvisit(jid.value,sc.value.customerId,oid.value,'客户面谈记录（待录入）')
     postR.value={analysisId:r.analysisId||'',journeyId:jid.value,visitSummary:'访后分析已完成',keyFindings:[],opportunitySignals:[],commitments:[],reconciliationItems:[],followUpActions:['CRM回写已触发：'+(r.crmCommandCount||0)+'条命令'],nextStepRecommendation:r.allCommandsRequireHumanConfirm?'部分操作需要人工确认，请检查CRM回写命令':'所有操作已自动执行'} as PostvisitAnalysisContent
-    done.value.add('POSTVISIT');msg.success('访后分析已完成')
+    roundDone.value.add('POSTVISIT')
+    // 记录迭代历史
+    roundHistory.value.push({
+      summary: `Round ${round.value}: 访前→互动→访后复盘完成`,
+      time: new Date().toLocaleString('zh-CN'),
+      evidenceCount: 0
+    })
+    msg.success(`Round ${round.value} 访后分析已完成`)
   }catch(e:any){msg.error(`执行访后分析失败：${e.message||'未知错误'}`)}
+  finally{ld.value=false}
+}
+
+function handleIterate() {
+  if(!jid.value){msg.warning('请先启动旅程');return}
+  if(!isDone('POSTVISIT')){msg.warning('请先完成访后复盘');return}
+  showIteratePanel.value = true
+}
+
+async function doIterate() {
+  if(!sc.value){msg.warning('请先选择客户');return}
+  if(!newEvidenceDesc.value.trim()){msg.warning('请输入新证据描述');return}
+  ld.value=true
+  try{
+    const r=await handleNewEvidence(jid.value,sc.value.customerId,oid.value,newEvidenceDesc.value.trim(),preR.value?.previsitReport?.reportId||'')
+    iterR.value=r
+    roundDone.value.add('ITERATE')
+    // 更新迭代历史
+    if (roundHistory.value.length > 0) {
+      roundHistory.value[roundHistory.value.length - 1].evidenceCount++
+    }
+    msg.success(`新证据已录入，R7+R8 已生成，即将进入 Round ${round.value + 1}`)
+    // 自动进入下一轮
+    setTimeout(() => doNextRound(), 1500)
+  }catch(e:any){msg.error(`迭代决策失败：${e.message||'未知错误'}`)}
+  finally{ld.value=false}
+}
+
+function doNextRound() {
+  round.value++
+  roundDone.value = new Set()
+  outR.value=null; meetR.value=null; preR.value=null; postR.value=null; iterR.value=null
+  showIteratePanel.value=false; newEvidenceDesc.value=''
+  msg.info(`已进入 Round ${round.value}，请执行访前准备`)
+}
+
+async function doComplete() {
+  if(!jid.value){msg.warning('请先启动旅程');return}
+  ld.value=true
+  try{
+    await completeJourney(jid.value)
+    roundDone.value.add('COMPLETE')
+    roundHistory.value.push({
+      summary: `旅程完成（共 ${round.value} 轮迭代）`,
+      time: new Date().toLocaleString('zh-CN'),
+      evidenceCount: 0
+    })
+    msg.success('旅程已完成，CRM回写已确认')
+  }catch(e:any){msg.error(`完成旅程失败：${e.message||'未知错误'}`)}
   finally{ld.value=false}
 }
 
@@ -344,92 +524,204 @@ onMounted(async()=>{try{custs.value=await fetchCustomers()}catch(e){console.erro
   gap: var(--space-2);
 }
 
-/* Flow Steps */
-.ew-flow {
+/* Flow Steps - replaced by Spiral */
+.ew-spiral {
   display: flex;
   align-items: flex-start;
   overflow-x: auto;
   padding: var(--space-4) 0;
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-6);
   gap: var(--space-2);
 }
 
-.ew-step {
+.sp-node {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 140px;
-  position: relative;
-  padding: var(--space-4);
+  min-width: 100px;
+  padding: var(--space-3);
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all var(--transition-normal);
-  border: 1px solid transparent;
+  border: 2px solid var(--border-light);
+  background: var(--bg-surface-soft);
+  color: var(--text-tertiary);
 }
 
-.ew-step.active {
+.sp-node.active {
   background: var(--brand-primary);
   color: var(--text-inverse);
   border-color: var(--brand-primary);
   box-shadow: var(--shadow-md);
 }
 
-.ew-step.done {
+.sp-node.done {
   background: var(--color-success-bg);
   border-color: var(--color-success-border);
   color: var(--color-success);
 }
 
-.ew-step:not(.active):not(.done) {
-  background: var(--bg-surface-soft);
-  color: var(--text-tertiary);
-  border-color: var(--border-light);
-}
-
-.ew-step:not(.active):not(.done):hover {
+.sp-node:not(.active):not(.done):hover {
   border-color: var(--border-normal);
   color: var(--text-secondary);
 }
 
-.ew-step-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--text-base);
-  font-weight: 700;
-  margin-bottom: var(--space-2);
+.sp-decision {
+  border-style: dashed;
 }
 
-.active .ew-step-icon {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.done .ew-step-icon {
-  background: var(--color-success);
-  color: var(--text-inverse);
-}
-
-.ew-step-name {
-  font-size: var(--text-sm);
-  font-weight: 600;
+.sp-icon {
+  font-size: 24px;
   margin-bottom: var(--space-1);
 }
 
-.ew-step-desc {
+.sp-label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.sp-sub {
   font-size: var(--text-xs);
   opacity: 0.8;
   text-align: center;
 }
 
-.ew-arrow {
-  position: absolute;
-  right: -16px;
-  top: 50%;
-  font-size: 16px;
-  color: var(--border-normal);
+.sp-arrow {
+  font-size: 18px;
+  color: var(--border-light);
+  align-self: center;
+  transition: color var(--transition-normal);
+  padding: 0 var(--space-1);
+}
+
+.sp-arrow.lit {
+  color: var(--brand-primary);
+}
+
+.sp-loop {
+  border: 2px dashed var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  transition: border-color var(--transition-normal);
+}
+
+.sp-loop.active {
+  border-color: var(--brand-primary);
+  background: rgba(var(--brand-primary-rgb, 59,130,246), 0.03);
+}
+
+.sp-loop-badge {
+  text-align: center;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--brand-primary);
+  margin-bottom: var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sp-loop-nodes {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+}
+
+.sp-loopback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--color-success-bg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.sp-loopback:hover {
+  background: var(--color-success-border);
+}
+
+.sp-loopback-arrow {
+  font-size: 20px;
+  color: var(--color-success);
+  animation: pulse 2s infinite;
+}
+
+.sp-loopback-label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-success);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Timeline */
+.ew-timeline {
+  margin-bottom: var(--space-6);
+}
+
+.ew-timeline h3 {
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 2px solid var(--brand-primary);
+}
+
+.tl-track {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  padding: var(--space-2) 0;
+}
+
+.tl-round {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface-soft);
+  border: 1px solid var(--border-light);
+  min-width: 200px;
+}
+
+.tl-round.current {
+  border-color: var(--brand-primary);
+  background: rgba(var(--brand-primary-rgb, 59,130,246), 0.05);
+}
+
+.tl-badge {
+  background: var(--brand-primary);
+  color: var(--text-inverse);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  align-self: flex-start;
+  white-space: nowrap;
+}
+
+.tl-phase {
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.tl-time {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+.tl-evidence {
+  font-size: var(--text-xs);
+  color: var(--color-success);
+  font-weight: 500;
 }
 
 /* Actions Panel */
@@ -443,6 +735,13 @@ onMounted(async()=>{try{custs.value=await fetchCustomers()}catch(e){console.erro
   margin: 0 0 var(--space-4);
   padding-bottom: var(--space-2);
   border-bottom: 2px solid var(--brand-primary);
+}
+
+.ew-actions-round {
+  font-size: var(--text-sm);
+  color: var(--brand-primary);
+  font-weight: 600;
+  margin-left: var(--space-2);
 }
 
 .ew-act {
