@@ -27,7 +27,9 @@ import com.gien.gits.ontology.port.*;
 @SpringBootTest
 @TestPropertySource(properties = {
     "spring.datasource.url=jdbc:h2:mem:engagement-test;DB_CLOSE_DELAY=-1;MODE=MySQL",
-    "spring.flyway.clean-disabled=false"
+    "spring.flyway.clean-disabled=false",
+    "gits.persistence.mode=jdbc",
+    "gits.seed.enabled=true"
 })
 class EngagementScenarioE2eIT {
 
@@ -55,13 +57,15 @@ class EngagementScenarioE2eIT {
     @Test
     void at001_thirtyMillionSemanticDisambiguation() {
         // 启动旅程
-        CustomerJourney journey = orchestrator.startEngagementJourney("CUST-CORP-0001");
+        EngagementOrchestrator.JourneyStartResult startResult = orchestrator.startEngagementJourney("CUST-CORP-0001");
+        CustomerJourney journey = startResult.journey();
+        String operatingCaseId = startResult.operatingCaseId();
         assertNotNull(journey);
 
         // 执行访后处理 — 包含"3000万"的转录
         String rawTranscript = "客户王强表示，希望增加3000万左右支持，用于智能制造二期项目设备采购。";
         EngagementOrchestrator.PostvisitWorkflowResult result = orchestrator.executePostvisitPhase(
-            journey.journeyId().toString(), journey.operatingCaseId().toString(), "CUST-CORP-0001", rawTranscript);
+            journey.journeyId().toString(), operatingCaseId, "CUST-CORP-0001", rawTranscript);
 
         // AT-001核心断言: "3000万"必须识别为OpportunitySignal, 不是直接授信需求
         List<InteractionExtraction> extractions = result.transcript().extractions();
@@ -77,7 +81,7 @@ class EngagementScenarioE2eIT {
         assertTrue(signal.requiresReconciliation(), "AT-001: 需要事实对账");
 
         // 验证OpportunitySignal记录
-        List<OpportunitySignal> signals = kycInsightService.getSignalsByCase(journey.operatingCaseId().toString());
+        List<OpportunitySignal> signals = kycInsightService.getSignalsByCase(operatingCaseId);
         assertFalse(signals.isEmpty(), "应该有OpportunitySignal记录");
         assertEquals(OpportunitySignal.SignalStatus.DETECTED, signals.get(0).status(),
             "AT-001: 信号状态应为DETECTED，不是CONFIRMED");
@@ -86,15 +90,16 @@ class EngagementScenarioE2eIT {
     // ========== AT-002: 事实对账四维校验 ==========
     @Test
     void at002_factReconciliationFourDimensionalCheck() {
-        CustomerJourney journey = orchestrator.startEngagementJourney("CUST-CORP-0001");
+        EngagementOrchestrator.JourneyStartResult startResult = orchestrator.startEngagementJourney("CUST-CORP-0001");
+        CustomerJourney journey = startResult.journey();
+        String operatingCaseId = startResult.operatingCaseId();
 
         String rawTranscript = "客户提到希望增加3000万左右支持";
         EngagementOrchestrator.PostvisitWorkflowResult result = orchestrator.executePostvisitPhase(
-            journey.journeyId().toString(), journey.operatingCaseId().toString(), "CUST-CORP-0001", rawTranscript);
+            journey.journeyId().toString(), operatingCaseId, "CUST-CORP-0001", rawTranscript);
 
         // AT-002: 事实对账必须包含四维校验
-        List<FactReconciliationCase> reconciliations = kycInsightService.getReconciliationsByCase(
-            journey.operatingCaseId().toString());
+        List<FactReconciliationCase> reconciliations = kycInsightService.getReconciliationsByCase(operatingCaseId);
         assertFalse(reconciliations.isEmpty(), "AT-002: 应该有事实对账记录");
 
         FactReconciliationCase rec = reconciliations.get(0);
@@ -105,18 +110,20 @@ class EngagementScenarioE2eIT {
     // ========== AT-003: 8阶段旅程闭环 ==========
     @Test
     void at003_journeyPhaseClosedLoop() {
-        CustomerJourney journey = orchestrator.startEngagementJourney("CUST-CORP-0001");
+        EngagementOrchestrator.JourneyStartResult startResult = orchestrator.startEngagementJourney("CUST-CORP-0001");
+        CustomerJourney journey = startResult.journey();
+        String operatingCaseId = startResult.operatingCaseId();
         // 旅程已推进到INSIGHT_ANALYSIS (数据库已更新, 但返回对象是创建时的状态)
         assertNotNull(journey, "AT-003: 旅程应成功创建");
 
         // 执行访前准备
         EngagementOrchestrator.PrevisitWorkflowResult preResult = orchestrator.executePrevisitPhase(
             journey.journeyId().toString(), "CUST-CORP-0001",
-            journey.operatingCaseId().toString(), "了解二期项目资金需求");
+            operatingCaseId, "了解二期项目资金需求");
 
         // 执行访后处理
         EngagementOrchestrator.PostvisitWorkflowResult postResult = orchestrator.executePostvisitPhase(
-            journey.journeyId().toString(), journey.operatingCaseId().toString(),
+            journey.journeyId().toString(), operatingCaseId,
             "CUST-CORP-0001", "客户提到希望增加3000万左右支持");
 
         // 完成旅程
@@ -126,11 +133,13 @@ class EngagementScenarioE2eIT {
     // ========== AT-004: CRM回写全部require_human_confirm ==========
     @Test
     void at004_crmWritebackRequiresHumanConfirm() {
-        CustomerJourney journey = orchestrator.startEngagementJourney("CUST-CORP-0001");
+        EngagementOrchestrator.JourneyStartResult startResult = orchestrator.startEngagementJourney("CUST-CORP-0001");
+        CustomerJourney journey = startResult.journey();
+        String operatingCaseId = startResult.operatingCaseId();
 
         String rawTranscript = "客户提到希望增加3000万左右支持";
         EngagementOrchestrator.PostvisitWorkflowResult result = orchestrator.executePostvisitPhase(
-            journey.journeyId().toString(), journey.operatingCaseId().toString(), "CUST-CORP-0001", rawTranscript);
+            journey.journeyId().toString(), operatingCaseId, "CUST-CORP-0001", rawTranscript);
 
         // AT-004: 所有CRM回写命令必须require_human_confirm
         List<CrmWritebackCommand> commands = result.crmCommands();
@@ -144,15 +153,17 @@ class EngagementScenarioE2eIT {
     // ========== AT-005: 新证据触发更新报告链 ==========
     @Test
     void at005_newEvidenceTriggersUpdatedReportChain() {
-        CustomerJourney journey = orchestrator.startEngagementJourney("CUST-CORP-0001");
+        EngagementOrchestrator.JourneyStartResult startResult = orchestrator.startEngagementJourney("CUST-CORP-0001");
+        CustomerJourney journey = startResult.journey();
+        String operatingCaseId = startResult.operatingCaseId();
 
         String rawTranscript = "客户提到希望增加3000万左右支持";
         EngagementOrchestrator.PostvisitWorkflowResult postResult = orchestrator.executePostvisitPhase(
-            journey.journeyId().toString(), journey.operatingCaseId().toString(), "CUST-CORP-0001", rawTranscript);
+            journey.journeyId().toString(), operatingCaseId, "CUST-CORP-0001", rawTranscript);
 
         // 新证据触发更新
         EngagementOrchestrator.NewEvidenceWorkflowResult evidenceResult = orchestrator.handleNewEvidence(
-            journey.journeyId().toString(), journey.operatingCaseId().toString(), "CUST-CORP-0001",
+            journey.journeyId().toString(), operatingCaseId, "CUST-CORP-0001",
             "收到设备清单: 5台数控机床, 总价值约2800万",
             postResult.internalReport().reportId().toString());
 
@@ -168,21 +179,23 @@ class EngagementScenarioE2eIT {
     // ========== AT-006: 上下文继承 ==========
     @Test
     void at006_contextInheritanceBetweenVisits() {
-        CustomerJourney journey = orchestrator.startEngagementJourney("CUST-CORP-0001");
+        EngagementOrchestrator.JourneyStartResult startResult = orchestrator.startEngagementJourney("CUST-CORP-0001");
+        CustomerJourney journey = startResult.journey();
+        String operatingCaseId = startResult.operatingCaseId();
 
         // 第一次访前
         EngagementOrchestrator.PrevisitWorkflowResult pre1 = orchestrator.executePrevisitPhase(
             journey.journeyId().toString(), "CUST-CORP-0001",
-            journey.operatingCaseId().toString(), "了解客户需求");
+            operatingCaseId, "了解客户需求");
 
         // 第一次访后
         EngagementOrchestrator.PostvisitWorkflowResult post1 = orchestrator.executePostvisitPhase(
-            journey.journeyId().toString(), journey.operatingCaseId().toString(),
+            journey.journeyId().toString(), operatingCaseId,
             "CUST-CORP-0001", "客户提到希望增加3000万左右支持");
 
         // 新证据 → R7 → R8
         EngagementOrchestrator.NewEvidenceWorkflowResult evidence = orchestrator.handleNewEvidence(
-            journey.journeyId().toString(), journey.operatingCaseId().toString(), "CUST-CORP-0001",
+            journey.journeyId().toString(), operatingCaseId, "CUST-CORP-0001",
             "收到设备清单", post1.internalReport().reportId().toString());
 
         // AT-006: R8应继承上次访后分析的上下文
@@ -264,19 +277,20 @@ class EngagementScenarioE2eIT {
     }
 
     // ========== 辅助方法: 创建测试旅程 ==========
-    private CustomerJourney createTestJourney(String purpose) {
+    private EngagementOrchestrator.JourneyStartResult createTestJourney(String purpose) {
         return orchestrator.startEngagementJourney("CUST-CORP-0001");
     }
 
     // ========== AT-007: OutreachScript基于客户画像动态生成 ==========
     @Test
     void outreachScriptGeneration() {
-        CustomerJourney journey = createTestJourney("OUTREACH");
+        EngagementOrchestrator.JourneyStartResult startResult = createTestJourney("OUTREACH");
+        CustomerJourney journey = startResult.journey();
 
         // 生成外联脚本
         OutreachScript script = outreachScriptService.generateScript(
             "CUST-CORP-0001", "RM-001",
-            journey.operatingCaseId().toString(),
+            startResult.operatingCaseId(),
             journey.journeyId().toString(),
             OutreachScript.OutreachChannel.PHONE);
 
@@ -291,12 +305,13 @@ class EngagementScenarioE2eIT {
     // ========== AT-008: MeetingScript基于访前报告+KYC缺口引导 ==========
     @Test
     void meetingScriptGeneration() {
-        CustomerJourney journey = createTestJourney("MEETING");
+        EngagementOrchestrator.JourneyStartResult startResult = createTestJourney("MEETING");
+        CustomerJourney journey = startResult.journey();
 
         // 生成会面脚本
         MeetingScript script = meetingScriptService.generateScript(
             "CUST-CORP-0001", "RM-001",
-            journey.operatingCaseId().toString(),
+            startResult.operatingCaseId(),
             journey.journeyId().toString());
 
         assertNotNull(script.scriptId(), "会面脚本应有ID");
@@ -324,11 +339,11 @@ class EngagementScenarioE2eIT {
     // ========== AT-010: 客户经营视图聚合 ==========
     @Test
     void customerOperatingViewAggregation() {
-        CustomerJourney journey = createTestJourney("VIEW");
+        EngagementOrchestrator.JourneyStartResult startResult = createTestJourney("VIEW");
 
         // 构建客户经营视图
         Optional<CustomerOperatingView> viewOpt = customerOperatingViewService.buildView(
-            "CUST-CORP-0001", journey.operatingCaseId().toString());
+            "CUST-CORP-0001", startResult.operatingCaseId());
 
         assertTrue(viewOpt.isPresent(), "应能构建客户经营视图");
         CustomerOperatingView view = viewOpt.get();

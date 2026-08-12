@@ -3,15 +3,16 @@ package com.gien.gits.api.config;
 import javax.sql.DataSource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.gien.gits.adapter.persistence.JdbcBankRelationshipSnapshotRepository;
 import com.gien.gits.adapter.persistence.JdbcClaimRepository;
-import com.gien.gits.adapter.persistence.v11.JdbcCommitmentRepository;
 import com.gien.gits.adapter.persistence.JdbcCreditFacilityRepository;
 import com.gien.gits.adapter.persistence.JdbcCustomerRepository;
+import com.gien.gits.adapter.persistence.v11.JdbcCommitmentRepository;
 import com.gien.gits.adapter.persistence.v11.JdbcExternalEventRepository;
 import com.gien.gits.adapter.persistence.JdbcFactReconciliationRepository;
 import com.gien.gits.adapter.persistence.JdbcGroupRelationshipRepository;
@@ -53,8 +54,12 @@ import com.gien.gits.ontology.port.WritableTransactionRepository;
 /**
  * Registers all JDBC repository beans.
  * These are plain POJOs (not Spring Data) — manually wired here.
+ *
+ * <p>通过 {@code gits.persistence.mode=jdbc} 激活（默认值，向后兼容）。
+ * 设为 {@code mybatis} 时本配置类所有 Bean 均不注册。</p>
  */
 @Configuration
+@ConditionalOnProperty(name = "gits.persistence.mode", havingValue = "jdbc", matchIfMissing = true)
 public class RepositoryConfig {
 
     @Bean

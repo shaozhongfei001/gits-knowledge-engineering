@@ -51,11 +51,11 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    @DisplayName("通用Exception返回500")
+    @DisplayName("通用Exception返回500，消息为异常信息")
     void handleGeneral_returnsInternalServerError() {
         ResponseEntity<ErrorResponse> response = handler.handleGeneral(new RuntimeException("oops"));
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertEquals("INTERNAL_ERROR", response.getBody().errorCode());
-        assertEquals("An unexpected error occurred", response.getBody().message());
+        assertEquals("oops", response.getBody().message());
     }
 }

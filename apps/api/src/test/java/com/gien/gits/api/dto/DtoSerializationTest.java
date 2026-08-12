@@ -22,7 +22,7 @@ class DtoSerializationTest {
     @Test
     void testJourneyStartResponseSerialization() throws Exception {
         JourneyStartResponse response = new JourneyStartResponse(
-            "JRN-001", "CUST-001", "INSIGHT_ANALYSIS", "2026-08-04T10:00:00Z");
+            "JRN-001", "CUST-001", "CASE-001", "INSIGHT_ANALYSIS", "2026-08-04T10:00:00Z");
 
         String json = objectMapper.writeValueAsString(response);
         assertNotNull(json);
@@ -36,7 +36,7 @@ class DtoSerializationTest {
 
     @Test
     void testJourneyStartResponse_NullFields() throws Exception {
-        JourneyStartResponse response = new JourneyStartResponse(null, null, null, null);
+        JourneyStartResponse response = new JourneyStartResponse(null, null, null, null, null);
         String json = objectMapper.writeValueAsString(response);
         assertNotNull(json);
 

@@ -77,6 +77,11 @@ public class SemanticPatternExtractionStrategy implements TranscriptExtractionSt
 
     @Override
     public List<InteractionExtraction> extract(String rawContent) {
+        if (rawContent == null || rawContent.isBlank()) {
+            log.debug("rawContent为空，跳过语义提取");
+            return List.of();
+        }
+
         // P11 G1: 先尝试LLM模式，失败时fallback到原有正则逻辑
         try {
             List<InteractionExtraction> llmResults = extractWithLlm(rawContent);

@@ -24,7 +24,7 @@ import java.util.UUID;
  * JDBC persistence adapter for MeetingScript.
  *
  * <p>Placed in the API app's adapter package because persistence-relational
- * does not depend on scenario-hermes module.</p>
+ * does not depend on scenario-execute module.</p>
  */
 public class JdbcMeetingScriptRepository implements WritableMeetingScriptRepository {
 

@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
  * 版本切换方式：
  * - 修改 application.yaml 中 scenario.data-root
  * - 设置环境变量 SCENARIO_DATA_ROOT
- * - 使用 symlink: scenario-data → scenario-data-v1.1
+ * - 使用 symlink: scenario/seed → scenario/seed-v1.1
  */
 @Configuration
 public class ScenarioDataConfig {

@@ -23,9 +23,20 @@ spring:
 gits:
   seed:
     enabled: true  # Enable seed data in dev/test; disabled by default in prod
+  persistence:
+    mode: mybatis  # jdbc | mybatis — 控制仓储实现选择
+
+mybatis:
+  mapper-locations: classpath*:mapper/**/*.xml
+  type-aliases-package: com.gien.gits.ontology,com.gien.gits.action,com.gien.gits.engagement,com.gien.gits.customerjourney
+  type-handlers-package: com.gien.gits.adapter.persistence.common.typehandler
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 30
 
 scenario:
-  data-root: "${SCENARIO_DATA_ROOT:}"  # V1.1: 外部场景数据根目录。空=使用classpath(V1.0兼容)
+  data-root: "${SCENARIO_DATA_ROOT:}"  # V1.1: 外部场景数据根目录(默认scenario/seed)。空=使用classpath(V1.0兼容)
 
 engagement:
   scenario:
@@ -70,6 +81,9 @@ management:
 
 server:
   shutdown: graceful
+  error:
+    include-stacktrace: always
+    include-message: always
 
 springdoc:
   api-docs:

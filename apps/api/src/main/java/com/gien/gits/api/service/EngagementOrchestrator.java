@@ -65,7 +65,7 @@ public class EngagementOrchestrator {
      * 启动持续经营场景 — 创建经营案例 + 旅程 + KYC洞察
      */
     @Transactional
-    public CustomerJourney startEngagementJourney(String customerId) {
+    public JourneyStartResult startEngagementJourney(String customerId) {
         // 1. 验证客户存在
         Customer customer = customerContextService.findCustomer(customerId)
             .orElseThrow(() -> new IllegalArgumentException("Customer not found: " + customerId));
@@ -85,9 +85,13 @@ public class EngagementOrchestrator {
 
         // 4. 推进到洞察分析阶段
         journeyRepo.updateJourneyPhase(journey.journeyId(), JourneyPhase.INSIGHT_ANALYSIS);
+        CustomerJourney updatedJourney = new CustomerJourney(
+            journey.journeyId(), journey.operatingCaseId(), journey.customerId(),
+            journey.customerName(), JourneyPhase.INSIGHT_ANALYSIS,
+            journey.startedAt(), Instant.now());
 
-        // 5. 触发KYC洞察分析（获取KYC缺口画像，为后续访前准备提供输入）
-        kycInsightService.getKycGapProfile(customerId);
+        // 5. 获取KYC缺口画像（为后续访前准备提供输入）
+        Optional<KycGapProfile> kycProfile = kycInsightService.getKycGapProfile(customerId);
 
         // 6. 发布领域事件: controlledActionRequested
         domainEventPublisher.publish(
@@ -97,8 +101,13 @@ public class EngagementOrchestrator {
 
         businessMetrics.recordJourneyStarted();
 
-        return journey;
+        return new JourneyStartResult(updatedJourney, operatingCase.caseId().toString(), kycProfile);
     }
+
+    // --- 结果记录 ---
+
+    public record JourneyStartResult(CustomerJourney journey, String operatingCaseId,
+                                      Optional<KycGapProfile> kycProfile) {}
 
     /**
      * 执行访前准备 — 生成R1/R2
@@ -196,6 +205,13 @@ public class EngagementOrchestrator {
      */
     @Transactional
     public void completeJourney(String journeyId) {
+        CustomerJourney journey = journeyService.findJourneyById(UUID.fromString(journeyId));
+        if (journey == null) {
+            throw new IllegalArgumentException("Journey not found: " + journeyId);
+        }
+        if (journey.phase() == JourneyPhase.COMPLETED) {
+            throw new IllegalStateException("Journey already completed: " + journeyId);
+        }
         journeyRepo.updateJourneyPhase(UUID.fromString(journeyId), JourneyPhase.COMPLETED);
         businessMetrics.recordJourneyCompleted();
     }
