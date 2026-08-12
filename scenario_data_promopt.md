@@ -30,7 +30,7 @@ Senior Tech Lead / Brownfield Upgrade Engineer / AI Coding Agent。
 
 新的完整场景数据包目录为：
 
-  scenario_data
+  scenario/seed
 
 该目录必须作为整体读取。
 
@@ -180,7 +180,7 @@ ScenarioDataProvider / ScenarioRepository
 
 推荐：
 
-PROJECT_ROOT/scenario_data/current
+PROJECT_ROOT/scenario/seed/current
 
 作为逻辑入口，
 允许通过symlink切换V1.1/V1.2。

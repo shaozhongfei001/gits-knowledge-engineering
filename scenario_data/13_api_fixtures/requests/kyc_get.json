@@ -1,4 +1,0 @@
-{
-  "method": "GET",
-  "path": "/api/v1/customers/CUST-001/kyc-gap?visit_id=VIS-20260708"
-}

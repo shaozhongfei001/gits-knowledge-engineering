@@ -1,2 +1,0 @@
-{"eval_case_id": "EVAL-001", "source": "HG-F05", "skill_or_policy": "WRITEBACK_POLICY", "model_suggestion": "CREATE Opportunity 3000万", "human_action": "EDIT to OpportunitySignal", "error_type": "PREMATURE_OPPORTUNITY_UPGRADE", "severity": "HIGH", "status": "REGRESSION_CASE"}
-{"eval_case_id": "EVAL-002", "source": "HG-C01", "skill_or_policy": "SP-10", "model_suggestion": "保留泛化行业背景段落", "human_action": "EDIT remove generic content", "error_type": "LOW_INFORMATION_DENSITY", "severity": "MEDIUM", "status": "REGRESSION_CASE"}

@@ -1,9 +1,0 @@
-{
-  "method": "POST",
-  "path": "/api/v1/human-gates/HG-F05/decision",
-  "body": {
-    "decision": "EDIT",
-    "actor": "P-RM-001",
-    "edit_reason": "Opportunity仍缺正式确认，只保留Signal"
-  }
-}

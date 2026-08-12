@@ -1,8 +1,0 @@
-{
-  "method": "POST",
-  "path": "/api/v1/writeback/commands",
-  "body": {
-    "activity_id": "ACT-HDEG-20260708",
-    "mode": "PROPOSE_ONLY"
-  }
-}

@@ -1,5 +1,0 @@
-{
-  "status": "PROPOSE_ONLY",
-  "commands_path": "11_outputs/CRM_WRITEBACK_COMMANDS.jsonl",
-  "human_gate": "HG-F05"
-}

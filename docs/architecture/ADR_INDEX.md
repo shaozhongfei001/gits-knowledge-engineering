@@ -15,5 +15,6 @@
 | ADR-0011 | 六边形架构 (Ports & Adapters) | Accepted | 领域核心零基础设施依赖；适配器实现端口接口 |
 | ADR-0012 | DMN引擎选型 — 轻量XML解析 vs KIE | Accepted | 选择轻量XML解析避免Jakarta/Javax冲突 |
 | ADR-0013 | 可观测性技术栈选择 | Accepted | Micrometer+Prometheus+Zipkin+Logstash |
+| ADR-0014 | Scenario 目录聚合重组 | Accepted | scenario/execute（原scenario-hermes）+ scenario/seed（原scenario_data）；Java包名不变 |
 
 正式版本、Owner、日期、替代方案、后果和验证证据将在对应ADR评审时补齐；本索引不能替代ADR批准。

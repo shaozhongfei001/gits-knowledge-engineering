@@ -1,7 +1,25 @@
 {
   "components": {
+    "parameters": {
+      "customerId": {
+        "in": "path",
+        "name": "customerId",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "journeyId": {
+        "in": "path",
+        "name": "journeyId",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
     "responses": {
-      "Problem": {
+      "BadRequest": {
         "content": {
           "application/problem+json": {
             "schema": {
@@ -9,7 +27,27 @@
             }
           }
         },
-        "description": "RFC 9457 problem detail"
+        "description": "请求参数错误"
+      },
+      "Conflict": {
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description": "业务冲突"
+      },
+      "NotFound": {
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        },
+        "description": "资源不存在"
       }
     },
     "schemas": {
@@ -43,41 +81,2200 @@
         ],
         "type": "object"
       },
-      "Problem": {
+      "AuditTraceEntry": {
         "properties": {
-          "detail": {
+          "action": {
             "type": "string"
           },
-          "status": {
-            "maximum": 599,
-            "minimum": 400,
-            "type": "integer"
-          },
-          "title": {
+          "actorId": {
             "type": "string"
           },
-          "traceId": {
+          "afterSnapshot": {
+            "additionalProperties": {},
+            "type": "object"
+          },
+          "beforeSnapshot": {
+            "additionalProperties": {},
+            "type": "object"
+          },
+          "entityId": {
             "type": "string"
           },
-          "type": {
-            "format": "uri-reference",
+          "entityType": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "timestamp": {
+            "format": "date-time",
             "type": "string"
           }
         },
         "required": [
+          "id",
+          "entityType",
+          "entityId",
+          "action"
+        ],
+        "type": "object"
+      },
+      "CaseStatus": {
+        "enum": [
+          "OPEN",
+          "IN_PROGRESS",
+          "RESOLVED",
+          "CLOSED"
+        ],
+        "type": "string"
+      },
+      "CaseType": {
+        "enum": [
+          "KYC_REVIEW",
+          "RISK_ASSESSMENT",
+          "COMPLIANCE_CHECK",
+          "CREDIT_REVIEW",
+          "OTHER"
+        ],
+        "type": "string"
+      },
+      "Channel": {
+        "enum": [
+          "IN_PERSON",
+          "PHONE",
+          "VIDEO",
+          "EMAIL",
+          "WECHAT",
+          "OTHER"
+        ],
+        "type": "string"
+      },
+      "Claim": {
+        "properties": {
+          "claimId": {
+            "type": "string"
+          },
+          "claimType": {
+            "$ref": "#/components/schemas/ClaimType"
+          },
+          "confidence": {
+            "format": "double",
+            "type": "number"
+          },
+          "conflictWith": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "evidenceRef": {
+            "type": "string"
+          },
+          "notFact": {
+            "type": "boolean"
+          },
+          "requiresReconciliation": {
+            "type": "boolean"
+          },
+          "sourceInteractionId": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ClaimStatus"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "claimId",
+          "customerId",
+          "claimType",
+          "content",
+          "status"
+        ],
+        "type": "object"
+      },
+      "ClaimRequest": {
+        "properties": {
+          "claimType": {
+            "$ref": "#/components/schemas/ClaimType"
+          },
+          "confidence": {
+            "format": "double",
+            "type": "number"
+          },
+          "content": {
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "evidenceRef": {
+            "type": "string"
+          },
+          "sourceInteractionId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customerId",
+          "claimType",
+          "content"
+        ],
+        "type": "object"
+      },
+      "ClaimStatus": {
+        "enum": [
+          "DETECTED",
+          "CANDIDATE",
+          "VERIFIED_FACT",
+          "REJECTED",
+          "SUPERSEDED"
+        ],
+        "type": "string"
+      },
+      "ClaimType": {
+        "enum": [
+          "FINANCING_NEED",
+          "MATERIAL_PROVIDE",
+          "FOLLOW_UP",
+          "EXPANSION_INTENT",
+          "CUSTOMER_STATEMENT",
+          "RM_COMMITMENT",
+          "RISK_SIGNAL",
+          "CUSTOMER_JOURNEY"
+        ],
+        "type": "string"
+      },
+      "Commitment": {
+        "properties": {
+          "commitmentId": {
+            "type": "string"
+          },
+          "commitmentType": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "dueDate": {
+            "type": "string"
+          },
+          "evidenceRef": {
+            "type": "string"
+          },
+          "fulfilledAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "interactionId": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CommitmentStatus"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "commitmentId",
+          "interactionId",
+          "commitmentType",
+          "content",
+          "owner",
+          "status"
+        ],
+        "type": "object"
+      },
+      "CommitmentRequest": {
+        "properties": {
+          "commitmentType": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "dueDate": {
+            "type": "string"
+          },
+          "evidenceRef": {
+            "type": "string"
+          },
+          "interactionId": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "interactionId",
+          "commitmentType",
+          "content",
+          "owner"
+        ],
+        "type": "object"
+      },
+      "CommitmentStatus": {
+        "enum": [
+          "PENDING",
+          "IN_PROGRESS",
+          "FULFILLED",
+          "BROKEN",
+          "SUPERSEDED"
+        ],
+        "type": "string"
+      },
+      "CommitmentSummary": {
+        "properties": {
+          "commitmentType": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "dueDate": {
+            "type": "string"
+          },
+          "fulfilled": {
+            "type": "boolean"
+          },
+          "owner": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "CreateCustomerRequest": {
+        "properties": {
+          "customerId": {
+            "type": "string"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerTier": {
+            "type": "string"
+          },
+          "enterpriseScale": {
+            "type": "string"
+          },
+          "industry": {
+            "type": "string"
+          },
+          "listedStatus": {
+            "type": "string"
+          },
+          "riskLevel": {
+            "type": "string"
+          },
+          "rmId": {
+            "type": "string"
+          },
+          "rmName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customerId",
+          "customerName"
+        ],
+        "type": "object"
+      },
+      "CreateEvaluationRequest": {
+        "properties": {
+          "criteria": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "evaluationType": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customerId"
+        ],
+        "type": "object"
+      },
+      "CreateKnowledgeRuleRequest": {
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "priority": {
+            "type": "integer"
+          },
+          "ruleContent": {
+            "type": "string"
+          },
+          "ruleName": {
+            "type": "string"
+          },
+          "ruleType": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ruleName",
+          "ruleType",
+          "ruleContent"
+        ],
+        "type": "object"
+      },
+      "CreateKycGapProfileRequest": {
+        "properties": {
+          "customerId": {
+            "type": "string"
+          },
+          "knownItems": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "partialItems": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "unknownItems": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "customerId"
+        ],
+        "type": "object"
+      },
+      "CreateOperatingCaseRequest": {
+        "properties": {
+          "caseType": {
+            "$ref": "#/components/schemas/CaseType"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "relatedInteractionIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customerId",
+          "caseType",
+          "title"
+        ],
+        "type": "object"
+      },
+      "CreateRecordingConsentRequest": {
+        "properties": {
+          "channel": {
+            "$ref": "#/components/schemas/Channel"
+          },
+          "consentType": {
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "grantedBy": {
+            "type": "string"
+          },
+          "validFrom": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "validUntil": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "customerId",
+          "consentType"
+        ],
+        "type": "object"
+      },
+      "CrmWritebackCommand": {
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "decidedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "decidedBy": {
+            "type": "string"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/GateDecision"
+          },
+          "gateId": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "payload": {
+            "additionalProperties": {},
+            "type": "object"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CrmWritebackStatus"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "gateId",
+          "customerId",
+          "status"
+        ],
+        "type": "object"
+      },
+      "CrmWritebackDecisionRequest": {
+        "properties": {
+          "actorId": {
+            "type": "string"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/GateDecision"
+          },
+          "modifications": {
+            "additionalProperties": {},
+            "type": "object"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "decision"
+        ],
+        "type": "object"
+      },
+      "CrmWritebackStatus": {
+        "enum": [
+          "PENDING",
+          "APPROVED",
+          "REJECTED",
+          "SENT",
+          "FAILED"
+        ],
+        "type": "string"
+      },
+      "Customer": {
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerTier": {
+            "type": "string"
+          },
+          "enterpriseScale": {
+            "type": "string"
+          },
+          "industry": {
+            "type": "string"
+          },
+          "listedStatus": {
+            "type": "string"
+          },
+          "riskLevel": {
+            "type": "string"
+          },
+          "rmId": {
+            "type": "string"
+          },
+          "rmName": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "customerId",
+          "customerName"
+        ],
+        "type": "object"
+      },
+      "CustomerCreatedResponse": {
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "customerName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customerId",
+          "customerName"
+        ],
+        "type": "object"
+      },
+      "CustomerJourney": {
+        "properties": {
+          "claimIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "commitmentIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "completedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "interactionIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "journeyId": {
+            "type": "string"
+          },
+          "journeyType": {
+            "type": "string"
+          },
+          "opportunityIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "phase": {
+            "$ref": "#/components/schemas/JourneyPhase"
+          },
+          "rmId": {
+            "type": "string"
+          },
+          "startedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "journeyId",
+          "customerId",
+          "phase"
+        ],
+        "type": "object"
+      },
+      "CustomerOperatingView": {
+        "properties": {
+          "activeJourneyCount": {
+            "type": "integer"
+          },
+          "activeSignals": {
+            "items": {
+              "$ref": "#/components/schemas/OpportunitySignalSummary"
+            },
+            "type": "array"
+          },
+          "currentJourneyPhase": {
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerTier": {
+            "type": "string"
+          },
+          "enterpriseScale": {
+            "type": "string"
+          },
+          "industry": {
+            "type": "string"
+          },
+          "knownKycItems": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "lastInteractionTime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "openReconciliationCount": {
+            "type": "integer"
+          },
+          "partialKycItems": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "pendingCommitments": {
+            "items": {
+              "$ref": "#/components/schemas/CommitmentSummary"
+            },
+            "type": "array"
+          },
+          "riskIndicators": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "riskLevel": {
+            "type": "string"
+          },
+          "rmId": {
+            "type": "string"
+          },
+          "rmName": {
+            "type": "string"
+          },
+          "totalInteractions": {
+            "type": "integer"
+          },
+          "unknownKycItems": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "customerId",
+          "customerName"
+        ],
+        "type": "object"
+      },
+      "Evaluation": {
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "criteria": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "evaluationId": {
+            "type": "string"
+          },
+          "evaluationType": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string"
+          },
+          "score": {
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "required": [
+          "evaluationId",
+          "customerId"
+        ],
+        "type": "object"
+      },
+      "EvidenceVersion": {
+        "properties": {
+          "contentHash": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "evidenceId": {
+            "type": "string"
+          },
+          "previousVersionId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "version",
+          "evidenceId"
+        ],
+        "type": "object"
+      },
+      "ExternalEvent": {
+        "properties": {
+          "customerId": {
+            "type": "string"
+          },
+          "eventId": {
+            "type": "string"
+          },
+          "eventType": {
+            "type": "string"
+          },
+          "payload": {
+            "additionalProperties": {},
+            "type": "object"
+          },
+          "processedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "receivedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "eventId",
+          "eventType",
+          "customerId"
+        ],
+        "type": "object"
+      },
+      "ExtractionStatus": {
+        "enum": [
+          "DETECTED",
+          "CANDIDATE",
+          "VERIFIED_FACT",
+          "REJECTED",
+          "SUPERSEDED"
+        ],
+        "type": "string"
+      },
+      "ExtractionType": {
+        "enum": [
+          "CLAIM",
+          "INTENT",
+          "CLARIFIED_INTENT",
+          "CUSTOMER_COMMITMENT",
+          "BANK_COMMITMENT",
+          "OPPORTUNITY_SIGNAL",
+          "FACT_CLAIM",
+          "COMMITMENT",
+          "RISK_INDICATOR"
+        ],
+        "type": "string"
+      },
+      "GateDecision": {
+        "enum": [
+          "APPROVE",
+          "REJECT",
+          "MODIFY",
+          "HOLD",
+          "DECLINE"
+        ],
+        "type": "string"
+      },
+      "GateType": {
+        "enum": [
+          "A01_OUTREACH",
+          "A02_SIGNAL_CONFIRM",
+          "A03_OPPORTUNITY_VALIDATE",
+          "B01_CONTEXT_ENRICH",
+          "B02_FACT_VALIDATE",
+          "C01_PREVISIT_APPROVE",
+          "C02_REPORT_APPROVE",
+          "D01_PRODUCT_RECOMMEND",
+          "E01_EXIT_CONFIRM",
+          "F01_CRM_WRITEBACK",
+          "F02_CREDIT_CHECK",
+          "F03_PRICE_APPROVE",
+          "F04_RISK_REVIEW",
+          "F05_RECORDING_APPROVE",
+          "F06_CONTROLLED_ACTION"
+        ],
+        "type": "string"
+      },
+      "HumanGate": {
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "decidedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "decidedBy": {
+            "type": "string"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/GateDecision"
+          },
+          "description": {
+            "type": "string"
+          },
+          "gateType": {
+            "$ref": "#/components/schemas/GateType"
+          },
+          "id": {
+            "type": "string"
+          },
+          "journeyId": {
+            "type": "string"
+          },
+          "modifiedPayload": {
+            "additionalProperties": {},
+            "type": "object"
+          },
+          "payload": {
+            "additionalProperties": {},
+            "type": "object"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/HumanGateStatus"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "gateType",
+          "status"
+        ],
+        "type": "object"
+      },
+      "HumanGateDecisionRequest": {
+        "properties": {
+          "actorId": {
+            "type": "string"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/GateDecision"
+          },
+          "modification": {
+            "additionalProperties": {},
+            "type": "object"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "decision"
+        ],
+        "type": "object"
+      },
+      "HumanGateStatus": {
+        "enum": [
+          "PENDING",
+          "APPROVED",
+          "REJECTED",
+          "MODIFIED"
+        ],
+        "type": "string"
+      },
+      "Interaction": {
+        "properties": {
+          "channel": {
+            "$ref": "#/components/schemas/Channel"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "durationSeconds": {
+            "type": "integer"
+          },
+          "extension": {
+            "$ref": "#/components/schemas/InteractionExtension"
+          },
+          "interactionDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "interactionId": {
+            "type": "string"
+          },
+          "participants": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "recordingConsentId": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "transcript": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "interactionId",
+          "customerId",
+          "channel"
+        ],
+        "type": "object"
+      },
+      "InteractionExtension": {
+        "properties": {
+          "commitmentIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "extensionId": {
+            "type": "string"
+          },
+          "interactionId": {
+            "type": "string"
+          },
+          "kycGapProfileId": {
+            "type": "string"
+          },
+          "opportunityIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "recordingConsentId": {
+            "type": "string"
+          },
+          "taskIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "InteractionExtraction": {
+        "properties": {
+          "claimType": {
+            "$ref": "#/components/schemas/ClaimType"
+          },
+          "confidence": {
+            "format": "double",
+            "type": "number"
+          },
+          "conflictWith": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "evidenceRef": {
+            "type": "string"
+          },
+          "nextQuestion": {
+            "type": "string"
+          },
+          "notFact": {
+            "type": "boolean"
+          },
+          "objectId": {
+            "type": "string"
+          },
+          "requiresReconciliation": {
+            "type": "boolean"
+          },
+          "speaker": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ExtractionStatus"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ExtractionType"
+          }
+        },
+        "required": [
+          "objectId",
           "type",
+          "content"
+        ],
+        "type": "object"
+      },
+      "JourneyCompleteResponse": {
+        "properties": {
+          "completedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "journeyId": {
+            "type": "string"
+          },
+          "summary": {
+            "properties": {
+              "kycGapReduction": {
+                "type": "integer"
+              },
+              "totalClaims": {
+                "type": "integer"
+              },
+              "totalCommitments": {
+                "type": "integer"
+              },
+              "totalOpportunities": {
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "journeyId",
+          "completedAt"
+        ],
+        "type": "object"
+      },
+      "JourneyPhase": {
+        "enum": [
+          "INITIATED",
+          "PREVISIT",
+          "IN_VISIT",
+          "POSTVISIT",
+          "FOLLOW_UP",
+          "COMPLETED"
+        ],
+        "type": "string"
+      },
+      "JourneyStartRequest": {
+        "properties": {
+          "context": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "journeyType": {
+            "type": "string"
+          },
+          "rmId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customerId"
+        ],
+        "type": "object"
+      },
+      "JourneyStartResponse": {
+        "properties": {
+          "customerId": {
+            "type": "string"
+          },
+          "journeyId": {
+            "type": "string"
+          },
+          "phase": {
+            "type": "string"
+          },
+          "previsitReady": {
+            "type": "boolean"
+          },
+          "startedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "journeyId",
+          "customerId",
+          "phase",
+          "startedAt"
+        ],
+        "type": "object"
+      },
+      "KycGapProfile": {
+        "properties": {
+          "completenessScore": {
+            "format": "double",
+            "type": "number"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "knownItems": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "lastUpdated": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "partialItems": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "profileId": {
+            "type": "string"
+          },
+          "unknownItems": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "profileId",
+          "customerId"
+        ],
+        "type": "object"
+      },
+      "KycGapProfileCreatedResponse": {
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "profileId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "profileId",
+          "customerId"
+        ],
+        "type": "object"
+      },
+      "KycInsight": {
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "detectedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "insightId": {
+            "type": "string"
+          },
+          "insightType": {
+            "type": "string"
+          },
+          "relatedGapItems": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "severity": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "MeetingScript": {
+        "properties": {
+          "customerId": {
+            "type": "string"
+          },
+          "generatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "meetingType": {
+            "type": "string"
+          },
+          "scriptContent": {
+            "type": "string"
+          },
+          "scriptId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "scriptId",
+          "customerId"
+        ],
+        "type": "object"
+      },
+      "MeetingScriptRequest": {
+        "properties": {
+          "customerId": {
+            "type": "string"
+          },
+          "meetingType": {
+            "type": "string"
+          },
+          "objectives": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "customerId"
+        ],
+        "type": "object"
+      },
+      "MeetingScriptResponse": {
+        "properties": {
+          "customerId": {
+            "type": "string"
+          },
+          "generatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "meetingType": {
+            "type": "string"
+          },
+          "scriptContent": {
+            "type": "string"
+          },
+          "scriptId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "scriptId",
+          "customerId"
+        ],
+        "type": "object"
+      },
+      "NewEvidenceRequest": {
+        "properties": {
+          "confidence": {
+            "format": "double",
+            "type": "number"
+          },
+          "content": {
+            "type": "string"
+          },
+          "evidenceType": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "evidenceType",
+          "content"
+        ],
+        "type": "object"
+      },
+      "NewEvidenceResponse": {
+        "properties": {
+          "conflictingClaims": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "evidenceId": {
+            "type": "string"
+          },
+          "journeyId": {
+            "type": "string"
+          },
+          "reconciliationTriggered": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "evidenceId",
+          "journeyId"
+        ],
+        "type": "object"
+      },
+      "OperatingCase": {
+        "properties": {
+          "caseId": {
+            "type": "string"
+          },
+          "caseType": {
+            "$ref": "#/components/schemas/CaseType"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "relatedInteractionIds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CaseStatus"
+          },
+          "title": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "caseId",
+          "customerId",
+          "caseType",
           "title",
+          "status"
+        ],
+        "type": "object"
+      },
+      "Opportunity": {
+        "properties": {
+          "confidence": {
+            "format": "double",
+            "type": "number"
+          },
+          "content": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "estimatedValue": {
+            "format": "double",
+            "type": "number"
+          },
+          "interactionId": {
+            "type": "string"
+          },
+          "opportunityId": {
+            "type": "string"
+          },
+          "opportunityType": {
+            "type": "string"
+          },
+          "stage": {
+            "$ref": "#/components/schemas/OpportunityStage"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "opportunityId",
+          "interactionId",
+          "content",
+          "stage"
+        ],
+        "type": "object"
+      },
+      "OpportunityRequest": {
+        "properties": {
+          "confidence": {
+            "format": "double",
+            "type": "number"
+          },
+          "content": {
+            "type": "string"
+          },
+          "estimatedValue": {
+            "format": "double",
+            "type": "number"
+          },
+          "interactionId": {
+            "type": "string"
+          },
+          "opportunityType": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "interactionId",
+          "content"
+        ],
+        "type": "object"
+      },
+      "OpportunitySignalSummary": {
+        "properties": {
+          "confidence": {
+            "format": "double",
+            "type": "number"
+          },
+          "content": {
+            "type": "string"
+          },
+          "signalType": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "OpportunityStage": {
+        "enum": [
+          "DETECTED",
+          "QUALIFIED",
+          "PROPOSAL",
+          "NEGOTIATION",
+          "CLOSED_WON",
+          "CLOSED_LOST"
+        ],
+        "type": "string"
+      },
+      "OutreachScript": {
+        "properties": {
+          "channel": {
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "generatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "scriptContent": {
+            "type": "string"
+          },
+          "scriptId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "scriptId",
+          "customerId",
+          "channel"
+        ],
+        "type": "object"
+      },
+      "OutreachScriptRequest": {
+        "properties": {
+          "channel": {
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "tone": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customerId"
+        ],
+        "type": "object"
+      },
+      "OutreachScriptResponse": {
+        "properties": {
+          "channel": {
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "generatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "scriptContent": {
+            "type": "string"
+          },
+          "scriptId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "scriptId",
+          "customerId"
+        ],
+        "type": "object"
+      },
+      "PolicyRule": {
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "priority": {
+            "type": "integer"
+          },
+          "ruleContent": {
+            "type": "string"
+          },
+          "ruleId": {
+            "type": "string"
+          },
+          "ruleName": {
+            "type": "string"
+          },
+          "ruleType": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ruleId",
+          "ruleName",
+          "ruleType"
+        ],
+        "type": "object"
+      },
+      "PostvisitAnalysisContent": {
+        "properties": {
+          "claimsExtracted": {
+            "items": {
+              "$ref": "#/components/schemas/InteractionExtraction"
+            },
+            "type": "array"
+          },
+          "commitmentsIdentified": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "followUpActions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "interactionSummary": {
+            "type": "string"
+          },
+          "opportunitiesDetected": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "riskUpdates": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "PostvisitExecutionResponse": {
+        "properties": {
+          "analysisContent": {
+            "$ref": "#/components/schemas/PostvisitAnalysisContent"
+          },
+          "analysisGenerated": {
+            "type": "boolean"
+          },
+          "claimsExtracted": {
+            "type": "integer"
+          },
+          "commitmentsIdentified": {
+            "type": "integer"
+          },
+          "journeyId": {
+            "type": "string"
+          },
+          "opportunitiesDetected": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "journeyId",
+          "analysisGenerated"
+        ],
+        "type": "object"
+      },
+      "PostvisitRequest": {
+        "properties": {
+          "interactionId": {
+            "type": "string"
+          },
+          "transcript": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "PrevisitExecutionResponse": {
+        "properties": {
+          "journeyId": {
+            "type": "string"
+          },
+          "kycGapsIdentified": {
+            "type": "integer"
+          },
+          "quickBattleCard": {
+            "$ref": "#/components/schemas/QuickBattleCard"
+          },
+          "reportContent": {
+            "$ref": "#/components/schemas/PrevisitReportContent"
+          },
+          "reportGenerated": {
+            "type": "boolean"
+          },
+          "signalsDetected": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "journeyId",
+          "reportGenerated"
+        ],
+        "type": "object"
+      },
+      "PrevisitReportContent": {
+        "properties": {
+          "customerOverview": {
+            "type": "string"
+          },
+          "kycGapSummary": {
+            "type": "string"
+          },
+          "opportunityHighlights": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "previousInteractionSummary": {
+            "type": "string"
+          },
+          "recommendedActions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "riskIndicators": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "PrevisitRequest": {
+        "properties": {
+          "focusAreas": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "includeQuickBattleCard": {
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "Problem": {
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "timestamp": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
           "status",
-          "traceId"
+          "error",
+          "message",
+          "path",
+          "timestamp"
+        ],
+        "type": "object"
+      },
+      "ProductKnowledgeVersion": {
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "productCount": {
+            "type": "integer"
+          },
+          "publishedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "versionId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "versionId",
+          "version"
+        ],
+        "type": "object"
+      },
+      "ProductMatch": {
+        "properties": {
+          "matchReasons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "matchScore": {
+            "format": "double",
+            "type": "number"
+          },
+          "productCategory": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "productName": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "QuickBattleCard": {
+        "properties": {
+          "customerName": {
+            "type": "string"
+          },
+          "keyFacts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "openItems": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "riskAlerts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "suggestedTopics": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "RecordInteractionRequest": {
+        "properties": {
+          "channel": {
+            "$ref": "#/components/schemas/Channel"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "durationSeconds": {
+            "type": "integer"
+          },
+          "interactionDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "participants": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "recordingConsentId": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "transcript": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customerId",
+          "channel"
+        ],
+        "type": "object"
+      },
+      "RecordingConsent": {
+        "properties": {
+          "channel": {
+            "$ref": "#/components/schemas/Channel"
+          },
+          "consentId": {
+            "type": "string"
+          },
+          "consentType": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "grantedBy": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "GRANTED",
+              "REVOKED",
+              "EXPIRED"
+            ],
+            "type": "string"
+          },
+          "validFrom": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "validUntil": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "consentId",
+          "customerId",
+          "consentType",
+          "status"
+        ],
+        "type": "object"
+      },
+      "SeedDataLoadResponse": {
+        "properties": {
+          "entitiesLoaded": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object"
+          },
+          "loaded": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "SeedDataStatusResponse": {
+        "properties": {
+          "entityCounts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object"
+          },
+          "loaded": {
+            "type": "boolean"
+          },
+          "loadedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Task": {
+        "properties": {
+          "assignee": {
+            "type": "string"
+          },
+          "completedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "dueDate": {
+            "type": "string"
+          },
+          "interactionId": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/TaskStatus"
+          },
+          "taskId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "taskId",
+          "interactionId",
+          "title",
+          "assignee",
+          "status"
+        ],
+        "type": "object"
+      },
+      "TaskRequest": {
+        "properties": {
+          "assignee": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "dueDate": {
+            "type": "string"
+          },
+          "interactionId": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "interactionId",
+          "title",
+          "assignee"
+        ],
+        "type": "object"
+      },
+      "TaskStatus": {
+        "enum": [
+          "PENDING",
+          "IN_PROGRESS",
+          "COMPLETED",
+          "CANCELLED"
+        ],
+        "type": "string"
+      },
+      "Transaction": {
+        "properties": {
+          "amount": {
+            "format": "double",
+            "type": "number"
+          },
+          "counterparty": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "transactionDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "transactionId": {
+            "type": "string"
+          },
+          "transactionType": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "transactionId",
+          "customerId"
+        ],
+        "type": "object"
+      },
+      "UpdateStageRequest": {
+        "properties": {
+          "stage": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "stage"
+        ],
+        "type": "object"
+      },
+      "UpdateStatusRequest": {
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
         ],
         "type": "object"
       }
     }
   },
   "info": {
-    "description": "工程候选API；不代表真实外部系统已经接通。",
+    "description": "GITS 知识工程平台 API — V1.1",
     "title": "GITS Knowledge Engineering API",
-    "version": "0.1.0"
+    "version": "1.1.0"
   },
   "openapi": "3.1.1",
   "paths": {
@@ -93,16 +2290,2024 @@
                 }
               }
             },
-            "description": "Current declared status"
+            "description": "OK"
           }
         },
-        "summary": "Return the declared engineering package status"
+        "tags": [
+          "Architecture"
+        ]
+      }
+    },
+    "/audit-trace": {
+      "get": {
+        "operationId": "getAuditTrace",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "entityType",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "entityId",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "actorId",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AuditTraceEntry"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Audit"
+        ]
+      }
+    },
+    "/commitments": {
+      "get": {
+        "operationId": "listCommitments",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "interactionId",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "$ref": "#/components/schemas/CommitmentStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Commitment"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Commitment"
+        ]
+      },
+      "post": {
+        "operationId": "createCommitment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommitmentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Commitment"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "tags": [
+          "Commitment"
+        ]
+      }
+    },
+    "/commitments/{id}/status": {
+      "put": {
+        "operationId": "updateCommitmentStatus",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStatusRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Commitment"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Commitment"
+        ]
+      }
+    },
+    "/crm/writeback-commands": {
+      "get": {
+        "operationId": "listCrmWritebackCommands",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "$ref": "#/components/schemas/CrmWritebackStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CrmWritebackCommand"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "CRM Writeback"
+        ]
+      }
+    },
+    "/crm/writeback-commands/{commandId}": {
+      "get": {
+        "operationId": "getCrmWritebackCommand",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "commandId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrmWritebackCommand"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "CRM Writeback"
+        ]
+      }
+    },
+    "/crm/writeback-commands/{commandId}/decide": {
+      "post": {
+        "operationId": "decideCrmWritebackCommand",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "commandId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrmWritebackDecisionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrmWritebackCommand"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        },
+        "tags": [
+          "CRM Writeback"
+        ]
+      }
+    },
+    "/customer-journeys": {
+      "get": {
+        "operationId": "listCustomerJourneys",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "customerId",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CustomerJourney"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Customer Journey"
+        ]
+      }
+    },
+    "/customer-journeys/{id}": {
+      "get": {
+        "operationId": "getCustomerJourney",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerJourney"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Customer Journey"
+        ]
+      }
+    },
+    "/engagement/claims": {
+      "get": {
+        "operationId": "listClaims",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "customerId",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Claim"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Claim"
+        ]
+      },
+      "post": {
+        "operationId": "recordClaim",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Claim"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "tags": [
+          "Claim"
+        ]
+      }
+    },
+    "/engagement/claims/{claimId}": {
+      "get": {
+        "operationId": "getClaim",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "claimId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Claim"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Claim"
+        ]
+      }
+    },
+    "/engagement/customer": {
+      "get": {
+        "operationId": "listCustomers",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "rmId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Customer"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Customer Context"
+        ]
+      },
+      "post": {
+        "operationId": "createCustomer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomerRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerCreatedResponse"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        },
+        "tags": [
+          "Customer Context"
+        ]
+      }
+    },
+    "/engagement/customer/{customerId}/operating-view": {
+      "get": {
+        "operationId": "getOperatingView",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/customerId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerOperatingView"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Customer Context"
+        ]
+      }
+    },
+    "/engagement/customer/{customerId}/product-matching": {
+      "post": {
+        "operationId": "matchProducts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/customerId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ProductMatch"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Customer Context"
+        ]
+      }
+    },
+    "/engagement/customer/{customerId}/transactions": {
+      "get": {
+        "operationId": "getTransactions",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/customerId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Transaction"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Customer Context"
+        ]
+      }
+    },
+    "/engagement/journey/meeting-script": {
+      "post": {
+        "operationId": "generateMeetingScript",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MeetingScriptRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeetingScriptResponse"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "tags": [
+          "Engagement Journey"
+        ]
+      }
+    },
+    "/engagement/journey/meeting-scripts": {
+      "get": {
+        "operationId": "listMeetingScripts",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "customerId",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MeetingScript"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Engagement Journey"
+        ]
+      }
+    },
+    "/engagement/journey/outreach-script": {
+      "post": {
+        "operationId": "generateOutreachScript",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OutreachScriptRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OutreachScriptResponse"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "tags": [
+          "Engagement Journey"
+        ]
+      }
+    },
+    "/engagement/journey/outreach-scripts": {
+      "get": {
+        "operationId": "listOutreachScripts",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "customerId",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/OutreachScript"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Engagement Journey"
+        ]
+      }
+    },
+    "/engagement/journey/start": {
+      "post": {
+        "operationId": "startJourney",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JourneyStartRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JourneyStartResponse"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        },
+        "tags": [
+          "Engagement Journey"
+        ]
+      }
+    },
+    "/engagement/journey/{journeyId}/complete": {
+      "post": {
+        "operationId": "completeJourney",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/journeyId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JourneyCompleteResponse"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Engagement Journey"
+        ]
+      }
+    },
+    "/engagement/journey/{journeyId}/new-evidence": {
+      "post": {
+        "operationId": "processNewEvidence",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/journeyId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewEvidenceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewEvidenceResponse"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Engagement Journey"
+        ]
+      }
+    },
+    "/engagement/journey/{journeyId}/postvisit": {
+      "post": {
+        "operationId": "executePostvisit",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/journeyId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostvisitRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostvisitExecutionResponse"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Engagement Journey"
+        ]
+      }
+    },
+    "/engagement/journey/{journeyId}/previsit": {
+      "post": {
+        "operationId": "executePrevisit",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/journeyId"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrevisitRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrevisitExecutionResponse"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Engagement Journey"
+        ]
+      }
+    },
+    "/engagement/kyc/gap-profile": {
+      "post": {
+        "operationId": "createKycGapProfile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateKycGapProfileRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycGapProfileCreatedResponse"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "tags": [
+          "KYC Insight"
+        ]
+      }
+    },
+    "/engagement/kyc/{customerId}/gap-profile": {
+      "get": {
+        "operationId": "getKycGapProfile",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/customerId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycGapProfile"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "KYC Insight"
+        ]
+      }
+    },
+    "/engagement/kyc/{customerId}/insights": {
+      "get": {
+        "operationId": "getKycInsights",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/customerId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/KycInsight"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "KYC Insight"
+        ]
+      }
+    },
+    "/evaluations": {
+      "post": {
+        "operationId": "createEvaluation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEvaluationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Evaluation"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "tags": [
+          "Evaluation"
+        ]
+      }
+    },
+    "/evaluations/{id}": {
+      "get": {
+        "operationId": "getEvaluation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Evaluation"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Evaluation"
+        ]
+      }
+    },
+    "/evidences/{evidenceId}/versions": {
+      "get": {
+        "operationId": "getEvidenceVersions",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "evidenceId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/EvidenceVersion"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Evidence"
+        ]
+      }
+    },
+    "/external-events": {
+      "get": {
+        "operationId": "listExternalEvents",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "customerId",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "eventType",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ExternalEvent"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "External Event"
+        ]
+      }
+    },
+    "/human-gates": {
+      "get": {
+        "operationId": "listHumanGates",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "$ref": "#/components/schemas/HumanGateStatus"
+            }
+          },
+          {
+            "in": "query",
+            "name": "gateType",
+            "schema": {
+              "$ref": "#/components/schemas/GateType"
+            }
+          },
+          {
+            "in": "query",
+            "name": "journeyId",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "customerId",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/HumanGate"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Human Gate"
+        ]
+      }
+    },
+    "/human-gates/{gateId}": {
+      "get": {
+        "operationId": "getHumanGate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "gateId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HumanGate"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Human Gate"
+        ]
+      }
+    },
+    "/human-gates/{gateId}/decide": {
+      "post": {
+        "operationId": "decideHumanGate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "gateId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HumanGateDecisionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HumanGate"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        },
+        "tags": [
+          "Human Gate"
+        ]
+      }
+    },
+    "/interactions": {
+      "get": {
+        "operationId": "listInteractions",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "customerId",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Interaction"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Interaction"
+        ]
+      },
+      "post": {
+        "operationId": "recordInteraction",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordInteractionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Interaction"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "tags": [
+          "Interaction"
+        ]
+      }
+    },
+    "/interactions/{interactionId}": {
+      "get": {
+        "operationId": "getInteraction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "interactionId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Interaction"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Interaction"
+        ]
+      }
+    },
+    "/interactions/{interactionId}/extract": {
+      "post": {
+        "operationId": "extractInteraction",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "interactionId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/InteractionExtraction"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Interaction"
+        ]
+      }
+    },
+    "/knowledge-rules": {
+      "get": {
+        "operationId": "listKnowledgeRules",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PolicyRule"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Knowledge Rule"
+        ]
+      },
+      "post": {
+        "operationId": "createKnowledgeRule",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateKnowledgeRuleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyRule"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "tags": [
+          "Knowledge Rule"
+        ]
+      }
+    },
+    "/operating-cases": {
+      "get": {
+        "operationId": "listOperatingCases",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "customerId",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/OperatingCase"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Operating Case"
+        ]
+      },
+      "post": {
+        "operationId": "createOperatingCase",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOperatingCaseRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperatingCase"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "tags": [
+          "Operating Case"
+        ]
+      }
+    },
+    "/operating-cases/{id}": {
+      "get": {
+        "operationId": "getOperatingCase",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperatingCase"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Operating Case"
+        ]
+      }
+    },
+    "/opportunities": {
+      "get": {
+        "operationId": "listOpportunities",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "interactionId",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "stage",
+            "schema": {
+              "$ref": "#/components/schemas/OpportunityStage"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Opportunity"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Opportunity"
+        ]
+      },
+      "post": {
+        "operationId": "createOpportunity",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpportunityRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Opportunity"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "tags": [
+          "Opportunity"
+        ]
+      }
+    },
+    "/opportunities/{id}/stage": {
+      "put": {
+        "operationId": "updateOpportunityStage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Opportunity"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Opportunity"
+        ]
+      }
+    },
+    "/products/versions": {
+      "get": {
+        "operationId": "listProductKnowledgeVersions",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ProductKnowledgeVersion"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Product Knowledge"
+        ]
+      }
+    },
+    "/recording-consents": {
+      "post": {
+        "operationId": "createRecordingConsent",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRecordingConsentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordingConsent"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "tags": [
+          "Recording Consent"
+        ]
+      }
+    },
+    "/recording-consents/{id}": {
+      "get": {
+        "operationId": "getRecordingConsent",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordingConsent"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Recording Consent"
+        ]
+      }
+    },
+    "/seed-data/load": {
+      "post": {
+        "operationId": "loadSeedData",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeedDataLoadResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Seed Data"
+        ]
+      }
+    },
+    "/seed-data/status": {
+      "get": {
+        "operationId": "getSeedDataStatus",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeedDataStatusResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Seed Data"
+        ]
+      }
+    },
+    "/tasks": {
+      "get": {
+        "operationId": "listTasks",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "interactionId",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "$ref": "#/components/schemas/TaskStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Task"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "Task"
+        ]
+      },
+      "post": {
+        "operationId": "createTask",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "tags": [
+          "Task"
+        ]
+      }
+    },
+    "/tasks/{id}/status": {
+      "put": {
+        "operationId": "updateTaskStatus",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStatusRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "tags": [
+          "Task"
+        ]
       }
     }
   },
   "servers": [
     {
       "url": "/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Engagement Journey"
+    },
+    {
+      "name": "Customer Context"
+    },
+    {
+      "name": "KYC Insight"
+    },
+    {
+      "name": "Claim"
+    },
+    {
+      "name": "Commitment"
+    },
+    {
+      "name": "Task"
+    },
+    {
+      "name": "Opportunity"
+    },
+    {
+      "name": "External Event"
+    },
+    {
+      "name": "Product Knowledge"
+    },
+    {
+      "name": "Interaction"
+    },
+    {
+      "name": "Customer Journey"
+    },
+    {
+      "name": "Evaluation"
+    },
+    {
+      "name": "Knowledge Rule"
+    },
+    {
+      "name": "Operating Case"
+    },
+    {
+      "name": "Recording Consent"
+    },
+    {
+      "name": "Human Gate"
+    },
+    {
+      "name": "CRM Writeback"
+    },
+    {
+      "name": "Evidence"
+    },
+    {
+      "name": "Audit"
+    },
+    {
+      "name": "Seed Data"
+    },
+    {
+      "name": "Architecture"
     }
   ]
 }

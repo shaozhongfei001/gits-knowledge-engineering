@@ -1,4 +1,0 @@
-﻿facility_id,borrower_entity_id,facility_type,approved_amount_cny,used_amount_cny,available_amount_cny,approval_date,expiry_date,allowed_purpose,restriction,status
-FAC-001,ENT-001,综合授信,150000000,110000000,40000000,2026-01-15,2027-01-14,日常经营周转、原材料采购、短期订单资金周转,固定资产投资需另行核实用途和审批；项目主体变化需重新判断结构,ACTIVE
-FAC-EXT-A,ENT-001,他行A授信（客户口径，待核）,90000000,65000000,25000000,,,,仅客户口头/内部估计，不作为本行事实,PENDING_VERIFICATION
-FAC-EXT-B,ENT-001,他行B授信（客户口径，待核）,60000000,40000000,20000000,,,,仅客户口头/内部估计，不作为本行事实,PENDING_VERIFICATION

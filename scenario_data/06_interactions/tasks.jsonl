@@ -1,5 +1,0 @@
-{"task_id": "TASK-001", "owner": "P-RM-001", "content": "跟进设备清单", "due": "2026-07-10", "related_commitment": "COM-CUST-001", "status": "OPEN", "task_type": "FOLLOW_UP"}
-{"task_id": "TASK-002", "owner": "P-RM-001", "content": "形成三年期融资结构建议", "due": "2026-07-14", "related_commitment": "COM-BANK-001", "status": "OPEN", "task_type": "BANK_DELIVERABLE"}
-{"task_id": "TASK-003", "owner": "P-TB-001", "content": "供应商付款工具对照", "due": "2026-07-14", "related_commitment": "COM-BANK-002", "status": "OPEN", "task_type": "SPECIALIST_COLLAB"}
-{"task_id": "TASK-004", "owner": "P-RISK-001", "content": "评估集团本部/项目公司两条路径的Preliminary Bankability边界", "due": "2026-07-14", "related_commitment": "", "status": "OPEN", "task_type": "SPECIALIST_COLLAB"}
-{"task_id": "TASK-005", "owner": "P-PM-001", "content": "确认设备更新贷款V2.2适用条件和材料缺口", "due": "2026-07-14", "related_commitment": "", "status": "OPEN", "task_type": "SPECIALIST_COLLAB"}

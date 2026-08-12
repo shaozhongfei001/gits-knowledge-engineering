@@ -1,8 +1,0 @@
-{"product_id": "PROD-WCL", "version": "3.4", "effective_from": "2026-06-15", "effective_to": null, "status": "ACTIVE", "owner": "公司金融产品管理部"}
-{"product_id": "PROD-FAL", "version": "2.2", "effective_from": "2026-07-01", "effective_to": null, "status": "ACTIVE", "owner": "公司金融产品管理部"}
-{"product_id": "PROD-FAL", "version": "2.1", "effective_from": "2025-11-01", "effective_to": "2026-06-30", "status": "RETIRED", "owner": "公司金融产品管理部"}
-{"product_id": "PROD-SCF", "version": "4.0", "effective_from": "2026-05-10", "effective_to": null, "status": "ACTIVE", "owner": "交易银行部"}
-{"product_id": "PROD-CASH", "version": "5.1", "effective_from": "2026-04-01", "effective_to": null, "status": "ACTIVE", "owner": "交易银行部"}
-{"product_id": "PROD-BA", "version": "3.7", "effective_from": "2026-02-01", "effective_to": null, "status": "ACTIVE", "owner": "交易银行部"}
-{"product_id": "PROD-ORDER", "version": "1.8", "effective_from": "2026-03-01", "effective_to": null, "status": "ACTIVE", "owner": "公司金融产品管理部"}
-{"product_id": "PROD-CROSS", "version": "2.5", "effective_from": "2026-01-01", "effective_to": null, "status": "ACTIVE", "owner": "国际业务部"}

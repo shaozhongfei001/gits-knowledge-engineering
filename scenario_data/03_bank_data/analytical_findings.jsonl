@@ -1,2 +1,0 @@
-{"finding_id": "FIND-DEP-001", "as_of": "2026-07-05", "finding": "集团本行关系口径日均存款较2026年3月约下降35%", "source_refs": ["03_bank_data/bank_relationship_monthly.csv"], "type": "FINDING", "limitation": "仅本行关系口径，不代表客户全部货币资金", "severity": "MEDIUM"}
-{"finding_id": "FIND-EQP-001", "as_of": "2026-07-05", "finding": "本行可见设备供应商付款近45天较前45天增加约32.0%", "source_refs": ["03_bank_data/transactions_20260101_20260708.csv"], "type": "FINDING", "limitation": "仅本行可见账户，不代表客户全部设备付款", "severity": "MEDIUM"}

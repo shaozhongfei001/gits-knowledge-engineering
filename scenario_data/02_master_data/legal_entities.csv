@@ -1,6 +1,0 @@
-﻿entity_id,name,short_name,entity_type,role,ownership_parent,ownership_pct,bank_customer_id,status
-ENT-001,华东精工装备集团有限公司,华东精工,LEGAL_ENTITY,集团本部/当前授信主体,,,CUST-001,ACTIVE
-ENT-002,华东精工智能制造有限公司,智能制造公司,LEGAL_ENTITY,二期项目潜在项目主体,ENT-001,100,CUST-002,ACTIVE
-ENT-003,华东精工自动化设备有限公司,自动化公司,LEGAL_ENTITY,生产/设备采购主体之一,ENT-001,80,CUST-003,ACTIVE
-ENT-004,华东精工进出口有限公司,进出口公司,LEGAL_ENTITY,进出口及跨境结算主体,ENT-001,100,CUST-004,ACTIVE
-ENT-005,华东精工产业投资有限公司,产业投资公司,LEGAL_ENTITY,项目持股/产业投资主体,ENT-001,100,CUST-005,ACTIVE

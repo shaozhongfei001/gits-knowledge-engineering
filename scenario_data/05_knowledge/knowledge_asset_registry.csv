@@ -1,6 +1,0 @@
-﻿asset_id,type,name,owner,version,status,effective_from
-KA-001,INDUSTRY,高端装备制造行业知识包,行业研究Owner,1.1,ACTIVE,2026-07-01
-KA-002,CUSTOMER_OPERATING,华东精工经营记忆投影,RM/客户经营Owner,2026-07-08,ACTIVE,2026-07-08
-KA-003,PRODUCT,固定资产/设备更新贷款知识卡V2.2,公司金融产品管理部,2.2,ACTIVE,2026-07-01
-KA-004,SOP,后续拜访与离场确认SOP,客户经营方法Owner,1.0,ACTIVE,2026-07-01
-KA-005,EVAL,3000万语义对账评测集,Skill Owner,1.0,DRAFT,2026-07-20

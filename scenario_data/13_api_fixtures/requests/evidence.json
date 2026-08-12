@@ -1,9 +1,0 @@
-{
-  "method": "POST",
-  "path": "/api/v1/evidence/ingest",
-  "body": {
-    "evidence_id": "EVD-20260710-EQUIP",
-    "source": "CUSTOMER_DOCUMENT",
-    "path": "12_new_evidence/equipment_list_20260710.csv"
-  }
-}

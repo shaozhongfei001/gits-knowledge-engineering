@@ -1,3 +1,0 @@
-{"commitment_id": "COM-CUST-001", "side": "CUSTOMER", "owner": "C-FIN-001", "content": "提供设备清单和付款节奏", "due": "2026-07-10", "status": "OPEN", "source_ref": "NOTE-008"}
-{"commitment_id": "COM-BANK-001", "side": "BANK", "owner": "P-RM-001", "content": "提供三年期融资结构建议", "due": "2026-07-14", "status": "OPEN", "source_ref": "NOTE-008"}
-{"commitment_id": "COM-BANK-002", "side": "BANK", "owner": "P-TB-001", "content": "提供供应商付款工具对照", "due": "2026-07-14", "status": "OPEN", "source_ref": "NOTE-008"}

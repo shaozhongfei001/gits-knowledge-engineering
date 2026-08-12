@@ -1,4 +1,0 @@
-﻿entity_id,industry_code,role,confidence,source
-ENT-001,I-111,中游/系统集成,0.96,SYNTH_MASTER
-ENT-002,I-111,智能制造项目主体候选,0.92,SYNTH_MASTER
-ENT-003,I-112,设备制造/采购主体,0.91,SYNTH_MASTER

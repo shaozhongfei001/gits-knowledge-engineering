@@ -1,4 +1,0 @@
-{"time": "08:31", "source": "微信", "from": "嘉禾新能源CFO", "content": "上午能否确认一下续授信材料还差什么？", "severity": "MEDIUM", "system_handling": "生成待办，不打断华东精工经营队列"}
-{"time": "10:46", "source": "电话", "from": "浙北新材料财务总监", "content": "票据到期安排临时咨询", "severity": "HIGH", "system_handling": "标记临时高优先，处理后恢复华东精工上下文"}
-{"time": "11:42", "source": "主管IM", "from": "陈晓峰", "content": "下午拜访前把华东精工3000万问题先核清口径，别直接报商机", "severity": "HIGH", "system_handling": "加入R2卡提醒"}
-{"time": "16:18", "source": "企业微信", "from": "王强", "content": "刚才有一点补充，设备清单后天先发初稿", "severity": "MEDIUM", "system_handling": "追加Interaction Follow-up"}
