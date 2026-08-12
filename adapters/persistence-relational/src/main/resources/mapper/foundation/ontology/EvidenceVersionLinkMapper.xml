@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.EvidenceVersionLinkMapper">
+
+    <resultMap id="evidenceVersionLinkResult" type="com.gien.gits.ontology.domain.EvidenceVersionLink">
+            <constructor>
+                <idArg column="link_id" javaType="String"/>
+                <arg column="evidence_id" javaType="String"/>
+                <arg column="previous_version_id" javaType="String"/>
+                <arg column="next_version_id" javaType="String"/>
+                <arg column="version_number" javaType="int"/>
+                <arg column="change_type" javaType="String"/>
+                <arg column="change_reason" javaType="String"/>
+                <arg column="changed_by" javaType="String"/>
+                <arg column="changed_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.domain.EvidenceVersionLink">
+        INSERT INTO evidence_version_link (
+            link_id, evidence_id, previous_version_id, next_version_id,
+            version_number, change_type, change_reason, changed_by, changed_at
+        ) VALUES (
+            #{linkId}, #{evidenceId}, #{previousVersionId}, #{nextVersionId},
+            #{versionNumber}, #{changeType}, #{changeReason}, #{changedBy},
+            #{changedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findByLinkId" resultMap="evidenceVersionLinkResult">
+        SELECT link_id, evidence_id, previous_version_id, next_version_id,
+               version_number, change_type, change_reason, changed_by, changed_at
+        FROM evidence_version_link WHERE link_id = #{linkId}
+    </select>
+
+    <select id="findByEvidenceId" resultMap="evidenceVersionLinkResult">
+        SELECT link_id, evidence_id, previous_version_id, next_version_id,
+               version_number, change_type, change_reason, changed_by, changed_at
+        FROM evidence_version_link WHERE evidence_id = #{evidenceId}
+        ORDER BY version_number DESC LIMIT 1
+    </select>
+
+    <select id="findVersionChain" resultMap="evidenceVersionLinkResult">
+        SELECT link_id, evidence_id, previous_version_id, next_version_id,
+               version_number, change_type, change_reason, changed_by, changed_at
+        FROM evidence_version_link WHERE evidence_id = #{evidenceId}
+        ORDER BY version_number ASC
+    </select>
+
+    <select id="findLatestVersion" resultMap="evidenceVersionLinkResult">
+        SELECT link_id, evidence_id, previous_version_id, next_version_id,
+               version_number, change_type, change_reason, changed_by, changed_at
+        FROM evidence_version_link WHERE evidence_id = #{evidenceId}
+        ORDER BY version_number DESC LIMIT 1
+    </select>
+
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.CustomerMapper">
+
+    <resultMap id="customerResult" type="com.gien.gits.adapter.persistence.foundation.ontology.dto.CustomerRow">
+            <constructor>
+                <idArg column="customer_id" javaType="String"/>
+                <arg column="customer_name" javaType="String"/>
+                <arg column="customer_short_name" javaType="String"/>
+                <arg column="unified_social_credit_code" javaType="String"/>
+                <arg column="established_date" javaType="java.time.LocalDate"/>
+                <arg column="registered_capital_cny" javaType="Long"/>
+                <arg column="industry" javaType="com.gien.gits.ontology.Industry"/>
+                <arg column="region" javaType="String"/>
+                <arg column="enterprise_scale" javaType="com.gien.gits.ontology.EnterpriseScale"/>
+                <arg column="customer_tier" javaType="com.gien.gits.ontology.CustomerTier"/>
+                <arg column="relationship_since" javaType="java.time.LocalDate"/>
+                <arg column="rm_id" javaType="String"/>
+                <arg column="rm_name" javaType="String"/>
+                <arg column="managing_branch" javaType="String"/>
+                <arg column="group_flag" javaType="Boolean"/>
+                <arg column="listed_status" javaType="com.gien.gits.ontology.ListedStatus"/>
+                <arg column="risk_level" javaType="com.gien.gits.ontology.RiskLevel"/>
+                <arg column="main_products" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+                <arg column="core_tags" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+                <arg column="relationship_summary" javaType="String"/>
+                <arg column="created_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="updated_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.Customer">
+        INSERT INTO customer (
+            customer_id, customer_name, customer_short_name, unified_social_credit_code,
+            established_date, registered_capital_cny, industry, region, enterprise_scale,
+            customer_tier, relationship_since, rm_id, rm_name, managing_branch,
+            group_flag, listed_status, risk_level, main_products, core_tags,
+            relationship_summary, created_at, updated_at
+        ) VALUES (
+            #{customerId}, #{customerName}, #{customerShortName}, #{unifiedSocialCreditCode},
+            #{establishedDate}, #{registeredCapitalCny}, #{industry},
+            #{region}, #{enterpriseScale}, #{customerTier},
+            #{relationshipSince}, #{rmId}, #{rmName}, #{managingBranch},
+            #{groupFlag}, #{listedStatus}, #{riskLevel},
+            #{mainProducts, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+            #{coreTags, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+            #{relationshipSummary},
+            #{createdAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{updatedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findRowById" resultMap="customerResult">
+        SELECT customer_id, customer_name, customer_short_name, unified_social_credit_code,
+               established_date, registered_capital_cny, industry, region, enterprise_scale,
+               customer_tier, relationship_since, rm_id, rm_name, managing_branch,
+               group_flag, listed_status, risk_level, main_products, core_tags,
+               relationship_summary, created_at, updated_at
+        FROM customer WHERE customer_id = #{customerId}
+    </select>
+
+    <select id="findRowsByRmId" resultMap="customerResult">
+        SELECT customer_id, customer_name, customer_short_name, unified_social_credit_code,
+               established_date, registered_capital_cny, industry, region, enterprise_scale,
+               customer_tier, relationship_since, rm_id, rm_name, managing_branch,
+               group_flag, listed_status, risk_level, main_products, core_tags,
+               relationship_summary, created_at, updated_at
+        FROM customer WHERE rm_id = #{rmId}
+    </select>
+
+    <select id="findAllRows" resultMap="customerResult">
+        SELECT customer_id, customer_name, customer_short_name, unified_social_credit_code,
+               established_date, registered_capital_cny, industry, region, enterprise_scale,
+               customer_tier, relationship_since, rm_id, rm_name, managing_branch,
+               group_flag, listed_status, risk_level, main_products, core_tags,
+               relationship_summary, created_at, updated_at
+        FROM customer ORDER BY customer_name
+    </select>
+
+</mapper>

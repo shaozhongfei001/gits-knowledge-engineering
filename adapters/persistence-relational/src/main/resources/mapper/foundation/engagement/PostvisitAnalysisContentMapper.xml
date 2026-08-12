@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.engagement.mapper.PostvisitAnalysisContentMapper">
+
+    <resultMap id="postvisitAnalysisResultMap"
+               type="com.gien.gits.engagement.PostvisitAnalysisContent">
+            <constructor>
+                <idArg column="analysis_id" javaType="String"/>
+                <arg column="journey_id" javaType="String"/>
+                <arg column="visit_summary" javaType="String"/>
+                <arg column="key_findings_json" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.InteractionExtractionListTypeHandler"/>
+                <arg column="opportunity_signals_json" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.OpportunitySignalItemListTypeHandler"/>
+                <arg column="commitments_json" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.CommitmentItemListTypeHandler"/>
+                <arg column="reconciliation_items_json" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.FactReconciliationItemListTypeHandler"/>
+                <arg column="follow_up_actions_json" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+                <arg column="next_step_recommendation" javaType="String"/>
+            </constructor>
+    </resultMap>
+
+    <sql id="postvisitColumns">
+        analysis_id, journey_id, operating_case_id, visit_summary,
+        key_findings_json, opportunity_signals_json, commitments_json,
+        reconciliation_items_json, follow_up_actions_json, next_step_recommendation
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO postvisit_analysis_content (
+            id, analysis_id, operating_case_id, journey_id, visit_summary,
+            key_findings_json, opportunity_signals_json, commitments_json,
+            reconciliation_items_json, follow_up_actions_json, next_step_recommendation,
+            created_at, updated_at
+        ) VALUES (
+            #{content.analysisId}, #{content.analysisId}, #{operatingCaseId}, #{content.journeyId},
+            #{content.visitSummary},
+            #{content.keyFindings, typeHandler=com.gien.gits.adapter.persistence.common.handler.InteractionExtractionListTypeHandler},
+            #{content.opportunitySignals, typeHandler=com.gien.gits.adapter.persistence.common.handler.OpportunitySignalItemListTypeHandler},
+            #{content.commitments, typeHandler=com.gien.gits.adapter.persistence.common.handler.CommitmentItemListTypeHandler},
+            #{content.reconciliationItems, typeHandler=com.gien.gits.adapter.persistence.common.handler.FactReconciliationItemListTypeHandler},
+            #{content.followUpActions, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+            #{content.nextStepRecommendation},
+            CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <select id="findRowByAnalysisId" resultMap="postvisitAnalysisResultMap">
+        SELECT <include refid="postvisitColumns"/>
+        FROM postvisit_analysis_content WHERE analysis_id = #{analysisId}
+    </select>
+
+    <select id="findRowLatestByOperatingCaseId" resultMap="postvisitAnalysisResultMap">
+        SELECT <include refid="postvisitColumns"/>
+        FROM postvisit_analysis_content
+        WHERE operating_case_id = #{operatingCaseId}
+        ORDER BY created_at DESC LIMIT 1
+    </select>
+
+    <select id="findRowByJourneyId" resultMap="postvisitAnalysisResultMap">
+        SELECT <include refid="postvisitColumns"/>
+        FROM postvisit_analysis_content WHERE journey_id = #{journeyId}
+    </select>
+
+</mapper>

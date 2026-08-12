@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.OpportunitySignalMapper">
+
+    <resultMap id="opportunitySignalResult" type="com.gien.gits.ontology.OpportunitySignal">
+            <constructor>
+                <idArg column="signal_id" javaType="java.util.UUID"/>
+                <arg column="operating_case_id" javaType="String"/>
+                <arg column="journey_id" javaType="String"/>
+                <arg column="signal_type" javaType="com.gien.gits.ontology.OpportunitySignal$SignalType"/>
+                <arg column="content" javaType="String"/>
+                <arg column="source_type" javaType="com.gien.gits.ontology.OpportunitySignal$SignalSourceType"/>
+                <arg column="source_ref" javaType="String"/>
+                <arg column="confidence" javaType="java.math.BigDecimal"/>
+                <arg column="status" javaType="com.gien.gits.ontology.OpportunitySignal$SignalStatus"/>
+                <arg column="evidence_ref" javaType="String"/>
+                <arg column="detected_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="confirmed_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="created_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="updated_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <sql id="signalColumns">
+        signal_id, operating_case_id, journey_id, signal_type, content,
+        source_type, source_ref, confidence, status, evidence_ref,
+        detected_at, confirmed_at, created_at, updated_at
+    </sql>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.OpportunitySignal">
+        INSERT INTO opportunity_signal (
+            signal_id, operating_case_id, journey_id, signal_type, content,
+            source_type, source_ref, confidence, status, evidence_ref,
+            detected_at, confirmed_at, created_at, updated_at
+        ) VALUES (
+            #{signalId}, #{operatingCaseId}, #{journeyId}, #{signalType}, #{content},
+            #{sourceType}, #{sourceRef}, #{confidence}, #{status}, #{evidenceRef},
+            #{detectedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{confirmedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{createdAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{updatedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findById" resultMap="opportunitySignalResult">
+        SELECT <include refid="signalColumns"/>
+        FROM opportunity_signal WHERE signal_id = #{signalId}
+    </select>
+
+    <select id="findByOperatingCaseId" resultMap="opportunitySignalResult">
+        SELECT <include refid="signalColumns"/>
+        FROM opportunity_signal WHERE operating_case_id = #{operatingCaseId}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="findByJourneyId" resultMap="opportunitySignalResult">
+        SELECT <include refid="signalColumns"/>
+        FROM opportunity_signal WHERE journey_id = #{journeyId}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="findByStatus" resultMap="opportunitySignalResult">
+        SELECT <include refid="signalColumns"/>
+        FROM opportunity_signal WHERE status = #{status}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="findAll" resultMap="opportunitySignalResult">
+        SELECT <include refid="signalColumns"/>
+        FROM opportunity_signal ORDER BY created_at DESC
+    </select>
+
+    <update id="updateStatus">
+        UPDATE opportunity_signal
+        SET status = #{status},
+            confirmed_at = CASE WHEN #{status} = 'CONFIRMED'
+                THEN CURRENT_TIMESTAMP ELSE confirmed_at END,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE signal_id = #{signalId}
+    </update>
+
+</mapper>

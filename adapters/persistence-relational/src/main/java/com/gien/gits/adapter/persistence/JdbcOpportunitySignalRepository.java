@@ -35,8 +35,12 @@ public class JdbcOpportunitySignalRepository implements WritableOpportunitySigna
 
     private static final String FIND_BY_CASE_SQL = FIND_BY_ID_SQL.replace("WHERE signal_id = ?", "WHERE operating_case_id = ?");
 
-    private static final String UPDATE_STATUS_SQL = """
+    private static final String UPDATE_STATUS_CONFIRM_SQL = """
         UPDATE opportunity_signal SET status = ?, confirmed_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP WHERE signal_id = ?
+        """;
+
+    private static final String UPDATE_STATUS_DISMISS_SQL = """
+        UPDATE opportunity_signal SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE signal_id = ?
         """;
 
     private final JdbcTemplate jdbcTemplate;
@@ -64,7 +68,11 @@ public class JdbcOpportunitySignalRepository implements WritableOpportunitySigna
     }
 
     public void updateStatus(UUID signalId, SignalStatus status) {
-        jdbcTemplate.update(UPDATE_STATUS_SQL, status.name(), signalId.toString());
+        String sql = (status == SignalStatus.CONFIRMED) ? UPDATE_STATUS_CONFIRM_SQL : UPDATE_STATUS_DISMISS_SQL;
+        int rows = jdbcTemplate.update(sql, status.name(), signalId.toString());
+        if (rows == 0) {
+            throw new java.util.NoSuchElementException("Signal not found: " + signalId);
+        }
     }
 
     private static OpportunitySignal toSignal(ResultSet rs) throws SQLException {

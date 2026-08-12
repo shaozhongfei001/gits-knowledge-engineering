@@ -23,8 +23,9 @@ public class JdbcCommitmentRepository implements WritableCommitmentRepository {
 
     private static final String INSERT_SQL = """
         INSERT INTO commitment (commitment_id, operating_case_id, journey_id, commitment_type,
-            content, owner, due_date, status, evidence_ref, created_at, fulfilled_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            content, owner, due_date, status, evidence_ref, created_at, fulfilled_at,
+            interaction_id, customer_id, fulfilled_date, assigned_to, verified_by, recorded_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """;
 
     private static final String UPDATE_STATUS_SQL = """
@@ -58,7 +59,13 @@ public class JdbcCommitmentRepository implements WritableCommitmentRepository {
                 c.evidenceRef(),
                 c.createdAt() != null ? Timestamp.from(c.createdAt()) : null,
                 c.fulfilledAt() != null ? Timestamp.from(c.fulfilledAt()) : null,
-                null);
+                c.interactionId() != null ? c.interactionId().toString() : null,
+                c.customerId() != null ? c.customerId().toString() : null,
+                c.fulfilledDate(),
+                c.assignedTo(),
+                c.verifiedBy(),
+                c.recordedAt() != null ? Timestamp.from(c.recordedAt()) : null,
+                c.updatedAt() != null ? Timestamp.from(c.updatedAt()) : null);
     }
 
     @Override

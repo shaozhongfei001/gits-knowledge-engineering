@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.ExternalEventMapper">
+
+    <resultMap id="externalEventRowResult"
+               type="com.gien.gits.adapter.persistence.foundation.ontology.dto.ExternalEventRow">
+            <constructor>
+                <idArg column="event_id" javaType="String"/>
+                <arg column="event_date" javaType="java.time.LocalDate"/>
+                <arg column="source_type" javaType="com.gien.gits.ontology.ExternalEvent$SourceType"/>
+                <arg column="source_name" javaType="String"/>
+                <arg column="entity" javaType="String"/>
+                <arg column="title" javaType="String"/>
+                <arg column="content" javaType="String"/>
+                <arg column="confidence" javaType="com.gien.gits.ontology.ExternalEvent$Confidence"/>
+                <arg column="reliability" javaType="com.gien.gits.ontology.ExternalEvent$Reliability"/>
+                <arg column="bank_use_allowed" javaType="Boolean"/>
+                <arg column="linked_themes" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+                <arg column="possible_business_signal" javaType="String"/>
+                <arg column="no_go_statement" javaType="String"/>
+                <arg column="evidence_ref" javaType="String"/>
+            </constructor>
+    </resultMap>
+
+    <sql id="externalEventColumns">
+        event_id, event_date, source_type, source_name, entity, title, content,
+        confidence, reliability, bank_use_allowed, linked_themes,
+        possible_business_signal, no_go_statement, evidence_ref
+    </sql>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.ExternalEvent">
+        INSERT INTO external_event (
+            event_id, event_date, source_type, source_name, entity, title, content,
+            confidence, reliability, bank_use_allowed, linked_themes,
+            possible_business_signal, no_go_statement, evidence_ref, created_at
+        ) VALUES (
+            #{eventId}, #{eventDate}, #{sourceType}, #{sourceName}, #{entity}, #{title}, #{content},
+            #{confidence}, #{reliability}, #{bankUseAllowed},
+            #{linkedThemes, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+            #{possibleBusinessSignal}, #{noGoStatement}, #{evidenceRef}, CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <select id="findRowByEventId" resultMap="externalEventRowResult">
+        SELECT <include refid="externalEventColumns"/>
+        FROM external_event WHERE event_id = #{eventId}
+    </select>
+
+    <select id="findRowsByEntity" resultMap="externalEventRowResult">
+        SELECT <include refid="externalEventColumns"/>
+        FROM external_event WHERE entity = #{entity}
+        ORDER BY event_date DESC
+    </select>
+
+    <select id="findRecentRows" resultMap="externalEventRowResult">
+        SELECT <include refid="externalEventColumns"/>
+        FROM external_event ORDER BY event_date DESC LIMIT #{limit}
+    </select>
+
+    <select id="findAllRows" resultMap="externalEventRowResult">
+        SELECT <include refid="externalEventColumns"/>
+        FROM external_event ORDER BY event_date DESC
+    </select>
+
+</mapper>

@@ -31,7 +31,10 @@ public record Interaction(
         InteractionOutcome outcome,
         Instant occurredAt,
         Instant endedAt,
-        String sourceHash) {
+        String sourceHash,
+        String sourceUri,
+        String sourceVersion,
+        Instant recordedAt) {
 
     /** 交互类型——对应业务场景中的不同接触方式 */
     public enum InteractionType {
@@ -128,6 +131,21 @@ public record Interaction(
         if (sourceHash == null || sourceHash.isBlank()) {
             throw new IllegalArgumentException("sourceHash is required");
         }
+    }
+
+    /**
+     * 兼容旧构造器 — V1.0 数据不包含 sourceUri/sourceVersion/recordedAt
+     */
+    public Interaction(UUID interactionId, UUID caseId, UUID journeyId,
+                       InteractionType type, Direction direction, Channel channel,
+                       Participant initiator, List<Participant> participants,
+                       String contentSummary, List<UUID> producedClaimIds,
+                       InteractionOutcome outcome, Instant occurredAt, Instant endedAt,
+                       String sourceHash) {
+        this(interactionId, caseId, journeyId, type, direction, channel,
+             initiator, participants, contentSummary, producedClaimIds,
+             outcome, occurredAt, endedAt, sourceHash,
+             null, null, null);
     }
 
     /**

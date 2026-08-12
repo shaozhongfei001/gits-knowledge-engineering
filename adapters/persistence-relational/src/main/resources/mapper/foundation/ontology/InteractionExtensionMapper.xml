@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.InteractionExtensionMapper">
+
+    <resultMap id="interactionExtensionResult" type="com.gien.gits.ontology.domain.InteractionExtension">
+            <constructor>
+                <idArg column="extension_id" javaType="String"/>
+                <arg column="interaction_id" javaType="String"/>
+                <arg column="extension_type" javaType="String"/>
+                <arg column="content" javaType="String"/>
+                <arg column="created_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+</resultMap>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.domain.InteractionExtension">
+        INSERT INTO interaction_extension (
+            extension_id, interaction_id, extension_type, content, created_at
+        ) VALUES (
+            #{extensionId}, #{interactionId}, #{extensionType}, #{content},
+            #{createdAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findByInteractionId" resultMap="interactionExtensionResult">
+        SELECT extension_id, interaction_id, extension_type, content, created_at
+        FROM interaction_extension WHERE interaction_id = #{interactionId}
+    </select>
+
+    <select id="findByExtensionId" resultMap="interactionExtensionResult">
+        SELECT extension_id, interaction_id, extension_type, content, created_at
+        FROM interaction_extension WHERE extension_id = #{extensionId}
+    </select>
+
+</mapper>

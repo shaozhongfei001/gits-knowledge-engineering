@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.OperatingCaseMapper">
+
+    <resultMap id="operatingCaseResult" type="com.gien.gits.ontology.OperatingCase">
+            <constructor>
+                <idArg column="case_id" javaType="java.util.UUID"/>
+                <arg column="case_type" javaType="com.gien.gits.ontology.CaseType"/>
+                <arg column="status" javaType="com.gien.gits.ontology.CaseStatus"/>
+                <arg column="purpose" javaType="String"/>
+                <arg column="valid_from" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="valid_to" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="recorded_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="created_by" javaType="String"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.OperatingCase">
+        INSERT INTO operating_case (
+            case_id, case_type, status, purpose,
+            valid_from, valid_to, recorded_at, created_by
+        ) VALUES (
+            #{caseId}, #{caseType}, #{status}, #{purpose},
+            #{validFrom, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{validTo, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{recordedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{createdBy}
+        )
+    </insert>
+
+    <select id="findById" resultMap="operatingCaseResult">
+        SELECT case_id, case_type, status, purpose,
+               valid_from, valid_to, recorded_at, created_by
+        FROM operating_case WHERE case_id = #{caseId}
+    </select>
+
+    <update id="updateStatus">
+        UPDATE operating_case SET status = #{status}
+        WHERE case_id = #{caseId}
+    </update>
+
+</mapper>

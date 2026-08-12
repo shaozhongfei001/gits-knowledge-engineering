@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.PolicyRuleMapper">
+
+    <resultMap id="policyRuleResult" type="com.gien.gits.ontology.PolicyRule">
+            <constructor>
+                <idArg column="rule_id" javaType="String"/>
+                <arg column="name" javaType="String"/>
+                <arg column="severity" javaType="com.gien.gits.ontology.PolicyRule$Severity"/>
+                <arg column="logic" javaType="String"/>
+                <arg column="required_output" javaType="String"/>
+                <arg column="scope" javaType="String"/>
+                <arg column="source_ref" javaType="String"/>
+            </constructor>
+    </resultMap>
+
+    <sql id="policyRuleColumns">
+        rule_id, name, severity, logic, required_output,
+        CAST(NULL AS VARCHAR(128)) AS scope, CAST(NULL AS VARCHAR(128)) AS source_ref
+    </sql>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.PolicyRule">
+        INSERT INTO policy_rule (rule_id, name, severity, logic, required_output)
+        VALUES (#{ruleId}, #{name}, #{severity}, #{logic}, #{requiredOutput})
+    </insert>
+
+    <select id="findByRuleId" resultMap="policyRuleResult">
+        SELECT <include refid="policyRuleColumns"/>
+        FROM policy_rule WHERE rule_id = #{ruleId}
+    </select>
+
+    <select id="findBySeverity" resultMap="policyRuleResult">
+        SELECT <include refid="policyRuleColumns"/>
+        FROM policy_rule WHERE severity = #{severity}
+    </select>
+
+    <select id="findAll" resultMap="policyRuleResult">
+        SELECT <include refid="policyRuleColumns"/>
+        FROM policy_rule ORDER BY severity, rule_id
+    </select>
+
+</mapper>

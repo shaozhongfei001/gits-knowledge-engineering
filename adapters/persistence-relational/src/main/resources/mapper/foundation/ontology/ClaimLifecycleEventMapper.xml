@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.ClaimLifecycleEventMapper">
+
+    <resultMap id="claimLifecycleEventResult" type="com.gien.gits.ontology.domain.ClaimLifecycleEvent">
+            <constructor>
+                <idArg column="event_id" javaType="String"/>
+                <arg column="claim_id" javaType="String"/>
+                <arg column="from_status" javaType="String"/>
+                <arg column="to_status" javaType="String"/>
+                <arg column="transition_reason" javaType="String"/>
+                <arg column="actor_id" javaType="String"/>
+                <arg column="actor_role" javaType="String"/>
+                <arg column="transitioned_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.domain.ClaimLifecycleEvent">
+        INSERT INTO claim_lifecycle_event (
+            event_id, claim_id, from_status, to_status, transition_reason,
+            actor_id, actor_role, transitioned_at
+        ) VALUES (
+            #{eventId}, #{claimId}, #{fromStatus}, #{toStatus}, #{transitionReason},
+            #{actorId}, #{actorRole},
+            #{transitionedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findByClaimId" resultMap="claimLifecycleEventResult">
+        SELECT event_id, claim_id, from_status, to_status, transition_reason,
+               actor_id, actor_role, transitioned_at
+        FROM claim_lifecycle_event WHERE claim_id = #{claimId}
+        ORDER BY transitioned_at DESC
+    </select>
+
+    <select id="findByActorId" resultMap="claimLifecycleEventResult">
+        SELECT event_id, claim_id, from_status, to_status, transition_reason,
+               actor_id, actor_role, transitioned_at
+        FROM claim_lifecycle_event WHERE actor_id = #{actorId}
+        ORDER BY transitioned_at DESC
+    </select>
+
+</mapper>

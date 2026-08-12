@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.ControlledActionMapper">
+
+    <resultMap id="controlledActionResult" type="com.gien.gits.ontology.ControlledAction">
+            <constructor>
+                <idArg column="action_id" javaType="java.util.UUID"/>
+                <arg column="case_id" javaType="String"/>
+                <arg column="action_type" javaType="String"/>
+                <arg column="description" javaType="String"/>
+                <arg column="target_system" javaType="String"/>
+                <arg column="payload" javaType="String"/>
+                <arg column="requires_confirmation" javaType="Boolean"/>
+                <arg column="confirmation_id" javaType="String"/>
+                <arg column="status" javaType="String"/>
+                <arg column="created_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+</resultMap>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.ControlledAction">
+        INSERT INTO controlled_action (
+            action_id, case_id, action_type, description, target_system,
+            payload, requires_confirmation, confirmation_id, status, created_at
+        ) VALUES (
+            #{actionId}, #{caseId}, #{actionType}, #{description}, #{targetSystem},
+            #{payload}, #{requiresConfirmation}, #{confirmationId}, #{status},
+            #{createdAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findByActionId" resultMap="controlledActionResult">
+        SELECT action_id, case_id, action_type, description, target_system,
+               payload, requires_confirmation, confirmation_id, status, created_at
+        FROM controlled_action WHERE action_id = #{actionId}
+    </select>
+
+</mapper>

@@ -44,7 +44,8 @@ public class JdbcInteractionRepository implements WritableInteractionRepository 
             "SELECT i.interaction_id, i.case_id, i.journey_id, i.interaction_type, i.direction, " +
             " i.channel, i.content_summary, i.outcome, " +
             " i.initiator_id, i.initiator_role, i.initiator_display_name, " +
-            " i.produced_claim_ids, i.occurred_at, i.ended_at, i.source_hash " +
+            " i.produced_claim_ids, i.occurred_at, i.ended_at, i.source_hash, " +
+            " i.source_uri, i.source_version, i.recorded_at " +
             "FROM interaction i WHERE i.interaction_id = ?";
 
     private static final String FIND_PARTICIPANTS_SQL =
@@ -55,14 +56,16 @@ public class JdbcInteractionRepository implements WritableInteractionRepository 
             "SELECT i.interaction_id, i.case_id, i.journey_id, i.interaction_type, i.direction, " +
             " i.channel, i.content_summary, i.outcome, " +
             " i.initiator_id, i.initiator_role, i.initiator_display_name, " +
-            " i.produced_claim_ids, i.occurred_at, i.ended_at, i.source_hash " +
+            " i.produced_claim_ids, i.occurred_at, i.ended_at, i.source_hash, " +
+            " i.source_uri, i.source_version, i.recorded_at " +
             "FROM interaction i WHERE i.case_id = ? ORDER BY i.occurred_at";
 
     private static final String FIND_BY_JOURNEY_SQL =
             "SELECT i.interaction_id, i.case_id, i.journey_id, i.interaction_type, i.direction, " +
             " i.channel, i.content_summary, i.outcome, " +
             " i.initiator_id, i.initiator_role, i.initiator_display_name, " +
-            " i.produced_claim_ids, i.occurred_at, i.ended_at, i.source_hash " +
+            " i.produced_claim_ids, i.occurred_at, i.ended_at, i.source_hash, " +
+            " i.source_uri, i.source_version, i.recorded_at " +
             "FROM interaction i WHERE i.journey_id = ? ORDER BY i.occurred_at";
 
     private final JdbcTemplate jdbcTemplate;
@@ -147,6 +150,7 @@ public class JdbcInteractionRepository implements WritableInteractionRepository 
 
     private static Interaction toInteraction(ResultSet rs, List<Interaction.Participant> participants) throws SQLException {
         String journeyIdStr = rs.getString("journey_id");
+        Timestamp recordedAtTs = rs.getTimestamp("recorded_at");
         return new Interaction(
                 UUID.fromString(rs.getString("interaction_id")),
                 UUID.fromString(rs.getString("case_id")),
@@ -164,7 +168,10 @@ public class JdbcInteractionRepository implements WritableInteractionRepository 
                 Interaction.InteractionOutcome.valueOf(rs.getString("outcome")),
                 rs.getTimestamp("occurred_at").toInstant(),
                 rs.getTimestamp("ended_at") == null ? null : rs.getTimestamp("ended_at").toInstant(),
-                rs.getString("source_hash"));
+                rs.getString("source_hash"),
+                rs.getString("source_uri"),
+                rs.getString("source_version"),
+                recordedAtTs == null ? null : recordedAtTs.toInstant());
     }
 
     private static List<UUID> parseUuidList(String json) {

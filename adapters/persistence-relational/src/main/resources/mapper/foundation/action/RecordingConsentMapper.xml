@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.action.mapper.RecordingConsentMapper">
+
+    <resultMap id="recordingConsentResult" type="com.gien.gits.action.domain.RecordingConsent">
+            <constructor>
+                <idArg column="consent_id" javaType="String"/>
+                <arg column="interaction_id" javaType="String"/>
+                <arg column="customer_id" javaType="String"/>
+                <arg column="consent_type" javaType="String"/>
+                <arg column="status" javaType="String"/>
+                <arg column="granted_by" javaType="String"/>
+                <arg column="granted_role" javaType="String"/>
+                <arg column="granted_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="withdrawal_reason" javaType="String"/>
+                <arg column="expires_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="legal_basis" javaType="String"/>
+            </constructor>
+    </resultMap>
+
+    <sql id="consentColumns">
+        consent_id, interaction_id, customer_id, consent_type,
+        status, granted_by, granted_role, granted_at,
+        withdrawal_reason, expires_at, legal_basis
+    </sql>
+
+    <insert id="insert" parameterType="com.gien.gits.action.domain.RecordingConsent">
+        INSERT INTO recording_consent (
+            consent_id, interaction_id, customer_id, consent_type,
+            status, granted_by, granted_role, granted_at,
+            withdrawal_reason, expires_at, legal_basis
+        ) VALUES (
+            #{consentId}, #{interactionId}, #{customerId}, #{consentType},
+            #{status}, #{grantedBy}, #{grantedRole},
+            #{grantedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{withdrawalReason},
+            #{expiresAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{legalBasis}
+        )
+    </insert>
+
+    <select id="findByConsentId" resultMap="recordingConsentResult">
+        SELECT <include refid="consentColumns"/>
+        FROM recording_consent WHERE consent_id = #{consentId}
+    </select>
+
+    <select id="findByInteractionId" resultMap="recordingConsentResult">
+        SELECT <include refid="consentColumns"/>
+        FROM recording_consent WHERE interaction_id = #{interactionId} ORDER BY granted_at DESC
+    </select>
+
+    <select id="findLatestByInteractionId" resultMap="recordingConsentResult">
+        SELECT <include refid="consentColumns"/>
+        FROM recording_consent WHERE interaction_id = #{interactionId} ORDER BY granted_at DESC LIMIT 1
+    </select>
+
+    <select id="findByCustomerId" resultMap="recordingConsentResult">
+        SELECT <include refid="consentColumns"/>
+        FROM recording_consent WHERE customer_id = #{customerId} ORDER BY granted_at DESC
+    </select>
+
+    <select id="findByStatus" resultMap="recordingConsentResult">
+        SELECT <include refid="consentColumns"/>
+        FROM recording_consent WHERE status = #{status} ORDER BY granted_at DESC
+    </select>
+
+    <update id="updateStatus">
+        UPDATE recording_consent SET status = #{status}, withdrawal_reason = #{withdrawalReason}
+        WHERE consent_id = #{consentId}
+    </update>
+
+</mapper>

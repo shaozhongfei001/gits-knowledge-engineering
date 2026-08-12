@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.TransactionRecordMapper">
+
+    <resultMap id="transactionRecordRowResult"
+               type="com.gien.gits.adapter.persistence.foundation.ontology.dto.TransactionRecordRow">
+            <constructor>
+                <idArg column="id" javaType="java.util.UUID"/>
+                <arg column="customer_id" javaType="String"/>
+                <arg column="transaction_date" javaType="java.time.LocalDate"/>
+                <arg column="transaction_type" javaType="String"/>
+                <arg column="counterparty" javaType="String"/>
+                <arg column="amount" javaType="java.math.BigDecimal"/>
+                <arg column="description" javaType="String"/>
+                <arg column="created_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.TransactionRecord">
+        INSERT INTO transaction (
+            id, transaction_id, customer_id, transaction_type, amount,
+            counterparty, description, transaction_date, created_at
+        ) VALUES (
+            #{id}, #{id}, #{customerId}, #{transactionType}, #{amountCny},
+            #{counterparty}, #{description}, #{transactionDate},
+            #{createdAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findRowsByCustomerId" resultMap="transactionRecordRowResult">
+        SELECT id, customer_id, transaction_date, transaction_type, counterparty,
+               amount, description, created_at
+        FROM transaction WHERE customer_id = #{customerId}
+        ORDER BY transaction_date DESC
+    </select>
+
+</mapper>
