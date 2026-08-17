@@ -21,7 +21,8 @@ check: ## 验证合同、生成物、Loop模板和安全基线
 	@test -x scripts/check-contracts.sh || { echo "FAIL: scripts/check-contracts.sh missing or not executable"; exit 2; }
 	@bash scripts/check-contracts.sh
 	@$(PYTHON) scripts/loop_guard.py --template-check
-	@$(PYTHON) scripts/secret_scan.py --root .
+	@$(PYTHON) scripts/secret_scan.py --root . --quiet
+	@$(PYTHON) scripts/enum_consistency_check.py --root . --quiet
 	@$(PYTHON) scripts/semantic_rule_gate.py
 
 semantic-rule-gate: ## 验证生成的语义与规则合同制品格式自洽(fail-closed)

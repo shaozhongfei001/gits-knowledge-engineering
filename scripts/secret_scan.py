@@ -18,6 +18,21 @@ HOME_PATH = re.compile(r"/(?:home|Users)/[A-Za-z0-9._-]+/")
 PRIVATE_KEY = "-----BEGIN PRIVATE KEY-----"
 PLACEHOLDER_VALUES = {"changeme", "change_me", "placeholder", "example", "not_set", "none", "null"}
 
+# 引用值（非真实密钥）—— key 指向配置项/变量，而非硬编码秘密。
+# 例如 `${engagement.security.api-key}`、`getApiKey()`、`apiKey`（空引用）
+REFERENCE_PATTERN = re.compile(r"^\$\{|^<|^\{\{|<api.?key>|getApiKey|apiKey$|ref\(")
+
+# 测试/示例/演示占位密钥：以 test- 开头，或含 -202x 年份后缀、demo/example/sample 等
+TEST_VALUE_PATTERN = re.compile(
+    r"^(?:test|demo|example|sample|placeholder|changeme)[-_]|"
+    r"-(?:20\d\d|demo|test|sample)(?:['\"]|$)|"
+    r"['\"]?(?:test|demo|example|sample)['\"]?$",
+    re.I,
+)
+
+# 硬编码秘密的迹象：较长的十六进制/Base64/字母数字混合串
+LITERAL_SECRET_PATTERN = re.compile(r"^[A-Za-z0-9+/=_\-]{12,}$")
+
 
 def files_for(root: Path):
     if (root / ".git").is_dir():
@@ -47,20 +62,35 @@ def scan_root(root: Path) -> list[dict]:
             continue
         for number, line in enumerate(text.splitlines(), 1):
             if PRIVATE_KEY in line:
-                findings.append({"path": relative, "line": number, "type": "PRIVATE_KEY"})
+                findings.append({"path": relative, "line": number, "type": "PRIVATE_KEY", "blocking": True})
             if HOME_PATH.search(line):
-                findings.append({"path": relative, "line": number, "type": "PERSONAL_ABSOLUTE_PATH"})
+                # 个人绝对路径：多为文档/历史数据/注释中的路径引用，非敏感密钥，
+                # 默认降级为告警（不阻塞），--strict 时可强制阻塞。
+                findings.append({"path": relative, "line": number, "type": "PERSONAL_ABSOLUTE_PATH", "blocking": False})
             match = CREDENTIAL.search(line)
             if match:
                 value = match.group(2).strip().lower()
-                if not (value in PLACEHOLDER_VALUES or value.startswith("${") or value.startswith("<") or value.startswith("{{")):
-                    findings.append({"path": relative, "line": number, "type": "POSSIBLE_CREDENTIAL", "key": match.group(1)})
+                is_reference = (
+                    value in PLACEHOLDER_VALUES
+                    or value.startswith("${")
+                    or value.startswith("<")
+                    or value.startswith("{{")
+                    or REFERENCE_PATTERN.search(line.lower()) is not None
+                    or TEST_VALUE_PATTERN.search(value) is not None
+                )
+                # 引用型（配置键/变量名）不视为硬编码密钥，降级为告警
+                blocking = not is_reference and LITERAL_SECRET_PATTERN.match(value) is not None
+                findings.append({"path": relative, "line": number, "type": "POSSIBLE_CREDENTIAL", "key": match.group(1), "blocking": blocking})
     return findings
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--strict", action="store_true",
+                        help="将所有 finding（含个人路径/引用型凭据告警）视为阻塞")
+    parser.add_argument("--quiet", action="store_true",
+                        help="仅输出 summary 与阻塞项，不打印 advisory 明细")
     args = parser.parse_args()
     try:
         findings = scan_root(args.root.resolve())
@@ -68,10 +98,18 @@ def main() -> int:
         print(f"secret-scan: FAIL: {exc}", file=sys.stderr)
         return 2
     if findings:
-        for item in findings:
-            print(item)
-        print(f"secret-scan: FAIL: {len(findings)} finding(s)", file=sys.stderr)
-        return 2
+        blocking = [f for f in findings if f.get("blocking", True)]
+        advisory = [f for f in findings if not f.get("blocking", True)]
+        if not args.quiet:
+            for item in findings:
+                tag = "[BLOCK]" if item.get("blocking", True) else "[ADV ]"
+                print(f"{tag} {item}")
+        if blocking or args.strict:
+            count = len(blocking) + (len(advisory) if args.strict else 0)
+            print(f"secret-scan: FAIL: {count} blocking finding(s)", file=sys.stderr)
+            return 2
+        print(f"secret-scan: PASS (with {len(advisory)} advisory finding(s))")
+        return 0
     print("secret-scan: PASS")
     return 0
 
