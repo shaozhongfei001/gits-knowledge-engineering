@@ -1,0 +1,43 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P20-wiki-ontology-fusion",
+  "title": "Wiki-first与Ontology融合架构验证",
+  "status": "planned",
+  "implementation_actor": "tech_lead",
+  "objective": [
+    "Validate Knowledge Map, Asset Manifest and Activation Contract as an LLM-first control plane.",
+    "Unify Wiki-first and Ontology-first paths through a replayable ActivationPlan.",
+    "Preserve legacy behavior while running two P20 scenarios in shadow mode."
+  ],
+  "scope": {
+    "include": [
+      "specs/knowledge-architecture/",
+      "modules/knowledge-architecture/",
+      "modules/skill-runtime/",
+      "adapters/knowledge-filesystem/",
+      "adapters/mock-rag/",
+      "modules/context-evidence/",
+      "modules/semantic-runtime/",
+      "adapters/semantic-jena/",
+      "two_shadow_scenarios"
+    ],
+    "exclude": [
+      "real_rag",
+      "real_graph_platform",
+      "real_metadata_platform",
+      "production_cutover",
+      "legacy_removal",
+      "direct_crm_writeback"
+    ]
+  },
+  "gates": [
+    {"id":"contract_generate","owner_kind":"implementation","command":"make generate","pass_condition":"All 24 registered contracts compile without placeholders."},
+    {"id":"contract_check","owner_kind":"implementation","command":"make check","pass_condition":"Generated artifacts match authoritative sources and P20 cross-references pass."},
+    {"id":"knowledge_architecture_check","owner_kind":"implementation","command":"python3 scripts/validate_knowledge_architecture.py","pass_condition":"6 schemas, 4 maps, 20 assets, 5 skills, 2 activations, 1 route and 2 plans pass fail-closed validation."},
+    {"id":"backend_test","owner_kind":"implementation","command":"make backend-test","pass_condition":"Legacy regression and P20 unit/integration tests pass."},
+    {"id":"security_check","owner_kind":"implementation","command":"make security-check","pass_condition":"Secrets, permissions, quarantine and P20 negative security checks pass."},
+    {"id":"shadow_e2e","owner_kind":"implementation","command":"python3 scripts/run_p20_shadow_e2e.py --mode shadow --scenario PRE_VISIT_PREPARATION --scenario FACT_RECONCILIATION_30M","pass_condition":"Two scenarios produce replayable shadow evidence without changing formal output."}
+  ],
+  "repair_policy": {"max_attempts_per_gate":5,"failure_record":"loops/P20-wiki-ontology-fusion/FAILURES.md","record_before_fix":true,"rerun_original_gate":true},
+  "exit_states": ["ready_for_independent_qa", "blocked"]
+}

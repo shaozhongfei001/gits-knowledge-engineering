@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "planId": "AP-FACT-RECON-GOLDEN-001",
+  "taskId": "TASK-FACT-RECON-HDEG-001",
+  "taskType": "FACT_RECONCILIATION_30M",
+  "routeMode": "ONTOLOGY_FIRST",
+  "versions": {
+    "knowledgeMap": "KM-CORP-RM-FACT-RECON@0.1.0",
+    "routePolicy": "RP-CORP-RM-001@0.1.0",
+    "activationContract": "AC-FACT-RECONCILIATION-001@0.1.0",
+    "ontology": "CTR-SEM-001/002@CURRENT_BASE"
+  },
+  "selectedAssets": [
+    {"assetId": "ASSET-DATA-CUSTOMER-PROFILE", "version": "0.1.0", "required": true, "sequence": 1},
+    {"assetId": "ASSET-DATA-INTERACTION-HISTORY", "version": "0.1.0", "required": true, "sequence": 2},
+    {"assetId": "ASSET-DATA-CREDIT-FACILITY", "version": "0.1.0", "required": true, "sequence": 3},
+    {"assetId": "ASSET-KNOW-CUSTOMER-ONTOLOGY", "version": "0.1.0", "required": true, "sequence": 4},
+    {"assetId": "ASSET-KNOW-EVIDENCE-POLICY", "version": "0.1.0", "required": true, "sequence": 5},
+    {"assetId": "ASSET-KNOW-CLAIM-RECONCILIATION", "version": "0.1.0", "required": true, "sequence": 6}
+  ],
+  "semanticQueries": ["SQ-CLAIM-SUBJECT-RELATIONS", "SQ-CREDIT-AND-PROJECT-AMOUNTS", "SQ-PROJECT-AND-BORROWER-ENTITY"],
+  "ruleChecks": ["CLAIM_NOT_FACT", "AVAILABLE_CREDIT_NOT_NEW_NEED", "PROJECT_NOT_BORROWER", "SIGNAL_NOT_OPPORTUNITY", "BANKABILITY_NOT_APPROVAL"],
+  "skills": ["SP-02", "SP-07"],
+  "context": {"maxTokens": 8000, "trimPolicy": "FAIL_ON_OVERFLOW"},
+  "permissionDecisionId": "PD-GOLDEN-RM-CUST001-ALLOW",
+  "trace": {"planHash": "GOLDEN_PLAN_HASH_NOT_RUNTIME", "createdAt": "2026-08-18T09:05:00+08:00", "plannerVersion": "p20-golden-0.1.0"}
+}

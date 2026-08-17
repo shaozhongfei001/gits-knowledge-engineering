@@ -1,0 +1,6 @@
+{"caseId":"ROUTE-001","taskType":"PRE_VISIT_PREPARATION","expectedMode":"ONTOLOGY_THEN_MAP","expectedContract":"AC-PREVISIT-001","expectedDecision":"ALLOW_PLAN"}
+{"caseId":"ROUTE-002","taskType":"FACT_RECONCILIATION_30M","expectedMode":"ONTOLOGY_FIRST","expectedContract":"AC-FACT-RECONCILIATION-001","expectedDecision":"ALLOW_PLAN"}
+{"caseId":"ROUTE-003","taskType":"MARKET_SIGNAL_DISCOVERY","expectedMode":"MAP_THEN_ONTOLOGY","expectedContract":"AC-NOT-IN-P20","expectedDecision":"DENY_NOT_IN_P20"}
+{"caseId":"ROUTE-004","taskType":"REPORT_GENERATION","expectedMode":"MAP_FIRST","expectedContract":"AC-NOT-IN-P20","expectedDecision":"DENY_NOT_IN_P20"}
+{"caseId":"ROUTE-005","taskType":"UNKNOWN_TASK","expectedMode":null,"expectedContract":null,"expectedDecision":"DENY_UNMAPPED_TASK"}
+{"caseId":"ROUTE-006","taskType":"PRE_VISIT_PREPARATION","permissionDecisionId":"PENDING","expectedDecision":"DENY_PERMISSION_PENDING"}

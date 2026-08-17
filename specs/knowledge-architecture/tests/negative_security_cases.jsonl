@@ -1,0 +1,10 @@
+{"caseId":"SEC-001","condition":"permissionDecisionId missing","expected":"DENY","severity":"BLOCKER"}
+{"caseId":"SEC-002","condition":"permissionDecisionId=PENDING","expected":"DENY","severity":"BLOCKER"}
+{"caseId":"SEC-003","condition":"asset not registered in Asset Manifest","expected":"DENY","severity":"BLOCKER"}
+{"caseId":"SEC-004","condition":"activation asset not declared by contract","expected":"DENY","severity":"BLOCKER"}
+{"caseId":"SEC-005","condition":"agent submits arbitrary SPARQL","expected":"DENY_ONLY_REGISTERED_QUERY_ID","severity":"BLOCKER"}
+{"caseId":"SEC-006","condition":"RESTRICTED asset with caller scope mismatch","expected":"DENY","severity":"BLOCKER"}
+{"caseId":"SEC-007","condition":"required asset fails","expected":"FAIL_CLOSED","severity":"MAJOR"}
+{"caseId":"SEC-008","condition":"context exceeds FAIL_ON_OVERFLOW budget","expected":"FAIL_NO_SILENT_TRIM","severity":"MAJOR"}
+{"caseId":"SEC-009","condition":"available credit inferred as new credit need","expected":"REJECT_SEMANTIC_INVARIANT","severity":"BLOCKER"}
+{"caseId":"SEC-010","condition":"signal upgraded to formal opportunity without Human Gate","expected":"REJECT_CONTROLLED_ACTION","severity":"BLOCKER"}

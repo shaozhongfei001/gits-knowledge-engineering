@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gientech.com/gits/kno/schemas/asset-manifest.json",
+  "title": "GITS Four-Class Asset Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "assetId", "assetType", "name", "domain", "version", "status", "source", "governance", "capabilities", "activation", "evidence"],
+  "properties": {
+    "schemaVersion": {"type": "string", "const": "1.0.0"},
+    "assetId": {"type": "string", "pattern": "^ASSET-[A-Z0-9-]+$"},
+    "assetType": {"type": "string", "enum": ["FOUNDATIONAL_DATA", "KNOWLEDGE_RULE", "PROCESS_TOOL", "RUNTIME_FEEDBACK"]},
+    "name": {"type": "string", "minLength": 1},
+    "domain": {"type": "string", "minLength": 1},
+    "version": {"type": "string", "minLength": 1},
+    "status": {"type": "string", "enum": ["DRAFT", "VALIDATION", "ACTIVE", "RETIRED"]},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "uri", "authority", "contentMode"],
+      "properties": {
+        "type": {"type": "string"},
+        "uri": {"type": "string", "minLength": 1},
+        "authority": {"type": "string", "enum": ["AUTHORITATIVE", "REFERENCE", "DERIVED", "SYNTHETIC"]},
+        "contentMode": {"type": "string", "enum": ["INLINE_MD", "RUNTIME_FETCH", "QUERY", "REASON", "EXECUTE", "REVIEW"]},
+        "sourceVersionPolicy": {"type": "string"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner", "classification", "permissionInherit", "allowedActions"],
+      "properties": {
+        "owner": {"type": "string", "minLength": 1},
+        "classification": {"type": "string", "enum": ["PUBLIC", "INTERNAL", "SENSITIVE", "RESTRICTED"]},
+        "permissionInherit": {"type": "string", "enum": ["CALLER", "SERVICE", "EXPLICIT"]},
+        "allowedActions": {"type": "array", "items": {"type": "string", "enum": ["READ", "QUERY", "REASON", "EXECUTE", "REVIEW"]}}
+      }
+    },
+    "capabilities": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "activation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "adapter", "requiredParameters", "maxContextTokens", "failurePolicy"],
+      "properties": {
+        "mode": {"type": "string", "enum": ["READ", "RETRIEVE", "QUERY", "REASON", "EXECUTE", "REVIEW"]},
+        "adapter": {"type": "string", "minLength": 1},
+        "requiredParameters": {"type": "array", "items": {"type": "string"}},
+        "maxContextTokens": {"type": "integer", "minimum": 0},
+        "failurePolicy": {"type": "string", "enum": ["FAIL_CLOSED", "DEGRADE_WITH_DISCLOSURE", "OPTIONAL_SKIP"]}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["citationRequired", "sourceVersionRequired", "contentHashRequired"],
+      "properties": {
+        "citationRequired": {"type": "boolean"},
+        "sourceVersionRequired": {"type": "boolean"},
+        "contentHashRequired": {"type": "boolean"}
+      }
+    },
+    "relatedAssets": {"type": "array", "items": {"type": "string"}},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  }
+}

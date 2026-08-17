@@ -1,0 +1,14 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P20-wiki-ontology-fusion",
+  "status": "planned",
+  "current_phase": "contract_candidate_review",
+  "baseline_commit": "f8452638543da91b4e8f56c393ecadcd59e57364",
+  "implementation_actor": "tech_lead",
+  "qa_actor": null,
+  "completed_gates": [],
+  "next_action": "Owner reviews CR-P20 and selects an allowed decision before assigning Baton.",
+  "blocked": true,
+  "blocking_reason": "OWNER_AUTHORIZATION_PENDING",
+  "updated_at": "2026-08-17T00:00:00-07:00"
+}

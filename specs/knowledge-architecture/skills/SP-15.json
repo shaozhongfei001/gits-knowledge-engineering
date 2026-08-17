@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "skillId": "SP-15",
+  "name": "产品适配与综合方案",
+  "version": "1.1.0-p20",
+  "owner": "公司金融产品管理部",
+  "status": "VALIDATION",
+  "implementationType": "RULE_MODEL",
+  "inputs": ["ContextPackage", "productIntent", "constraints"],
+  "outputs": ["productCandidates", "fitReasons", "conditions", "materialGaps", "riskNotes"],
+  "assetDependencies": ["ASSET-KNOW-PRODUCT-CARDS"],
+  "semanticDependencies": ["SQ-CUSTOMER-NEED-AND-PROJECT", "SQ-ACTIVE-PRODUCT-VERSIONS"],
+  "ruleDependencies": ["PRODUCT_VERSION_ACTIVE", "CANDIDATE_NOT_APPROVAL"],
+  "humanGatePolicy": "REQUIRED",
+  "sideEffectPolicy": "PROPOSE_ONLY"
+}

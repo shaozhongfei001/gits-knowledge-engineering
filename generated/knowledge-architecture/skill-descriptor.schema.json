@@ -1,0 +1,106 @@
+{
+  "$id": "https://gientech.com/gits/kno/schemas/skill-descriptor.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "assetDependencies": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "humanGatePolicy": {
+      "enum": [
+        "NONE",
+        "CONDITIONAL",
+        "REQUIRED"
+      ],
+      "type": "string"
+    },
+    "implementationType": {
+      "enum": [
+        "RULE",
+        "MODEL",
+        "RULE_MODEL",
+        "WORKFLOW"
+      ],
+      "type": "string"
+    },
+    "inputs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "name": {
+      "type": "string"
+    },
+    "outputs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "ruleDependencies": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schemaVersion": {
+      "const": "1.0.0",
+      "type": "string"
+    },
+    "semanticDependencies": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "sideEffectPolicy": {
+      "enum": [
+        "NONE",
+        "PROPOSE_ONLY",
+        "CONTROLLED_ACTION"
+      ],
+      "type": "string"
+    },
+    "skillId": {
+      "pattern": "^SP-[A-Z0-9-]+$",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "VALIDATION",
+        "ACTIVE",
+        "RETIRED"
+      ],
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "skillId",
+    "name",
+    "version",
+    "owner",
+    "status",
+    "implementationType",
+    "inputs",
+    "outputs",
+    "assetDependencies",
+    "semanticDependencies",
+    "ruleDependencies",
+    "humanGatePolicy",
+    "sideEffectPolicy"
+  ],
+  "title": "GITS Governed Skill Descriptor",
+  "type": "object"
+}

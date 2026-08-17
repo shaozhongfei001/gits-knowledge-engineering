@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "skillId": "SP-02",
+  "name": "客户上下文与主体装配",
+  "version": "1.1.0-p20",
+  "owner": "客户经营Owner",
+  "status": "VALIDATION",
+  "implementationType": "WORKFLOW",
+  "inputs": ["ActivationPlan", "callerContext", "asOf"],
+  "outputs": ["ContextPackage", "EvidenceBundle"],
+  "assetDependencies": ["ASSET-DATA-CUSTOMER-PROFILE", "ASSET-KNOW-CUSTOMER-ONTOLOGY"],
+  "semanticDependencies": ["SQ-CUSTOMER-RELATIONSHIP", "SQ-RELATED-LEGAL-ENTITIES"],
+  "ruleDependencies": ["CALLER_SCOPE_ALLOWED"],
+  "humanGatePolicy": "CONDITIONAL",
+  "sideEffectPolicy": "NONE"
+}

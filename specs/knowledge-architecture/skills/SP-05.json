@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "skillId": "SP-05",
+  "name": "经营KYC Gap智能",
+  "version": "1.1.0-p20",
+  "owner": "KYC知识Owner",
+  "status": "VALIDATION",
+  "implementationType": "RULE_MODEL",
+  "inputs": ["ContextPackage", "visitObjective"],
+  "outputs": ["knownObjects", "unknownObjects", "conflicts", "questionPlan"],
+  "assetDependencies": ["ASSET-KNOW-KYC-QUESTION-LIBRARY", "ASSET-KNOW-EVIDENCE-POLICY"],
+  "semanticDependencies": ["SQ-KYC-GAPS"],
+  "ruleDependencies": ["CLAIM_NOT_FACT"],
+  "humanGatePolicy": "CONDITIONAL",
+  "sideEffectPolicy": "NONE"
+}

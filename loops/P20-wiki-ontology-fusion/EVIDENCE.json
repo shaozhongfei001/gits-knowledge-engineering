@@ -1,0 +1,13 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P20-wiki-ontology-fusion",
+  "gates": {
+    "contract_generate": {"status":"pending","command":"make generate","exit_code":null,"actor":null,"actor_role":null,"executed_at":null,"evidence_file":null,"output_sha256":null},
+    "contract_check": {"status":"pending","command":"make check","exit_code":null,"actor":null,"actor_role":null,"executed_at":null,"evidence_file":null,"output_sha256":null},
+    "knowledge_architecture_check": {"status":"pending","command":"python3 scripts/validate_knowledge_architecture.py","exit_code":null,"actor":null,"actor_role":null,"executed_at":null,"evidence_file":null,"output_sha256":null},
+    "backend_test": {"status":"pending","command":"make backend-test","exit_code":null,"actor":null,"actor_role":null,"executed_at":null,"evidence_file":null,"output_sha256":null},
+    "security_check": {"status":"pending","command":"make security-check","exit_code":null,"actor":null,"actor_role":null,"executed_at":null,"evidence_file":null,"output_sha256":null},
+    "shadow_e2e": {"status":"pending","command":"python3 scripts/run_p20_shadow_e2e.py --mode shadow --scenario PRE_VISIT_PREPARATION --scenario FACT_RECONCILIATION_30M","exit_code":null,"actor":null,"actor_role":null,"executed_at":null,"evidence_file":null,"output_sha256":null}
+  },
+  "independent_qa": {"status":"pending","actor":null,"session":null,"attested_at":null,"evidence_file":null,"evidence_sha256":null}
+}

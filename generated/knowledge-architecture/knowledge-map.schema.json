@@ -1,0 +1,134 @@
+{
+  "$id": "https://gientech.com/gits/kno/schemas/knowledge-map.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "activationContractRefs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "assetRefs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "defaultPolicy": {
+      "const": "DENY",
+      "type": "string"
+    },
+    "domains": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "domainId": {
+            "type": "string"
+          },
+          "mapRef": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domainId",
+          "name",
+          "purpose",
+          "mapRef"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "entrypoints": {
+      "additionalProperties": false,
+      "properties": {
+        "roles": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "tasks": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "roles",
+        "tasks"
+      ],
+      "type": "object"
+    },
+    "mapId": {
+      "pattern": "^KM-[A-Z0-9-]+$",
+      "type": "string"
+    },
+    "mapType": {
+      "enum": [
+        "ROOT",
+        "DOMAIN",
+        "TASK"
+      ],
+      "type": "string"
+    },
+    "maxInitialTokens": {
+      "maximum": 4096,
+      "minimum": 256,
+      "type": "integer"
+    },
+    "name": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "routePolicyRef": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "1.0.0",
+      "type": "string"
+    },
+    "skillRefs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "VALIDATION",
+        "ACTIVE",
+        "RETIRED"
+      ],
+      "type": "string"
+    },
+    "version": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "mapId",
+    "name",
+    "version",
+    "status",
+    "mapType",
+    "entrypoints",
+    "domains",
+    "defaultPolicy",
+    "routePolicyRef"
+  ],
+  "title": "GITS Knowledge Map",
+  "type": "object"
+}

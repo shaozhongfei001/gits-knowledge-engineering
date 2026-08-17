@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gientech.com/gits/kno/schemas/activation-plan.json",
+  "title": "GITS Replayable Activation Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "planId", "taskId", "taskType", "routeMode", "versions", "selectedAssets", "semanticQueries", "ruleChecks", "skills", "context", "permissionDecisionId", "trace"],
+  "properties": {
+    "schemaVersion": {"type": "string", "const": "1.0.0"},
+    "planId": {"type": "string"},
+    "taskId": {"type": "string"},
+    "taskType": {"type": "string"},
+    "routeMode": {"type": "string", "enum": ["MAP_FIRST", "ONTOLOGY_FIRST", "MAP_THEN_ONTOLOGY", "ONTOLOGY_THEN_MAP"]},
+    "versions": {
+      "type": "object",
+      "required": ["knowledgeMap", "routePolicy", "activationContract", "ontology"],
+      "properties": {
+        "knowledgeMap": {"type": "string"},
+        "routePolicy": {"type": "string"},
+        "activationContract": {"type": "string"},
+        "ontology": {"type": "string"}
+      }
+    },
+    "selectedAssets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["assetId", "version", "required", "sequence"],
+        "properties": {
+          "assetId": {"type": "string"},
+          "version": {"type": "string"},
+          "required": {"type": "boolean"},
+          "sequence": {"type": "integer"}
+        }
+      }
+    },
+    "semanticQueries": {"type": "array", "items": {"type": "string"}},
+    "ruleChecks": {"type": "array", "items": {"type": "string"}},
+    "skills": {"type": "array", "items": {"type": "string"}},
+    "context": {
+      "type": "object",
+      "required": ["maxTokens", "trimPolicy"],
+      "properties": {
+        "maxTokens": {"type": "integer"},
+        "trimPolicy": {"type": "string"}
+      }
+    },
+    "permissionDecisionId": {"type": "string", "minLength": 1},
+    "trace": {
+      "type": "object",
+      "required": ["planHash", "createdAt", "plannerVersion"],
+      "properties": {
+        "planHash": {"type": "string"},
+        "createdAt": {"type": "string", "format": "date-time"},
+        "plannerVersion": {"type": "string"}
+      }
+    }
+  }
+}

@@ -1,0 +1,234 @@
+{
+  "$id": "https://gientech.com/gits/kno/schemas/asset-manifest.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "activation": {
+      "additionalProperties": false,
+      "properties": {
+        "adapter": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "failurePolicy": {
+          "enum": [
+            "FAIL_CLOSED",
+            "DEGRADE_WITH_DISCLOSURE",
+            "OPTIONAL_SKIP"
+          ],
+          "type": "string"
+        },
+        "maxContextTokens": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "mode": {
+          "enum": [
+            "READ",
+            "RETRIEVE",
+            "QUERY",
+            "REASON",
+            "EXECUTE",
+            "REVIEW"
+          ],
+          "type": "string"
+        },
+        "requiredParameters": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "mode",
+        "adapter",
+        "requiredParameters",
+        "maxContextTokens",
+        "failurePolicy"
+      ],
+      "type": "object"
+    },
+    "assetId": {
+      "pattern": "^ASSET-[A-Z0-9-]+$",
+      "type": "string"
+    },
+    "assetType": {
+      "enum": [
+        "FOUNDATIONAL_DATA",
+        "KNOWLEDGE_RULE",
+        "PROCESS_TOOL",
+        "RUNTIME_FEEDBACK"
+      ],
+      "type": "string"
+    },
+    "capabilities": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "domain": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "citationRequired": {
+          "type": "boolean"
+        },
+        "contentHashRequired": {
+          "type": "boolean"
+        },
+        "sourceVersionRequired": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "citationRequired",
+        "sourceVersionRequired",
+        "contentHashRequired"
+      ],
+      "type": "object"
+    },
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "allowedActions": {
+          "items": {
+            "enum": [
+              "READ",
+              "QUERY",
+              "REASON",
+              "EXECUTE",
+              "REVIEW"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "classification": {
+          "enum": [
+            "PUBLIC",
+            "INTERNAL",
+            "SENSITIVE",
+            "RESTRICTED"
+          ],
+          "type": "string"
+        },
+        "owner": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "permissionInherit": {
+          "enum": [
+            "CALLER",
+            "SERVICE",
+            "EXPLICIT"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner",
+        "classification",
+        "permissionInherit",
+        "allowedActions"
+      ],
+      "type": "object"
+    },
+    "limitations": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "name": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "relatedAssets": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schemaVersion": {
+      "const": "1.0.0",
+      "type": "string"
+    },
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "authority": {
+          "enum": [
+            "AUTHORITATIVE",
+            "REFERENCE",
+            "DERIVED",
+            "SYNTHETIC"
+          ],
+          "type": "string"
+        },
+        "contentMode": {
+          "enum": [
+            "INLINE_MD",
+            "RUNTIME_FETCH",
+            "QUERY",
+            "REASON",
+            "EXECUTE",
+            "REVIEW"
+          ],
+          "type": "string"
+        },
+        "sourceVersionPolicy": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "uri": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "uri",
+        "authority",
+        "contentMode"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "VALIDATION",
+        "ACTIVE",
+        "RETIRED"
+      ],
+      "type": "string"
+    },
+    "version": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "assetId",
+    "assetType",
+    "name",
+    "domain",
+    "version",
+    "status",
+    "source",
+    "governance",
+    "capabilities",
+    "activation",
+    "evidence"
+  ],
+  "title": "GITS Four-Class Asset Manifest",
+  "type": "object"
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1.0.0",
+  "planId": "AP-PREVISIT-GOLDEN-001",
+  "taskId": "TASK-PREVISIT-HDEG-001",
+  "taskType": "PRE_VISIT_PREPARATION",
+  "routeMode": "ONTOLOGY_THEN_MAP",
+  "versions": {
+    "knowledgeMap": "KM-CORP-RM-PREVISIT@0.1.0",
+    "routePolicy": "RP-CORP-RM-001@0.1.0",
+    "activationContract": "AC-PREVISIT-001@0.1.0",
+    "ontology": "CTR-SEM-001/002@CURRENT_BASE"
+  },
+  "selectedAssets": [
+    {"assetId": "ASSET-DATA-CUSTOMER-PROFILE", "version": "0.1.0", "required": true, "sequence": 1},
+    {"assetId": "ASSET-KNOW-CUSTOMER-ONTOLOGY", "version": "0.1.0", "required": true, "sequence": 2},
+    {"assetId": "ASSET-DATA-CREDIT-FACILITY", "version": "0.1.0", "required": true, "sequence": 3},
+    {"assetId": "ASSET-DATA-INTERACTION-HISTORY", "version": "0.1.0", "required": true, "sequence": 4},
+    {"assetId": "ASSET-DATA-TRANSACTION-SUMMARY", "version": "0.1.0", "required": false, "sequence": 5},
+    {"assetId": "ASSET-DATA-EXTERNAL-EVENT", "version": "0.1.0", "required": false, "sequence": 6},
+    {"assetId": "ASSET-KNOW-KYC-QUESTION-LIBRARY", "version": "0.1.0", "required": true, "sequence": 7},
+    {"assetId": "ASSET-KNOW-PRODUCT-CARDS", "version": "0.1.0", "required": false, "sequence": 8},
+    {"assetId": "ASSET-KNOW-VISIT-SOP", "version": "0.1.0", "required": false, "sequence": 9}
+  ],
+  "semanticQueries": ["SQ-CUSTOMER-RELATIONSHIP", "SQ-RELATED-LEGAL-ENTITIES", "SQ-KYC-GAPS", "SQ-OPEN-COMMITMENTS", "SQ-ACTIVE-PRODUCT-VERSIONS"],
+  "ruleChecks": ["CALLER_SCOPE_ALLOWED", "CLAIM_NOT_FACT", "SIGNAL_NOT_OPPORTUNITY", "PRODUCT_VERSION_ACTIVE"],
+  "skills": ["SP-02", "SP-05", "SP-15", "SP-10"],
+  "context": {"maxTokens": 12000, "trimPolicy": "CONTRACT_PRIORITY"},
+  "permissionDecisionId": "PD-GOLDEN-RM-CUST001-ALLOW",
+  "trace": {"planHash": "GOLDEN_PLAN_HASH_NOT_RUNTIME", "createdAt": "2026-08-18T09:00:00+08:00", "plannerVersion": "p20-golden-0.1.0"}
+}

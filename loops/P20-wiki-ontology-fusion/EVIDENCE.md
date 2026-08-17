@@ -1,0 +1,18 @@
+# P20 Evidence Log
+
+当前没有实现或 QA 证据。本文件只定义证据追加格式；不得用计划、设计稿或本包校验替代执行证据。
+
+```text
+EVIDENCE_ID=
+GATE=
+ACTOR=
+TIMESTAMP=
+BASE_COMMIT=
+COMMAND=
+EXIT_CODE=
+ARTIFACT_PATHS=
+ARTIFACT_SHA256=
+CLAIM_SCOPE=
+```
+
+初始状态：`OWNER_AUTHORIZATION_PENDING`。

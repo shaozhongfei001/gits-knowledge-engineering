@@ -1,0 +1,157 @@
+{
+  "$id": "https://gientech.com/gits/kno/schemas/activation-contract.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "activations": {
+      "items": {
+        "properties": {
+          "assetId": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "sequence": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "assetId",
+          "required",
+          "purpose",
+          "sequence"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "context": {
+      "properties": {
+        "maxTokens": {
+          "minimum": 512,
+          "type": "integer"
+        },
+        "priorityOrder": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "trimPolicy": {
+          "enum": [
+            "CONTRACT_PRIORITY",
+            "FAIL_ON_OVERFLOW"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "maxTokens",
+        "priorityOrder",
+        "trimPolicy"
+      ],
+      "type": "object"
+    },
+    "contractId": {
+      "pattern": "^AC-[A-Z0-9-]+$",
+      "type": "string"
+    },
+    "failurePolicy": {
+      "enum": [
+        "FAIL_CLOSED",
+        "DEGRADE_WITH_DISCLOSURE"
+      ],
+      "type": "string"
+    },
+    "humanGates": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "preconditions": {
+      "properties": {
+        "permissionDecisionRequired": {
+          "type": "boolean"
+        },
+        "requiredInputs": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "requiredRoles": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "requiredInputs",
+        "requiredRoles",
+        "permissionDecisionRequired"
+      ],
+      "type": "object"
+    },
+    "routeMode": {
+      "enum": [
+        "MAP_FIRST",
+        "ONTOLOGY_FIRST",
+        "MAP_THEN_ONTOLOGY",
+        "ONTOLOGY_THEN_MAP"
+      ],
+      "type": "string"
+    },
+    "ruleChecks": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schemaVersion": {
+      "const": "1.0.0",
+      "type": "string"
+    },
+    "semanticQueries": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "skills": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "taskType": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "contractId",
+    "version",
+    "taskType",
+    "routeMode",
+    "preconditions",
+    "activations",
+    "semanticQueries",
+    "ruleChecks",
+    "skills",
+    "context",
+    "humanGates",
+    "failurePolicy"
+  ],
+  "title": "GITS Asset Activation Contract",
+  "type": "object"
+}
