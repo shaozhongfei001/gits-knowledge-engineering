@@ -76,6 +76,12 @@ router.beforeEach((to, _from, next) => {
     return
   }
 
+  // 开发模式跳过认证（后端 api-key 为空时认证已关闭）
+  if (import.meta.env.DEV) {
+    next()
+    return
+  }
+
   // 未认证时跳转登录页
   if (!isAuthenticated()) {
     next({ name: 'Login', query: { redirect: to.fullPath } })

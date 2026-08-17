@@ -438,7 +438,8 @@ async function doIterate() {
   if(!newEvidenceDesc.value.trim()){msg.warning('请输入新证据描述');return}
   ld.value=true
   try{
-    const r=await handleNewEvidence(jid.value,sc.value.customerId,oid.value,newEvidenceDesc.value.trim(),preR.value?.previsitReport?.reportId||'')
+    const prevReportId = preR.value?.previsitReport?.reportId || undefined
+    const r=await handleNewEvidence(jid.value,sc.value.customerId,oid.value,newEvidenceDesc.value.trim(),prevReportId)
     iterR.value=r
     roundDone.value.add('ITERATE')
     // 更新迭代历史
