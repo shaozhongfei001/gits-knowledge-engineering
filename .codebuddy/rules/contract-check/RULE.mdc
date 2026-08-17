@@ -1,0 +1,102 @@
+---
+description: "合同检查技能：前后端契约漂移检测、联调前置条件、兼容性验证"
+alwaysApply: false
+globs: "specs/**,generated/**,frontend/src/api/**"
+enabled: true
+---
+
+# 合同检查技能
+
+集成工程师检查清单。SSOT：`specs/CONTRACT_INDEX.yaml`
+
+## 自动化检查
+
+从工作区根目录：
+
+```bash
+make generate           # 刷新 generated/
+make check              # 合同校验
+make contract-verify    # 合同合规验证
+make contract-diff BASELINE=origin/main  # 与基线比较
+```
+
+前端冒烟测试：
+
+```bash
+cd frontend && npm run check && npm run test
+```
+
+## 手动漂移检测
+
+| 层 | 比对对象 |
+|----|----------|
+| OpenAPI 合同 | `specs/openapi/gits-kno-api.openapi.json` |
+| 生成制品 | `generated/` 下的所有文件 |
+| 前端类型 | `frontend/src/api/engagement.ts`, `frontend/src/api/v11.ts` |
+| 后端 DTO | `apps/api/src/main/java/com/gien/gits/api/dto/` |
+| 后端 Controller | `apps/api/src/main/java/com/gien/gits/api/controller/` |
+
+任何不一致 → 标记 🔴 **阻塞**。先修合同，再重新生成，最后改代码。
+
+## 联调前置条件
+
+### 后端就绪
+
+- [ ] OpenAPI 合同已更新并提交
+- [ ] `make generate` 成功
+- [ ] `make check` 哈希一致
+- [ ] 后端测试全部通过（`make backend-test`）
+- [ ] springdoc 可访问（`/api-docs`）
+
+### 前端就绪
+
+- [ ] API 类型定义已同步更新
+- [ ] `vue-tsc --noEmit` 类型检查通过
+- [ ] 前端测试全部通过（`make frontend-test`）
+- [ ] Vite 代理配置正确（`/api` → `localhost:8080`）
+
+### 启动联调
+
+```bash
+# 终端 1：后端
+./mvnw spring-boot:run -pl apps/api
+
+# 终端 2：前端
+cd frontend && npm run dev
+
+# 终端 3：验证
+make smoke-test
+```
+
+## 输出格式
+
+| 检查项 | 状态 | 详情 |
+|--------|------|------|
+| API 路径一致 | ✅/🔴 | |
+| 请求体/参数 | ✅/🔴 | |
+| 响应体类型 | ✅/🔴 | |
+| 错误响应格式 | ✅/🔴 | |
+| null/空数组约定 | ✅/🔴 | |
+| 合同哈希一致 | ✅/🔴 | |
+| CONTRACT_INDEX 注册 | ✅/🔴 | |
+
+## 常见漂移模式
+
+- 字段重命名：后端 `rate` vs 前端 `value`
+- 格式不一致：原始数组 vs ECharts option
+- `null` vs `[]` 空集合
+- 未文档化的错误结构
+- 前端发明后端未返回的字段
+- 合同已更新但前端类型未同步
+
+## 兼容性策略
+
+| 策略 | 含义 |
+|------|------|
+| `backward_compatible` | 只允许向后兼容变更 |
+| `explicit_migration` | 变更需要显式迁移 |
+| `versioned_decision` | 版本化决策 |
+| `versioned_mapping` | 版本化映射 |
+| `no_silent_breaking_change` | 禁止静默破坏 |
+
+破坏性变更（删除字段、重命名、修改类型、必填变可选→可选变必填）无论哪种策略都需要 ADR + 迁移计划。

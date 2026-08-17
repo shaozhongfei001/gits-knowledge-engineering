@@ -1,0 +1,101 @@
+---
+description: "E2E 验收技能：浏览器验证工作流，不只看代码，必须验证用户可见行为"
+alwaysApply: false
+globs: "apps/**,frontend/**"
+enabled: true
+---
+
+# E2E 验收技能
+
+**心态**：我只关心浏览器里能不能正常用。声明 `[切换到 E2E Owner 模式]`。
+
+代码审查不等于验收。必须打开浏览器操作 UI。
+
+## 启动
+
+```bash
+# 终端 1 — 后端
+./mvnw spring-boot:run -pl apps/api
+
+# 终端 2 — 前端
+cd frontend && npm run dev
+
+# 浏览器 → http://localhost:5173
+```
+
+预检：`curl -sf http://localhost:8080/actuator/health | jq .` → status UP
+
+## 逐页检查清单
+
+对每个用户可见项：
+
+```
+| 检查项 | 通过 | 失败 |
+|--------|------|------|
+| API 请求发出? | 200+数据 | 404/500/超时 |
+| 数据能解析? | 渲染成功 | null/undefined 崩溃 |
+| 图表/数据可见? | 真实数据 | 空白画布 |
+| 交互正常? | 响应操作 | 无变化/报错 |
+| 异常有提示? | 友好文案 | 白屏/堆栈 |
+| 四态处理? | Idle/Loading/Success/Error 均正常 | 缺失某种状态 |
+```
+
+DevTools Network：确认请求、状态码、响应结构符合合同。
+
+## 失败模式
+
+| 现象 | 可能根因 |
+|------|----------|
+| 空白图表 | 字段名不一致 |
+| 无限转圈 | 未 catch Promise 异常 |
+| 白屏 | JS 崩溃，无 ErrorBoundary |
+| 数据不对 | SQL/参数错误 |
+| 切换不刷新 | 缓存未失效 |
+| Loading 永不消失 | enabled 条件错误 |
+| Error 无提示 | 缺少 isError 处理 |
+
+## 测试错误路径
+
+1. 停止后端 → 刷新 → 期望友好错误提示，不是白屏
+2. 空数据集 → 期望空状态占位符，不是崩溃
+3. 慢/超时 API → 期望超时提示，不是无限 spinner
+4. 无效参数 → 期望 400 错误提示，不是 500
+
+## 报告格式
+
+```markdown
+## 页面验收: /[path]
+
+| 验收项 | 状态 | 详情 |
+|--------|------|------|
+| ... | ✅/❌ | |
+
+## 阻塞问题
+1. [后端/前端] [现象] → [根因] → [指派]
+```
+
+状态流：发现 ❌ → 指派 → 修复 🔄 → 重新验收 → 通过 ✅
+
+**红线**：不说"应该没问题"；不只走 happy path；每个检查项必须有 ✅ 或 ❌。
+
+## Playwright 自动化
+
+```bash
+# 运行 E2E 测试
+make e2e-test
+
+# 或直接
+cd frontend && npx playwright test
+
+# 指定测试
+cd frontend && npx playwright test e2e/engagement.spec.ts
+```
+
+## 验收通过条件
+
+- [ ] 所有页面检查项 ✅
+- [ ] 错误路径测试通过
+- [ ] DevTools 无 4xx/5xx 异常
+- [ ] 无控制台错误
+- [ ] 响应时间 < 3s（P95）
+- [ ] 证据记录到 Loop EVIDENCE.md

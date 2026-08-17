@@ -1,0 +1,89 @@
+---
+description: "后端兜底规范：API First、错误结构、空数组、本地 H2、MyBatis、Spring Modulith"
+alwaysApply: true
+enabled: true
+---
+
+# 后端兜底规范
+
+## 1. API First
+
+- 所有 HTTP 端点必须先在 `specs/openapi/gits-kno-api.openapi.json` 中定义。
+- Controller 方法签名必须与 OpenAPI operationId 一致。
+- DTO 字段必须与 OpenAPI schema 一致，不得发明合同未定义的字段。
+- 新增端点必须先更新合同 → `make generate` → `make check` → 再写实现。
+
+## 2. 错误响应结构
+
+所有 API 错误必须返回统一结构：
+
+```json
+{
+  "status": 400,
+  "error": "Bad Request",
+  "message": "具体错误描述",
+  "path": "/api/v1/engagement/...",
+  "timestamp": "2026-08-12T10:00:00Z"
+}
+```
+
+- 禁止暴露堆栈跟踪给客户端。
+- 业务异常使用领域异常类（如 `ClaimConflictException`），由全局 `@ExceptionHandler` 统一处理。
+- 404 用于资源不存在；400 用于参数错误；409 用于业务冲突；422 用于语义校验失败。
+
+## 3. 集合返回
+
+- 列表接口返回空数组 `[]`，不返回 `null`。
+- 分页接口必须包含 `totalElements`、`totalPages`、`number`、`size`。
+- 禁止用集合包装类（如 `{"items": [...]}`）除非合同明确定义。
+
+## 4. 本地开发环境
+
+- 默认使用 H2 内存库（MySQL 兼容模式），无需本地安装 MySQL。
+- `application.yaml` 中 `gits.persistence.mode: mybatis`。
+- 种子数据通过 `gits.seed.enabled: true` 自动加载。
+- Flyway 迁移脚本放在 `classpath:db/migration/h2`。
+
+## 5. Spring Modulith 模块化
+
+- 领域逻辑放在 `modules/`，通过 Port 接口暴露。
+- 外部系统集成放在 `adapters/`，实现 Port 接口。
+- 应用组装放在 `apps/`，通过 Spring 配置选择实现。
+- **模块间禁止直接依赖实现类**，必须通过 Port 接口。
+- 新增 Port 接口必须同步更新 `specs/CONTRACT_INDEX.yaml`。
+
+## 6. MyBatis 规范
+
+- Mapper XML 放在 `classpath:mapper/` 下，按模块分包。
+- Entity 与 DTO 分离：Entity 映射数据库，DTO 映射 API。
+- TypeHandler 用于领域值对象与数据库类型的转换。
+- 复杂查询使用 `<resultMap>` 显式映射，不依赖自动映射。
+
+## 7. 数据库迁移
+
+- 所有 schema 变更必须通过 Flyway 迁移脚本。
+- 迁移脚本命名：`V{版本号}__{描述}.sql`（双下划线）。
+- H2 和 MySQL 方言脚本必须同步维护。
+- 禁止在代码中使用 `CREATE TABLE` / `ALTER TABLE` 等 DDL。
+
+## 8. 测试规范
+
+- 单元测试：JUnit 5 + AssertJ + Mockito。
+- 集成测试：`@SpringBootTest` + H2 内存库。
+- 合同测试：验证 Controller 响应符合 OpenAPI schema。
+- 测试覆盖率门槛：行覆盖率 ≥ 80%（JaCoCo）。
+- 测试类命名：`*Test.java`（单元）、`*IT.java`（集成）。
+
+## 9. 安全
+
+- API Key 认证：`X-API-KEY` 请求头。
+- CORS 仅允许 `localhost:5173`（前端开发）和 `localhost:8080`。
+- 禁止在日志中输出 API Key 或敏感数据。
+- OWASP 依赖检查：CVSS ≥ 7 阻断构建。
+
+## 10. 可观测性
+
+- 结构化日志：JSON 格式（Logstash encoder）。
+- 指标：Micrometer + Prometheus registry。
+- 链路追踪：Zipkin（开发 100% 采样）。
+- Actuator 端点：`/actuator/health`、`/actuator/info`、`/actuator/metrics`、`/actuator/prometheus`。

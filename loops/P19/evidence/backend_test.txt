@@ -1,0 +1,5 @@
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in 空输入和无匹配场景
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 s -- in com.gien.gits.api.service.report.SemanticPatternExtractionStrategyTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.072 s -- in com.gien.gits.api.service.MeetingScriptServiceTest
+[INFO] Tests run: 283, Failures: 0, Errors: 0, Skipped: 4
+[INFO] BUILD SUCCESS

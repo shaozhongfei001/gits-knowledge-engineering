@@ -1,0 +1,9 @@
+contract-check: PASS
+loop-guard: PASS
+secret-scan: PASS (with 3760 advisory finding(s))
+enum-consistency: PASS — 2 族受控枚举, 19 个 seed 文件
+semantic-rule-gate: SHACL: PASS
+semantic-rule-gate: Schema JSON: PASS
+semantic-rule-gate: DMN: PASS
+semantic-rule-gate: LinkML: PASS
+semantic-rule-gate: PASS

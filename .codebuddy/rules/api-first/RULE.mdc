@@ -1,0 +1,71 @@
+---
+description: "API First 可执行技能：合同先行，禁止先写实现再补合同"
+alwaysApply: false
+globs: "modules/**,adapters/**,apps/**,frontend/src/api/**"
+enabled: true
+---
+
+# API First 技能
+
+**红线**：实现代码之前，合同必须已存在于 `specs/`。
+
+## SSOT
+
+```
+specs/openapi/gits-kno-api.openapi.json   ← 在这里先改
+generated/                                  ← 只读，make generate
+frontend/src/api/engagement.ts              ← 从合同同步类型
+```
+
+禁止发明字段。禁止手工编辑 `generated/`。
+
+## 工作流
+
+```
+1. 更新 OpenAPI — 在 specs/openapi/ 中添加/修改 path、params、schemas
+2. 重新生成 SDK — 从工作区根目录：
+   make generate
+3. 校验 — 从工作区根目录：
+   make check
+4. 然后实现 — 后端 Controller + 前端 API 调用
+5. 注册合同 — 更新 specs/CONTRACT_INDEX.yaml
+```
+
+## 写代码前确认
+
+```
+[ ] OpenAPI 合同已更新
+[ ] make generate 成功
+[ ] make check 通过（或漂移已记录并接受）
+[ ] 前端使用与合同一致的类型，不是临时接口
+[ ] CONTRACT_INDEX.yaml 已注册（新增合同时）
+```
+
+## 实现中途合同变更
+
+**停止**。回到步骤 1。不要用不一致的字段名打补丁。
+
+## 合同变更分类
+
+| 变更类型 | 处理 |
+|----------|------|
+| 新增端点 | 先加 OpenAPI → generate → 实现 |
+| 新增字段（可选） | 先加 OpenAPI → generate → 实现 |
+| 修改字段类型 | 破坏性变更，需 ADR + 兼容性评估 |
+| 删除字段/端点 | 破坏性变更，需 ADR + 迁移计划 |
+| 重命名字段 | 破坏性变更，需 ADR + 双写过渡 |
+
+## 与其它合同类型的关系
+
+本项目不只有 OpenAPI，还有：
+
+| 合同类型 | 位置 | 变更策略 |
+|----------|------|----------|
+| AsyncAPI | `specs/events/` | 新增事件需注册到 CONTRACT_INDEX |
+| LinkML | `specs/semantic/` | 变更需显式迁移 |
+| OWL/SHACL | `specs/semantic/` | 变更需显式迁移 |
+| DMN | `specs/rules/` | 版本化决策 |
+| R2RML | `specs/mapping/` | 版本化映射 |
+| JSON Schema | `specs/actions/` | 禁止静默破坏 |
+
+所有合同类型的变更都遵循同一原则：**先改合同源 → make generate → make check → 再写实现**。

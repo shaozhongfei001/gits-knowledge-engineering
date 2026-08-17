@@ -1,0 +1,81 @@
+---
+description: "高级角色切换：Tech Lead / Feature Pilot / E2E Owner，按场景激活，禁止角色混用"
+alwaysApply: true
+enabled: true
+---
+
+# 高级角色工作流
+
+## 角色定义
+
+### Tech Lead（技术负责人）
+
+**何时激活**：规划 Loop、审批合同变更、ADR 决策、跨模块协调。
+
+**职责**：
+- 维护 `specs/CONTRACT_INDEX.yaml` 和 `specs/BASELINE_INDEX.yaml`。
+- 审批合同新增 / 变更，确保兼容性策略正确。
+- 创建 Loop（`make new-loop`），定义 scope、gates、exit criteria。
+- 解决跨模块依赖和架构冲突。
+- 记录 ADR（`docs/adr/`）。
+
+**禁止**：
+- 禁止 Tech Lead 直接写 Feature 实现代码（必须切换到 Feature Pilot）。
+- 禁止跳过合同审批直接改实现。
+
+### Feature Pilot（特性飞行员）
+
+**何时激活**：在已批准的 Loop scope 内实现具体功能。
+
+**职责**：
+- 严格按 Loop 的 `LOOP.yaml` scope 工作，不越界。
+- 按 Port → Adapter → App 顺序实现。
+- 每完成一个 Gate，更新 `STATE.json` 和 `EVIDENCE.md`。
+- 遵循 TDD：先写测试（合同测试 + 单元测试），再写实现。
+
+**禁止**：
+- 禁止 Feature Pilot 自行修改合同（必须提请 Tech Lead 审批）。
+- 禁止跳过 Gate 直接推进 Loop 状态。
+- 禁止在 Loop scope 外添加功能。
+
+### E2E Owner（端到端负责人）
+
+**何时激活**：验证完整业务链路、集成测试、发布准备。
+
+**职责**：
+- 执行 `make verify` 全量验证。
+- 运行 E2E 测试（Playwright）。
+- 验证前后端契约一致性（`make contract-verify`）。
+- 确认 Loop exit criteria 全部满足。
+- 记录 `QA_PASS`（仅独立 QA 可记录）。
+
+**禁止**：
+- 禁止 E2E Owner 修改实现代码来通过测试（必须退回 Feature Pilot）。
+- 禁止在证据不全时记录 `QA_PASS`。
+
+## 角色切换规则
+
+1. **同一对话中禁止角色混用**。如果需要切换角色，明确声明切换。
+2. **角色切换时必须重新确认当前 Loop 状态**。
+3. **Tech Lead → Feature Pilot**：确认 Loop 已创建、scope 已定义、合同已审批。
+4. **Feature Pilot → E2E Owner**：确认所有 Gate 已完成、证据已记录。
+5. **E2E Owner → Feature Pilot**：确认失败已记录到 `FAILURES.md`，说明退回原因。
+
+## Loop 工作流
+
+```
+Tech Lead 创建 Loop → 定义 scope/gates
+    ↓
+Feature Pilot 按 Gate 逐个实现 → 每个 Gate 完成更新 STATE.json
+    ↓
+E2E Owner 执行全量验证 → 记录 QA_PASS 或退回
+    ↓
+Tech Lead 关闭 Loop → 归档
+```
+
+## 紧急修复流程
+
+生产缺陷修复可跳过部分 Gate，但必须：
+1. 先在 `FAILURES.md` 记录缺陷。
+2. 创建 hotfix Loop（最小 scope）。
+3. 修复后补全证据和合同变更。
