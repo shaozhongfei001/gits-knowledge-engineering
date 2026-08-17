@@ -131,6 +131,9 @@ public class EngagementJourneyController {
             @RequestBody OutreachScriptRequest request) {
         OutreachChannel channel;
         try {
+            if (request.channel() == null || request.channel().isBlank()) {
+                return ResponseEntity.badRequest().build();
+            }
             channel = OutreachChannel.valueOf(request.channel());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();

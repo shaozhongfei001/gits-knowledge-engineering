@@ -102,7 +102,7 @@ public class ReportGenerationService {
             String operatingCaseId, String journeyId,
             String customerId,
             String newEvidenceDescription, String previousReportId) {
-        UUID previousId = previousReportId != null ? UUID.fromString(previousReportId) : null;
+        UUID previousId = (previousReportId != null && !previousReportId.isBlank()) ? UUID.fromString(previousReportId) : null;
         Optional<RelationshipReport> previousReport = previousId != null
             ? reportRepo.findById(previousId) : Optional.empty();
         Optional<CustomerOperatingView> view = buildView(customerId, operatingCaseId);
@@ -123,7 +123,7 @@ public class ReportGenerationService {
             String customerId,
             PostvisitAnalysisContent previousAnalysis,
             String previousReportId) {
-        UUID previousId = previousReportId != null ? UUID.fromString(previousReportId) : null;
+        UUID previousId = (previousReportId != null && !previousReportId.isBlank()) ? UUID.fromString(previousReportId) : null;
         Optional<CustomerOperatingView> view = buildView(customerId, operatingCaseId);
 
         ReportContext ctx = ReportContext.forNextPrevisit(operatingCaseId, journeyId, customerId, previousAnalysis, previousId, view);
