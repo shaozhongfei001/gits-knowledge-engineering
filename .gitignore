@@ -32,6 +32,9 @@ playwright-report/
 test-results/
 coverage/
 
+# Knowledge-graph analysis tool output
+graphify-out/
+
 # Hermes / HEMM runtime
 .hemm/
 .hermes_run/
