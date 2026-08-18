@@ -8,7 +8,6 @@
   "implementation_actor": "feature_pilot",
   "production_ready": "no",
   "frozen": "no",
-  "implementation_actor": "tech_lead",
   "objective": [
     "Validate Knowledge Map, Asset Manifest and Activation Contract as an LLM-first control plane.",
     "Unify Wiki-first and Ontology-first paths through a replayable ActivationPlan.",

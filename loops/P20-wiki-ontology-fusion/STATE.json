@@ -8,7 +8,7 @@
   "qa_actor": null,
   "implementation_state": "DEV_SELF_CHECK_PASS",
   "gate_decision": "READY_FOR_INDEPENDENT_QA",
-  "completed_gates": ["contract_generate", "contract_check", "knowledge_architecture_check"],
+  "completed_gates": ["contract_generate", "contract_check", "knowledge_architecture_check", "security_check", "shadow_e2e"],
   "next_action": "Independent QA reviews P20 shadow implementation; Owner approval required before merge/fusion/production.",
   "blocked": false,
   "blocking_reason": null,

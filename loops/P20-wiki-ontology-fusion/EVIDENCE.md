@@ -137,3 +137,35 @@ CLAIM_SCOPE=
 - `make backend-test` 因**基线** OWASP npm nanoid 阻断 + apps/api JaCoCo 覆盖率 0.69<0.80 失败（非本批回归；本批模块均 SUCCESS，未触碰 frontend/ 或 apps/api）
 
 状态：DEV_SELF_CHECK（独立 QA 尚未签署，QA_PASS 不由此记录）。
+
+---
+
+## EVIDENCE_ID: EV-P20-E2E-005（两场景 Shadow E2E 与安全门禁）
+
+```text
+EVIDENCE_ID=EV-P20-E2E-005
+GATE=shadow_e2e / security_check（正式 Loop Gate）
+ACTOR=feature_pilot
+TIMESTAMP=2026-08-18
+BASE_COMMIT=44bf4b2a804ff2416edeba939217aa6a0bf1bdcf
+COMMAND=
+  python3 scripts/run_p20_shadow_e2e.py --mode shadow --scenario PRE_VISIT_PREPARATION --scenario FACT_RECONCILIATION_30M
+  make PYTHON=./gits-kno-p20-venv/bin/python security-check
+EXIT_CODE=0
+ARTIFACT_PATHS=scripts/run_p20_shadow_e2e.py, tests/tooling/test_shadow_e2e.py,
+  loops/P20-wiki-ontology-fusion/evidence/shadow-e2e/shadow-e2e-evidence.json
+CLAIM_SCOPE=
+  - 两场景 shadow E2E：确定性 ActivationPlan 与黄金计划 deterministicFields 一致，可重放
+  - shadow-e2e 只写 Loop 证据目录，formal_output_changed=False，不改变正式输出
+  - fail-closed：--mode production 拒绝；第三场景拒绝（DENY_UNMAPPED_TASK/DENY_NOT_IN_P20/DENY_CONTRACT_MISMATCH）
+  - security-check：secret-scan PASS(62 advisories)、sensitive-permissions PASS、oracle-readonly-guard PASS
+```
+
+验证（DEV_SELF_CHECK）：
+- `run_p20_shadow_e2e.py --mode shadow --scenario PRE_VISIT_PREPARATION --scenario FACT_RECONCILIATION_30M` → PASS，EXIT=0
+- `make tooling-test` → 17/17 OK（含 3 项新增 shadow-e2e 测试）
+- `make security-check` → PASS，EXIT=0
+- `make check` → PASS；loop memory/evidence guard → PASS
+- EVIDENCE.json 中 `shadow_e2e` / `security_check` 已 hash-attested 为 pass（证据落盘于 loop/evidence/）
+
+状态：DEV_SELF_CHECK（独立 QA 尚未签署，QA_PASS 不由此记录）。

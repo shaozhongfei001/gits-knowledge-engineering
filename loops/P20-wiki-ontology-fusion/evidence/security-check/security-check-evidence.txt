@@ -1,0 +1,11 @@
+P20 security-check evidence
+GATE=security_check
+COMMAND=make security-check (PYTHON=./gits-kno-p20-venv/bin/python)
+RESULT=PASS
+EXIT_CODE=0
+TIMESTAMP=2026-08-18
+secret-scan=PASS (with 62 advisory finding(s))
+sensitive-permissions=PASS
+oracle-readonly-guard=PASS
+NOTE=62 advisories preserved as advisories; no blocking findings
+ACTOR=feature_pilot
