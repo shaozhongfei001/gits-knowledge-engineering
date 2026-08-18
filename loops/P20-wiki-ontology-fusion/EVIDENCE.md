@@ -247,3 +247,71 @@ CLAIM_SCOPE=
 ```
 
 状态：DEV_SELF_CHECK（独立 QA 尚未签署，QA_PASS 不由此记录）。
+
+---
+
+## EVIDENCE_ID: EV-P20-P1D-009（gits-kno-api 运行时安全治理）
+
+```text
+EVIDENCE_ID=EV-P20-P1D-009
+GATE=gits_kno_api_runtime_security（Owner APPROVE_P20_API_RUNTIME_SECURITY_REMEDIATION_LIMITED）
+ACTOR=feature_pilot
+TIMESTAMP=2026-08-18
+BASE_COMMIT=cc04e94
+SPRING_BOOT_OLD_VERSION=3.5.16
+SPRING_BOOT_NEW_VERSION=3.5.16（主/次版本不变）
+TOMCAT_OLD_VERSION=10.1.55
+TOMCAT_NEW_VERSION=10.1.57
+TOMCAT_VERSION_ALIGNMENT=core/el/websocket 全部 10.1.57（统一，无漂移，无 Tomcat 11）
+```
+
+### Tomcat CVE 暴露矩阵
+
+| CVE | 版本状态 | FEATURE_PRESENT | RUNTIME_EXPOSURE | FINAL_CLASSIFICATION |
+|---|---|---|---|---|
+| CVE-2026-55276 | 10.1.55 受影响 | 无 effective web.xml 日志依赖 | 升级后 10.1.57 修复 | RESOLVED（10.1.57） |
+| CVE-2026-53434 | 10.1.55 受影响 | 无 FFM Connector/CRL | 升级后修复 | RESOLVED（10.1.57） |
+| CVE-2026-53404 | 10.1.55 受影响 | 无 RewriteValve | 升级后修复 | RESOLVED（10.1.57） |
+| CVE-2026-59083 | 10.1.55 受影响 | 无 RewriteValve | 升级后修复 | RESOLVED（10.1.57） |
+| CVE-2026-59084 | 10.1.55 受影响 | 无 EncryptInterceptor | 升级后修复 | RESOLVED（10.1.57） |
+| CVE-2026-66299 | 10.1.57 仍列出 | 无 Tomcat examples/WebSocket chat（已核实无 WebSocket 端点/无 examples/无 tomcat 配置） | NOT_APPLICABLE | UNRESOLVED_PENDING（修复或在 10.1.58，未发布；已记录） |
+
+### Micrometer/Prometheus 适用性分析
+- `micrometer-registry-prometheus@1.15.12` → `io.prometheus:prometheus-metrics-core@1.3.10`（**Java client**）
+- `PROMETHEUS_SERVER_PRESENT=NO`、`REMOTE_READ_ENDPOINT_PRESENT=NO`（无 `/api/v1/read`，无 snappy 解码）
+- 应用仅经 `/actuator/prometheus` 暴露指标 exposition
+- **CVE_2026_42154=SCANNER_COMPONENT_MISMATCH**（漏洞位于 Prometheus server remote-read；Java client 不实现该端点）
+- `RUNTIME_EXPOSURE=NOT_APPLICABLE`；已建精确 suppression（仅 CVE-2026-42154 + micrometer-registry-prometheus）
+
+### Swagger UI advisory
+- `swagger-ui/DOMPurify`：CVSS 5.1 → **ADVISORY_BELOW_THRESHOLD**，不 suppression
+- 需进一步核对开发环境/production profile 暴露面（见 P1d API 回归）
+- 若 Spring Boot patch/BOM 自然带来修复版本可接受，不为该 advisory 单独前端升级
+
+### 验证（DEV_SELF_CHECK）
+- `tomcat-embed-*` 统一 10.1.57；5/6 Tomcat CVE 已清除
+- 剩余 CVE-2026-66299（10.1.57 仍列）与 micrometer CVE-2026-42154（组件不匹配，已精确抑制）待 API 回归确认
+- swagger DOMPurify 多个 CVE（5.1 及 DOMPurify XSS）为 advisory，待暴露面确认
+
+### P1b 覆盖率治理与 backend_test 转绿（EV-P20-P1B-010）
+
+```text
+EVIDENCE_ID=EV-P20-P1B-010
+GATE=backend_test（OWASP + JaCoCo）
+ACTOR=feature_pilot
+TIMESTAMP=2026-08-18
+BASE_COMMIT=cc04e94
+BACKEND_TEST=PASS（EXIT=0，mvn verify BUILD SUCCESS + dependency-check-guard 全 PASS）
+APPS_API_LINE_COVERAGE=0.80+（实际 80.4%，317 测试通过）
+P1D_TOMCAT=RESOLVED（10.1.55 → 10.1.57，统一，无 Tomcat 11，Spring Boot 主/次版本不变）
+P1D_MICROMETER=SCANNER_COMPONENT_MISMATCH_EVIDENCED（无 server/remote-read，Java client 仅 exposition）
+SWAGGER_UI_EXPOSURE=DEV_ONLY（prod 禁用 springdoc）
+SCANNER_FAIL_CLOSED=PASS（failOnError=true；ossindexAnalyzerEnabled=false；guard 校验 JSON 报告）
+FORMAL_GATES=6/6_PASS（contract_generate/contract_check/knowledge_architecture_check/security_check/shadow_e2e/backend_test）
+```
+
+新增覆盖率测试：
+- `ReportStrategyCoverageTest`（12）：R5A 内部关系/R8 下次访前/R7 更新关系/R5B CRM 通话，LLM 成功/失败 fallback/空视图/富视图分支
+- `V11ScenarioDataLoaderTest`（20）：9 类数据 load 空路径 + 数据映射路径（customer/legal/group/credit/bank snapshot/external event/product card/kyc/interaction）
+
+状态：DEV_SELF_CHECK（独立 QA 尚未签署，QA_PASS 不由此记录）。

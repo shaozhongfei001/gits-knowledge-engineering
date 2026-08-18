@@ -93,7 +93,11 @@ CLASSIFICATION=environment/reproducibility (not a LinkML contract failure)
 - **RESULT**: FAIL（P1c 授权内项已处置；但暴露 gits-kno-api 级联新发现，超出授权范围，需新 Owner 决策）
 
 ### P1c 授权内处置结果（已完成）
-- **P1C_MYSQL_CONNECTOR=RESOLVED**：`mysql-connector-j@9.7.0 → 9.6.0`（Maven Central 无 9.7.x 补丁；9.6.0 为不在 9.7.0-9.7.1 影响区的最小兼容稳定版本，同 9.x 系列，非大版本）。确认 Connector/J 的 CVE-2026-60586/60623 已消失。
+- **P1C_MYSQL_CONNECTOR=TEMPORARY_MITIGATION_ACCEPTED**（依 Owner 决策2修正）
+  - `OLD_VERSION=9.7.0`、`CURRENT_VERSION=9.6.0`
+  - `MITIGATION_REASON=9.7.0–9.7.1 affected and no patched 9.7.x available（Maven Central 无 9.7.1+）`
+  - `LONG_TERM_STATE=UPSTREAM_PATCH_PENDING`
+  - **退出条件**：当 Oracle 发布不受影响且与项目兼容的新稳定 Connector/J 版本时，应重新评估并从 9.6.0 升级，不长期停留在归档版本。已登记为后续依赖维护事项（不重新打开 P1c）。
 - **P1C_LOG4J=RESOLVED（组件不匹配）**：核验依赖树——项目仅有 `log4j-to-slf4j` + `log4j-api`，**无 `log4j-core`**、无 log4j2 配置文件、无 Rfc5424Layout/XmlLayout/Socket/Syslog appender。log4j-core 相关 CVE（CVE-2026-34477/478/479/480/481、CVE-2025-68161）因 log4j-core 不存在而**不可利用**，按组件不匹配窄抑制。
 - **CVE-2026-49844（log4j-api，真实但 <7.0）**：CVSS 5.9(NVD)/6.3(CVSS4)，**ADVISORY_BELOW_THRESHOLD**；利用需 JsonTemplateLayout/MapMessage.asJson（本项目未用）。**不抑制**（真实 log4j-api 漏洞），记录为 advisory。
 - **SCANNER_FAIL_CLOSED**：`failOnError=true` 恢复（执行/数据源错误 → FAIL）；OSS Index analyzer 用正确参数 `ossindexAnalyzerEnabled=false` 禁用（可选外部数据源 401 不可用，依 Owner 决策选项3）；新增 `scripts/dependency-check-guard.py` 完整性校验（报告非空/依赖>0/NVD 时间可识别/无 fatal/阻断漏洞）。
@@ -107,4 +111,22 @@ CLASSIFICATION=environment/reproducibility (not a LinkML contract failure)
 
 - **CLASSIFICATION**: PRE_EXISTING_BASELINE（级联，非 P20 改动引入）
 - **NEXT_ACTION**: 向 Owner 申请对 `gits-kno-api` 运行时依赖（tomcat-embed-core、micrometer-registry-prometheus）的安全治理授权；本批已完成授权范围内 P1c。
+- **RECORDED_AT**: 2026-08-18
+
+---
+
+## FAILURE_ID: BASE-P20-G0-005（P1d/P1b 完成，backend_test 转绿）
+
+- **GATE**: backend_test（OWASP + JaCoCo）
+- **COMMAND**: `make backend-test`
+- **RESULT**: **PASS（EXIT=0）**，`mvn verify` BUILD SUCCESS + dependency-check-guard 全报告 PASS
+- **P1D_TOMCAT=RESOLVED**：`tomcat-embed-* 10.1.55 → 10.1.57`（Maven Central 最新可用 10.1.x；10.1.58 未发布）。core/el/websocket 统一 10.1.57，无 Tomcat 11，Spring Boot 3.5.16 主/次版本不变。5/6 Tomcat CVE 清除；CVE-2026-66299（examples/WebSocket chat）因嵌入式 Tomcat 无 examples、无 WebSocket 端点按组件不匹配窄抑制。
+- **P1D_MICROMETER=SCANNER_COMPONENT_MISMATCH_EVIDENCED**：项目仅用 Prometheus Java client（`prometheus-metrics-core@1.3.10`）暴露 `/actuator/prometheus`；无 Prometheus server、无 `/api/v1/read` remote-read。CVE-2026-42154 精确窄抑制。
+- **SWAGGER_UI_EXPOSURE=DEV_ONLY**：`application-prod.yaml` 已配置 `springdoc.api-docs.enabled=false`（生产禁用）；DOMPurify CVEs 均 <7.0，窄抑制（advisory）。
+- **P1B_APPS_API_LINE_COVERAGE=0.80+（实际 80.4%）**：新增报告策略测试（12）+ V11ScenarioDataLoader 数据/空路径测试（20）+ 追加分支，JaCoCo `All coverage checks have been met`。
+- **SCANNER_FAIL_CLOSED=PASS**：`failOnError=true`；OSS Index analyzer 用 `ossindexAnalyzerEnabled=false` 禁用；`dependency-check-guard.py` 校验 JSON 报告（非空/无 errorCount/无 ≥7.0 阻断；无依赖模块合法空报告不误判）。
+- **CLASSIFICATION**: CLOSED（级联基线安全治理完成；所有 P1 条件满足）
+- **OWNER_DECISION**: APPROVE_P20_API_RUNTIME_SECURITY_REMEDIATION_LIMITED
+- **CLOSED_AT**: 2026-08-18
+- **CLOSED_BY**: feature_pilot
 - **RECORDED_AT**: 2026-08-18

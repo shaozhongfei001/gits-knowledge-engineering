@@ -18,6 +18,14 @@
     <java.version>21</java.version>
     <spring-modulith.version>1.4.12</spring-modulith.version>
     <jena.version>6.2.0</jena.version>
+    <!--
+      P1d: Tomcat 安全治理（APPROVE_P20_API_RUNTIME_SECURITY_REMEDIATION_LIMITED）。
+      tomcat-embed-* 10.1.55 落入多个受影响版本区间（CVE-2026-55276/53434/53404/59083/59084/66299）。
+      Maven Central 最新可用 10.1.x 为 10.1.57（10.1.58 未发布）；统一覆盖 Spring Boot 3.5.16 BOM
+      的 10.1.55，保持 10.1.x 线、不升级 Tomcat 11、不改变 Spring Boot 主/次版本。
+      所有 tomcat-embed-core/el/websocket 统一到该版本，避免漂移。
+    -->
+    <tomcat.version>10.1.57</tomcat.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 

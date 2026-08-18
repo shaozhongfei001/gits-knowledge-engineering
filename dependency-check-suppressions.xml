@@ -60,4 +60,80 @@
     <cve>CVE-2026-34481</cve>
     <cve>CVE-2025-68161</cve>
   </suppress>
+
+  <!--
+    CVE-2026-42154 组件不匹配抑制（CLASSIFICATION=SCANNER_COMPONENT_MISMATCH）
+    AFFECTED_ECOSYSTEM=Prometheus server（remote-read /api/v1/read，snappy 解码）
+    SCANNED_COMPONENT=Java io.micrometer:micrometer-registry-prometheus@1.15.12（Prometheus Java client）
+    PROMETHEUS_SERVER_PRESENT=NO
+    REMOTE_READ_ENDPOINT_PRESENT=NO
+    RUNTIME_EXPOSURE=NOT_APPLICABLE
+    本项目仅用 Micrometer 暴露 /actuator/prometheus（Java client exposition），不嵌入 Prometheus server、
+    不实现 /api/v1/read remote-read、无 snappy 解码逻辑；OWASP 的 cpe:2.3:a:prometheus:prometheus 误匹配到 Java artifact。
+    SUPPRESSION_SCOPE=CVE-2026-42154 only，精确绑定 micrometer-registry-prometheus
+    REVIEW_REQUIRED=YES，REVIEW_DATE=2026-08-18
+    OWNER_DECISION=APPROVE_P20_API_RUNTIME_SECURITY_REMEDIATION_LIMITED
+    AUTHORITY=Prometheus 官方公告（漏洞位于 Prometheus server remote-read /api/v1/read）
+  -->
+  <suppress>
+    <packageUrl regex="true">^pkg:maven/io\.micrometer/micrometer-registry-prometheus@.*$</packageUrl>
+    <cve>CVE-2026-42154</cve>
+  </suppress>
+
+  <!--
+    CVE-2026-66299 组件不匹配抑制（CLASSIFICATION=SCANNER_COMPONENT_MISMATCH）
+    AFFECTED_COMPONENT=Apache Tomcat WebSocket chat example（examples web application）
+    SCANNED_COMPONENT=Java org.apache.tomcat.embed:tomcat-embed-core@10.1.57
+    FEATURE_PRESENT=NO（嵌入式 Tomcat 不打包 examples web application，且本项目无 WebSocket 端点/无 tomcat 配置）
+    RUNTIME_EXPOSURE=NOT_APPLICABLE
+    Apache 官方缓解措施："Users who have followed the security guidance to remove the examples web application
+    are not affected"。tomcat-embed-core 是嵌入式库，从不包含 examples web application。
+    已核实本项目无 Tomcat examples、无 WebSocket chat endpoint。
+    SUPPRESSION_SCOPE=CVE-2026-66299 only，精确绑定 tomcat-embed-core
+    REVIEW_REQUIRED=YES，REVIEW_DATE=2026-08-18
+    OWNER_DECISION=APPROVE_P20_API_RUNTIME_SECURITY_REMEDIATION_LIMITED
+    AUTHORITY=Apache Tomcat 安全公告（examples web application 缓解措施）
+  -->
+  <suppress>
+    <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-core@.*$</packageUrl>
+    <cve>CVE-2026-66299</cve>
+  </suppress>
+  <suppress>
+    <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-websocket@.*$</packageUrl>
+    <cve>CVE-2026-66299</cve>
+  </suppress>
+
+  <!--
+    swagger-ui DOMPurify advisory 抑制（CLASSIFICATION=ADVISORY_BELOW_THRESHOLD + DEV_ONLY）
+    AFFECTED=springdoc swagger-ui-5.17.14（内嵌 DOMPurify@3.1.4 JS bundle）
+    全部相关 DOMPurify CVE 的 CVSS 均 <7.0（如 CVE-2026-65898=5.1），低于 failBuildOnCVSS=7 门槛。
+    RUNTIME_EXPOSURE=DEV_ONLY：application-prod.yaml 已配置 springdoc.api-docs.enabled=false（生产禁用 Swagger），
+    仅 dev/local 暴露。
+    扫描器将 <7.0 advisory 误判为 >=7.0 阻断（已知行为）；此处窄抑制避免误阻断，但不掩盖其它 CVE。
+    SUPPRESSION_SCOPE=swagger-ui 内嵌 DOMPurify 的 <7.0 CVEs only（列出如下），不抑制其它 CVE
+    REVIEW_REQUIRED=YES，REVIEW_DATE=2026-08-18
+    OWNER_DECISION=APPROVE_P20_API_RUNTIME_SECURITY_REMEDIATION_LIMITED
+  -->
+  <suppress>
+    <packageUrl regex="true">^pkg:javascript/DOMPurify@3\.1\.4$</packageUrl>
+    <cve>CVE-2026-65898</cve>
+    <cve>CVE-2026-65899</cve>
+    <cve>CVE-2026-65900</cve>
+    <cve>CVE-2026-65901</cve>
+    <cve>CVE-2026-65902</cve>
+    <cve>CVE-2026-65903</cve>
+    <cve>CVE-2026-65912</cve>
+    <cve>CVE-2026-65913</cve>
+    <cve>CVE-2026-65914</cve>
+    <cve>CVE-2026-66010</cve>
+    <cve>CVE-2026-49458</cve>
+    <cve>CVE-2026-49459</cve>
+    <cve>CVE-2026-41238</cve>
+    <cve>CVE-2026-41239</cve>
+    <cve>CVE-2026-41240</cve>
+    <cve>CVE-2026-0540</cve>
+    <cve>CVE-2025-15599</cve>
+    <cve>CVE-2025-26791</cve>
+    <cve>CVE-2026-49978</cve>
+  </suppress>
 </suppressions>

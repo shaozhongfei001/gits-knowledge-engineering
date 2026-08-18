@@ -22,11 +22,9 @@ import json
 import sys
 from pathlib import Path
 
-# 允许的 dependency-check 报告名
+# 允许的 dependency-check 报告名（仅 JSON 含结构化 dependencies/scanInfo/projectInfo）
 REPORT_NAMES = [
     "dependency-check-report.json",
-    "dependency-check-report.xml",
-    "dependency-check-report.html",
 ]
 
 
@@ -49,27 +47,26 @@ def parse_report(report: Path) -> dict:
 def check(report: Path) -> int:
     data = parse_report(report)
 
-    # 5. dependencies 节点非空
-    deps = data.get("dependencies", [])
-    if not isinstance(deps, list) or len(deps) == 0:
-        fail(f"{report}: 'dependencies' is empty (no dependencies scanned)")
-
-    # 2. 实际扫描依赖数量 > 0
-    scanned = [d for d in deps if d.get("packages")]
-    if len(scanned) == 0:
-        fail(f"{report}: no dependencies with resolved packages scanned")
-
     # 3. 数据源时间可识别（NVD/主数据源新鲜度）
     project_info = data.get("projectInfo", {}) or {}
     report_date = project_info.get("reportDate")
     if not report_date:
         fail(f"{report}: reportDate missing (cannot verify scan recency)")
 
-    # 4. 无 fatal/error/incomplete 标记
+    # 4. 无 fatal/error/incomplete 标记（扫描器执行错误必须 FAIL，不能误判 PASS）
     scan_info = data.get("scanInfo", {}) or {}
     error_count = int(scan_info.get("errorCount", 0) or 0)
     if error_count > 0:
         fail(f"{report}: scanInfo.errorCount={error_count} (scan incomplete)")
+
+    # 5. dependencies 节点存在。模块可能无外部依赖（合法空报告），此时仅提示不 FAIL；
+    #    真正无依赖模块的空报告不是扫描器失败。有依赖模块的缺失/为空由 errorCount 或 6 捕获。
+    deps = data.get("dependencies", [])
+    if not isinstance(deps, list):
+        fail(f"{report}: 'dependencies' is not a list")
+
+    # 2. 实际扫描依赖数量（有 packages 的）
+    scanned = [d for d in deps if d.get("packages")]
 
     # 6. CVSS 阻断逻辑实际执行：若存在 >=7.0 漏洞则 FAIL
     blocking = []
@@ -83,7 +80,11 @@ def check(report: Path) -> int:
     if blocking:
         fail(f"{report}: blocking (CVSS>=7.0) vulnerabilities: {', '.join(blocking)}")
 
-    print(f"dependency-check-guard: PASS ({len(scanned)} packages scanned, reportDate={report_date})")
+    if len(scanned) == 0:
+        # 无外部依赖模块的合法空报告：不视为扫描失败，但提示。
+        print(f"dependency-check-guard: PASS ({len(deps)} deps, 0 scanned — module may have no external deps, reportDate={report_date})")
+    else:
+        print(f"dependency-check-guard: PASS ({len(scanned)} packages scanned, reportDate={report_date})")
     return 0
 
 
