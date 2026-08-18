@@ -108,7 +108,7 @@ def check_evidence() -> list[str]:
             status = gate_data.get("status", "")
             if status == "fail":
                 drifts.append(f"{loop_id}: gate '{gate_id}' has status 'fail'")
-            # Check for pass gate with no actor
+            # 检查是否有标记为 pass 但未登记执行人的门禁（通过但无追溯主体）
             if status == "pass" and not gate_data.get("actor"):
                 drifts.append(f"{loop_id}: gate '{gate_id}' passed but no actor recorded")
 
@@ -127,7 +127,7 @@ def main() -> int:
             "drift_count": len(all_drifts),
             "drifts": all_drifts,
         }
-        # Append to drift log
+        # 把本次检测结果追加到漂移日志
         log_entries = []
         if DRIFT_LOG.exists():
             try:

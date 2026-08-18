@@ -12,17 +12,17 @@ public final class RegisteredSemanticQueryCatalog {
 
     /** P20 合同集登记的语义查询 ID（激活合同 semanticQueries ∪ 技能 semanticDependencies）。 */
     private static final Set<String> REGISTERED = Set.of(
-            // activation contracts
-            "SQ-CUSTOMER-RELATIONSHIP",
-            "SQ-RELATED-LEGAL-ENTITIES",
-            "SQ-KYC-GAPS",
-            "SQ-OPEN-COMMITMENTS",
-            "SQ-ACTIVE-PRODUCT-VERSIONS",
-            "SQ-CLAIM-SUBJECT-RELATIONS",
-            "SQ-CREDIT-AND-PROJECT-AMOUNTS",
-            "SQ-PROJECT-AND-BORROWER-ENTITY",
-            // skills
-            "SQ-CUSTOMER-NEED-AND-PROJECT");
+            // ── 来自激活合同的 semanticQueries 字段声明的查询 ID ──
+            "SQ-CUSTOMER-RELATIONSHIP",      // 客户关系网络查询
+            "SQ-RELATED-LEGAL-ENTITIES",     // 关联法人查询
+            "SQ-KYC-GAPS",                   // 客户 KYC 缺口查询
+            "SQ-OPEN-COMMITMENTS",           // 未结承诺查询
+            "SQ-ACTIVE-PRODUCT-VERSIONS",    // 活跃产品版本查询
+            "SQ-CLAIM-SUBJECT-RELATIONS",    // 主张主体关系查询
+            "SQ-CREDIT-AND-PROJECT-AMOUNTS", // 授信与项目金额查询
+            "SQ-PROJECT-AND-BORROWER-ENTITY",// 项目与借款人实体查询
+            // ── 来自技能 semanticDependencies 字段声明的查询 ID ──
+            "SQ-CUSTOMER-NEED-AND-PROJECT"); // 客户需求与项目匹配查询
 
     private final Set<String> registered;
 
