@@ -169,3 +169,30 @@ CLAIM_SCOPE=
 - EVIDENCE.json 中 `shadow_e2e` / `security_check` 已 hash-attested 为 pass（证据落盘于 loop/evidence/）
 
 状态：DEV_SELF_CHECK（独立 QA 尚未签署，QA_PASS 不由此记录）。
+
+---
+
+## EVIDENCE_ID: EV-P20-SQ-006（受控语义查询 Gap G3）
+
+```text
+EVIDENCE_ID=EV-P20-SQ-006
+GATE=semantic_query_gate（Gap G3，非正式 Loop Gate）
+ACTOR=feature_pilot
+TIMESTAMP=2026-08-18
+BASE_COMMIT=7ec8542
+COMMAND=mvn -pl modules/semantic-runtime test
+EXIT_CODE=0
+ARTIFACT_PATHS=modules/semantic-runtime（SemanticQueryPort/RegisteredSemanticQueryCatalog/FailClosedSemanticQueryGuard）
+CLAIM_SCOPE=
+  - 只允许注册 Semantic Query ID 执行；任意 SPARQL / 未注册 / 空白一律 DENY_ONLY_REGISTERED_QUERY_ID（SEC-005）
+  - RegisteredSemanticQueryCatalog：P20 激活合同 semanticQueries ∪ 技能 semanticDependencies 的 9 个登记 ID
+  - FailClosedSemanticQueryGuard：rawQuery 非空、queryId 缺失/未登记、非法命名构造均 fail-closed
+  - 不连接真实语义端点、不产生业务副作用
+```
+
+验证（DEV_SELF_CHECK）：
+- `mvn -pl modules/semantic-runtime test` → 16 测试通过（含 7 项新语义查询守卫测试）
+- `make check` → PASS；`make framework-test` → OK；`make tooling-test` → 17/17 OK
+- 全反应堆 `mvn -q compile` → EXIT 0；loop memory/evidence guard → PASS
+
+状态：DEV_SELF_CHECK（独立 QA 尚未签署，QA_PASS 不由此记录）。
