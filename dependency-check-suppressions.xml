@@ -10,20 +10,25 @@
     <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-core@.*$</packageUrl>
     <cve>CVE-2024-34759</cve>
     <cve>CVE-2025-24813</cve>
-    <justification>Development-only embedded Tomcat; production uses hardened external container</justification>
   </suppress>
 
   <!-- Jackson Databind — Spring Boot BOM 管理版本，已通过 Spring Security 公告确认安全 -->
   <suppress>
     <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson-databind@.*$</packageUrl>
     <cve>CVE-2024-54679</cve>
-    <justification>Version managed by Spring Boot BOM; no actual exploit path in our usage</justification>
   </suppress>
 
   <!-- Apache Jena — 本体存储引擎，无外部网络暴露 -->
   <suppress>
     <packageUrl regex="true">^pkg:maven/org\.apache\.jena/.*@.*$</packageUrl>
     <vulnerabilityName>HTTP Request Smuggling</vulnerabilityName>
-    <justification>Jena used as embedded library only; no HTTP endpoint exposed</justification>
+  </suppress>
+
+  <!-- CVE-2026-0994 假阳性豁免：该 CVE 仅影响 Python google.protobuf 的
+       json_format.ParseDict()（DoS，修复于 6.33.5）；OWASP 将其 CPE 误匹配到
+       Java 的 com.google.protobuf:protobuf-java。protobuf-java（Java 实现）不受影响。 -->
+  <suppress>
+    <packageUrl regex="true">^pkg:maven/com\.google\.protobuf/protobuf-java@.*$</packageUrl>
+    <cve>CVE-2026-0994</cve>
   </suppress>
 </suppressions>

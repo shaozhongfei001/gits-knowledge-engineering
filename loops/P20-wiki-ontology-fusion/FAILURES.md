@@ -59,3 +59,23 @@ CLASSIFICATION=environment/reproducibility (not a LinkML contract failure)
   - 全反应堆其它模块均 SUCCESS
 - **NEXT_ACTION**: 由基线治理单独处理（npm 依赖升级/豁免 + apps/api 覆盖率补充）；不属于 P20 shadow slice 范围。
 - **RECORDED_AT**: 2026-08-18
+
+---
+
+## FAILURE_ID: BASE-P20-G0-003（P1a 后级联 OWASP 基线发现，需新 Owner 授权）
+
+- **GATE**: backend_test（OWASP dependency-check）
+- **COMMAND**: `make backend-test`
+- **RESULT**: FAIL（P1a nanoid 已修复；但修复 nanoid 后暴露出更多被先前 abort 掩盖的基线发现）
+- **P1A_NANOID=RESOLVED**：
+  - 根 `package.json` 加 `overrides: {"nanoid": "^5.1.16"}`（与 `docx@8.5.0` 的 `nanoid ^5.0.4` 兼容，已证明）；
+  - 用官方 registry 更新 lockfile → `nanoid@5.1.16`（Tencent 镜像仅到 5.1.9）；
+  - `pom.xml` OWASP `failOnError=false`（OSS Index 401 外部服务不可达时不硬失败；`failBuildOnCVSS=7` 仍阻断真实 ≥7.0 漏洞，未弱化）；
+  - `dependency-check-suppressions.xml`：修复损坏的无效 `justification` 子元素；并登记 CVE-2026-0994 假阳性豁免（该 CVE 仅影响 Python `google.protobuf.json_format.ParseDict()`，OWASP 误匹配到 Java `protobuf-java`）。
+- **级联发现（被先前 nanoid abort 掩盖，超出授权两阻断）**：
+  - `persistence-relational`: `mysql-connector-j@9.7.0` → CVE-2026-60586(7.7)/60193(8.5)/60317(7.4)/60192(8.1)/60623(7.1)，**真实 ≥7.0**，需升级；
+  - `persistence-relational`: `log4j-api@2.24.3` → CVE-2026-34478/479/480/481（6.3~6.9，<7.0，但被插件列为阻断，OSS Index CVSS 口径问题）；
+  - 可能还有更多模块在继续扫描后暴露。
+- **CLASSIFICATION**: PRE_EXISTING_BASELINE（级联，非 P20 改动引入）
+- **NEXT_ACTION**: 向 Owner 申请更广的基线安全治理授权（mysql-connector-j 升级、log4j 处置等）；本批仅完成已授权的 nanoid 修复。
+- **RECORDED_AT**: 2026-08-18

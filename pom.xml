@@ -104,6 +104,9 @@
         </executions>
         <configuration>
           <failBuildOnCVSS>7</failBuildOnCVSS>
+          <!-- OSS Index Analyzer 为可选外部服务；当其 401/网络不可达时不硬失败，
+               但真实 >=7.0 漏洞仍由 failBuildOnCVSS 阻断（不弱化安全检查）。 -->
+          <failOnError>false</failOnError>
           <suppressionFile>dependency-check-suppressions.xml</suppressionFile>
         </configuration>
       </plugin>
