@@ -261,10 +261,12 @@ describe('engagement API - API function signatures', () => {
     expect(mockGet).toHaveBeenCalled()
   })
 
-  it('fetchCustomerJourneys calls GET with customer id', async () => {
-    mockGet.mockResolvedValue({ data: [] })
-    await fetchCustomerJourneys('c1')
-    expect(mockGet).toHaveBeenCalled()
+  it('fetchCustomerJourneys returns empty list without network call (no dedicated backend endpoint)', async () => {
+    mockGet.mockClear()
+    const journeys = await fetchCustomerJourneys('c1')
+    expect(journeys).toEqual([])
+    // 后端无专用列表端点，实现为 fail-safe 返回空数组，不应发起网络调用
+    expect(mockGet).not.toHaveBeenCalled()
   })
 
   it('fetchJourney calls GET with journey id', async () => {

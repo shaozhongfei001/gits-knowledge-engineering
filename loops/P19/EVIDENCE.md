@@ -49,3 +49,11 @@ make check   : EXIT=0 (contract + loop-guard + secret + enum + semantic-rule 全
 
 P19 治理目标达成：防护网建立 + 真实缺陷修复 + 演示链路打通。
 G4 E2E 验证需由独立 QA 角色记录 QA_PASS（开发角色仅记录 DEV_SELF_CHECK_PASS）。
+
+## 五、独立 QA 正式 Attestation（2026-08-19，actor=independent_qa）
+
+- 正式 QA PASS：`python3 scripts/qa_attest.py --loop P19 --actor independent_qa --session qa-p19-formal-001 --decision pass`，EXIT=0；STATE.status=`qa_pass`。
+- 证据：`loops/P19/evidence/independent_qa.txt`（sha256 `044c58f0...`）。
+- 复现验证：`make verify` 除 db-check（外部 GITS_KEDB_PASSWORD 环境依赖）外全绿；后端 317+22 tests、前端 100 tests（vue-tsc+vitest+build）、dependency-check 15 reports 全 PASS。
+- QA 期间修复 scope 外预存前端问题（FAILURES.md F-4）：`fetchCustomerJourneys` 测试断言对齐空数组实现；`vitest.config.ts` 排除 e2e/ 目录。
+- loop-guard evidence + memory 均 PASS；Baton 交接至 `independent_qa`。

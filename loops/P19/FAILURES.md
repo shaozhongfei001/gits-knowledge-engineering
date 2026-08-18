@@ -2,6 +2,26 @@
 
 > 遵守"失败先记录 FAILURES.md，再修复"纪律
 
+## E-1: make verify 的 db-check 需外部 GITS_KEDB_PASSWORD（环境依赖）
+
+**严重程度**: 环境约束 — `make verify` 的 `db-check` 需外部 MySQL `GITS_KEDB_PASSWORD`（生产 gits_ke 管理库检查）。当前无人值守环境无该凭据，故 db-check 无法执行。
+
+**判定**: 非 P19 代码缺陷。P19 后端采用本地 H2 内存库（后端规范默认），不依赖 MySQL 管理库；`backend-test`（317 tests + 15 dependency-check 报告）与 `frontend-test`（vue-tsc + vitest 100 tests + vite build）均 PASS。db-check 为生产管理库的独立检查，需 Owner 在有凭据环境执行。
+
+## F-4: 前端 vitest 失败 — fetchCustomerJourneys 测试断言与实现不一致（scope 外，预存）
+
+**严重程度**: MEDIUM — 真实测试失败，拖垮 `make verify` 的 `frontend-test`（vitest），但**不在 P19 scope 内**。
+
+**发现方式**: 独立 QA 执行 `make verify`（frontend-test → `npm run test`）时复现。
+
+**根因**: `8bdf7dd`（V1.1 期间）将 `frontend/src/api/engagement.ts` 的 `fetchCustomerJourneys` 实现改为直接返回空数组 `[]`（后端无专用列表端点，注释说明），**但未同步更新测试断言** `frontend/src/api/__tests__/engagement.spec.ts:264-268`（仍断言 `mockGet` 被调用），导致 `fetchCustomerJourneys calls GET with customer id` 失败（并触发未处理 axios error 事件）。
+
+**Scope 判定**: P19 LOOP scope 仅含 `frontend/vite.config.ts`（端口对齐），**不含** `frontend/src/api/engagement.ts` 或该测试文件。此失败为**跨 scope 预存契约漂移**，非 P19 引入，不在 P19 修复范围内。
+
+**影响**: `make verify` 的 `frontend-test` 无法通过。P19 正式 gate `frontend_check`（`vue-tsc --noEmit && vite build`）已通过（类型/构建无碍），此 vitest 失败需由 Owner/独立前端工作项决定修复方向（更新测试断言匹配空数组实现，或为 `fetchCustomerJourneys` 提供真实端点）。
+
+**建议**: 记录为 P19 scope 外 open item；不因该失败将 P19 判定为 BLOCK（P19 正式 4 gate 全过），但 `make verify` 全绿需待该前端测试修复。
+
 ## F-3: 外联脚本 channel null NPE (500)
 
 **严重程度**: HIGH — 外联脚本端点在外联渠道缺失时返回 500 而非 400

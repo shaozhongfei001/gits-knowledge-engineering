@@ -2,10 +2,10 @@
 
 | 字段 | 值 |
 |---|---|
-| **Updated** | `2026-08-14T07:00:00Z` |
-| **holder** | `tech_lead` |
+| **Updated** | `2026-08-19T01:45:00Z` |
+| **holder** | `independent_qa` |
 | **packet** | `P19` |
-| **wave** | `W0` |
-| **do_not_start** | QA_PASS、REAL_E2E_PASS（待独立 QA 确认） |
+| **wave** | `independent_qa_attestation` |
+| **do_not_start** | 冒充 Owner/QA、越界修改 scope 外文件、生产切换 |
 
-短提示词：你是 `tech_lead`。P19 防护网已建立、NPE 已修复、E2E 29/29 通过。下一 holder 为 `independent_qa`，需执行 `make verify` + `scripts/e2e-29-endpoints.sh`，通过后记录 QA_PASS。
+短提示词：你是 `independent_qa`。P19 独立 QA 已执行 `make verify`（除 db-check 外部凭据环境依赖外全绿），后端 317+22 tests、前端 100 tests、dependency-check 15 reports 全 PASS，正式 QA PASS 已记录。移交 Owner 做 P5 审查（受控合并批准，不表示生产就绪）。
