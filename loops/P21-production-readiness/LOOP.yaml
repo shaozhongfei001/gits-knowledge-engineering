@@ -1,0 +1,85 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P21-production-readiness",
+  "title": "P20 wiki-ontology fusion 生产就绪准备",
+  "status": "planned",
+  "implementation_actor": "tech_lead",
+  "owner_decision": "OWNER_APPROVED_P21_PRODUCTION_READINESS_PREPARATION",
+  "objective": [
+    "将 P20 已验证的 wiki-ontology 融合控制面（Knowledge Map / Route Policy / ActivationPlan / 受控语义查询 / 上下文装配）从 shadow 推进到生产就绪准备。",
+    "验证生产 profile（application-prod.yaml）在无凭据环境下的 fail-closed 行为，确保生产配置不因缺凭据而静默降级。",
+    "定义真实平台接入（real RAG / GraphDB / OpenMetadata）的 Port 合同与适配器计划，作为后续生产接入的工作基线。",
+    "产出生产 cutover 计划与回滚方案，纳入独立 QA 与 Owner 门禁。"
+  ],
+  "scope": {
+    "include": [
+      "specs/knowledge-architecture/",
+      "modules/knowledge-architecture/",
+      "adapters/knowledge-filesystem/",
+      "apps/api/src/main/resources/application-prod.yaml",
+      "specs/CONTRACT_INDEX.yaml",
+      "docs/dispatch/",
+      "loops/P21-production-readiness/"
+    ],
+    "exclude": [
+      "oracle_writeback",
+      "quarantined_assets",
+      "production_credentials",
+      "production_data_migration",
+      "direct_crm_writeback",
+      "legacy_removal",
+      "unrelated_features"
+    ]
+  },
+  "gates": [
+    {
+      "id": "contract_generate",
+      "owner_kind": "implementation",
+      "command": "make generate",
+      "pass_condition": "All registered contracts compile without placeholders or unsupported constructs."
+    },
+    {
+      "id": "contract_check",
+      "owner_kind": "implementation",
+      "command": "make check",
+      "pass_condition": "Generated artifacts exactly match authoritative contract sources; P21 cross-references pass."
+    },
+    {
+      "id": "security_check",
+      "owner_kind": "implementation",
+      "command": "make security-check",
+      "pass_condition": "Secret, permissions and quarantine checks pass; no real credentials committed."
+    },
+    {
+      "id": "prod_profile_fail_closed",
+      "owner_kind": "implementation",
+      "command": "bash scripts/verify_prod_profile_fail_closed.sh",
+      "pass_condition": "Activating application-prod.yaml without required env credentials fails closed (no silent fallback to insecure defaults)."
+    },
+    {
+      "id": "production_plan",
+      "owner_kind": "implementation",
+      "command": "bash scripts/verify_production_plan.sh",
+      "pass_condition": "Cutover plan, rollback plan, real-platform adapter plan and contract index entries are present and validated."
+    },
+    {
+      "id": "backend_test",
+      "owner_kind": "implementation",
+      "command": "make backend-test",
+      "pass_condition": "All Java tests pass; P20 control-plane modules regression green; coverage >= 0.80."
+    },
+    {
+      "id": "independent_qa",
+      "owner_kind": "independent_qa",
+      "command": "make verify",
+      "pass_condition": "Independent QA confirms production-readiness preparation gates pass and records QA_PASS."
+    }
+  ],
+  "repair_policy": {
+    "max_attempts_per_gate": 5,
+    "failure_record": "loops/P21-production-readiness/FAILURES.md",
+    "record_before_fix": true,
+    "rerun_original_gate": true
+  },
+  "exit_states": ["ready_for_independent_qa", "blocked"]
+}
