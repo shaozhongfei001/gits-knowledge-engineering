@@ -56,7 +56,7 @@ engagement:
     retry:
       max-attempts: ${CRM_RETRY_MAX_ATTEMPTS:3}
   security:
-    api-key: ${API_KEY:}  # 生产环境必须配置
+    api-key: ${API_KEY}  # 生产环境必须配置（无默认，缺省启动失败 = fail-closed）
     api-key-rotation: ${API_KEY_ROTATION:}
     api-key-rotation-deadline: ${API_KEY_ROTATION_DEADLINE:}
     cors:

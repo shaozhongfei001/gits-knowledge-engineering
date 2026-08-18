@@ -1,3 +1,18 @@
-# W0｜Iteration log（append-only）
+# W0｜Iteration Log
 
-由 `scripts/record_gate.py` 追加实际attempt、命令、退出码、证据hash和下一动作。没有实际执行不得登记PASS。
+> record_gate.py 在此追加每次受控 gate 尝试。append-only。
+
+## 初始化
+
+- Loop: P21-production-readiness
+- Wave: W0
+- Holder: tech_lead
+- 目标: 生产就绪准备（prod profile fail-closed + 生产计划 + 真实平台 Port 合同计划）
+
+## Attempt 1｜20260818T181341Z
+
+- Gate: `prod_profile_fail_closed`
+- Command: `bash scripts/verify_prod_profile_fail_closed.sh`
+- Exit: `0`
+- Evidence: `loops/P21-production-readiness/evidence/prod_profile_fail_closed-20260818T181341Z.log`
+- SHA256: `1e8bf2c8cefb3262b723e4e3ff5b713bc2a8d45557d6c3d86c12a48008762e4d`
