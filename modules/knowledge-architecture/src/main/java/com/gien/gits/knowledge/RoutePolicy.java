@@ -32,10 +32,32 @@ public record RoutePolicy(
             String activationContractRef,
             String reason) {}
 
-    /** 未映射任务默认拒绝（defaultDecision = DENY_UNMAPPED_TASK 语义）。 */
+    /**
+     * 解析任务对应的唯一合法 route。
+     *
+     * <p>fail-closed：若存在多个同优先级 rule（route 冲突/歧义），返回空以触发拒绝，
+     * 不允许随机选择（P20 契约：同等优先级的多条冲突 route 不得随机选择）。</p>
+     */
     public Optional<Rule> findRule(String taskType) {
-        return rules.stream()
-                .filter(r -> r.taskType().equals(taskType))
-                .min(java.util.Comparator.comparingInt(r -> r.priority() == null ? Integer.MAX_VALUE : r.priority()));
+        List<Rule> candidates = rules.stream()
+                .filter(r -> taskType.equals(r.taskType()))
+                .toList();
+        if (candidates.isEmpty()) {
+            return Optional.empty();
+        }
+        int minPriority = candidates.stream()
+                .map(Rule::priority)
+                .filter(java.util.Objects::nonNull)
+                .mapToInt(Integer::intValue)
+                .min()
+                .orElse(Integer.MAX_VALUE);
+        List<Rule> top = candidates.stream()
+                .filter(r -> (r.priority() == null ? Integer.MAX_VALUE : r.priority()) == minPriority)
+                .toList();
+        if (top.size() > 1) {
+            // route 冲突/歧义 → fail-closed
+            return Optional.empty();
+        }
+        return Optional.of(top.get(0));
     }
 }
