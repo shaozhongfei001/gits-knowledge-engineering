@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.OpportunityMapper">
+
+    <sql id="opportunityColumns">
+        opportunity_id, customer_id, interaction_id, operating_case_id,
+        opportunity_type, product_id, product_name, description, status,
+        estimated_amount, probability, assigned_to, source, next_steps,
+        expected_close_date, created_at, updated_at
+    </sql>
+
+    <resultMap id="opportunityResult" type="com.gien.gits.ontology.domain.Opportunity">
+        <constructor>
+            <idArg column="opportunity_id" javaType="String"/>
+            <arg column="customer_id" javaType="String"/>
+            <arg column="interaction_id" javaType="String"/>
+            <arg column="operating_case_id" javaType="String"/>
+            <arg column="opportunity_type" javaType="String"/>
+            <arg column="product_id" javaType="String"/>
+            <arg column="product_name" javaType="String"/>
+            <arg column="description" javaType="String"/>
+            <arg column="status" javaType="String"/>
+            <arg column="estimated_amount" javaType="String"/>
+            <arg column="probability" javaType="String"/>
+            <arg column="assigned_to" javaType="String"/>
+            <arg column="source" javaType="String"/>
+            <arg column="next_steps" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+            <arg column="expected_close_date" javaType="String"/>
+            <arg column="created_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            <arg column="updated_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+        </constructor>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.domain.Opportunity">
+        INSERT INTO opportunity (
+            opportunity_id, customer_id, interaction_id, operating_case_id,
+            opportunity_type, product_id, product_name, description, status,
+            estimated_amount, probability, assigned_to, source, next_steps,
+            expected_close_date, created_at, updated_at
+        ) VALUES (
+            #{opportunityId}, #{customerId}, #{interactionId}, #{operatingCaseId},
+            #{opportunityType}, #{productId}, #{productName}, #{description}, #{status},
+            #{estimatedAmount}, #{probability}, #{assignedTo}, #{source},
+            #{nextSteps, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+            #{expectedCloseDate},
+            #{createdAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{updatedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findByOpportunityId" resultMap="opportunityResult">
+        SELECT <include refid="opportunityColumns"/>
+        FROM opportunity WHERE opportunity_id = #{opportunityId}
+    </select>
+
+    <select id="findByCustomerId" resultMap="opportunityResult">
+        SELECT <include refid="opportunityColumns"/>
+        FROM opportunity WHERE customer_id = #{customerId} ORDER BY created_at DESC
+    </select>
+
+    <select id="findByStatus" resultMap="opportunityResult">
+        SELECT <include refid="opportunityColumns"/>
+        FROM opportunity WHERE status = #{status} ORDER BY created_at DESC
+    </select>
+
+    <select id="findActiveByCustomerId" resultMap="opportunityResult">
+        SELECT <include refid="opportunityColumns"/>
+        FROM opportunity
+        WHERE customer_id = #{customerId}
+          AND status IN ('IDENTIFIED','QUALIFIED','PROPOSAL','NEGOTIATION')
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="findByOpportunityType" resultMap="opportunityResult">
+        SELECT <include refid="opportunityColumns"/>
+        FROM opportunity WHERE opportunity_type = #{opportunityType} ORDER BY created_at DESC
+    </select>
+
+    <select id="findByAssignedTo" resultMap="opportunityResult">
+        SELECT <include refid="opportunityColumns"/>
+        FROM opportunity WHERE assigned_to = #{assignedTo} ORDER BY created_at DESC
+    </select>
+
+    <select id="findAll" resultMap="opportunityResult">
+        SELECT <include refid="opportunityColumns"/>
+        FROM opportunity ORDER BY created_at DESC
+    </select>
+
+    <update id="updateStatus">
+        UPDATE opportunity SET status = #{status},
+               updated_at = NOW() WHERE opportunity_id = #{opportunityId}
+    </update>
+
+</mapper>

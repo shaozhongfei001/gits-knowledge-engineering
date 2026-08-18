@@ -17,7 +17,7 @@ import java.util.*;
  * <p>
  * 数据根目录结构（V1.1）：
  * <pre>
- * scenario_data/
+ * scenario/seed/
  * ├── 02_master_data/     (customer_master.json, legal_entities.csv, ...)
  * ├── 03_bank_data/       (accounts.csv, credit_facilities.csv, ...)
  * ├── 04_external_data/   (external_events.jsonl, ...)

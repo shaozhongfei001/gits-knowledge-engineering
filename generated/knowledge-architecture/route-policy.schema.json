@@ -1,0 +1,78 @@
+{
+  "$id": "https://gientech.com/gits/kno/schemas/route-policy.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "defaultDecision": {
+      "const": "DENY_UNMAPPED_TASK",
+      "type": "string"
+    },
+    "defaultMode": {
+      "enum": [
+        "MAP_FIRST",
+        "ONTOLOGY_FIRST",
+        "MAP_THEN_ONTOLOGY",
+        "ONTOLOGY_THEN_MAP"
+      ],
+      "type": "string"
+    },
+    "policyId": {
+      "pattern": "^RP-[A-Z0-9-]+$",
+      "type": "string"
+    },
+    "rules": {
+      "items": {
+        "properties": {
+          "activationContractRef": {
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "MAP_FIRST",
+              "ONTOLOGY_FIRST",
+              "MAP_THEN_ONTOLOGY",
+              "ONTOLOGY_THEN_MAP"
+            ],
+            "type": "string"
+          },
+          "priority": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "taskType": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "priority",
+          "taskType",
+          "mode",
+          "activationContractRef",
+          "reason"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schemaVersion": {
+      "const": "1.0.0",
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "policyId",
+    "version",
+    "defaultMode",
+    "defaultDecision",
+    "rules"
+  ],
+  "title": "GITS Scene Route Policy",
+  "type": "object"
+}

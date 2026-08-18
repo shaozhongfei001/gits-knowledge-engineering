@@ -1,0 +1,470 @@
+{
+  "classification": "INTERNAL",
+  "effectiveFrom": "2026-08-04T00:00:00Z",
+  "objects": [
+    {
+      "authority": "AUTHORITATIVE",
+      "fields": [
+        {
+          "mapsToSubject": "metric/{metric_id}",
+          "name": "metric_id",
+          "role": "primary_key"
+        },
+        {
+          "name": "metric_name_cn",
+          "role": "attribute"
+        },
+        {
+          "name": "metric_name_en",
+          "role": "attribute"
+        },
+        {
+          "name": "business_definition",
+          "role": "calculation_logic"
+        },
+        {
+          "name": "formula_expression",
+          "role": "calculation_logic"
+        },
+        {
+          "name": "numerator_definition",
+          "role": "calculation_logic"
+        },
+        {
+          "name": "denominator_definition",
+          "role": "calculation_logic"
+        },
+        {
+          "name": "statistical_grain",
+          "role": "attribute"
+        },
+        {
+          "name": "unit",
+          "role": "attribute"
+        },
+        {
+          "name": "metric_status",
+          "role": "lifecycle_status"
+        },
+        {
+          "name": "confidence_level",
+          "role": "confidence"
+        },
+        {
+          "name": "source_tables",
+          "role": "data_lineage"
+        },
+        {
+          "name": "source_columns",
+          "role": "data_lineage"
+        },
+        {
+          "name": "target_schema",
+          "role": "data_lineage"
+        },
+        {
+          "name": "target_table",
+          "role": "data_lineage"
+        },
+        {
+          "name": "target_column",
+          "role": "data_lineage"
+        },
+        {
+          "name": "producer_object_owner",
+          "role": "producer_reference"
+        },
+        {
+          "name": "producer_object_name",
+          "role": "producer_reference"
+        },
+        {
+          "name": "producer_object_type",
+          "role": "producer_reference"
+        },
+        {
+          "name": "source_hash",
+          "role": "evidence_hash"
+        },
+        {
+          "name": "business_confirmation_required",
+          "role": "approval_flag"
+        }
+      ],
+      "name": "metric_definition",
+      "schema": "ORACLE_METADATA"
+    },
+    {
+      "authority": "REFERENCE",
+      "fields": [
+        {
+          "mapsToSubject": "lineage/field/{lineage_id}",
+          "name": "lineage_id",
+          "role": "primary_key"
+        },
+        {
+          "name": "source_owner",
+          "role": "source_reference"
+        },
+        {
+          "name": "source_object",
+          "role": "source_reference"
+        },
+        {
+          "name": "source_column",
+          "role": "source_reference"
+        },
+        {
+          "name": "transformation_type",
+          "role": "transformation_logic"
+        },
+        {
+          "name": "transformation_expression",
+          "role": "transformation_logic"
+        },
+        {
+          "name": "filters",
+          "role": "transformation_logic"
+        },
+        {
+          "name": "group_by",
+          "role": "transformation_logic"
+        },
+        {
+          "name": "target_owner",
+          "role": "target_reference"
+        },
+        {
+          "name": "target_object",
+          "role": "target_reference"
+        },
+        {
+          "name": "target_column",
+          "role": "target_reference"
+        },
+        {
+          "name": "producer_owner",
+          "role": "producer_reference"
+        },
+        {
+          "name": "producer_object",
+          "role": "producer_reference"
+        },
+        {
+          "name": "source_hash",
+          "role": "evidence_hash"
+        },
+        {
+          "name": "confidence",
+          "role": "confidence"
+        }
+      ],
+      "name": "field_lineage",
+      "schema": "ORACLE_METADATA"
+    },
+    {
+      "authority": "REFERENCE",
+      "fields": [
+        {
+          "mapsToSubject": "lineage/object/{lineage_id}",
+          "name": "lineage_id",
+          "role": "primary_key"
+        },
+        {
+          "name": "source_owner",
+          "role": "source_reference"
+        },
+        {
+          "name": "source_object",
+          "role": "source_reference"
+        },
+        {
+          "name": "producer_owner",
+          "role": "producer_reference"
+        },
+        {
+          "name": "producer_object",
+          "role": "producer_reference"
+        },
+        {
+          "name": "producer_type",
+          "role": "producer_reference"
+        },
+        {
+          "name": "target_owner",
+          "role": "target_reference"
+        },
+        {
+          "name": "target_object",
+          "role": "target_reference"
+        },
+        {
+          "name": "confidence",
+          "role": "confidence"
+        }
+      ],
+      "name": "object_lineage",
+      "schema": "ORACLE_METADATA"
+    },
+    {
+      "authority": "DERIVED",
+      "fields": [
+        {
+          "mapsToSubject": "derived_field/{derived_field_id}",
+          "name": "derived_field_id",
+          "role": "primary_key"
+        },
+        {
+          "name": "target_owner",
+          "role": "target_reference"
+        },
+        {
+          "name": "target_object",
+          "role": "target_reference"
+        },
+        {
+          "name": "target_column",
+          "role": "target_reference"
+        },
+        {
+          "name": "business_name_cn",
+          "role": "business_attribute"
+        },
+        {
+          "name": "business_description_cn",
+          "role": "business_attribute"
+        },
+        {
+          "name": "field_category",
+          "role": "classification"
+        },
+        {
+          "name": "source_fields",
+          "role": "data_lineage"
+        },
+        {
+          "name": "transformation_expression",
+          "role": "transformation_logic"
+        },
+        {
+          "name": "transformation_type",
+          "role": "transformation_logic"
+        },
+        {
+          "name": "producer_program",
+          "role": "producer_reference"
+        },
+        {
+          "name": "source_hash",
+          "role": "evidence_hash"
+        },
+        {
+          "name": "confidence_level",
+          "role": "confidence"
+        },
+        {
+          "name": "ambiguities",
+          "role": "quality_note"
+        }
+      ],
+      "name": "derived_field",
+      "schema": "ORACLE_METADATA"
+    },
+    {
+      "authority": "REFERENCE",
+      "fields": [
+        {
+          "mapsToSubject": "issue/{issue_id}",
+          "name": "issue_id",
+          "role": "primary_key"
+        },
+        {
+          "name": "severity",
+          "role": "severity"
+        },
+        {
+          "name": "category",
+          "role": "classification"
+        },
+        {
+          "name": "object_ref",
+          "role": "reference"
+        },
+        {
+          "name": "message",
+          "role": "description"
+        },
+        {
+          "name": "status",
+          "role": "lifecycle_status"
+        }
+      ],
+      "name": "analysis_issue",
+      "schema": "ORACLE_METADATA"
+    },
+    {
+      "authority": "AUTHORITATIVE",
+      "fields": [
+        {
+          "name": "owner",
+          "role": "schema_owner"
+        },
+        {
+          "name": "table_name",
+          "role": "primary_key"
+        },
+        {
+          "name": "table_comment",
+          "role": "business_attribute"
+        },
+        {
+          "name": "num_rows",
+          "role": "statistic"
+        },
+        {
+          "name": "blocks",
+          "role": "statistic"
+        },
+        {
+          "name": "last_analyzed",
+          "role": "freshness"
+        },
+        {
+          "name": "partitioned",
+          "role": "physical_attribute"
+        },
+        {
+          "name": "temporary",
+          "role": "physical_attribute"
+        }
+      ],
+      "name": "table_metadata",
+      "schema": "ORACLE_METADATA"
+    },
+    {
+      "authority": "AUTHORITATIVE",
+      "fields": [
+        {
+          "name": "owner",
+          "role": "schema_owner"
+        },
+        {
+          "name": "table_name",
+          "role": "table_reference"
+        },
+        {
+          "name": "column_name",
+          "role": "primary_key"
+        },
+        {
+          "name": "data_type",
+          "role": "physical_attribute"
+        },
+        {
+          "name": "data_length",
+          "role": "physical_attribute"
+        },
+        {
+          "name": "data_precision",
+          "role": "physical_attribute"
+        },
+        {
+          "name": "data_scale",
+          "role": "physical_attribute"
+        },
+        {
+          "name": "nullable",
+          "role": "physical_attribute"
+        },
+        {
+          "name": "column_comment",
+          "role": "business_attribute"
+        },
+        {
+          "name": "num_distinct",
+          "role": "statistic"
+        },
+        {
+          "name": "num_nulls",
+          "role": "statistic"
+        }
+      ],
+      "name": "column_metadata",
+      "schema": "ORACLE_METADATA"
+    },
+    {
+      "authority": "REFERENCE",
+      "fields": [
+        {
+          "name": "owner",
+          "role": "schema_owner"
+        },
+        {
+          "name": "object_name",
+          "role": "primary_key"
+        },
+        {
+          "name": "object_type",
+          "role": "classification"
+        },
+        {
+          "name": "status",
+          "role": "lifecycle_status"
+        },
+        {
+          "name": "source_hash",
+          "role": "evidence_hash"
+        },
+        {
+          "name": "source_length",
+          "role": "statistic"
+        },
+        {
+          "name": "created",
+          "role": "temporal"
+        },
+        {
+          "name": "last_ddl_time",
+          "role": "temporal"
+        }
+      ],
+      "name": "program_unit",
+      "schema": "ORACLE_METADATA"
+    },
+    {
+      "authority": "AUTHORITATIVE",
+      "fields": [
+        {
+          "name": "owner",
+          "role": "schema_owner"
+        },
+        {
+          "name": "object_name",
+          "role": "object_reference"
+        },
+        {
+          "name": "object_type",
+          "role": "classification"
+        },
+        {
+          "name": "source_line",
+          "role": "line_number"
+        },
+        {
+          "name": "source_text",
+          "role": "code_content"
+        },
+        {
+          "name": "source_hash",
+          "role": "evidence_hash"
+        }
+      ],
+      "name": "source_code",
+      "schema": "ORACLE_METADATA"
+    }
+  ],
+  "owner": "data_mapping_owner",
+  "sourceContractId": "SRC-ORACLE-METRIC-ONTOLOGY-v0.1",
+  "system": "ORACLE_EDWCRM",
+  "version": "0.1.0"
+}

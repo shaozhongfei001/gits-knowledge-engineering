@@ -1,0 +1,225 @@
+---
+description: "开发规范：编码风格、命名约定、Git 工作流、PR 流程、代码审查"
+alwaysApply: true
+enabled: true
+---
+
+# 开发规范
+
+## 1. Java 编码风格
+
+### 命名约定
+
+| 类型 | 约定 | 示例 |
+|------|------|------|
+| 包 | 全小写，模块前缀 | `com.gien.gits.engagement.port` |
+| 类 | PascalCase | `KycInsightService` |
+| 接口（Port） | 名词 + Port 后缀 | `ClaimReconciliationPort` |
+| 接口实现 | 技术/框架前缀 | `DmnClaimReconciliationAdapter` |
+| 方法 | camelCase，动词开头 | `reconcile()`, `publishEvent()` |
+| 常量 | SCREAMING_SNAKE_CASE | `DEFAULT_PAGE_SIZE` |
+| 变量 | camelCase | `conflictDetected` |
+| 布尔变量 | is/has/can/should 前缀 | `isAuthoritative`, `hasEvidence` |
+| record 字段 | camelCase | `customerId`, `evidenceBundle` |
+| 枚举值 | SCREAMING_SNAKE_CASE | `BACKWARD_COMPATIBLE` |
+
+### 代码组织
+
+```java
+// 类内成员顺序
+1. 静态常量
+2. 实例字段（final 优先）
+3. 构造函数
+4. 公有方法
+5. 保护/包私有方法
+6. 私有方法
+7. 内部类/枚举
+```
+
+### 关键规则
+
+- **一个类一个职责**：Service 只做业务编排，Adapter 只做外部对接。
+- **方法不超过 30 行**：超过则抽取私有方法。
+- **参数不超过 4 个**：超过则封装为 record 或 Request 对象。
+- **禁止 `null` 传参**：使用 `Optional` 或重载方法。
+- **禁止 `System.out.println`**：使用 SLF4J Logger。
+- **优先使用 record**：不可变数据载体用 record，不用 class。
+- **优先使用 sealed interface**：有限类型层次用 sealed interface + permits。
+
+### 异常处理
+
+```java
+// 领域异常：携带业务语义
+public class ClaimConflictException extends RuntimeException {
+    private final String claimId;
+    // ...
+}
+
+// 全局处理：@ExceptionHandler 统一响应
+// 禁止 catch 后吞异常或只打印日志
+// 禁止在业务代码中使用 try-catch 控制流程
+```
+
+### 日志规范
+
+```java
+// 正确
+log.info("Claim recorded: claimId={}, customerId={}", claimId, customerId);
+log.error("Failed to reconcile claim: claimId={}", claimId, e);
+
+// 禁止
+log.info("Claim recorded: " + claimId);  // 字符串拼接
+log.info("Claim data: {}", claim);       // 大对象序列化
+```
+
+## 2. TypeScript / Vue 编码风格
+
+### 命名约定
+
+| 类型 | 约定 | 示例 |
+|------|------|------|
+| 组件文件 | PascalCase.vue | `EngagementWorkspace.vue` |
+| Composable | use 前缀 + camelCase | `useEngagement.ts` |
+| Store | camelCase | `useCommitmentStore` |
+| 接口/类型 | PascalCase | `Customer`, `JourneyStartResponse` |
+| 函数 | camelCase | `fetchCommitments()` |
+| 常量 | SCREAMING_SNAKE_CASE | `API_BASE_URL` |
+| 事件名 | kebab-case | `auth:unauthorized` |
+| CSS 类 | kebab-case（Tailwind 优先） | `phase-indicator` |
+
+### 组件规范
+
+```vue
+<!-- ✅ 正确：script setup + TypeScript -->
+<script setup lang="ts">
+import { useQuery } from '@tanstack/vue-query'
+import { engagementApi } from '@/api/engagement'
+
+const props = defineProps<{ customerId: string }>()
+const emit = defineEmits<{ (e: 'navigate', path: string): void }>()
+
+const { data, isLoading, isError } = useQuery({
+  queryKey: ['customer', props.customerId],
+  queryFn: () => engagementApi.getCustomer(props.customerId),
+})
+</script>
+
+<!-- ❌ 禁止：Options API -->
+<script>
+export default {
+  data() { return { ... } },
+  methods: { ... }
+}
+</script>
+```
+
+### 关键规则
+
+- **禁止 `any`**：必须提供具体类型。
+- **禁止 `@ts-ignore`**：修复类型错误，不压制。
+- **禁止内联样式**：使用 Tailwind 或 scoped CSS。
+- **禁止直接操作 DOM**：使用 Vue 响应式系统。
+- **禁止在模板中使用复杂表达式**：抽取为 computed。
+
+## 3. Git 工作流
+
+### 分支策略
+
+```
+main              ← 稳定基线，PR 合并目标
+├── feature/P11-claim-reconciliation   ← 功能分支
+├── fix/P11-null-response              ← 修复分支
+└── loop/P11-dmn-engine                ← Loop 批次分支
+```
+
+### 提交消息
+
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+类型：
+- `feat`: 新功能
+- `fix`: 修复
+- `refactor`: 重构（不改变行为）
+- `test`: 测试
+- `docs`: 文档
+- `chore`: 构建/工具
+- `contract`: 合同变更
+
+示例：
+```
+feat(engagement): add DMN claim reconciliation adapter
+
+- Implement DmnClaimReconciliationAdapter using KIE DMN runtime
+- Add FallbackClaimReconciliationAdapter for non-DMN mode
+- Configure via engagement.reconciliation.mode in EngagementConfig
+
+Loop: P11
+```
+
+### 提交规则
+
+- **原子提交**：每个提交只做一件事。
+- **禁止 `git add .`**：显式添加文件。
+- **禁止提交 `generated/` 的手工修改**：通过 `make generate` 生成。
+- **禁止提交敏感信息**：API Key、密码等（`make security-check` 检测）。
+- **失败先记录**：测试失败先写 `FAILURES.md`，再修复。
+
+## 4. PR 流程
+
+### PR 检查清单
+
+```markdown
+## PR 描述
+- 关联 Loop ID:
+- 关联合同变更（如有）:
+
+## 自检
+- [ ] `make generate` 成功
+- [ ] `make check` 通过
+- [ ] `make backend-test` 通过
+- [ ] `make frontend-test` 通过
+- [ ] 新增代码有测试覆盖
+- [ ] 合同变更已注册到 CONTRACT_INDEX.yaml
+- [ ] 无敏感信息泄露
+```
+
+### 审查要点
+
+1. **合同合规**：实现是否符合 `specs/` 中的合同定义？
+2. **分层正确**：是否遵循 Port → Adapter → App 分层？
+3. **测试覆盖**：是否有单元测试 + 集成测试？
+4. **命名规范**：是否符合命名约定？
+5. **错误处理**：是否有统一的错误响应？
+6. **安全**：是否暴露敏感信息？
+
+### 合并规则
+
+- 至少 1 人审查通过。
+- 所有 CI 检查通过。
+- 合同哈希一致（`make check`）。
+- 禁止 force push 到 main。
+
+## 5. 代码审查标准
+
+### 必须拒绝
+
+- 违反分层原则（模块直接依赖外部框架）。
+- 修改 `generated/` 目录。
+- 前端发明后端未定义的字段。
+- 硬编码配置值（URL、密码）。
+- 缺少测试覆盖。
+- `any` 类型。
+
+### 建议改进
+
+- 方法过长（> 30 行）。
+- 参数过多（> 4 个）。
+- 缺少日志/指标。
+- 魔法数字/字符串。
+- 可简化的条件逻辑。

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "AC-FACT-RECONCILIATION-001",
+  "version": "0.1.0",
+  "taskType": "FACT_RECONCILIATION_30M",
+  "routeMode": "ONTOLOGY_FIRST",
+  "preconditions": {
+    "requiredInputs": ["callerId", "customerId", "operatingCaseId", "claimRef", "asOf"],
+    "requiredRoles": ["RELATIONSHIP_MANAGER", "RISK_MANAGER"],
+    "permissionDecisionRequired": true
+  },
+  "activations": [
+    {"assetId": "ASSET-DATA-CUSTOMER-PROFILE", "required": true, "purpose": "客户与主体定位", "sequence": 1},
+    {"assetId": "ASSET-DATA-INTERACTION-HISTORY", "required": true, "purpose": "保留客户原话", "sequence": 2},
+    {"assetId": "ASSET-DATA-CREDIT-FACILITY", "required": true, "purpose": "额度与提款事实", "sequence": 3},
+    {"assetId": "ASSET-KNOW-CUSTOMER-ONTOLOGY", "required": true, "purpose": "对象关系和数值语义", "sequence": 4},
+    {"assetId": "ASSET-KNOW-EVIDENCE-POLICY", "required": true, "purpose": "Fact与Claim边界", "sequence": 5},
+    {"assetId": "ASSET-KNOW-CLAIM-RECONCILIATION", "required": true, "purpose": "DMN事实对账", "sequence": 6}
+  ],
+  "semanticQueries": ["SQ-CLAIM-SUBJECT-RELATIONS", "SQ-CREDIT-AND-PROJECT-AMOUNTS", "SQ-PROJECT-AND-BORROWER-ENTITY"],
+  "ruleChecks": ["CLAIM_NOT_FACT", "AVAILABLE_CREDIT_NOT_NEW_NEED", "PROJECT_NOT_BORROWER", "SIGNAL_NOT_OPPORTUNITY", "BANKABILITY_NOT_APPROVAL"],
+  "skills": ["SP-02", "SP-07"],
+  "context": {"maxTokens": 8000, "priorityOrder": ["CUSTOMER_VERBATIM", "VERIFIED_FACT", "CONFLICT", "UNKNOWN", "HUMAN_JUDGMENT"], "trimPolicy": "FAIL_ON_OVERFLOW"},
+  "humanGates": ["HG-B05", "HG-E01"],
+  "failurePolicy": "FAIL_CLOSED"
+}

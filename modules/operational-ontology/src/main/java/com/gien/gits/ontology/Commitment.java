@@ -16,7 +16,14 @@ public record Commitment(
         CommitmentStatus status,
         String evidenceRef,
         Instant createdAt,
-        Instant fulfilledAt) {
+        Instant fulfilledAt,
+        UUID interactionId,
+        UUID customerId,
+        String fulfilledDate,
+        String assignedTo,
+        String verifiedBy,
+        Instant recordedAt,
+        Instant updatedAt) {
 
     public enum CommitmentType { CUSTOMER_COMMITMENT, BANK_COMMITMENT }
     public enum CommitmentStatus { OPEN, FULFILLED, OVERDUE, CANCELLED }
@@ -29,5 +36,17 @@ public record Commitment(
         }
         Objects.requireNonNull(status, "status");
         Objects.requireNonNull(createdAt, "createdAt");
+    }
+
+    /**
+     * 兼容旧构造器 — V1.0 数据不包含 V011 新增字段
+     */
+    public Commitment(UUID commitmentId, String operatingCaseId, String journeyId,
+                      CommitmentType commitmentType, String content, String owner,
+                      LocalDate dueDate, CommitmentStatus status, String evidenceRef,
+                      Instant createdAt, Instant fulfilledAt) {
+        this(commitmentId, operatingCaseId, journeyId, commitmentType, content, owner,
+             dueDate, status, evidenceRef, createdAt, fulfilledAt,
+             null, null, null, null, null, null, null);
     }
 }

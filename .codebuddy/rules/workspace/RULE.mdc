@@ -1,0 +1,77 @@
+---
+description: "Gits-KNE 总宪法：合同 SSOT、权威顺序、AI 边界、目录布局、证据纪律"
+alwaysApply: true
+enabled: true
+---
+
+# Gits-KNE 工作区总则
+
+## 1. 权威来源与顺序
+
+| 优先级 | 来源 | 说明 |
+|--------|------|------|
+| 1 | 已批准需求 / 产品基线 | `specs/BASELINE_INDEX.yaml` |
+| 2 | ADR + 合同注册表 | `specs/CONTRACT_INDEX.yaml` |
+| 3 | 当前 Loop / Dispatch | `loops/<LOOP_ID>/LOOP.yaml` + `STATE.json` |
+| 4 | 实现代码 | modules / adapters / apps / scenario |
+
+**低权威不得反向覆盖高权威。** 实现代码与合同冲突时，以合同为准。
+
+## 2. 合同 SSOT（Single Source of Truth）
+
+- `specs/CONTRACT_INDEX.yaml` 是唯一合同注册入口。
+- 合同类型不限于 OpenAPI：AsyncAPI、LinkML、OWL、SHACL、DMN、JSON Schema、R2RML 均属受控合同。
+- **合同变化必须先改合同源 → `make generate` → `make check` → 最后才写实现。**
+- 禁止在实现代码中发明合同未定义的字段、接口或事件。
+
+## 3. 禁止修改 generated/
+
+`generated/` 目录下所有文件由 `make generate` 从 `specs/` 权威源自动生成。
+- **禁止手工编辑。**
+- 修改必须改 `specs/` 下的权威源，再重新生成。
+- `make check` 会校验哈希一致性，不一致则构建失败。
+
+## 4. AI 输出边界
+
+- AI 只能产生候选 Claim / Proposal，不能直接写入权威事实。
+- 正式 ControlledAction 必须经过：人工确认 → 权限复核 → 幂等校验 → 回执。
+- 开发角色只能记录 `DEV_SELF_CHECK_PASS`；独立 QA 角色才能记录 `QA_PASS`。
+
+## 5. 目录布局与职责
+
+```
+modules/          领域模块（纯业务逻辑，无框架依赖，通过 Port 接口解耦）
+adapters/         防腐层适配器（实现 Port，对接外部系统）
+apps/             启动应用（api: 主服务 8080, worker: 后台 8090）
+scenario/         场景领域聚合（execute: 场景执行引擎, seed: 种子数据）
+frontend/         Vue3 前端
+specs/            合同权威源（唯一 SSOT）
+generated/        自动生成制品（只读）
+loops/            Loop 批次管理
+docs/             文档
+```
+
+## 6. 证据纪律
+
+- 失败先记录 `FAILURES.md`，再修复。
+- 禁止 `git add .`；必须显式添加文件。
+- 证据必须可追溯：关联 Loop ID、Gate 名称、提交哈希。
+
+## 7. 隔离资产
+
+- Oracle / Ossie 等未授权资产放在 `tools/quarantine/`。
+- 启用需：ADR + 数据所有者授权 + 专用 Loop。
+- 无授权不得在代码中引用隔离资产。
+
+## 8. 展示边界
+
+- ECharts option 等厂商展示对象只存在于前端适配层。
+- 不得渗入核心领域合同或后端模块。
+
+## 9. 开工前必读
+
+每次编辑前必须确认：
+1. 读取 `AI_GUIDE.md` 了解权威顺序和红线。
+2. 读取 `specs/BASELINE_INDEX.yaml` 了解受控基线。
+3. 读取当前 Loop 的 `LOOP.yaml` 和 `STATE.json` 了解工作范围。
+4. 读取 `specs/CONTRACT_INDEX.yaml` 确认合同状态。

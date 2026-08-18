@@ -1,0 +1,68 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P19",
+  "title": "V1.1 演示就绪修复 + 工程治理（防护网建立）",
+  "status": "in_progress",
+  "implementation_actor": "tech_lead",
+  "objective": [
+    "修复 V1.1 演示就绪的所有阻塞和中等问题，确保 E2E 全量验证通过。",
+    "针对死循环根因建立防护网：三层契约同步检查、secret-scan 噪音治理、E2E 端点验证。",
+    "修复真实缺陷（外联脚本 channel null NPE）并打通前后端演示链路。"
+  ],
+  "scope": {
+    "include": [
+      "scripts/enum_consistency_check.py",
+      "scripts/secret_scan.py",
+      "scripts/e2e-29-endpoints.sh",
+      "Makefile",
+      "apps/api/src/main/java/com/gien/gits/api/controller/EngagementJourneyController.java",
+      "frontend/vite.config.ts",
+      "loops/P19/"
+    ],
+    "exclude": [
+      "unrelated_scenarios",
+      "production_credentials",
+      "quarantined_assets",
+      "new_feature_development"
+    ]
+  },
+  "gates": [
+    {
+      "id": "contract_check",
+      "owner_kind": "implementation",
+      "command": "make generate && make check",
+      "pass_condition": "合同生成与检查通过，含新增 enum-consistency 防护网；secret-scan 3729 误报已治理为 advisory。"
+    },
+    {
+      "id": "backend_test",
+      "owner_kind": "implementation",
+      "command": "./mvnw -pl apps/api test",
+      "pass_condition": "后端全量测试 283 pass / 0 fail；F-1 Mapper XML 修复确认。"
+    },
+    {
+      "id": "frontend_check",
+      "owner_kind": "implementation",
+      "command": "cd frontend && npx vue-tsc --noEmit && npx vite build",
+      "pass_condition": "前端类型检查与构建通过；vite 代理端口对齐后端实际端口。"
+    },
+    {
+      "id": "e2e_endpoints",
+      "owner_kind": "implementation",
+      "command": "bash scripts/e2e-29-endpoints.sh http://localhost:8082",
+      "pass_condition": "29 个剧情环节端点全部通过；外联脚本 channel null NPE 修复为 400。"
+    },
+    {
+      "id": "independent_qa",
+      "owner_kind": "independent_qa",
+      "command": "make verify",
+      "pass_condition": "独立 QA 角色确认所有 gate 通过，并记录 QA_PASS。"
+    }
+  ],
+  "repair_policy": {
+    "max_attempts_per_gate": 5,
+    "failure_record": "loops/P19/FAILURES.md",
+    "record_before_fix": true,
+    "rerun_original_gate": true
+  },
+  "exit_states": ["ready_for_independent_qa", "blocked"]
+}

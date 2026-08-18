@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.ProductKnowledgeVersionMapper">
+
+    <resultMap id="productKnowledgeVersionResult" type="com.gien.gits.ontology.domain.ProductKnowledgeVersion">
+            <constructor>
+                <idArg column="version_id" javaType="String"/>
+                <arg column="product_id" javaType="String"/>
+                <arg column="version_number" javaType="int"/>
+                <arg column="product_name" javaType="String"/>
+                <arg column="category" javaType="String"/>
+                <arg column="description" javaType="String"/>
+                <arg column="key_features" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+                <arg column="target_industries" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+                <arg column="risk_level" javaType="String"/>
+                <arg column="required_materials" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+                <arg column="pricing_basis" javaType="String"/>
+                <arg column="previous_version_id" javaType="String"/>
+                <arg column="change_summary" javaType="String"/>
+                <arg column="changed_by" javaType="String"/>
+                <arg column="changed_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.domain.ProductKnowledgeVersion">
+        INSERT INTO product_knowledge_version (
+            version_id, product_id, version_number, product_name, category, description,
+            key_features, target_industries, risk_level, required_materials, pricing_basis,
+            previous_version_id, change_summary, changed_by, changed_at
+        ) VALUES (
+            #{versionId}, #{productId}, #{versionNumber}, #{productName}, #{category}, #{description},
+            #{keyFeatures, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+            #{targetIndustries, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+            #{riskLevel},
+            #{requiredMaterials, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+            #{pricingBasis}, #{previousVersionId}, #{changeSummary}, #{changedBy},
+            #{changedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findByVersionId" resultMap="productKnowledgeVersionResult">
+        SELECT version_id, product_id, version_number, product_name, category, description,
+               key_features, target_industries, risk_level, required_materials, pricing_basis,
+               previous_version_id, change_summary, changed_by, changed_at
+        FROM product_knowledge_version WHERE version_id = #{versionId}
+    </select>
+
+    <select id="findByProductId" resultMap="productKnowledgeVersionResult">
+        SELECT version_id, product_id, version_number, product_name, category, description,
+               key_features, target_industries, risk_level, required_materials, pricing_basis,
+               previous_version_id, change_summary, changed_by, changed_at
+        FROM product_knowledge_version WHERE product_id = #{productId}
+        ORDER BY version_number DESC
+    </select>
+
+    <select id="findLatestByProductId" resultMap="productKnowledgeVersionResult">
+        SELECT version_id, product_id, version_number, product_name, category, description,
+               key_features, target_industries, risk_level, required_materials, pricing_basis,
+               previous_version_id, change_summary, changed_by, changed_at
+        FROM product_knowledge_version WHERE product_id = #{productId}
+        ORDER BY version_number DESC LIMIT 1
+    </select>
+
+    <select id="findByCategory" resultMap="productKnowledgeVersionResult">
+        SELECT version_id, product_id, version_number, product_name, category, description,
+               key_features, target_industries, risk_level, required_materials, pricing_basis,
+               previous_version_id, change_summary, changed_by, changed_at
+        FROM product_knowledge_version WHERE category = #{category}
+        ORDER BY product_name, version_number DESC
+    </select>
+
+    <select id="findRecentVersions" resultMap="productKnowledgeVersionResult">
+        SELECT version_id, product_id, version_number, product_name, category, description,
+               key_features, target_industries, risk_level, required_materials, pricing_basis,
+               previous_version_id, change_summary, changed_by, changed_at
+        FROM product_knowledge_version ORDER BY changed_at DESC LIMIT #{limit}
+    </select>
+
+</mapper>

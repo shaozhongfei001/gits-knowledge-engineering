@@ -213,9 +213,11 @@ def compile_all(destination: Path) -> dict:
         source_hashes[item["id"]] = digest(source_path)
         kind = item["kind"]
         parsed = None
-        if kind in {"openapi", "asyncapi", "json_schema", "linkml_subset", "source_contract_instance"}:
+        if kind in {"openapi", "openapi_paths", "asyncapi", "json_schema", "linkml_subset", "source_contract_instance", "seed_claims"}:
             parsed = load_json(source_path)
         if kind == "openapi":
+            validate_openapi(parsed, source_path)
+        elif kind == "openapi_paths":
             validate_openapi(parsed, source_path)
         elif kind == "asyncapi":
             validate_asyncapi(parsed, source_path)
@@ -230,11 +232,13 @@ def compile_all(destination: Path) -> dict:
             validate_dmn(source_path)
         elif kind == "turtle":
             validate_turtle(source_path)
+        elif kind == "seed_claims":
+            pass  # data file, no schema validation
         else:
             raise ValueError(f"{item['id']}: unsupported contract kind {kind}")
 
         generated_targets = [Path(raw).relative_to("generated") for raw in item["generated"]]
-        if kind in {"openapi", "asyncapi", "json_schema", "source_contract_instance"}:
+        if kind in {"openapi", "openapi_paths", "asyncapi", "json_schema", "source_contract_instance"}:
             if len(generated_targets) != 1:
                 raise ValueError(f"{item['id']}: exactly one normalized target required")
             write_json(destination / generated_targets[0], parsed)
@@ -251,6 +255,12 @@ def compile_all(destination: Path) -> dict:
             shacl_target = destination / generated_targets[1]
             shacl_target.parent.mkdir(parents=True, exist_ok=True)
             shacl_target.write_text(linkml_shacl(parsed), encoding="utf-8")
+        elif kind == "seed_claims":
+            if len(generated_targets) != 1:
+                raise ValueError(f"{item['id']}: exactly one seed_claims target required")
+            target = destination / generated_targets[0]
+            target.parent.mkdir(parents=True, exist_ok=True)
+            write_json(target, parsed)
 
         catalog.append({key: item[key] for key in ("id", "kind", "authority_source", "owner", "compatibility", "consumers", "generated")})
 

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gientech.com/gits/kno/schemas/activation-contract.json",
+  "title": "GITS Asset Activation Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "contractId", "version", "taskType", "routeMode", "preconditions", "activations", "semanticQueries", "ruleChecks", "skills", "context", "humanGates", "failurePolicy"],
+  "properties": {
+    "schemaVersion": {"type": "string", "const": "1.0.0"},
+    "contractId": {"type": "string", "pattern": "^AC-[A-Z0-9-]+$"},
+    "version": {"type": "string"},
+    "taskType": {"type": "string"},
+    "routeMode": {"type": "string", "enum": ["MAP_FIRST", "ONTOLOGY_FIRST", "MAP_THEN_ONTOLOGY", "ONTOLOGY_THEN_MAP"]},
+    "preconditions": {
+      "type": "object",
+      "required": ["requiredInputs", "requiredRoles", "permissionDecisionRequired"],
+      "properties": {
+        "requiredInputs": {"type": "array", "items": {"type": "string"}},
+        "requiredRoles": {"type": "array", "items": {"type": "string"}},
+        "permissionDecisionRequired": {"type": "boolean"}
+      }
+    },
+    "activations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["assetId", "required", "purpose", "sequence"],
+        "properties": {
+          "assetId": {"type": "string"},
+          "required": {"type": "boolean"},
+          "purpose": {"type": "string"},
+          "sequence": {"type": "integer", "minimum": 1}
+        }
+      }
+    },
+    "semanticQueries": {"type": "array", "items": {"type": "string"}},
+    "ruleChecks": {"type": "array", "items": {"type": "string"}},
+    "skills": {"type": "array", "items": {"type": "string"}},
+    "context": {
+      "type": "object",
+      "required": ["maxTokens", "priorityOrder", "trimPolicy"],
+      "properties": {
+        "maxTokens": {"type": "integer", "minimum": 512},
+        "priorityOrder": {"type": "array", "items": {"type": "string"}},
+        "trimPolicy": {"type": "string", "enum": ["CONTRACT_PRIORITY", "FAIL_ON_OVERFLOW"]}
+      }
+    },
+    "humanGates": {"type": "array", "items": {"type": "string"}},
+    "failurePolicy": {"type": "string", "enum": ["FAIL_CLOSED", "DEGRADE_WITH_DISCLOSURE"]}
+  }
+}

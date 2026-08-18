@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.ClaimMapper">
+
+    <resultMap id="claimResult" type="com.gien.gits.ontology.Claim">
+            <constructor>
+                <idArg column="claim_id" javaType="java.util.UUID"/>
+                <arg column="case_id" javaType="java.util.UUID"/>
+                <arg column="claim_type" javaType="com.gien.gits.ontology.ClaimType"/>
+                <arg column="claim_status" javaType="com.gien.gits.ontology.ClaimStatus"/>
+                <arg column="statement_text" javaType="String"/>
+                <arg column="valid_from" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="valid_to" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="recorded_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="supersedes_claim_id" javaType="java.util.UUID"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.Claim">
+        INSERT INTO claim (
+            claim_id, case_id, interaction_id, claim_type, claim_status, statement_text,
+            valid_from, valid_to, recorded_at, supersedes_claim_id, model_run_id
+        ) VALUES (
+            #{claimId}, #{caseId}, null, #{claimType}, #{status}, #{statement},
+            #{validFrom, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{validTo, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{recordedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{supersedesClaimId}, null
+        )
+    </insert>
+
+    <select id="findById" resultMap="claimResult">
+        SELECT claim_id, case_id, claim_type, claim_status, statement_text,
+               valid_from, valid_to, recorded_at, supersedes_claim_id
+        FROM claim WHERE claim_id = #{claimId}
+    </select>
+
+    <select id="findByCaseId" resultMap="claimResult">
+        SELECT claim_id, case_id, claim_type, claim_status, statement_text,
+               valid_from, valid_to, recorded_at, supersedes_claim_id
+        FROM claim WHERE case_id = #{caseId} ORDER BY recorded_at
+    </select>
+
+    <update id="updateStatus">
+        UPDATE claim SET claim_status = #{status}
+        WHERE claim_id = #{claimId}
+    </update>
+
+</mapper>

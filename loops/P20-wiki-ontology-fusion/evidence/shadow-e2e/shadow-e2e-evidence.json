@@ -1,0 +1,167 @@
+{
+  "mode": "shadow",
+  "scenarios": [
+    {
+      "scenario": "FACT_RECONCILIATION_30M",
+      "plan": {
+        "schemaVersion": "1.0.0",
+        "planId": "AP-FACT_RECONCILIATION_30M-CUST-001-SHADOW",
+        "taskId": "TASK-FACT_RECONCILIATION_30M-CUST-001-SHADOW",
+        "taskType": "FACT_RECONCILIATION_30M",
+        "routeMode": "ONTOLOGY_FIRST",
+        "selectedAssets": [
+          {
+            "assetId": "ASSET-DATA-CUSTOMER-PROFILE",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 1
+          },
+          {
+            "assetId": "ASSET-DATA-INTERACTION-HISTORY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 2
+          },
+          {
+            "assetId": "ASSET-DATA-CREDIT-FACILITY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 3
+          },
+          {
+            "assetId": "ASSET-KNOW-CUSTOMER-ONTOLOGY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 4
+          },
+          {
+            "assetId": "ASSET-KNOW-EVIDENCE-POLICY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 5
+          },
+          {
+            "assetId": "ASSET-KNOW-CLAIM-RECONCILIATION",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 6
+          }
+        ],
+        "semanticQueries": [
+          "SQ-CLAIM-SUBJECT-RELATIONS",
+          "SQ-CREDIT-AND-PROJECT-AMOUNTS",
+          "SQ-PROJECT-AND-BORROWER-ENTITY"
+        ],
+        "ruleChecks": [
+          "CLAIM_NOT_FACT",
+          "AVAILABLE_CREDIT_NOT_NEW_NEED",
+          "PROJECT_NOT_BORROWER",
+          "SIGNAL_NOT_OPPORTUNITY",
+          "BANKABILITY_NOT_APPROVAL"
+        ],
+        "skills": [
+          "SP-02",
+          "SP-07"
+        ],
+        "context": {
+          "maxTokens": 8000,
+          "trimPolicy": "FAIL_ON_OVERFLOW"
+        },
+        "permissionDecisionId": "PD-SHADOW-ALLOW",
+        "planHash": "7feca49f022ab385"
+      }
+    },
+    {
+      "scenario": "PRE_VISIT_PREPARATION",
+      "plan": {
+        "schemaVersion": "1.0.0",
+        "planId": "AP-PRE_VISIT_PREPARATION-CUST-001-SHADOW",
+        "taskId": "TASK-PRE_VISIT_PREPARATION-CUST-001-SHADOW",
+        "taskType": "PRE_VISIT_PREPARATION",
+        "routeMode": "ONTOLOGY_THEN_MAP",
+        "selectedAssets": [
+          {
+            "assetId": "ASSET-DATA-CUSTOMER-PROFILE",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 1
+          },
+          {
+            "assetId": "ASSET-KNOW-CUSTOMER-ONTOLOGY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 2
+          },
+          {
+            "assetId": "ASSET-DATA-CREDIT-FACILITY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 3
+          },
+          {
+            "assetId": "ASSET-DATA-INTERACTION-HISTORY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 4
+          },
+          {
+            "assetId": "ASSET-DATA-TRANSACTION-SUMMARY",
+            "version": "0.1.0",
+            "required": false,
+            "sequence": 5
+          },
+          {
+            "assetId": "ASSET-DATA-EXTERNAL-EVENT",
+            "version": "0.1.0",
+            "required": false,
+            "sequence": 6
+          },
+          {
+            "assetId": "ASSET-KNOW-KYC-QUESTION-LIBRARY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 7
+          },
+          {
+            "assetId": "ASSET-KNOW-PRODUCT-CARDS",
+            "version": "0.1.0",
+            "required": false,
+            "sequence": 8
+          },
+          {
+            "assetId": "ASSET-KNOW-VISIT-SOP",
+            "version": "0.1.0",
+            "required": false,
+            "sequence": 9
+          }
+        ],
+        "semanticQueries": [
+          "SQ-CUSTOMER-RELATIONSHIP",
+          "SQ-RELATED-LEGAL-ENTITIES",
+          "SQ-KYC-GAPS",
+          "SQ-OPEN-COMMITMENTS",
+          "SQ-ACTIVE-PRODUCT-VERSIONS"
+        ],
+        "ruleChecks": [
+          "CALLER_SCOPE_ALLOWED",
+          "CLAIM_NOT_FACT",
+          "SIGNAL_NOT_OPPORTUNITY",
+          "PRODUCT_VERSION_ACTIVE"
+        ],
+        "skills": [
+          "SP-02",
+          "SP-05",
+          "SP-15",
+          "SP-10"
+        ],
+        "context": {
+          "maxTokens": 12000,
+          "trimPolicy": "CONTRACT_PRIORITY"
+        },
+        "permissionDecisionId": "PD-SHADOW-ALLOW",
+        "planHash": "e0d2519976d2646d"
+      }
+    }
+  ],
+  "formal_output_changed": false
+}

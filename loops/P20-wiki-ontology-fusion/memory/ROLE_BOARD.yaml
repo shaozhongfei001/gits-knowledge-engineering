@@ -1,0 +1,30 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P20-wiki-ontology-fusion",
+  "updated_at": "2026-08-19T00:00:00-07:00",
+  "updated_by": "independent_qa",
+  "board_status": "qa_pass",
+  "owner_decision": "APPROVE_P20_SHADOW_IMPLEMENTATION",
+  "parallel_with_p19": "AUTHORIZED_BY_OWNER",
+  "baton": {
+    "holder": "independent_qa",
+    "packet": "P20-wiki-ontology-fusion",
+    "wave": "independent_qa_attestation",
+    "blocked_note": null,
+    "parallel_allowed": []
+  },
+  "roles": {
+    "tech_lead": {
+      "responsibility": "contract_candidate_maintenance",
+      "status": "handed_off_to_feature_pilot"
+    },
+    "feature_pilot": {
+      "responsibility": "route_activation_shadow_slice_implementation",
+      "status": "completed"
+    },
+    "independent_qa": {
+      "responsibility": "gate_review",
+      "status": "attested_pass"
+    }
+  }
+}

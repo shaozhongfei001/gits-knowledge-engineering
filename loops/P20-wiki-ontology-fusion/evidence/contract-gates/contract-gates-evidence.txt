@@ -1,0 +1,21 @@
+P20 contract-gate evidence (shared)
+ACTOR=feature_pilot
+TIMESTAMP=2026-08-18
+
+contract_generate
+COMMAND=make generate (PYTHON=./gits-kno-p20-venv/bin/python)
+RESULT=PASS
+EXIT_CODE=0
+NOTE=generated/ has no diff (source contracts unchanged)
+
+contract_check
+COMMAND=make check (PYTHON=./gits-kno-p20-venv/bin/python)
+RESULT=PASS
+EXIT_CODE=0
+NOTE=includes contract-check, loop-guard, secret-scan(62 advisories), enum-consistency, semantic-rule-gate(SHACL/Schema/DMN/LinkML)
+
+knowledge_architecture_check
+COMMAND=python3 scripts/validate_knowledge_architecture.py
+RESULT=PASS
+EXIT_CODE=0
+NOTE=6 schemas, 4 maps, 20 assets, 5 skills, 2 activations, 1 route, 2 plans

@@ -51,6 +51,18 @@ const router = createRouter({
       name: 'ExternalEventMonitor',
       component: () => import('../views/ExternalEventMonitor.vue'),
       meta: { title: '外部事件监控' }
+    },
+    {
+      path: '/in-meeting/:id?',
+      name: 'InMeetingAssistant',
+      component: () => import('../views/InMeetingAssistant.vue'),
+      meta: { title: '会中助手' }
+    },
+    {
+      path: '/audit-trace',
+      name: 'AuditTrace',
+      component: () => import('../views/AuditTraceView.vue'),
+      meta: { title: '审计追踪' }
     }
   ]
 })
@@ -60,6 +72,12 @@ router.beforeEach((to, _from, next) => {
 
   // 公开页面不需要认证
   if (to.meta.public) {
+    next()
+    return
+  }
+
+  // 开发模式跳过认证（后端 api-key 为空时认证已关闭）
+  if (import.meta.env.DEV) {
     next()
     return
   }

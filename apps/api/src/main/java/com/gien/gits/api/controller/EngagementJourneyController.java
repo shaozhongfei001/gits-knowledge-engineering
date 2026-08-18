@@ -14,6 +14,7 @@ import com.gien.gits.engagement.OutreachScript;
 import com.gien.gits.engagement.OutreachScript.OutreachChannel;
 import com.gien.gits.engagement.port.OutreachScriptRepository;
 import com.gien.gits.engagement.port.MeetingScriptRepository;
+import com.gien.gits.ontology.KycGapProfile;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,19 +51,31 @@ public class EngagementJourneyController {
 
     @PostMapping("/start")
     public ResponseEntity<JourneyStartResponse> startJourney(@RequestBody StartJourneyRequest request) {
-        CustomerJourney journey = orchestrator.startEngagementJourney(request.customerId());
+        if (request.customerId() == null || request.customerId().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+        EngagementOrchestrator.JourneyStartResult result = orchestrator.startEngagementJourney(request.customerId());
+        CustomerJourney journey = result.journey();
+        String kycSummary = result.kycProfile().map(p ->
+            "未知项:" + p.unknownItems().size() + ",待确认:" + p.priorityQuestions().size()).orElse(null);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(new JourneyStartResponse(
                 journey.journeyId().toString(),
                 journey.customerId(),
+                result.operatingCaseId(),
                 journey.phase().name(),
-                journey.startedAt().toString()));
+                journey.startedAt().toString(),
+                kycSummary));
     }
 
     @PostMapping("/{journeyId}/previsit")
     public ResponseEntity<PrevisitExecutionResponse> executePrevisit(
             @PathVariable String journeyId,
             @RequestBody PrevisitRequest request) {
+        if (request.customerId() == null || request.customerId().isBlank()
+                || request.operatingCaseId() == null || request.operatingCaseId().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
         EngagementOrchestrator.PrevisitWorkflowResult result = orchestrator.executePrevisitPhase(
             journeyId, request.customerId(), request.operatingCaseId(), request.visitObjective());
         return ResponseEntity.ok(new PrevisitExecutionResponse(
@@ -73,6 +86,10 @@ public class EngagementJourneyController {
     public ResponseEntity<PostvisitExecutionResponse> executePostvisit(
             @PathVariable String journeyId,
             @RequestBody PostvisitRequest request) {
+        if (request.operatingCaseId() == null || request.operatingCaseId().isBlank()
+                || request.customerId() == null || request.customerId().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
         EngagementOrchestrator.PostvisitWorkflowResult result = orchestrator.executePostvisitPhase(
             journeyId, request.operatingCaseId(), request.customerId(), request.rawTranscript());
         return ResponseEntity.ok(new PostvisitExecutionResponse(
@@ -88,6 +105,11 @@ public class EngagementJourneyController {
     public ResponseEntity<NewEvidenceResponse> handleNewEvidence(
             @PathVariable String journeyId,
             @RequestBody NewEvidenceRequest request) {
+        if (request.operatingCaseId() == null || request.operatingCaseId().isBlank()
+                || request.customerId() == null || request.customerId().isBlank()
+                || request.evidenceDescription() == null || request.evidenceDescription().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
         EngagementOrchestrator.NewEvidenceWorkflowResult result = orchestrator.handleNewEvidence(
             journeyId, request.operatingCaseId(), request.customerId(),
             request.evidenceDescription(), request.previousReportId());
@@ -107,10 +129,19 @@ public class EngagementJourneyController {
     @PostMapping("/outreach-script")
     public ResponseEntity<OutreachScript> generateOutreachScript(
             @RequestBody OutreachScriptRequest request) {
+        OutreachChannel channel;
+        try {
+            if (request.channel() == null || request.channel().isBlank()) {
+                return ResponseEntity.badRequest().build();
+            }
+            channel = OutreachChannel.valueOf(request.channel());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
         OutreachScript script = outreachScriptService.generateScript(
             request.customerId(), request.rmId(),
             request.operatingCaseId(), request.journeyId(),
-            OutreachChannel.valueOf(request.channel()));
+            channel);
         return ResponseEntity.ok(script);
     }
 

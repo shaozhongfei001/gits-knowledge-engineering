@@ -5,7 +5,11 @@
 
 ## 当前 Active Dispatch/Loop
 
-> 无活跃Loop。P0-P10全部已关闭。
+| Dispatch | Packet | Loop | Status | 下一门禁 |
+|---|---|---|---|---|
+| P19 | P19工程治理 | P19 | in_progress（DEV_SELF_CHECK_PASS；独立QA待完成） | independent_qa执行`make verify`并形成独立结论 |
+
+> P11～P18历史Loop文件的状态归并不属于P20变更包范围，本包不据此补签或重分类。
 
 ## 已关闭 Dispatch/Loop
 
@@ -25,7 +29,9 @@
 
 ## 规划中 Dispatch/Loop
 
-> 暂无。待确定P11方向。
+| Dispatch | Packet | Loop | Status | 下一门禁 |
+|---|---|---|---|---|
+| P20 | GITS-KNO-P20-WIKI-ONTOLOGY-FUSION-CONTRACT-PACK-V0.1-R1 | P20-wiki-ontology-fusion | planned（Owner授权待定） | Owner选择是否批准合同候选或Shadow验证 |
 
 ## 模块-阶段映射
 
@@ -37,7 +43,7 @@
 
 ## 合同注册表摘要
 
-共 12 份合同（ENGINEERING_CANDIDATE）：
+共 24 份合同（ENGINEERING_CANDIDATE；其中P20新增6份候选）：
 
 | ID | Kind | Authority Source |
 |---|---|---|
@@ -53,6 +59,18 @@
 | CTR-EVIDENCE-001 | json_schema | specs/evidence/evidence-bundle.schema.json |
 | CTR-EVAL-001 | json_schema | specs/evaluation/run-manifest.schema.json |
 | CTR-MAP-001 | turtle | specs/data/customer-source-mapping.r2rml.ttl |
+| CTR-DATA-003 | source_contract_instance | specs/data/src-oracle-metric-ontology.v0.1.json |
+| CTR-DATA-004 | seed_claims | specs/data/oracle-seed-claims.v0.1.json |
+| CTR-V11-001 | openapi_paths | specs/openapi/gits-kno-api.openapi.json |
+| CTR-V11-002 | openapi_paths | specs/openapi/gits-kno-api.openapi.json |
+| CTR-V11-003 | openapi_paths | specs/openapi/gits-kno-api.openapi.json |
+| CTR-V11-004 | openapi_paths | specs/openapi/gits-kno-api.openapi.json |
+| CTR-KMAP-001 | json_schema | specs/knowledge-architecture/schemas/knowledge-map.schema.json |
+| CTR-ASSET-001 | json_schema | specs/knowledge-architecture/schemas/asset-manifest.schema.json |
+| CTR-ACTIVATION-001 | json_schema | specs/knowledge-architecture/schemas/activation-contract.schema.json |
+| CTR-ROUTE-001 | json_schema | specs/knowledge-architecture/schemas/route-policy.schema.json |
+| CTR-PLAN-001 | json_schema | specs/knowledge-architecture/schemas/activation-plan.schema.json |
+| CTR-SKILL-002 | json_schema | specs/knowledge-architecture/schemas/skill-descriptor.schema.json |
 
 > 详见 `specs/CONTRACT_INDEX.yaml`
 

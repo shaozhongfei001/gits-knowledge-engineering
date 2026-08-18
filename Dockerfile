@@ -11,7 +11,7 @@ COPY modules/context-evidence/pom.xml modules/context-evidence/pom.xml
 COPY modules/human-action/pom.xml modules/human-action/pom.xml
 COPY modules/evaluation/pom.xml modules/evaluation/pom.xml
 COPY modules/scenario-customer-journey/pom.xml modules/scenario-customer-journey/pom.xml
-COPY modules/scenario-hermes/pom.xml modules/scenario-hermes/pom.xml
+COPY scenario/execute/pom.xml scenario/execute/pom.xml
 COPY adapters/semantic-jena/pom.xml adapters/semantic-jena/pom.xml
 COPY adapters/persistence-relational/pom.xml adapters/persistence-relational/pom.xml
 COPY apps/api/pom.xml apps/api/pom.xml

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.engagement.mapper.MeetingScriptMapper">
+
+    <resultMap id="meetingScriptResult" type="com.gien.gits.engagement.MeetingScript">
+            <constructor>
+                <idArg column="script_id" javaType="String"/>
+                <arg column="customer_id" javaType="String"/>
+                <arg column="rm_id" javaType="String"/>
+                <arg column="operating_case_id" javaType="String"/>
+                <arg column="journey_id" javaType="String"/>
+                <arg column="meeting_objective" javaType="String"/>
+                <arg column="previsit_summary" javaType="String"/>
+                <arg column="agenda_items" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.AgendaItemListTypeHandler"/>
+                <arg column="kyc_questions" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.KycQuestionItemListTypeHandler"/>
+                <arg column="product_discussions" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.ProductDiscussionItemListTypeHandler"/>
+                <arg column="risk_points" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+                <arg column="closing_summary" javaType="String"/>
+                <arg column="created_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO meeting_script (
+            id, script_id, customer_id, rm_id, operating_case_id, journey_id,
+            meeting_objective, previsit_summary, agenda_items, kyc_questions,
+            product_discussions, risk_points, closing_summary, created_at, updated_at
+        ) VALUES (
+            #{id}, #{script.scriptId}, #{script.customerId}, #{script.rmId},
+            #{script.operatingCaseId}, #{script.journeyId},
+            #{script.meetingObjective}, #{script.previsitSummary},
+            #{script.agendaItems, typeHandler=com.gien.gits.adapter.persistence.common.handler.AgendaItemListTypeHandler},
+            #{script.kycQuestions, typeHandler=com.gien.gits.adapter.persistence.common.handler.KycQuestionItemListTypeHandler},
+            #{script.productDiscussions, typeHandler=com.gien.gits.adapter.persistence.common.handler.ProductDiscussionItemListTypeHandler},
+            #{script.riskPoints, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+            #{script.closingSummary},
+            #{script.createdAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{script.createdAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findByScriptId" resultMap="meetingScriptResult">
+        SELECT script_id, customer_id, rm_id, operating_case_id, journey_id,
+               meeting_objective, previsit_summary, agenda_items, kyc_questions,
+               product_discussions, risk_points, closing_summary, created_at
+        FROM meeting_script WHERE script_id = #{scriptId}
+    </select>
+
+    <select id="findByCustomerId" resultMap="meetingScriptResult">
+        SELECT script_id, customer_id, rm_id, operating_case_id, journey_id,
+               meeting_objective, previsit_summary, agenda_items, kyc_questions,
+               product_discussions, risk_points, closing_summary, created_at
+        FROM meeting_script WHERE customer_id = #{customerId}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="findByOperatingCaseId" resultMap="meetingScriptResult">
+        SELECT script_id, customer_id, rm_id, operating_case_id, journey_id,
+               meeting_objective, previsit_summary, agenda_items, kyc_questions,
+               product_discussions, risk_points, closing_summary, created_at
+        FROM meeting_script WHERE operating_case_id = #{operatingCaseId}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="findByJourneyId" resultMap="meetingScriptResult">
+        SELECT script_id, customer_id, rm_id, operating_case_id, journey_id,
+               meeting_objective, previsit_summary, agenda_items, kyc_questions,
+               product_discussions, risk_points, closing_summary, created_at
+        FROM meeting_script WHERE journey_id = #{journeyId}
+        ORDER BY created_at DESC
+    </select>
+
+</mapper>

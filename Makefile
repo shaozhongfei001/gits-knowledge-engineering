@@ -21,7 +21,8 @@ check: ## 验证合同、生成物、Loop模板和安全基线
 	@test -x scripts/check-contracts.sh || { echo "FAIL: scripts/check-contracts.sh missing or not executable"; exit 2; }
 	@bash scripts/check-contracts.sh
 	@$(PYTHON) scripts/loop_guard.py --template-check
-	@$(PYTHON) scripts/secret_scan.py --root .
+	@$(PYTHON) scripts/secret_scan.py --root . --quiet
+	@$(PYTHON) scripts/enum_consistency_check.py --root . --quiet
 	@$(PYTHON) scripts/semantic_rule_gate.py
 
 semantic-rule-gate: ## 验证生成的语义与规则合同制品格式自洽(fail-closed)
@@ -51,6 +52,7 @@ backend-deps-check: ## 验证semantic-jena的Jena依赖可从根统一治理解�
 backend-test: backend-deps-check ## Java 21/Maven真实编译和测试
 	@test -x $(MVNW) || { echo "FAIL: $(MVNW) missing or not executable"; exit 2; }
 	@$(MVNW) --batch-mode --no-transfer-progress verify
+	@$(PYTHON) scripts/dependency-check-guard.py --search-root .
 
 frontend-test: ## 前端锁文件安装、类型检查、测试和构建
 	@test -f frontend/package-lock.json || { echo "FAIL: frontend/package-lock.json missing; lock dependencies before testing"; exit 2; }

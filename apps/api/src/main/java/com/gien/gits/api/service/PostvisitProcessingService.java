@@ -48,6 +48,12 @@ public class PostvisitProcessingService {
     public MeetingTranscript processTranscript(
             String journeyId, String rawContent, String operatingCaseId) {
 
+        if (rawContent == null || rawContent.isBlank()) {
+            return new MeetingTranscript(
+                "TR-" + UUID.randomUUID().toString().substring(0, 8),
+                journeyId, rawContent, List.of(), List.of("无转录内容，跳过提取"), Instant.now());
+        }
+
         List<InteractionExtraction> extractions = extractionStrategy.extract(rawContent);
         List<String> qualityNotes = validateExtractions(extractions);
 

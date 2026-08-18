@@ -4,18 +4,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 /**
- * Default in-memory implementation of {@link SemanticRepositoryPort}.
+ * {@link SemanticRepositoryPort} 的默认内存实现。
  *
- * <p>Stores the loaded {@link SemanticPackage} in memory and performs a minimal,
- * dependency-light structural well-formedness check on candidate Turtle. It is
- * fail-closed: any null, empty, or structurally malformed candidate (or a call
- * made before any package is loaded) yields {@code conforms=false} with a
- * non-conformance report and never throws.
+ * <p>将已加载的 {@link SemanticPackage} 保存在内存中，并对候选 Turtle 执行最小化、
+ * 轻依赖的结构性良构性检查。其行为严格 fail-closed：任何 null、空或结构异常的候选
+ * （或在任何包加载之前发起调用）都会返回 {@code conforms=false} 及不合规报告，并且
+ * 从不抛异常。
  *
- * <p>This implementation intentionally does not perform SHACL validation; the
- * authoritative SHACL validation lives in the Jena adapter module. Here we only
- * assert that the candidate is structurally plausible Turtle so that callers
- * get a deterministic, non-throwing result.
+ * <p>本实现刻意不执行 SHACL 校验；权威的 SHACL 校验位于 Jena 适配器模块。这里仅断言
+ * 候选内容在结构上是合理的 Turtle，从而让调用方得到一个确定、不抛异常的结果。
  */
 public final class InMemorySemanticRepository implements SemanticRepositoryPort {
 
@@ -54,11 +51,11 @@ public final class InMemorySemanticRepository implements SemanticRepositoryPort 
     }
 
     /**
-     * Minimal hand-rolled Turtle well-formedness check. Returns a non-conformance
-     * report string when the candidate is structurally implausible, or {@code null}
-     * when it passes. The check is intentionally conservative: it only verifies
-     * balanced delimiters, terminated string literals, and the presence of at
-     * least one statement terminator. It is not a full Turtle parser.
+     * 最小化的手写 Turtle 良构性检查。
+     *
+     * <p>当候选内容在结构上不合理时返回不合规报告字符串，通过时返回 {@code null}。
+     * 该检查刻意保守：仅核验分隔符是否配对、字符串字面量是否闭合，以及是否存在至少一个
+     * 语句终止符。它并不是一个完整的 Turtle 解析器。</p>
      */
     private static String checkWellFormedness(String text) {
         int parens = 0;
@@ -114,9 +111,10 @@ public final class InMemorySemanticRepository implements SemanticRepositoryPort 
     }
 
     /**
-     * Skips a Turtle string literal starting at index {@code i} (the opening quote)
-     * and returns the index of the closing quote, or {@code -1} if unterminated.
-     * Handles both plain and triple-quoted literals.
+     * 跳过从下标 {@code i}（开引号）开始的 Turtle 字符串字面量。
+     *
+     * <p>返回闭合引号的下标；若未闭合则返回 {@code -1}。同时处理普通引号（`"..."`）
+     * 与三引号（`"""..."""`）两种字面量。</p>
      */
     private static int consumeString(String text, int i) {
         int n = text.length();

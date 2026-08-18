@@ -1,0 +1,180 @@
+---
+description: "前端工程师规范：Vue3 / Pinia / vue-query / Naive UI / Tailwind / 契约对齐"
+alwaysApply: false
+globs: "frontend/**"
+enabled: true
+---
+
+# 前端工程师规范
+
+## 1. 组件结构
+
+```vue
+<script setup lang="ts">
+// 1. 类型导入
+// 2. Composable 导入
+// 3. Props & Emits 定义
+// 4. 响应式状态
+// 5. 计算属性
+// 6. 方法
+// 7. 生命周期钩子
+</script>
+
+<template>
+  <!-- 单根元素，语义化标签 -->
+</template>
+
+<style scoped>
+/* Tailwind 工具类优先，组件级样式补充 */
+</style>
+```
+
+## 2. 状态管理
+
+### Pinia Store
+
+```typescript
+// stores/commitment.ts
+export const useCommitmentStore = defineStore('commitment', () => {
+  // state
+  const commitments = ref<Commitment[]>([])
+  // getters
+  const activeCommitments = computed(() => commitments.value.filter(c => c.status === 'ACTIVE'))
+  // actions
+  async function fetchCommitments() { ... }
+  return { commitments, activeCommitments, fetchCommitments }
+})
+```
+
+- Store 按领域划分，不按页面划分。
+- 异步操作使用 vue-query（`useQuery` / `useMutation`），不直接在 Store 中调用 API。
+- Store 仅缓存状态，不处理副作用。
+
+### vue-query 数据获取
+
+```typescript
+// 标准查询模式
+const { data, isLoading, isError, error, refetch } = useQuery({
+  queryKey: ['commitments', customerId],
+  queryFn: () => engagementApi.getCommitments(customerId.value),
+  enabled: computed(() => !!customerId.value),
+})
+```
+
+- `queryKey` 必须包含所有依赖参数。
+- 条件查询使用 `enabled` 选项。
+- 乐观更新使用 `useMutation` + `onMutate` 回滚。
+
+## 3. API 层规范
+
+### 类型定义
+
+```typescript
+// api/engagement.ts
+export interface Customer {
+  customerId: string
+  name: string
+  // ... 必须与 OpenAPI schema 一一对应
+}
+```
+
+- 类型必须与 `specs/openapi/gits-kno-api.openapi.json` 一致。
+- 新增字段必须先在 OpenAPI 中定义。
+- 禁止在前端类型中添加后端不返回的字段。
+
+### API 调用
+
+```typescript
+export const engagementApi = {
+  async getCustomer(id: string): Promise<Customer> {
+    const { data } = await api.get(`/customers/${id}`)
+    return data
+  },
+}
+```
+
+- 使用 `frontend/src/api/` 下的 axios 实例。
+- 错误由拦截器统一处理，业务代码只处理业务逻辑。
+
+## 4. Naive UI 使用规范
+
+- 优先使用 Naive UI 组件。
+- 组件前缀：模板中直接使用（`<n-button>`），不导入。
+- 主题定制通过 `n-config-provider`。
+- 禁止覆盖 Naive UI 内部样式（使用 props 和 slots 定制）。
+
+### 常用组件映射
+
+| 需求 | Naive UI 组件 |
+|------|---------------|
+| 表单 | `n-form` + `n-form-item` + `n-input` |
+| 表格 | `n-data-table` |
+| 对话框 | `n-modal` |
+| 消息提示 | `useMessage()` |
+| 通知 | `useNotification()` |
+| 加载 | `n-spin` / `n-skeleton` |
+
+## 5. Tailwind CSS 规范
+
+- 工具类优先，避免自定义 CSS。
+- 响应式断点：`sm:` `md:` `lg:` `xl:`。
+- 禁止使用 `!important`。
+- 颜色使用 Naive UI 主题变量（`var(--primary-color)` 等），不硬编码色值。
+
+## 6. 路由规范
+
+```typescript
+// router/index.ts
+{
+  path: '/engagement',
+  name: 'EngagementWorkspace',
+  component: () => import('@/views/EngagementWorkspace.vue'),
+  meta: { requiresAuth: true, title: '经营工作台' }
+}
+```
+
+- 路由懒加载：使用 `() => import()` 语法。
+- 认证路由：`meta.requiresAuth: true`。
+- 页面标题：`meta.title`。
+
+## 7. 测试规范
+
+### 单元测试
+
+```typescript
+// __tests__/CustomerCard.spec.ts
+import { mount } from '@vue/test-utils'
+import { describe, it, expect } from 'vitest'
+
+it('renders customer name', () => {
+  const wrapper = mount(CustomerCard, { props: { customer: mockCustomer } })
+  expect(wrapper.text()).toContain(mockCustomer.name)
+})
+```
+
+### E2E 测试
+
+```typescript
+// e2e/engagement.spec.ts
+import { test, expect } from '@playwright/test'
+
+test('can start journey', async ({ page }) => {
+  await page.goto('/engagement')
+  await page.click('text=开始旅程')
+  await expect(page.locator('.phase-indicator')).toBeVisible()
+})
+```
+
+## 8. 性能规范
+
+- 大列表使用虚拟滚动（Naive UI `n-virtual-list`）。
+- 图片使用懒加载。
+- 组件按需导入，不全局注册。
+- 避免不必要的响应式（`shallowRef` / `shallowReactive`）。
+
+## 9. 可访问性
+
+- 语义化 HTML 标签。
+- 表单必须关联 `label`。
+- 键盘可操作。
+- 颜色对比度符合 WCAG 2.1 AA 标准。

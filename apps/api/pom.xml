@@ -10,12 +10,13 @@
     <dependency><groupId>com.gien.gits</groupId><artifactId>human-action</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>com.gien.gits</groupId><artifactId>evaluation</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>com.gien.gits</groupId><artifactId>scenario-customer-journey</artifactId><version>${project.version}</version></dependency>
-    <dependency><groupId>com.gien.gits</groupId><artifactId>scenario-hermes</artifactId><version>${project.version}</version></dependency>
+    <dependency><groupId>com.gien.gits</groupId><artifactId>scenario-execute</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>com.gien.gits</groupId><artifactId>persistence-relational</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>com.gien.gits</groupId><artifactId>oracle-source</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>com.h2database</groupId><artifactId>h2</artifactId><scope>runtime</scope></dependency>
     <dependency><groupId>com.mysql</groupId><artifactId>mysql-connector-j</artifactId><scope>runtime</scope></dependency>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-jdbc</artifactId></dependency>
+    <dependency><groupId>org.mybatis.spring.boot</groupId><artifactId>mybatis-spring-boot-starter</artifactId></dependency>
     <dependency><groupId>org.flywaydb</groupId><artifactId>flyway-core</artifactId></dependency>
     <dependency><groupId>com.gien.gits</groupId><artifactId>semantic-jena</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-web</artifactId></dependency>

@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "1.0.0",
+  "policyId": "RP-CORP-RM-001",
+  "version": "0.1.0",
+  "defaultMode": "MAP_FIRST",
+  "defaultDecision": "DENY_UNMAPPED_TASK",
+  "rules": [
+    {"priority": 10, "taskType": "FACT_RECONCILIATION_30M", "mode": "ONTOLOGY_FIRST", "activationContractRef": "AC-FACT-RECONCILIATION-001", "reason": "对象、关系、数值和规则边界必须确定性校验"},
+    {"priority": 20, "taskType": "PRE_VISIT_PREPARATION", "mode": "ONTOLOGY_THEN_MAP", "activationContractRef": "AC-PREVISIT-001", "reason": "先锁定客户事实和缺口，再定向加载文档知识"},
+    {"priority": 30, "taskType": "MARKET_SIGNAL_DISCOVERY", "mode": "MAP_THEN_ONTOLOGY", "activationContractRef": "AC-NOT-IN-P20", "reason": "先发现外部材料，再进行实体归一和Signal约束"},
+    {"priority": 40, "taskType": "REPORT_GENERATION", "mode": "MAP_FIRST", "activationContractRef": "AC-NOT-IN-P20", "reason": "以模板和知识组织为主，事实必须来自EvidenceBundle"}
+  ]
+}

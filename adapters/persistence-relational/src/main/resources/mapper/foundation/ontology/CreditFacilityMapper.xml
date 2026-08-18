@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.CreditFacilityMapper">
+
+    <resultMap id="creditFacilityRowResult"
+               type="com.gien.gits.adapter.persistence.foundation.ontology.dto.CreditFacilityRow">
+            <constructor>
+                <idArg column="facility_id" javaType="String"/>
+                <arg column="customer_id" javaType="String"/>
+                <arg column="borrower_entity" javaType="String"/>
+                <arg column="approval_date" javaType="java.time.LocalDate"/>
+                <arg column="maturity_date" javaType="java.time.LocalDate"/>
+                <arg column="credit_total_cny" javaType="Long"/>
+                <arg column="used_credit_cny" javaType="Long"/>
+                <arg column="available_credit_cny" javaType="Long"/>
+                <arg column="current_loan_balance_cny" javaType="Long"/>
+                <arg column="bank_acceptance_bill_balance_cny" javaType="Long"/>
+                <arg column="guarantee_balance_cny" javaType="Long"/>
+                <arg column="collateral" javaType="String"/>
+                <arg column="purpose_allowed" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+                <arg column="purpose_restrictions" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+                <arg column="covenants" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+                <arg column="reconciliation_note" javaType="String"/>
+                <arg column="evidence_ref" javaType="String"/>
+                <arg column="created_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="updated_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.CreditFacility">
+        INSERT INTO credit_facility (
+            facility_id, customer_id, borrower_entity, approval_date, maturity_date,
+            credit_total_cny, used_credit_cny, available_credit_cny, current_loan_balance_cny,
+            bank_acceptance_bill_balance_cny, guarantee_balance_cny, collateral,
+            purpose_allowed, purpose_restrictions, covenants, reconciliation_note,
+            evidence_ref, created_at, updated_at
+        ) VALUES (
+            #{facilityId}, #{customerId}, #{borrowerEntity}, #{approvalDate}, #{maturityDate},
+            #{creditTotalCny}, #{usedCreditCny}, #{availableCreditCny}, #{currentLoanBalanceCny},
+            #{bankAcceptanceBillBalanceCny}, #{guaranteeBalanceCny}, #{collateral},
+            #{purposeAllowed, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+            #{purposeRestrictions, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+            #{covenants, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+            #{reconciliationNote}, #{evidenceRef},
+            #{createdAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{updatedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findRowByFacilityId" resultMap="creditFacilityRowResult">
+        SELECT facility_id, customer_id, borrower_entity, approval_date, maturity_date,
+               credit_total_cny, used_credit_cny, available_credit_cny, current_loan_balance_cny,
+               bank_acceptance_bill_balance_cny, guarantee_balance_cny, collateral,
+               purpose_allowed, purpose_restrictions, covenants, reconciliation_note,
+               evidence_ref, created_at, updated_at
+        FROM credit_facility WHERE facility_id = #{facilityId}
+    </select>
+
+    <select id="findRowsByCustomerId" resultMap="creditFacilityRowResult">
+        SELECT facility_id, customer_id, borrower_entity, approval_date, maturity_date,
+               credit_total_cny, used_credit_cny, available_credit_cny, current_loan_balance_cny,
+               bank_acceptance_bill_balance_cny, guarantee_balance_cny, collateral,
+               purpose_allowed, purpose_restrictions, covenants, reconciliation_note,
+               evidence_ref, created_at, updated_at
+        FROM credit_facility WHERE customer_id = #{customerId}
+    </select>
+
+</mapper>

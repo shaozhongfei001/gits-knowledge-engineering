@@ -1,0 +1,87 @@
+---
+description: "前端兜底规范：SDK 类型、四态处理、不发明字段、Composition API、Naive UI"
+alwaysApply: true
+enabled: true
+---
+
+# 前端兜底规范
+
+## 1. 类型来源
+
+- API 类型定义来自 `frontend/src/api/engagement.ts` 和 `frontend/src/api/v11.ts`。
+- 类型必须与 OpenAPI 合同一致，不得在前端发明后端合同未定义的字段。
+- 如需前端扩展字段，使用 TypeScript intersection type：`type Extended = ApiType & { localField: string }`。
+- 禁止使用 `any`，必须提供具体类型。
+
+## 2. 四态处理
+
+每个数据加载组件必须处理四种状态：
+
+| 状态 | 处理方式 |
+|------|----------|
+| **Idle** | 未请求，显示默认/空状态 |
+| **Loading** | 请求中，显示骨架屏或 spinner |
+| **Success** | 请求成功，显示数据 |
+| **Error** | 请求失败，显示错误信息 + 重试按钮 |
+
+```typescript
+// 标准四态模式
+const { data, isLoading, isError, error } = useQuery(...)
+```
+
+- 禁止只处理 Success 状态而忽略其他三种。
+- Loading 状态禁止显示空白页面。
+
+## 3. 不发明字段
+
+- 前端不得添加后端 API 未返回的字段。
+- 如需计算字段，使用 `computed` 或 `useComputed`，明确标记为派生字段。
+- 禁止在 API 响应中硬编码不存在的字段值。
+
+## 4. Composition API
+
+- 所有组件使用 `<script setup lang="ts">` 语法。
+- 状态管理使用 Pinia Composition Store（`defineStore` + `setup` 函数）。
+- 组合逻辑抽取为 Composables（`use*.ts`）。
+- 禁止使用 Options API。
+
+## 5. UI 框架
+
+- 主 UI 库：**Naive UI**。
+- 辅助 UI 库：**TDesign Vue Next**（仅在 Naive UI 缺少对应组件时使用）。
+- 禁止混用两个库的同类组件（如同时用 Naive Button 和 TDesign Button）。
+- 图表使用 ECharts，配置对象仅存在于前端组件中。
+
+## 6. HTTP 客户端
+
+- 使用 `frontend/src/api/` 下的 axios 实例。
+- 认证：API Key 通过请求拦截器注入 `X-API-KEY` 头。
+- 401 响应触发 `auth:unauthorized` 事件，自动跳转登录页。
+- 错误处理：网络错误 → 提示重试；业务错误 → 显示 `message` 字段。
+
+## 7. 路由
+
+- 使用 vue-router 4 History 模式。
+- 路由守卫处理认证检查。
+- 路由定义集中在 `frontend/src/router/`。
+
+## 8. 构建与测试
+
+- 构建工具：Vite。
+- 测试：Vitest + @vue/test-utils + happy-dom。
+- E2E：Playwright。
+- Node 版本要求：≥ 22。
+- 类型检查：`vue-tsc --noEmit` 必须通过。
+
+## 9. 样式
+
+- 使用 Tailwind CSS 工具类。
+- 组件级样式使用 `<style scoped>`。
+- 禁止全局样式污染。
+- 响应式设计：移动端优先，断点参考 Naive UI 标准。
+
+## 10. 环境与配置
+
+- 开发代理：Vite dev server 代理 `/api` 到后端 `localhost:8080`。
+- 环境变量通过 `.env.*` 文件管理。
+- 禁止在前端代码中硬编码后端地址。

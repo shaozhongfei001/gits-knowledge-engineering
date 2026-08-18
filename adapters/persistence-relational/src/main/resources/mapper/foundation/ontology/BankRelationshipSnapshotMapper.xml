@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.BankRelationshipSnapshotMapper">
+
+    <resultMap id="bankRelationshipSnapshotRowResultMap"
+               type="com.gien.gits.adapter.persistence.foundation.ontology.dto.BankRelationshipSnapshotRow">
+            <constructor>
+                <idArg column="id" javaType="java.util.UUID"/>
+                <arg column="customer_id" javaType="String"/>
+                <arg column="snapshot_month" javaType="String"/>
+                <arg column="avg_daily_deposit_cny" javaType="Long"/>
+                <arg column="monthly_settlement_cny" javaType="Long"/>
+                <arg column="loan_balance_cny" javaType="Long"/>
+                <arg column="credit_total_cny" javaType="Long"/>
+                <arg column="used_credit_cny" javaType="Long"/>
+                <arg column="available_credit_cny" javaType="Long"/>
+                <arg column="bank_acceptance_bill_balance_cny" javaType="Long"/>
+                <arg column="guarantee_balance_cny" javaType="Long"/>
+                <arg column="payroll_employees" javaType="Integer"/>
+                <arg column="cash_management_opened" javaType="Boolean"/>
+                <arg column="supply_chain_finance_opened" javaType="Boolean"/>
+                <arg column="cross_border_settlement_cny" javaType="Long"/>
+                <arg column="product_count" javaType="Integer"/>
+                <arg column="customer_contribution_level" javaType="String"/>
+                <arg column="anomaly_flags" javaType="String"/>
+                <arg column="created_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.BankRelationshipSnapshot">
+        INSERT INTO bank_relationship_snapshot (id, customer_id, snapshot_month,
+                                                avg_daily_deposit_cny, monthly_settlement_cny,
+                                                loan_balance_cny, credit_total_cny, used_credit_cny,
+                                                available_credit_cny, bank_acceptance_bill_balance_cny,
+                                                guarantee_balance_cny, payroll_employees,
+                                                cash_management_opened, supply_chain_finance_opened,
+                                                cross_border_settlement_cny, product_count,
+                                                customer_contribution_level, anomaly_flags, created_at)
+        VALUES (#{id}, #{customerId}, #{snapshotMonth},
+                #{avgDailyDepositCny}, #{monthlySettlementCny},
+                #{loanBalanceCny}, #{creditTotalCny}, #{usedCreditCny},
+                #{availableCreditCny}, #{bankAcceptanceBillBalanceCny},
+                #{guaranteeBalanceCny}, #{payrollEmployees},
+                #{cashManagementOpened}, #{supplyChainFinanceOpened},
+                #{crossBorderSettlementCny}, #{productCount},
+                #{customerContributionLevel}, #{anomalyFlags},
+                #{createdAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler})
+    </insert>
+
+    <select id="findRowByCustomerId" resultMap="bankRelationshipSnapshotRowResultMap">
+        SELECT id, customer_id, snapshot_month, avg_daily_deposit_cny, monthly_settlement_cny,
+               loan_balance_cny, credit_total_cny, used_credit_cny, available_credit_cny,
+               bank_acceptance_bill_balance_cny, guarantee_balance_cny, payroll_employees,
+               cash_management_opened, supply_chain_finance_opened, cross_border_settlement_cny,
+               product_count, customer_contribution_level, anomaly_flags, created_at
+        FROM bank_relationship_snapshot
+        WHERE customer_id = #{customerId}
+        ORDER BY snapshot_month DESC
+        LIMIT 1
+    </select>
+
+</mapper>

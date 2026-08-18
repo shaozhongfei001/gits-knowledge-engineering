@@ -32,6 +32,10 @@
           <span class="stat-value">{{ strategicCount }}</span>
           <span class="stat-label">战略客户</span>
         </div>
+        <div class="stat-item clickable" @click="router.push({ name: 'AuditTrace' })">
+          <span class="stat-value">{{ pendingGateCount }}</span>
+          <span class="stat-label">待审批</span>
+        </div>
       </div>
 
       <div class="customer-grid">
@@ -55,11 +59,13 @@ import { NSpin, NResult, NButton, NEmpty } from 'naive-ui'
 import CustomerCard from '../components/CustomerCard.vue'
 import { fetchCustomers } from '../api/engagement'
 import type { Customer, RiskLevel, CustomerTier } from '../api/engagement'
+import { fetchHumanGates } from '../api/v11'
 
 const router = useRouter()
 const customers = ref<Customer[]>([])
 const loading = ref(true)
 const error = ref('')
+const pendingGateCount = ref(0)
 
 const highRiskCount = computed(() =>
   customers.value.filter(c => c.riskLevel === 'HIGH').length
@@ -77,6 +83,9 @@ async function loadCustomers() {
   error.value = ''
   try {
     customers.value = await fetchCustomers()
+    // 加载待审批门禁数量
+    const gates = await fetchHumanGates({ status: 'PENDING' })
+    pendingGateCount.value = gates.length
   } catch (e: any) {
     error.value = e.message || '无法获取客户列表'
   } finally {

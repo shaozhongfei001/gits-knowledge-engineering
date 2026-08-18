@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -50,8 +51,10 @@ class EngagementJourneyControllerTest {
     @Test
     void testStartJourney() throws Exception {
         CustomerJourney journey = sampleJourney();
+        EngagementOrchestrator.JourneyStartResult startResult =
+            new EngagementOrchestrator.JourneyStartResult(journey, UUID.randomUUID().toString(), Optional.empty());
         when(engagementOrchestrator.startEngagementJourney("CUST-001"))
-            .thenReturn(journey);
+            .thenReturn(startResult);
 
         Map<String, String> body = Map.of("customerId", "CUST-001");
         mockMvc.perform(post("/api/v1/engagement/journey/start")
@@ -59,7 +62,8 @@ class EngagementJourneyControllerTest {
                 .content(objectMapper.writeValueAsString(body)))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.customerId").value("CUST-001"))
-            .andExpect(jsonPath("$.phase").value("INSIGHT_ANALYSIS"));
+            .andExpect(jsonPath("$.phase").value("INSIGHT_ANALYSIS"))
+            .andExpect(jsonPath("$.operatingCaseId").isString());
     }
 
     @Test

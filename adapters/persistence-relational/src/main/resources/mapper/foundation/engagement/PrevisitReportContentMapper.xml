@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.engagement.mapper.PrevisitReportContentMapper">
+
+    <resultMap id="previsitReportContentResult" type="com.gien.gits.engagement.PrevisitReportContent">
+            <constructor>
+                <idArg column="report_id" javaType="String"/>
+                <arg column="customer_id" javaType="String"/>
+                <arg column="customer_name" javaType="String"/>
+                <arg column="rm_name" javaType="String"/>
+                <arg column="visit_objective" javaType="String"/>
+                <arg column="customer_overview" javaType="com.gien.gits.engagement.PrevisitReportContent$CustomerOverview"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.JsonTypeHandler"/>
+                <arg column="kyc_gap_summary" javaType="com.gien.gits.engagement.PrevisitReportContent$KycGapSummary"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.JsonTypeHandler"/>
+                <arg column="product_schemes" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.ProductSchemeListTypeHandler"/>
+                <arg column="key_questions" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+                <arg column="risk_reminders" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+                <arg column="visit_strategy" javaType="String"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO previsit_report_content (
+            report_id, customer_id, customer_name, rm_name, visit_objective,
+            customer_overview, kyc_gap_summary, product_schemes, key_questions,
+            risk_reminders, visit_strategy, journey_id, operating_case_id
+        ) VALUES (
+            #{content.reportId}, #{content.customerId}, #{content.customerName},
+            #{content.rmName}, #{content.visitObjective},
+            #{content.customerOverview, typeHandler=com.gien.gits.adapter.persistence.common.handler.JsonTypeHandler},
+            #{content.kycGapSummary, typeHandler=com.gien.gits.adapter.persistence.common.handler.JsonTypeHandler},
+            #{content.productSchemes, typeHandler=com.gien.gits.adapter.persistence.common.handler.ProductSchemeListTypeHandler},
+            #{content.keyQuestions, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+            #{content.riskReminders, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+            #{content.visitStrategy}, #{journeyId}, #{operatingCaseId}
+        )
+    </insert>
+
+    <select id="findByReportId" resultMap="previsitReportContentResult">
+        SELECT report_id, customer_id, customer_name, rm_name, visit_objective,
+               customer_overview, kyc_gap_summary, product_schemes, key_questions,
+               risk_reminders, visit_strategy
+        FROM previsit_report_content WHERE report_id = #{reportId}
+    </select>
+
+    <select id="findLatestByOperatingCaseId" resultMap="previsitReportContentResult">
+        SELECT report_id, customer_id, customer_name, rm_name, visit_objective,
+               customer_overview, kyc_gap_summary, product_schemes, key_questions,
+               risk_reminders, visit_strategy
+        FROM previsit_report_content WHERE operating_case_id = #{operatingCaseId}
+        ORDER BY created_at DESC LIMIT 1
+    </select>
+
+    <select id="findByJourneyId" resultMap="previsitReportContentResult">
+        SELECT report_id, customer_id, customer_name, rm_name, visit_objective,
+               customer_overview, kyc_gap_summary, product_schemes, key_questions,
+               risk_reminders, visit_strategy
+        FROM previsit_report_content WHERE journey_id = #{journeyId}
+    </select>
+
+</mapper>

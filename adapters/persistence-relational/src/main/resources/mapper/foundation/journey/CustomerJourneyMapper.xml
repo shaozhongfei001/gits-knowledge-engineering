@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.journey.mapper.CustomerJourneyMapper">
+
+    <!-- ── CustomerJourney ── -->
+
+    <resultMap id="customerJourneyResult" type="com.gien.gits.customerjourney.CustomerJourney">
+            <constructor>
+                <idArg column="journey_id" javaType="java.util.UUID"/>
+                <arg column="case_id" javaType="java.util.UUID"/>
+                <arg column="customer_id" javaType="String"/>
+                <arg column="customer_name" javaType="String"/>
+                <arg column="phase" javaType="com.gien.gits.customerjourney.JourneyPhase"/>
+                <arg column="started_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="updated_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insertJourney" parameterType="com.gien.gits.customerjourney.CustomerJourney">
+        INSERT INTO customer_journey (
+            journey_id, case_id, customer_id, customer_name,
+            phase, started_at, updated_at
+        ) VALUES (
+            #{journeyId}, #{operatingCaseId}, #{customerId}, #{customerName},
+            #{phase},
+            #{startedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{updatedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findJourneyById" resultMap="customerJourneyResult">
+        SELECT journey_id, case_id, customer_id, customer_name,
+               phase, started_at, updated_at
+        FROM customer_journey WHERE journey_id = #{journeyId}
+    </select>
+
+    <select id="findJourneysByCaseId" resultMap="customerJourneyResult">
+        SELECT journey_id, case_id, customer_id, customer_name,
+               phase, started_at, updated_at
+        FROM customer_journey WHERE case_id = #{caseId}
+        ORDER BY started_at DESC
+    </select>
+
+    <update id="updateJourneyPhase">
+        UPDATE customer_journey SET phase = #{phase},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE journey_id = #{journeyId}
+    </update>
+
+    <!-- ── InsightClaim ── -->
+
+    <resultMap id="insightClaimResult" type="com.gien.gits.customerjourney.InsightClaim">
+            <constructor>
+                <idArg column="insight_id" javaType="java.util.UUID"/>
+                <arg column="claim_id" javaType="java.util.UUID"/>
+                <arg column="operating_case_id" javaType="java.util.UUID"/>
+                <arg column="insight_category" javaType="String"/>
+                <arg column="insight_summary" javaType="String"/>
+                <arg column="generated_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insertInsight" parameterType="com.gien.gits.customerjourney.InsightClaim">
+        INSERT INTO insight_claim (
+            insight_id, claim_id, operating_case_id, insight_category,
+            insight_summary, generated_at
+        ) VALUES (
+            #{insightId}, #{claimId}, #{operatingCaseId}, #{insightCategory},
+            #{insightSummary},
+            #{generatedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findInsightById" resultMap="insightClaimResult">
+        SELECT insight_id, claim_id, operating_case_id, insight_category,
+               insight_summary, generated_at
+        FROM insight_claim WHERE insight_id = #{insightId}
+    </select>
+
+    <select id="findInsightsByCaseId" resultMap="insightClaimResult">
+        SELECT insight_id, claim_id, operating_case_id, insight_category,
+               insight_summary, generated_at
+        FROM insight_claim WHERE operating_case_id = #{caseId}
+        ORDER BY generated_at
+    </select>
+
+    <!-- ── ProductCandidateClaim ── -->
+
+    <resultMap id="productCandidateClaimResult" type="com.gien.gits.customerjourney.ProductCandidateClaim">
+            <constructor>
+                <idArg column="product_id" javaType="java.util.UUID"/>
+                <arg column="claim_id" javaType="java.util.UUID"/>
+                <arg column="insight_claim_id" javaType="java.util.UUID"/>
+                <arg column="operating_case_id" javaType="java.util.UUID"/>
+                <arg column="product_code" javaType="String"/>
+                <arg column="product_name" javaType="String"/>
+                <arg column="match_reason" javaType="String"/>
+                <arg column="proposed_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insertProductCandidate" parameterType="com.gien.gits.customerjourney.ProductCandidateClaim">
+        INSERT INTO product_candidate_claim (
+            product_id, claim_id, insight_claim_id, operating_case_id,
+            product_code, product_name, match_reason, proposed_at
+        ) VALUES (
+            #{productId}, #{claimId}, #{insightClaimId}, #{operatingCaseId},
+            #{productCode}, #{productName}, #{matchReason},
+            #{proposedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findProductCandidateById" resultMap="productCandidateClaimResult">
+        SELECT product_id, claim_id, insight_claim_id, operating_case_id,
+               product_code, product_name, match_reason, proposed_at
+        FROM product_candidate_claim WHERE product_id = #{candidateId}
+    </select>
+
+    <!-- ── PrevisitReport ── -->
+
+    <resultMap id="previsitReportResult" type="com.gien.gits.customerjourney.PrevisitReport">
+            <constructor>
+                <idArg column="report_id" javaType="java.util.UUID"/>
+                <arg column="operating_case_id" javaType="java.util.UUID"/>
+                <arg column="journey_id" javaType="java.util.UUID"/>
+                <arg column="insight_ids" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.UuidListJsonTypeHandler"/>
+                <arg column="product_candidate_ids" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.UuidListJsonTypeHandler"/>
+                <arg column="summary" javaType="String"/>
+                <arg column="generated_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insertPrevisitReport" parameterType="com.gien.gits.customerjourney.PrevisitReport">
+        INSERT INTO previsit_report (
+            report_id, operating_case_id, journey_id, insight_ids,
+            product_candidate_ids, summary, generated_at
+        ) VALUES (
+            #{reportId}, #{operatingCaseId}, #{journeyId},
+            #{insightIds, typeHandler=com.gien.gits.adapter.persistence.common.handler.UuidListJsonTypeHandler},
+            #{productCandidateIds, typeHandler=com.gien.gits.adapter.persistence.common.handler.UuidListJsonTypeHandler},
+            #{summary},
+            #{generatedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findPrevisitReportById" resultMap="previsitReportResult">
+        SELECT report_id, operating_case_id, journey_id, insight_ids,
+               product_candidate_ids, summary, generated_at
+        FROM previsit_report WHERE report_id = #{reportId}
+    </select>
+
+    <!-- ── PostvisitAnalysis ── -->
+
+    <resultMap id="postvisitAnalysisResult" type="com.gien.gits.customerjourney.PostvisitAnalysis">
+            <constructor>
+                <idArg column="analysis_id" javaType="java.util.UUID"/>
+                <arg column="operating_case_id" javaType="java.util.UUID"/>
+                <arg column="journey_id" javaType="java.util.UUID"/>
+                <arg column="previsit_report_id" javaType="java.util.UUID"/>
+                <arg column="outcome" javaType="String"/>
+                <arg column="follow_up_action" javaType="String"/>
+                <arg column="analyzed_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insertPostvisitAnalysis" parameterType="com.gien.gits.customerjourney.PostvisitAnalysis">
+        INSERT INTO postvisit_analysis (
+            analysis_id, operating_case_id, journey_id, previsit_report_id,
+            outcome, follow_up_action, analyzed_at
+        ) VALUES (
+            #{analysisId}, #{operatingCaseId}, #{journeyId}, #{previsitReportId},
+            #{outcome}, #{followUpAction},
+            #{analyzedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <select id="findPostvisitAnalysisById" resultMap="postvisitAnalysisResult">
+        SELECT analysis_id, operating_case_id, journey_id, previsit_report_id,
+               outcome, follow_up_action, analyzed_at
+        FROM postvisit_analysis WHERE analysis_id = #{analysisId}
+    </select>
+
+</mapper>

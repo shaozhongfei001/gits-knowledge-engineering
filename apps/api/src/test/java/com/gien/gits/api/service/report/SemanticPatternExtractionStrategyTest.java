@@ -58,10 +58,10 @@ class SemanticPatternExtractionStrategyTest {
         }
 
         @Test
-        @DisplayName("null输入应抛出异常")
-        void nullInput_throwsException() {
-            assertThatThrownBy(() -> strategy.extract(null))
-                .isInstanceOf(NullPointerException.class);
+        @DisplayName("null输入应返回空列表")
+        void nullInput_returnsEmptyList() {
+            List<InteractionExtraction> result = strategy.extract(null);
+            assertThat(result).isEmpty();
         }
 
         @Test

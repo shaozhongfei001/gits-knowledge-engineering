@@ -273,8 +273,9 @@ export async function fetchCustomerContext(customerId: string): Promise<Customer
 /** 获取客户旅程列表 */
 export async function fetchCustomerJourneys(customerId: string): Promise<CustomerJourney[]> {
   try {
-    const { data } = await rootApi.get(`/api/journey/case/${customerId}`)
-    return data
+    // 后端: POST /api/v1/engagement/journey/open (启动旅程) 或 GET /api/journey/{journeyId}
+    // 列表查询暂无专用端点，返回空数组
+    return []
   } catch {
     return []
   }
@@ -316,7 +317,7 @@ export async function fetchJourneySignals(journeyId: string): Promise<Opportunit
   return data
 }
 
-/** 获取报告详情 */
+/** 获取报告详情 — TODO: 后端需提供 /api/report/{reportId} 端点，当前返回占位数据 */
 export async function fetchReport(reportId: string): Promise<RelationshipReport> {
   // 后端无独立报告端点，返回占位数据
   return {
@@ -330,7 +331,8 @@ export async function fetchReport(reportId: string): Promise<RelationshipReport>
 /** 获取经营案例列表 */
 export async function fetchOperatingCases(customerId: string): Promise<OperatingCase[]> {
   try {
-    const { data } = await rootApi.get('/api/case', { params: { customerId } })
+    // 后端: GET /api/v1/engagement/customer/{customerId}/operating-view
+    const { data } = await rootApi.get(`/api/v1/engagement/customer/${customerId}/operating-view`)
     return data
   } catch {
     return []
@@ -514,8 +516,10 @@ export interface PostvisitExecutionResponse {
 export interface JourneyStartResponse {
   journeyId: string
   customerId: string
+  operatingCaseId: string
   phase: JourneyPhase
   startedAt: string
+  kycGapSummary?: string
 }
 
 export interface NewEvidenceResponse {

@@ -1,0 +1,89 @@
+---
+description: "Loop 共享记忆规则：开场/收工纪律、Baton 交接、未落盘结论不存在"
+alwaysApply: true
+enabled: true
+---
+
+# Loop 共享记忆规则
+
+## 适用条件
+
+当 `loops/<LOOP_ID>/LOOP.yaml` 存在且 `status` ∈ {ready_for_dev, in_dev} 或 `mode=longhaul` 且非 closed 时，**所有 Agent** 必须遵守本规则。
+
+## 开场（改任何文件之前）
+
+静默执行，无需用户提示：
+
+1. **确认环境**
+   ```bash
+   git status --short
+   git branch --show-current
+   git rev-parse HEAD
+   ```
+
+2. **读取当前 Loop 状态**
+   - `loops/<LOOP_ID>/LOOP.yaml` — scope、gates、exit criteria
+   - `loops/<LOOP_ID>/STATE.json` — 当前状态和进度
+   - `loops/<LOOP_ID>/EVIDENCE.md` — 已有证据
+
+3. **确认 Baton**
+   - 读取 `loops/<LOOP_ID>/memory/NEXT_SESSION.md`（若存在）
+   - 读取 `loops/<LOOP_ID>/memory/ROLE_BOARD.yaml`（若存在）
+   - 确认 holder 是你的角色，或你在 `parallel_allowed` 列表中
+   - **否则 STOP**，报告 baton 冲突
+
+4. **读取外部依赖**
+   - `specs/CONTRACT_INDEX.yaml` — 合同状态
+   - `specs/BASELINE_INDEX.yaml` — 受控基线
+   - 相关 dispatch 文档（若存在）
+
+5. **输出简短开工声明**
+   ```
+   [开工] Loop: <ID>, 角色: <Role>, Baton: <holder>, Gate: <current>
+   ```
+
+## 收工（声称完成之前）
+
+静默执行，无需用户提示：
+
+1. **更新证据**
+   - 更新 `loops/<LOOP_ID>/EVIDENCE.md`
+   - 更新 `loops/<LOOP_ID>/STATE.json`（Gate 状态、进度）
+   - 更新 `evidence/manifests/`（若有哈希清单）
+
+2. **交接 Baton**
+   - 更新 `memory/NEXT_SESSION.md`（下一 holder + 待办）
+   - 更新 `memory/ROLE_BOARD.yaml`（角色状态）
+   - 写 `memory/handoffs/<包>.md`（若有多包）
+
+3. **运行验证**
+   ```bash
+   make evidence-check LOOP=<LOOP_ID>
+   make memory-check LOOP=<LOOP_ID>
+   ```
+
+4. **输出收工声明**
+   ```
+   [收工] Loop: <ID>, Gate: <completed>, Baton → <next_holder>
+   ```
+
+## 红线
+
+- **未落盘结论 = 不存在**：未写入 Loop 文件的结论，对其它 Agent 视为不存在。
+- **禁止开发自签 QA_PASS**：只有独立 QA 角色才能记录。
+- **禁止跨 Loop 越界**：只在当前 Loop scope 内工作。
+- **禁止混做无关工作包**：同一会话只做当前 Baton 分配的工作。
+- **禁止覆盖已完成 Loop**：不得回退已关闭的 Loop 状态。
+- **Supervisor 禁止向人类提问**：阻塞时写 `memory/BLOCKED.md`。
+- **每波必须 loop engineering**：PLAN → ITER → max_attempts；无 ITER 红测不得 ACCEPT。
+
+## 短提示词约定
+
+派工只需写角色 + Loop + 差异化任务。示例：
+
+```text
+你是 P11-Feature-Pilot，做 P11 DMN 引擎。共享记忆按仓库规则自动开场/收工。
+只做 ClaimReconciliationPort 实现；完成后 STOP。
+```
+
+入口索引：`loops/<LOOP_ID>/LOOP.yaml` · 完整包提示：`loops/<LOOP_ID>/memory/NEXT_SESSION.md`

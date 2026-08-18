@@ -2,6 +2,9 @@
   "dependencies": {
     "docx": "^8.5.0"
   },
+  "overrides": {
+    "nanoid": "^5.1.16"
+  },
   "name": "gits-knowledge-engineering",
   "version": "1.0.0",
   "description": "杭州银行“知识工程体系和智能体基础能力建设项目”工程开发仓库候选骨架。",

@@ -1,0 +1,12 @@
+P20 backend_test evidence
+GATE=backend_test
+COMMAND=make backend-test
+RESULT=PASS
+EXIT_CODE=0
+TIMESTAMP=2026-08-19
+HEAD=52fa6d5644f9c01257ceef64d8a93adf35493a11
+ACTOR=feature_pilot
+mvn verify=BUILD SUCCESS (all modules compile+test; JaCoCo apps/api coverage >=0.80)
+dependency-check-guard=all 15 report(s) PASS (OWASP + scanner completeness)
+APPS_API_LINE_COVERAGE=0.804
+NOTE=P1a nanoid / P1c Connector-J+Log4j / P1d Tomcat+Micrometer / P1b coverage all resolved

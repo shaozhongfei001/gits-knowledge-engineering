@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.CommitmentMapper">
+
+    <resultMap id="commitmentResult" type="com.gien.gits.ontology.Commitment">
+            <constructor>
+                <idArg column="commitment_id" javaType="java.util.UUID"/>
+                <arg column="operating_case_id" javaType="String"/>
+                <arg column="journey_id" javaType="String"/>
+                <arg column="commitment_type" javaType="com.gien.gits.ontology.Commitment$CommitmentType"/>
+                <arg column="content" javaType="String"/>
+                <arg column="owner" javaType="String"/>
+                <arg column="due_date" javaType="java.time.LocalDate"/>
+                <arg column="status" javaType="com.gien.gits.ontology.Commitment$CommitmentStatus"/>
+                <arg column="evidence_ref" javaType="String"/>
+                <arg column="created_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="fulfilled_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="interaction_id" javaType="java.util.UUID"/>
+                <arg column="customer_id" javaType="java.util.UUID"/>
+                <arg column="fulfilled_date" javaType="String"/>
+                <arg column="assigned_to" javaType="String"/>
+                <arg column="verified_by" javaType="String"/>
+                <arg column="recorded_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="updated_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <sql id="commitmentColumns">
+        commitment_id, operating_case_id, journey_id, commitment_type, content, owner,
+        due_date, status, evidence_ref, created_at, fulfilled_at,
+        interaction_id, customer_id, fulfilled_date, assigned_to, verified_by, recorded_at, updated_at
+    </sql>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.Commitment">
+        INSERT INTO commitment (commitment_id, operating_case_id, journey_id, commitment_type,
+                                content, owner, due_date, status, evidence_ref,
+                                created_at, fulfilled_at,
+                                interaction_id, customer_id, fulfilled_date, assigned_to,
+                                verified_by, recorded_at, updated_at)
+        VALUES (#{commitmentId}, #{operatingCaseId}, #{journeyId}, #{commitmentType},
+                #{content}, #{owner}, #{dueDate}, #{status}, #{evidenceRef},
+                #{createdAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+                #{fulfilledAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+                #{interactionId}, #{customerId}, #{fulfilledDate}, #{assignedTo},
+                #{verifiedBy},
+                #{recordedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+                #{updatedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler})
+    </insert>
+
+    <select id="findByCommitmentId" resultMap="commitmentResult">
+        SELECT <include refid="commitmentColumns"/>
+        FROM commitment WHERE commitment_id = #{commitmentId}
+    </select>
+
+    <select id="findByInteractionId" resultMap="commitmentResult">
+        SELECT <include refid="commitmentColumns"/>
+        FROM commitment WHERE interaction_id = #{interactionId}
+        ORDER BY due_date
+    </select>
+
+    <select id="findByCustomerId" resultMap="commitmentResult">
+        SELECT <include refid="commitmentColumns"/>
+        FROM commitment WHERE customer_id = #{customerId}
+        ORDER BY due_date
+    </select>
+
+    <select id="findByStatus" resultMap="commitmentResult">
+        SELECT <include refid="commitmentColumns"/>
+        FROM commitment WHERE status = #{status}
+        ORDER BY due_date
+    </select>
+
+    <select id="findByCommitmentType" resultMap="commitmentResult">
+        SELECT <include refid="commitmentColumns"/>
+        FROM commitment WHERE commitment_type = #{commitmentType}
+        ORDER BY due_date
+    </select>
+
+    <select id="findByOperatingCaseId" resultMap="commitmentResult">
+        SELECT <include refid="commitmentColumns"/>
+        FROM commitment WHERE operating_case_id = #{operatingCaseId}
+        ORDER BY due_date
+    </select>
+
+    <select id="findOverdue" resultMap="commitmentResult">
+        SELECT <include refid="commitmentColumns"/>
+        FROM commitment WHERE status = 'OPEN' AND due_date &lt; CURRENT_DATE
+        ORDER BY due_date
+    </select>
+
+    <select id="findAll" resultMap="commitmentResult">
+        SELECT <include refid="commitmentColumns"/>
+        FROM commitment ORDER BY created_at DESC
+    </select>
+
+    <update id="updateStatus">
+        UPDATE commitment SET status = #{status},
+               verified_by = #{verifiedBy},
+               updated_at = CURRENT_TIMESTAMP
+        WHERE commitment_id = #{commitmentId}
+    </update>
+
+</mapper>

@@ -1,5 +1,6 @@
 package com.gien.gits.api.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,12 @@ public class ClaimController {
         return claimRepo.findById(claimId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    /** 按运营案例ID查询关联主张列表 */
+    @GetMapping("/case/{caseId}")
+    public ResponseEntity<List<Claim>> getClaimsByCase(@PathVariable UUID caseId) {
+        return ResponseEntity.ok(claimRepo.findByCaseId(caseId));
     }
 
     /** 更新主张状态——人工确认推进 */

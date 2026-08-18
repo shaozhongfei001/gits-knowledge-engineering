@@ -9,8 +9,8 @@
 #
 # 机制:
 #   - V1.0: 清空SCENARIO_DATA_ROOT环境变量，应用使用classpath内嵌数据
-#   - V1.1: 设置SCENARIO_DATA_ROOT指向scenario_data目录
-#   - 也可通过symlink方式: /opt/gits/scenario-data → scenario_data-v1.1/
+#   - V1.1: 设置SCENARIO_DATA_ROOT指向scenario/seed目录
+#   - 也可通过symlink方式: /opt/gits/scenario-data → scenario/seed-v1.1/
 #
 # 注意:
 #   - 切换版本后需重启应用
@@ -22,7 +22,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-SCENARIO_DATA_DIR="$PROJECT_ROOT/scenario_data"
+SCENARIO_DATA_DIR="$PROJECT_ROOT/scenario/seed"
 ENV_FILE="$PROJECT_ROOT/.env.scenario"
 
 RED='\033[0;31m'
@@ -38,7 +38,7 @@ log_error() { echo -e "${RED}[ERROR]${NC} $*"; }
 
 check_v11_data() {
     if [ ! -d "$SCENARIO_DATA_DIR" ]; then
-        log_error "V1.1 scenario_data directory not found: $SCENARIO_DATA_DIR"
+        log_error "V1.1 scenario/seed directory not found: $SCENARIO_DATA_DIR"
         return 1
     fi
 
@@ -129,10 +129,10 @@ show_status() {
     echo ""
     log_info "V1.1 data availability:"
     if [ -d "$SCENARIO_DATA_DIR" ]; then
-        log_ok "scenario_data/ directory exists at: $SCENARIO_DATA_DIR"
+        log_ok "scenario/seed/ directory exists at: $SCENARIO_DATA_DIR"
         check_v11_data && log_ok "All critical V1.1 data files present" || log_warn "Some V1.1 data files missing"
     else
-        log_warn "scenario_data/ directory not found"
+        log_warn "scenario/seed/ directory not found"
     fi
 }
 

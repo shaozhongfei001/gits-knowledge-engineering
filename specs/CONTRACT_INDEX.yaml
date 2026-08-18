@@ -118,7 +118,7 @@
       "owner": "data_mapping_owner",
       "compatibility": "versioned_mapping",
       "consumers": ["oracle_mapping_spike", "semantic_runtime", "operational_ontology"],
-      "generated": []
+      "generated": ["generated/data/src-oracle-metric-ontology.v0.1.json"]
     },
     {
       "id": "CTR-DATA-004",
@@ -127,8 +127,102 @@
       "owner": "data_mapping_owner",
       "compatibility": "versioned_mapping",
       "consumers": ["operational_ontology", "semantic_runtime"],
-      "generated": [],
+      "generated": ["generated/data/oracle-seed-claims.v0.1.json"],
       "note": "2505条Oracle元数据种子Claim：175指标+910字段血缘+234对象血缘+1182衍生字段+4风险信号"
+    },
+    {
+      "id": "CTR-V11-001",
+      "kind": "openapi_paths",
+      "authority_source": "specs/openapi/gits-kno-api.openapi.json",
+      "owner": "human_action_owner",
+      "compatibility": "backward_compatible",
+      "consumers": ["api_app", "frontend_bff_adapter"],
+      "generated": ["generated/openapi/gits-kno-api.normalized.json"],
+      "scope": "V1.1 HumanGate: GET /human-gates, GET /human-gates/{gateId}, POST /human-gates/{gateId}/decide; schemas: GateType, HumanGateStatus, GateDecision, HumanGate, HumanGateDecisionRequest"
+    },
+    {
+      "id": "CTR-V11-002",
+      "kind": "openapi_paths",
+      "authority_source": "specs/openapi/gits-kno-api.openapi.json",
+      "owner": "human_action_owner",
+      "compatibility": "backward_compatible",
+      "consumers": ["api_app", "frontend_bff_adapter"],
+      "generated": ["generated/openapi/gits-kno-api.normalized.json"],
+      "scope": "V1.1 CrmWriteback: GET /crm/writeback-commands, GET /crm/writeback-commands/{commandId}, POST /crm/writeback-commands/{commandId}/decide; schemas: CrmWritebackStatus, CrmWritebackCommand, CrmWritebackDecisionRequest"
+    },
+    {
+      "id": "CTR-V11-003",
+      "kind": "openapi_paths",
+      "authority_source": "specs/openapi/gits-kno-api.openapi.json",
+      "owner": "audit_owner",
+      "compatibility": "backward_compatible",
+      "consumers": ["api_app", "frontend_bff_adapter"],
+      "generated": ["generated/openapi/gits-kno-api.normalized.json"],
+      "scope": "V1.1 AuditTrace: GET /audit-trace; schemas: AuditTraceEntry"
+    },
+    {
+      "id": "CTR-V11-004",
+      "kind": "openapi_paths",
+      "authority_source": "specs/openapi/gits-kno-api.openapi.json",
+      "owner": "evidence_owner",
+      "compatibility": "backward_compatible",
+      "consumers": ["api_app", "frontend_bff_adapter"],
+      "generated": ["generated/openapi/gits-kno-api.normalized.json"],
+      "scope": "V1.1 EvidenceVersion: GET /evidences/{evidenceId}/versions; schemas: EvidenceVersion"
+    },
+    {
+      "id": "CTR-KMAP-001",
+      "kind": "json_schema",
+      "authority_source": "specs/knowledge-architecture/schemas/knowledge-map.schema.json",
+      "owner": "knowledge_architecture_owner",
+      "compatibility": "backward_compatible",
+      "consumers": ["knowledge_map_registry", "activation_planner", "agent_orchestrator"],
+      "generated": ["generated/knowledge-architecture/knowledge-map.schema.json"]
+    },
+    {
+      "id": "CTR-ASSET-001",
+      "kind": "json_schema",
+      "authority_source": "specs/knowledge-architecture/schemas/asset-manifest.schema.json",
+      "owner": "asset_governance_owner",
+      "compatibility": "explicit_migration",
+      "consumers": ["asset_registry", "permission_policy", "context_evidence"],
+      "generated": ["generated/knowledge-architecture/asset-manifest.schema.json"]
+    },
+    {
+      "id": "CTR-ACTIVATION-001",
+      "kind": "json_schema",
+      "authority_source": "specs/knowledge-architecture/schemas/activation-contract.schema.json",
+      "owner": "activation_contract_owner",
+      "compatibility": "explicit_migration",
+      "consumers": ["activation_planner", "skill_runtime", "agent_orchestrator"],
+      "generated": ["generated/knowledge-architecture/activation-contract.schema.json"]
+    },
+    {
+      "id": "CTR-ROUTE-001",
+      "kind": "json_schema",
+      "authority_source": "specs/knowledge-architecture/schemas/route-policy.schema.json",
+      "owner": "routing_policy_owner",
+      "compatibility": "backward_compatible",
+      "consumers": ["route_policy_evaluator", "activation_planner"],
+      "generated": ["generated/knowledge-architecture/route-policy.schema.json"]
+    },
+    {
+      "id": "CTR-PLAN-001",
+      "kind": "json_schema",
+      "authority_source": "specs/knowledge-architecture/schemas/activation-plan.schema.json",
+      "owner": "activation_planner_owner",
+      "compatibility": "explicit_migration",
+      "consumers": ["context_evidence", "skill_runtime", "agent_orchestrator", "evaluation"],
+      "generated": ["generated/knowledge-architecture/activation-plan.schema.json"]
+    },
+    {
+      "id": "CTR-SKILL-002",
+      "kind": "json_schema",
+      "authority_source": "specs/knowledge-architecture/schemas/skill-descriptor.schema.json",
+      "owner": "skill_contract_owner",
+      "compatibility": "backward_compatible",
+      "consumers": ["skill_registry", "activation_planner", "agent_orchestrator"],
+      "generated": ["generated/knowledge-architecture/skill-descriptor.schema.json"]
     }
   ]
 }

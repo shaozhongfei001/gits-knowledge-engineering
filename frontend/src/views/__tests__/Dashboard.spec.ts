@@ -8,6 +8,10 @@ vi.mock('../../api/engagement', () => ({
   fetchCustomers: vi.fn(),
 }))
 
+vi.mock('../../api/v11', () => ({
+  fetchHumanGates: vi.fn(),
+}))
+
 const mockCustomers: Customer[] = [
   {
     customerId: 'c1', customerName: '企业A', industry: 'MANUFACTURING',
@@ -37,6 +41,9 @@ const stubs = {
 async function mountDashboard() {
   const { fetchCustomers } = await import('../../api/engagement')
   ;(fetchCustomers as ReturnType<typeof vi.fn>).mockResolvedValue(mockCustomers)
+
+  const { fetchHumanGates } = await import('../../api/v11')
+  ;(fetchHumanGates as ReturnType<typeof vi.fn>).mockResolvedValue([])
 
   const router = createRouter({
     history: createMemoryHistory(),
@@ -91,6 +98,9 @@ describe('Dashboard', () => {
     const { fetchCustomers } = await import('../../api/engagement')
     ;(fetchCustomers as ReturnType<typeof vi.fn>).mockReturnValue(new Promise(() => {}))
 
+    const { fetchHumanGates } = await import('../../api/v11')
+    ;(fetchHumanGates as ReturnType<typeof vi.fn>).mockReturnValue(new Promise(() => {}))
+
     const router = createRouter({
       history: createMemoryHistory(),
       routes: [
@@ -107,6 +117,9 @@ describe('Dashboard', () => {
   it('shows error state on API failure', async () => {
     const { fetchCustomers } = await import('../../api/engagement')
     ;(fetchCustomers as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Network error'))
+
+    const { fetchHumanGates } = await import('../../api/v11')
+    ;(fetchHumanGates as ReturnType<typeof vi.fn>).mockResolvedValue([])
 
     const router = createRouter({
       history: createMemoryHistory(),

@@ -283,12 +283,14 @@ public class EngagementConfig {
     // --- P9 Loop G4+G5: 脚本生成服务 ---
 
     @Bean
+    @ConditionalOnProperty(name = "gits.persistence.mode", havingValue = "jdbc", matchIfMissing = true)
     public JdbcOutreachScriptRepository jdbcOutreachScriptRepository(
             JdbcTemplate jdbcTemplate, ObjectMapper objectMapper) {
         return new JdbcOutreachScriptRepository(jdbcTemplate, objectMapper);
     }
 
     @Bean
+    @ConditionalOnProperty(name = "gits.persistence.mode", havingValue = "jdbc", matchIfMissing = true)
     public JdbcMeetingScriptRepository jdbcMeetingScriptRepository(
             JdbcTemplate jdbcTemplate, ObjectMapper objectMapper) {
         return new JdbcMeetingScriptRepository(jdbcTemplate, objectMapper);
@@ -354,21 +356,25 @@ public class EngagementConfig {
     // --- V1.1 JDBC仓储适配器 (仅新增的，其余在RepositoryConfig中注册) ---
 
     @Bean
+    @ConditionalOnProperty(name = "gits.persistence.mode", havingValue = "jdbc", matchIfMissing = true)
     public WritableOpportunityRepository jdbcOpportunityRepository(JdbcTemplate jdbc, ObjectMapper objectMapper) {
         return new JdbcOpportunityRepository(jdbc, objectMapper);
     }
 
     @Bean
+    @ConditionalOnProperty(name = "gits.persistence.mode", havingValue = "jdbc", matchIfMissing = true)
     public WritableTaskRepository jdbcTaskRepository(JdbcTemplate jdbc, ObjectMapper objectMapper) {
         return new JdbcTaskRepository(jdbc, objectMapper);
     }
 
     @Bean
+    @ConditionalOnProperty(name = "gits.persistence.mode", havingValue = "jdbc", matchIfMissing = true)
     public WritableRecordingConsentRepository jdbcRecordingConsentRepository(JdbcTemplate jdbc) {
         return new JdbcRecordingConsentRepository(jdbc);
     }
 
     @Bean
+    @ConditionalOnProperty(name = "gits.persistence.mode", havingValue = "jdbc", matchIfMissing = true)
     public WritableProductKnowledgeVersionRepository jdbcProductKnowledgeVersionRepository(JdbcTemplate jdbc, ObjectMapper objectMapper) {
         return new JdbcProductKnowledgeVersionRepository(jdbc, objectMapper);
     }

@@ -1,0 +1,140 @@
+---
+description: "集成工程师规范：前后端契约漂移检查、联调前置条件、合同兼容性验证"
+alwaysApply: false
+globs: "specs/**,generated/**,frontend/src/api/**"
+enabled: true
+---
+
+# 集成工程师规范
+
+## 1. 合同漂移检查
+
+### 检查时机
+
+- 每次修改 `specs/openapi/` 下的合同文件后。
+- 每次修改 `frontend/src/api/` 下的类型定义后。
+- 每次 Loop Gate 完成时。
+- 每次 PR 合并前。
+
+### 检查方法
+
+```bash
+# 1. 重新生成制品
+make generate
+
+# 2. 校验哈希一致性
+make check
+
+# 3. 合同兼容性验证
+make contract-verify
+
+# 4. 与基线比较
+make contract-diff BASELINE=origin/main
+```
+
+### 漂移信号
+
+| 信号 | 严重性 | 处理 |
+|------|--------|------|
+| 前端类型字段与 OpenAPI 不一致 | 🔴 高 | 立即修复，阻塞发布 |
+| OpenAPI 有字段但前端未使用 | 🟡 中 | 评估是否需要使用 |
+| 前端有字段但 OpenAPI 未定义 | 🔴 高 | 立即修复，删除前端多余字段 |
+| 合同哈希不一致 | 🔴 高 | 重新生成并确认 |
+
+## 2. 联调前置条件
+
+### 后端就绪检查
+
+- [ ] OpenAPI 合同已更新并提交。
+- [ ] `make generate` 成功。
+- [ ] `make check` 哈希一致。
+- [ ] 后端测试全部通过（`make backend-test`）。
+- [ ] springdoc 可访问（`/api-docs`）。
+
+### 前端就绪检查
+
+- [ ] API 类型定义已同步更新。
+- [ ] `vue-tsc --noEmit` 类型检查通过。
+- [ ] 前端测试全部通过（`make frontend-test`）。
+- [ ] Vite 代理配置正确（`/api` → `localhost:8080`）。
+
+### 联调启动
+
+```bash
+# 终端 1：后端
+./mvnw spring-boot:run -pl apps/api
+
+# 终端 2：前端
+cd frontend && npm run dev
+
+# 终端 3：验证
+make smoke-test
+```
+
+## 3. 合同兼容性策略
+
+每种合同类型有对应的兼容性策略（定义在 `specs/CONTRACT_INDEX.yaml`）：
+
+| 策略 | 含义 | 示例 |
+|------|------|------|
+| `backward_compatible` | 只允许向后兼容变更 | 新增可选字段、新增端点 |
+| `explicit_migration` | 变更需要显式迁移 | LinkML schema 变更需要 Flyway 迁移 |
+| `versioned_decision` | 版本化决策 | DMN 规则版本化管理 |
+| `versioned_mapping` | 版本化映射 | R2RML 映射版本化管理 |
+| `no_silent_breaking_change` | 禁止静默破坏 | Action schema 变更必须通知消费者 |
+
+### 破坏性变更判定
+
+以下变更属于破坏性变更（无论哪种策略）：
+- 删除字段或端点。
+- 重命名字段或端点。
+- 修改字段类型。
+- 将可选字段变为必填。
+- 修改枚举值（删除或重命名）。
+
+### 兼容性变更
+
+以下变更通常是兼容的：
+- 新增可选字段。
+- 新增端点。
+- 新增枚举值。
+- 将必填字段变为可选。
+
+## 4. 合同变更流程
+
+```
+1. 修改 specs/ 下的权威源
+2. make generate（重新生成制品）
+3. make check（校验哈希一致性）
+4. 更新 CONTRACT_INDEX.yaml（如新增/变更合同）
+5. 同步前端类型定义
+6. make contract-verify（合同合规验证）
+7. 更新实现代码
+8. 全量测试（make verify）
+```
+
+## 5. 事件合同管理
+
+- 事件定义在 `specs/events/domain-events.asyncapi.json`。
+- 事件类型复用 `DomainEventType` 常量。
+- 新增事件必须：
+  1. 在 AsyncAPI 合同中定义。
+  2. 在 `DomainEventType` 中添加常量。
+  3. 在 `DomainEventPublisher` Port 中发布。
+  4. 更新 `CONTRACT_INDEX.yaml`。
+
+## 6. 语义合同管理
+
+- LinkML 领域模型：`specs/semantic/gits-core.linkml.yaml`。
+- OWL 本体：`specs/semantic/gits-core.owl.ttl`。
+- 生成物：
+  - `generated/semantic/gits-core.schema.json`（JSON Schema）
+  - `generated/semantic/gits-core.shacl.ttl`（SHACL 形状）
+- 变更需要显式迁移（`explicit_migration` 策略）。
+
+## 7. 跨团队协作
+
+- 后端变更合同后，必须通知前端同步更新。
+- 前端发现类型不一致时，立即报告后端确认。
+- 合同变更必须关联 Loop ID 和 ADR。
+- 禁止绕过合同直接在实现代码中协商接口。

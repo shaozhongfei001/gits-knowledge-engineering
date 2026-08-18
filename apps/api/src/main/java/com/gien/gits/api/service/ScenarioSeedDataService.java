@@ -86,6 +86,10 @@ public class ScenarioSeedDataService {
     @PostConstruct
     @Transactional
     public void init() {
+        if (isLoaded()) {
+            log.info("Seed data already loaded, skipping auto-load");
+            return;
+        }
         try {
             loadAll();
         } catch (Exception e) {
@@ -115,50 +119,75 @@ public class ScenarioSeedDataService {
 
     /**
      * V1.1数据加载路径 — 从外部文件系统读取
+     * <p>
+     * 每个步骤独立容错，避免单步主键冲突导致后续步骤全部跳过
      */
     private void loadFromV11Data() {
         V11ScenarioDataLoader loader = new V11ScenarioDataLoader(
             new V11ScenarioDataReader(dataProvider));
 
-        loader.loadCustomers().forEach(customerRepo::save);
-        loader.loadLegalEntities().forEach(legalEntityRepo::save);
-        loader.loadGroupRelationships().forEach(groupRelRepo::save);
-        loader.loadBankRelationshipSnapshot().ifPresent(bankRelRepo::save);
-        loader.loadCreditFacilities().forEach(creditFacilityRepo::save);
-        loader.loadProductKnowledgeCards().forEach(productCatalogRepo::save);
-        loadPolicyRules();  // 政策规则暂保留硬编码（V1.1无对应数据文件）
-        loader.loadExternalEvents().forEach(externalEventRepo::save);
-        loader.loadKycGapProfile().ifPresent(kycGapRepo::save);
-        loader.loadHistoricalInteractions().forEach(i -> {
+        loadSafely("v11-customers", () -> loader.loadCustomers().forEach(customerRepo::save));
+        loadSafely("v11-legalEntities", () -> loader.loadLegalEntities().forEach(legalEntityRepo::save));
+        loadSafely("v11-groupRelationships", () -> loader.loadGroupRelationships().forEach(groupRelRepo::save));
+        loadSafely("v11-bankRelationship", () -> loader.loadBankRelationshipSnapshot().ifPresent(bankRelRepo::save));
+        loadSafely("v11-creditFacilities", () -> loader.loadCreditFacilities().forEach(creditFacilityRepo::save));
+        loadSafely("v11-productCatalog", () -> loader.loadProductKnowledgeCards().forEach(productCatalogRepo::save));
+        loadSafely("policyRules", this::loadPolicyRules);  // 政策规则暂保留硬编码（V1.1无对应数据文件）
+        loadSafely("v11-externalEvents", () -> loader.loadExternalEvents().forEach(this::saveExternalEventSafely));
+        loadSafely("v11-kycGapProfile", () -> loader.loadKycGapProfile().ifPresent(kycGapRepo::save));
+        loadSafely("v11-historicalInteractions", () -> loader.loadHistoricalInteractions().forEach(i -> {
             // 历史交互暂存为Interaction，不映射为Transaction
-        });
+        }));
 
         log.info("[V11] Loaded data from external source: {}", dataProvider.getRootDescription());
     }
 
     /**
      * V1.0数据加载路径 — 使用硬编码数据（classpath fallback）
+     * <p>
+     * 每个步骤独立容错，避免单步主键冲突导致后续步骤全部跳过
      */
     private void loadFromV10Hardcoded() {
-        loadCustomerMaster();
-        loadLegalEntities();
-        loadGroupRelationships();
-        loadBankRelationship();
-        loadCreditFacilities();
-        loadProductCatalog();
-        loadPolicyRules();
-        loadExternalEvents();
-        loadKycGapProfile();
-        loadTransactions();
+        loadSafely("customerMaster", this::loadCustomerMaster);
+        loadSafely("legalEntities", this::loadLegalEntities);
+        loadSafely("groupRelationships", this::loadGroupRelationships);
+        loadSafely("bankRelationship", this::loadBankRelationship);
+        loadSafely("creditFacilities", this::loadCreditFacilities);
+        loadSafely("productCatalog", this::loadProductCatalog);
+        loadSafely("policyRules", this::loadPolicyRules);
+        loadSafely("externalEvents", this::loadExternalEvents);
+        loadSafely("kycGapProfile", this::loadKycGapProfile);
+        loadSafely("transactions", this::loadTransactions);
+    }
+
+    /**
+     * 安全加载：捕获单步异常，不阻断后续步骤
+     */
+    private void loadSafely(String stepName, Runnable loader) {
+        try {
+            loader.run();
+        } catch (Exception e) {
+            log.warn("Seed data step '{}' skipped (may already exist): {}", stepName, e.getMessage());
+        }
     }
 
     /**
      * 检查种子数据是否已加载
+     * <p>
+     * 同时检查客户主档和外部事件，避免部分加载时跳过重试
      */
     public boolean isLoaded() {
-        Integer count = jdbcTemplate.queryForObject(
+        Integer customerCount = jdbcTemplate.queryForObject(
             "SELECT COUNT(*) FROM customer WHERE customer_id = 'CUST-CORP-0001'", Integer.class);
-        return count != null && count > 0;
+        Integer eventCount = jdbcTemplate.queryForObject(
+            "SELECT COUNT(*) FROM external_event", Integer.class);
+        boolean customerLoaded = customerCount != null && customerCount > 0;
+        boolean eventsLoaded = eventCount != null && eventCount > 0;
+        if (customerLoaded && !eventsLoaded) {
+            log.warn("Customer data loaded but external events missing — will retry full load");
+            return false;
+        }
+        return customerLoaded && eventsLoaded;
     }
 
     private void loadCustomerMaster() {
@@ -311,7 +340,7 @@ public class ScenarioSeedDataService {
     }
 
     private void loadExternalEvents() {
-        externalEventRepo.save(new ExternalEvent(
+        saveExternalEventSafely(new ExternalEvent(
             "E-EXT-001", LocalDate.of(2026, 6, 20),
             ExternalEvent.SourceType.OFFICIAL_ANNOUNCEMENT,
             "浙江省发改委项目备案公示", "华东精工智能制造有限公司",
@@ -323,7 +352,7 @@ public class ScenarioSeedDataService {
             "不得将项目备案等同于授信需求，需进一步确认客户实际意愿",
             "EV-EXT-001"));
 
-        externalEventRepo.save(new ExternalEvent(
+        saveExternalEventSafely(new ExternalEvent(
             "E-EXT-002", LocalDate.of(2026, 6, 25),
             ExternalEvent.SourceType.INDUSTRY,
             "中国机械工业联合会", "专用设备制造业",
@@ -335,7 +364,7 @@ public class ScenarioSeedDataService {
             "行业景气不等于个体企业景气，需结合客户具体情况",
             "EV-EXT-002"));
 
-        externalEventRepo.save(new ExternalEvent(
+        saveExternalEventSafely(new ExternalEvent(
             "E-EXT-003", LocalDate.of(2026, 7, 1),
             ExternalEvent.SourceType.NEWS,
             "企查查", "浙江恒远钢材贸易有限公司",
@@ -347,7 +376,7 @@ public class ScenarioSeedDataService {
             "供应商风险不直接等于客户风险，需评估替代供应商",
             "EV-EXT-003"));
 
-        externalEventRepo.save(new ExternalEvent(
+        saveExternalEventSafely(new ExternalEvent(
             "E-EXT-004", LocalDate.of(2026, 7, 5),
             ExternalEvent.SourceType.NEWS,
             "杭州日报", "华东精工装备集团有限公司",
@@ -359,7 +388,45 @@ public class ScenarioSeedDataService {
             "政策优惠不等于实际融资，需确认客户是否了解相关政策",
             "EV-EXT-004"));
 
-        log.info("Loaded external events: 4 records");
+        // V1.1新增：监管动态事件
+        saveExternalEventSafely(new ExternalEvent(
+            "E-EXT-005", LocalDate.of(2026, 7, 8),
+            ExternalEvent.SourceType.REGULATORY,
+            "银保监会", "制造业企业",
+            "银保监会发布制造业中长期贷款支持政策",
+            "银保监会发布通知，鼓励银行加大对制造业中长期贷款投放，对专精特新企业给予优惠利率支持。",
+            ExternalEvent.Confidence.HIGH, ExternalEvent.Reliability.VERIFIED, true,
+            List.of("政策利好", "融资便利", "利率优惠"),
+            "政策利好可能降低客户融资成本",
+            "政策支持不等于自动获批，需按正常流程申请",
+            "EV-EXT-005"));
+
+        // V1.1新增：社交媒体舆情事件
+        saveExternalEventSafely(new ExternalEvent(
+            "E-EXT-006", LocalDate.of(2026, 7, 10),
+            ExternalEvent.SourceType.SOCIAL_MEDIA,
+            "微博财经", "华东精工装备集团有限公司",
+            "华东精工集团智能制造二期项目引发行业关注",
+            "多家财经自媒体关注华东精工智能制造二期项目，认为其可能成为行业标杆。",
+            ExternalEvent.Confidence.LOW, ExternalEvent.Reliability.UNVERIFIED, false,
+            List.of("品牌曝光", "行业关注"),
+            "舆情关注可能提升客户品牌影响力",
+            "社交媒体信息未经核实，不得作为业务决策依据",
+            "EV-EXT-006"));
+
+        log.info("Loaded external events: 6 records (V1.0: 4 + V1.1: 2)");
+    }
+
+    /**
+     * 安全保存外部事件，忽略重复键冲突
+     */
+    private void saveExternalEventSafely(ExternalEvent event) {
+        try {
+            externalEventRepo.save(event);
+        } catch (Exception e) {
+            log.debug("External event already exists, skipping: eventId={}, error={}",
+                event.eventId(), e.getMessage());
+        }
     }
 
     private void loadKycGapProfile() {

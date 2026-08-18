@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.FactReconciliationCaseMapper">
+
+    <resultMap id="factReconciliationResultMap"
+               type="com.gien.gits.ontology.FactReconciliationCase">
+            <constructor>
+                <idArg column="reconciliation_id" javaType="String"/>
+                <arg column="case_id" javaType="String"/>
+                <arg column="topic" javaType="String"/>
+                <arg column="structured_fact" javaType="String"/>
+                <arg column="interaction_claim" javaType="String"/>
+                <arg column="external_fact" javaType="String"/>
+                <arg column="ontology_distinction" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+                <arg column="correct_judgment" javaType="String"/>
+                <arg column="wrong_output_examples" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler"/>
+                <arg column="next_action" javaType="String"/>
+                <arg column="status" javaType="com.gien.gits.ontology.ReconciliationStatus"/>
+                <arg column="created_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="updated_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.FactReconciliationCase">
+        INSERT INTO fact_reconciliation_case (reconciliation_id, case_id, topic, structured_fact,
+                                              interaction_claim, external_fact, ontology_distinction,
+                                              correct_judgment, wrong_output_examples, next_action,
+                                              status, created_at, updated_at)
+        VALUES (#{reconciliationId}, #{caseId}, #{topic}, #{structuredFact},
+                #{interactionClaim}, #{externalFact},
+                #{ontologyDistinction, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+                #{correctJudgment},
+                #{wrongOutputExamples, typeHandler=com.gien.gits.adapter.persistence.common.handler.StringListJsonTypeHandler},
+                #{nextAction}, #{status},
+                #{createdAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+                #{updatedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler})
+    </insert>
+
+    <select id="findByReconciliationId" resultMap="factReconciliationResultMap">
+        SELECT reconciliation_id, case_id, topic, structured_fact, interaction_claim, external_fact,
+               ontology_distinction, correct_judgment, wrong_output_examples, next_action,
+               status, created_at, updated_at
+        FROM fact_reconciliation_case
+        WHERE reconciliation_id = #{reconciliationId}
+    </select>
+
+    <select id="findByCaseId" resultMap="factReconciliationResultMap">
+        SELECT reconciliation_id, case_id, topic, structured_fact, interaction_claim, external_fact,
+               ontology_distinction, correct_judgment, wrong_output_examples, next_action,
+               status, created_at, updated_at
+        FROM fact_reconciliation_case
+        WHERE case_id = #{caseId}
+    </select>
+
+    <update id="updateStatus">
+        UPDATE fact_reconciliation_case
+        SET status = #{status}, updated_at = CURRENT_TIMESTAMP
+        WHERE reconciliation_id = #{reconciliationId}
+    </update>
+
+</mapper>

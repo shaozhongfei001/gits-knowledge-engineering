@@ -1,0 +1,152 @@
+{
+  "$id": "https://gientech.com/gits/kno/schemas/activation-plan.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "context": {
+      "properties": {
+        "maxTokens": {
+          "type": "integer"
+        },
+        "trimPolicy": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "maxTokens",
+        "trimPolicy"
+      ],
+      "type": "object"
+    },
+    "permissionDecisionId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "planId": {
+      "type": "string"
+    },
+    "routeMode": {
+      "enum": [
+        "MAP_FIRST",
+        "ONTOLOGY_FIRST",
+        "MAP_THEN_ONTOLOGY",
+        "ONTOLOGY_THEN_MAP"
+      ],
+      "type": "string"
+    },
+    "ruleChecks": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schemaVersion": {
+      "const": "1.0.0",
+      "type": "string"
+    },
+    "selectedAssets": {
+      "items": {
+        "properties": {
+          "assetId": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "sequence": {
+            "type": "integer"
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "assetId",
+          "version",
+          "required",
+          "sequence"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "semanticQueries": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "skills": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "taskId": {
+      "type": "string"
+    },
+    "taskType": {
+      "type": "string"
+    },
+    "trace": {
+      "properties": {
+        "createdAt": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "planHash": {
+          "type": "string"
+        },
+        "plannerVersion": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "planHash",
+        "createdAt",
+        "plannerVersion"
+      ],
+      "type": "object"
+    },
+    "versions": {
+      "properties": {
+        "activationContract": {
+          "type": "string"
+        },
+        "knowledgeMap": {
+          "type": "string"
+        },
+        "ontology": {
+          "type": "string"
+        },
+        "routePolicy": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "knowledgeMap",
+        "routePolicy",
+        "activationContract",
+        "ontology"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "planId",
+    "taskId",
+    "taskType",
+    "routeMode",
+    "versions",
+    "selectedAssets",
+    "semanticQueries",
+    "ruleChecks",
+    "skills",
+    "context",
+    "permissionDecisionId",
+    "trace"
+  ],
+  "title": "GITS Replayable Activation Plan",
+  "type": "object"
+}

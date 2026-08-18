@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "AC-PREVISIT-001",
+  "version": "0.1.0",
+  "taskType": "PRE_VISIT_PREPARATION",
+  "routeMode": "ONTOLOGY_THEN_MAP",
+  "preconditions": {
+    "requiredInputs": ["callerId", "customerId", "operatingCaseId", "visitObjective", "asOf"],
+    "requiredRoles": ["RELATIONSHIP_MANAGER"],
+    "permissionDecisionRequired": true
+  },
+  "activations": [
+    {"assetId": "ASSET-DATA-CUSTOMER-PROFILE", "required": true, "purpose": "客户和管户事实", "sequence": 1},
+    {"assetId": "ASSET-KNOW-CUSTOMER-ONTOLOGY", "required": true, "purpose": "主体关系与状态查询", "sequence": 2},
+    {"assetId": "ASSET-DATA-CREDIT-FACILITY", "required": true, "purpose": "额度和融资事实", "sequence": 3},
+    {"assetId": "ASSET-DATA-INTERACTION-HISTORY", "required": true, "purpose": "历史原话和未决事项", "sequence": 4},
+    {"assetId": "ASSET-DATA-TRANSACTION-SUMMARY", "required": false, "purpose": "本行经营变化", "sequence": 5},
+    {"assetId": "ASSET-DATA-EXTERNAL-EVENT", "required": false, "purpose": "行业与企业外部信号", "sequence": 6},
+    {"assetId": "ASSET-KNOW-KYC-QUESTION-LIBRARY", "required": true, "purpose": "未知对象问题计划", "sequence": 7},
+    {"assetId": "ASSET-KNOW-PRODUCT-CARDS", "required": false, "purpose": "定向产品知识", "sequence": 8},
+    {"assetId": "ASSET-KNOW-VISIT-SOP", "required": false, "purpose": "访前和离场作业约束", "sequence": 9}
+  ],
+  "semanticQueries": ["SQ-CUSTOMER-RELATIONSHIP", "SQ-RELATED-LEGAL-ENTITIES", "SQ-KYC-GAPS", "SQ-OPEN-COMMITMENTS", "SQ-ACTIVE-PRODUCT-VERSIONS"],
+  "ruleChecks": ["CALLER_SCOPE_ALLOWED", "CLAIM_NOT_FACT", "SIGNAL_NOT_OPPORTUNITY", "PRODUCT_VERSION_ACTIVE"],
+  "skills": ["SP-02", "SP-05", "SP-15", "SP-10"],
+  "context": {"maxTokens": 12000, "priorityOrder": ["VERIFIED_FACT", "HUMAN_CONFIRMED", "CONFLICT", "UNKNOWN", "KNOWLEDGE", "SIGNAL"], "trimPolicy": "CONTRACT_PRIORITY"},
+  "humanGates": ["HG-B01", "HG-C01", "HG-D01"],
+  "failurePolicy": "FAIL_CLOSED"
+}

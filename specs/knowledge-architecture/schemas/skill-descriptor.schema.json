@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gientech.com/gits/kno/schemas/skill-descriptor.json",
+  "title": "GITS Governed Skill Descriptor",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "skillId", "name", "version", "owner", "status", "implementationType", "inputs", "outputs", "assetDependencies", "semanticDependencies", "ruleDependencies", "humanGatePolicy", "sideEffectPolicy"],
+  "properties": {
+    "schemaVersion": {"type": "string", "const": "1.0.0"},
+    "skillId": {"type": "string", "pattern": "^SP-[A-Z0-9-]+$"},
+    "name": {"type": "string"},
+    "version": {"type": "string"},
+    "owner": {"type": "string"},
+    "status": {"type": "string", "enum": ["DRAFT", "VALIDATION", "ACTIVE", "RETIRED"]},
+    "implementationType": {"type": "string", "enum": ["RULE", "MODEL", "RULE_MODEL", "WORKFLOW"]},
+    "inputs": {"type": "array", "items": {"type": "string"}},
+    "outputs": {"type": "array", "items": {"type": "string"}},
+    "assetDependencies": {"type": "array", "items": {"type": "string"}},
+    "semanticDependencies": {"type": "array", "items": {"type": "string"}},
+    "ruleDependencies": {"type": "array", "items": {"type": "string"}},
+    "humanGatePolicy": {"type": "string", "enum": ["NONE", "CONDITIONAL", "REQUIRED"]},
+    "sideEffectPolicy": {"type": "string", "enum": ["NONE", "PROPOSE_ONLY", "CONTROLLED_ACTION"]}
+  }
+}

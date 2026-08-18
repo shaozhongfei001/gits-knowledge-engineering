@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.InteractionMapper">
+
+    <!-- ── Interaction row (flat, no nested objects) ── -->
+
+    <resultMap id="interactionRowResult" type="com.gien.gits.adapter.persistence.foundation.ontology.dto.InteractionRow">
+            <constructor>
+                <idArg column="interaction_id" javaType="java.util.UUID"/>
+                <arg column="case_id" javaType="java.util.UUID"/>
+                <arg column="journey_id" javaType="java.util.UUID"/>
+                <arg column="interaction_type" javaType="com.gien.gits.ontology.Interaction$InteractionType"/>
+                <arg column="direction" javaType="com.gien.gits.ontology.Interaction$Direction"/>
+                <arg column="channel" javaType="com.gien.gits.ontology.Channel"/>
+                <arg column="initiator_id" javaType="String"/>
+                <arg column="initiator_role" javaType="com.gien.gits.ontology.Interaction$Participant$Role"/>
+                <arg column="initiator_display_name" javaType="String"/>
+                <arg column="content_summary" javaType="String"/>
+                <arg column="produced_claim_ids" javaType="java.util.List"
+                    typeHandler="com.gien.gits.adapter.persistence.common.handler.UuidListJsonTypeHandler"/>
+                <arg column="outcome" javaType="com.gien.gits.ontology.Interaction$InteractionOutcome"/>
+                <arg column="occurred_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="ended_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+                <arg column="source_hash" javaType="String"/>
+                <arg column="source_uri" javaType="String"/>
+                <arg column="source_version" javaType="String"/>
+                <arg column="recorded_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <!-- ── Participant row ── -->
+
+    <resultMap id="participantRowResult" type="com.gien.gits.adapter.persistence.foundation.ontology.dto.ParticipantRow">
+            <constructor>
+                <idArg column="interaction_id" javaType="java.util.UUID"/>
+                <arg column="participant_id" javaType="String"/>
+                <arg column="participant_role" javaType="com.gien.gits.ontology.Interaction$Participant$Role"/>
+                <arg column="display_name" javaType="String"/>
+            </constructor>
+    </resultMap>
+
+    <!-- ── INSERT: main interaction row ── -->
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.Interaction">
+        INSERT INTO interaction (
+            interaction_id, case_id, journey_id, interaction_type, direction, channel,
+            content_summary, outcome,
+            initiator_id, initiator_role, initiator_display_name,
+            produced_claim_ids, occurred_at, ended_at, source_hash,
+            source_uri, source_version, recorded_at
+        ) VALUES (
+            #{interactionId}, #{caseId}, #{journeyId},
+            #{type}, #{direction}, #{channel},
+            #{contentSummary}, #{outcome},
+            #{initiator.participantId}, #{initiator.role}, #{initiator.displayName},
+            #{producedClaimIds, typeHandler=com.gien.gits.adapter.persistence.common.handler.UuidListJsonTypeHandler},
+            #{occurredAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{endedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler},
+            #{sourceHash},
+            COALESCE(#{sourceUri}, ''),
+            COALESCE(#{sourceVersion}, ''),
+            COALESCE(#{recordedAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}, CURRENT_TIMESTAMP)
+        )
+    </insert>
+
+    <!-- ── INSERT: single participant ── -->
+
+    <insert id="insertParticipant">
+        INSERT INTO interaction_participant (interaction_id, participant_id, participant_role, display_name)
+        VALUES (#{interactionId}, #{participant.participantId}, #{participant.role}, #{participant.displayName})
+    </insert>
+
+    <!-- ── SELECT: find interaction row by id ── -->
+
+    <select id="findRowById" resultMap="interactionRowResult">
+        SELECT interaction_id, case_id, journey_id, interaction_type, direction, channel,
+               initiator_id, initiator_role, initiator_display_name,
+               content_summary, produced_claim_ids, outcome,
+               occurred_at, ended_at, source_hash,
+               source_uri, source_version, recorded_at
+        FROM interaction
+        WHERE interaction_id = #{interactionId}
+    </select>
+
+    <!-- ── SELECT: find interaction rows by case_id ── -->
+
+    <select id="findRowsByCaseId" resultMap="interactionRowResult">
+        SELECT interaction_id, case_id, journey_id, interaction_type, direction, channel,
+               initiator_id, initiator_role, initiator_display_name,
+               content_summary, produced_claim_ids, outcome,
+               occurred_at, ended_at, source_hash,
+               source_uri, source_version, recorded_at
+        FROM interaction
+        WHERE case_id = #{caseId}
+        ORDER BY occurred_at DESC
+    </select>
+
+    <!-- ── SELECT: find interaction rows by journey_id ── -->
+
+    <select id="findRowsByJourneyId" resultMap="interactionRowResult">
+        SELECT interaction_id, case_id, journey_id, interaction_type, direction, channel,
+               initiator_id, initiator_role, initiator_display_name,
+               content_summary, produced_claim_ids, outcome,
+               occurred_at, ended_at, source_hash,
+               source_uri, source_version, recorded_at
+        FROM interaction
+        WHERE journey_id = #{journeyId}
+        ORDER BY occurred_at DESC
+    </select>
+
+    <!-- ── SELECT: find participants by interaction_id ── -->
+
+    <select id="findParticipantsByInteractionId" resultMap="participantRowResult">
+        SELECT interaction_id, participant_id, participant_role, display_name
+        FROM interaction_participant
+        WHERE interaction_id = #{interactionId}
+    </select>
+
+</mapper>

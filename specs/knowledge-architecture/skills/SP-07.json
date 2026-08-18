@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0.0",
+  "skillId": "SP-07",
+  "name": "一致性与证据充分度",
+  "version": "1.1.0-p20",
+  "owner": "evidence_owner",
+  "status": "VALIDATION",
+  "implementationType": "RULE_MODEL",
+  "inputs": ["EvidenceBundle", "candidateClaim"],
+  "outputs": ["reconciliationStatus", "interpretationOptions", "unknowns", "conflicts"],
+  "assetDependencies": ["ASSET-KNOW-EVIDENCE-POLICY", "ASSET-KNOW-CLAIM-RECONCILIATION"],
+  "semanticDependencies": ["SQ-CLAIM-SUBJECT-RELATIONS", "SQ-CREDIT-AND-PROJECT-AMOUNTS"],
+  "ruleDependencies": ["CLAIM_NOT_FACT", "AVAILABLE_CREDIT_NOT_NEW_NEED", "PROJECT_NOT_BORROWER"],
+  "humanGatePolicy": "REQUIRED",
+  "sideEffectPolicy": "NONE"
+}

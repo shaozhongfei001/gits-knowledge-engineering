@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gien.gits.adapter.persistence.foundation.ontology.mapper.TransactionMapper">
+
+    <resultMap id="transactionResult" type="com.gien.gits.ontology.Transaction">
+            <constructor>
+                <idArg column="id" javaType="java.util.UUID"/>
+                <arg column="transaction_id" javaType="String"/>
+                <arg column="customer_id" javaType="String"/>
+                <arg column="account_id" javaType="String"/>
+                <arg column="transaction_type" javaType="com.gien.gits.ontology.Transaction$TransactionType"/>
+                <arg column="amount" javaType="java.math.BigDecimal"/>
+                <arg column="currency" javaType="String"/>
+                <arg column="counterparty" javaType="String"/>
+                <arg column="counterparty_industry" javaType="String"/>
+                <arg column="description" javaType="String"/>
+                <arg column="transaction_date" javaType="java.time.LocalDate"/>
+                <arg column="created_at" javaType="java.time.Instant"
+                    typeHandler="com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler"/>
+            </constructor>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.gien.gits.ontology.Transaction"
+            useGeneratedKeys="false">
+        INSERT INTO transaction (
+            id, transaction_id, customer_id, account_id, transaction_type,
+            amount, currency, counterparty, counterparty_industry, description,
+            transaction_date, created_at
+        ) VALUES (
+            #{id}, #{transactionId}, #{customerId}, #{accountId},
+            #{transactionType},
+            #{amount}, #{currency}, #{counterparty}, #{counterpartyIndustry}, #{description},
+            #{transactionDate},
+            #{createdAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+        )
+    </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO transaction (
+            id, transaction_id, customer_id, account_id, transaction_type,
+            amount, currency, counterparty, counterparty_industry, description,
+            transaction_date, created_at
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.id}, #{item.transactionId}, #{item.customerId}, #{item.accountId},
+                #{item.transactionType},
+                #{item.amount}, #{item.currency}, #{item.counterparty}, #{item.counterpartyIndustry}, #{item.description},
+                #{item.transactionDate},
+                #{item.createdAt, typeHandler=com.gien.gits.adapter.persistence.common.typehandler.InstantTypeHandler}
+            )
+        </foreach>
+    </insert>
+
+    <select id="findById" resultMap="transactionResult">
+        SELECT id, transaction_id, customer_id, account_id, transaction_type,
+               amount, currency, counterparty, counterparty_industry, description,
+               transaction_date, created_at
+        FROM transaction WHERE id = #{id}
+    </select>
+
+    <select id="findByCustomerId" resultMap="transactionResult">
+        SELECT id, transaction_id, customer_id, account_id, transaction_type,
+               amount, currency, counterparty, counterparty_industry, description,
+               transaction_date, created_at
+        FROM transaction WHERE customer_id = #{customerId} ORDER BY transaction_date DESC
+    </select>
+
+    <select id="findByCustomerIdAndDateRange" resultMap="transactionResult">
+        SELECT id, transaction_id, customer_id, account_id, transaction_type,
+               amount, currency, counterparty, counterparty_industry, description,
+               transaction_date, created_at
+        FROM transaction
+        WHERE customer_id = #{customerId}
+          AND transaction_date BETWEEN #{startDate} AND #{endDate}
+        ORDER BY transaction_date DESC
+    </select>
+
+    <select id="findRecentByCustomerId" resultMap="transactionResult">
+        SELECT id, transaction_id, customer_id, account_id, transaction_type,
+               amount, currency, counterparty, counterparty_industry, description,
+               transaction_date, created_at
+        FROM transaction WHERE customer_id = #{customerId}
+        ORDER BY transaction_date DESC LIMIT #{limit}
+    </select>
+
+</mapper>

@@ -62,7 +62,7 @@ def check_dmn() -> None:
 
 
 def check_linkml() -> None:
-    import yaml  # PyYAML
+    import yaml  # 导入 PyYAML（语义规则门禁的 YAML 解析依赖）
 
     with LINKML_YAML.open("r", encoding="utf-8") as fh:
         doc = yaml.safe_load(fh)
