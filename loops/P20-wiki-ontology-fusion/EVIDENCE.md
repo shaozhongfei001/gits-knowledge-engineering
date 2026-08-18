@@ -223,3 +223,27 @@ CLAIM_SCOPE=
 - 全反应堆 `mvn -q compile` → EXIT 0；`make check` → PASS
 
 状态：DEV_SELF_CHECK（独立 QA 尚未签署，QA_PASS 不由此记录）。
+
+---
+
+## EVIDENCE_ID: EV-P20-QA-008（独立 QA 交叉评审）
+
+```text
+EVIDENCE_ID=EV-P20-QA-008
+GATE=independent_qa_review
+ACTOR=independent_qa（独立评审 Agent，只读）
+TIMESTAMP=2026-08-18
+BASE_COMMIT=78e5372
+REVIEW_VERDICT=PASS_WITH_ISSUES
+BLOCKERS=（无）
+MAJOR=（无）
+MINOR=5（MINOR-2 路由歧义已修复；其余记录为 refinement）
+EVIDENCE_FILE=loops/P20-wiki-ontology-fusion/evidence/qa-review/qa-review-report.md
+CLAIM_SCOPE=
+  - 独立只读评审：合同合规/分层/fail-closed/测试/越界/证据/路径安全 均 PASS
+  - 无阻断 Owner 授权的 BLOCKER/MAJOR
+  - 协调阻断：backend_test（基线 OWASP npm nanoid + apps/api 覆盖率）需治理后才可
+    ready_for_independent_qa（loop_guard 强制 all gates pass）
+```
+
+状态：DEV_SELF_CHECK（独立 QA 尚未签署，QA_PASS 不由此记录）。

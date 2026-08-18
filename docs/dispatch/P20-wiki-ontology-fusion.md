@@ -31,6 +31,16 @@ QA_ACTOR=MUST_BE_INDEPENDENT
 | G5 | 两场景Shadow | 新旧链路并行，形成差异报告，不改变正式输出 |
 | G6 | 回归与QA包 | No-Go、安全和原链路回归通过，交独立QA |
 
+## 协调状态（2026-08-18）
+
+```text
+QA_REVIEW=independent_qa PASS_WITH_ISSUES（无 BLOCKER/MAJOR；MINOR-2 已修复）
+QA_ATTEST=BLOCKED_BY_BACKEND_TEST
+COORDINATION_BLOCKER=backend_test 因基线 OWASP npm nanoid + apps/api JaCoCo 覆盖率 <0.80 失败
+SEQUENCING=loop_guard 强制 ready_for_independent_qa 需 all gates pass → 基线治理是独立 QA attestation 前置
+BASELINE_GOVERNANCE=NEEDS_OWNER_AUTHORIZATION（超出 P20 shadow 范围）
+```
+
 ## 明确排除
 
 - 真实RAG/OpenSPG/GraphDB/OpenMetadata；
