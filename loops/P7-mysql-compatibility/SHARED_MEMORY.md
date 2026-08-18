@@ -43,3 +43,9 @@
 - 本 Loop 为历史批次（P7-P14），LOOP.yaml 早已声明 `COMPLETED`，代码已交付（提交 `12e0b9e`）。
 - STATE.json 此前残留 `ready_for_independent_qa` 中间状态，与 LOOP.yaml 不一致。已统一为 `closed`。
 - **合规声明**：独立 QA（T5）历史上**未实际执行**，此处闭环为历史状态收尾，**不构成正式 QA PASS**。若需正式独立 QA，需另建工作项在有 MySQL 凭据环境执行。
+
+## Owner 决策记录（2026-08-19）
+
+- Owner 确认：P7 正式独立 QA **需补做**，作为**单独工作项**（不在本历史收尾范围内）。
+- 前置：需在有 MySQL 凭据环境执行（T4 MySQL 启动验证 + T5 独立 QA）。
+- 状态：`OPEN_ITEM_AWAITING_DEDICATED_LOOP`（待独立工作项落地，不并入历史收尾）。

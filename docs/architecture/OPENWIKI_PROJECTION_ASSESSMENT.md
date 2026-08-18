@@ -2,12 +2,16 @@
 
 ```text
 DOC_ID=OPENWIKI-PROJECTION-ASSESSMENT-001
-STATUS=FOR_OWNER_REVIEW
+STATUS=OWNER_ADOPTED_DEFER
 AUTHOR=tech_lead
 CREATED_AT=2026-08-19
+OWNER_DECISION_DATE=2026-08-19
+OWNER_DECISION=ADOPT_DEFER_UNTIL_PRODUCTION_READY
 RELATED=ADR-0017（OpenWiki知识投影边界，PROPOSED_FOR_P20_OWNER_REVIEW）
 BASIS=P20 wiki-ontology fusion shadow 验证结果（qa_pass, 6/6 gate）
 ```
+
+> **Owner 决策（2026-08-19）**：采纳"暂缓（DEFER_UNTIL_PRODUCTION_READY）"建议。OpenWiki 暂不引入，保持 ADR-0017 边界为强制设计约束；待 P20 转生产就绪或出现明确业务需求时再评估。ADR-0017 状态维持 `PROPOSED_FOR_P20_OWNER_REVIEW`（暂不推进）。
 
 > 本文档评估 P20 之后是否应引入真实 OpenWiki 作为知识地图投影/阅读入口，以及边界与实施路径。供 Owner 决策，不替代 Owner 批准。
 
