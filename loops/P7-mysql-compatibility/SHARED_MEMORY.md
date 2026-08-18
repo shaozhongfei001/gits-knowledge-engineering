@@ -37,3 +37,9 @@
 
 - 当前环境未运行 MySQL 实例，Flyway 迁移验证、Spring Boot 实际启动验证、集成测试待 MySQL 环境就绪后执行
 - 独立 QA 验证（T5）待开发自检完成后由独立 QA actor 执行
+
+## 历史状态收尾说明（2026-08-19）
+
+- 本 Loop 为历史批次（P7-P14），LOOP.yaml 早已声明 `COMPLETED`，代码已交付（提交 `12e0b9e`）。
+- STATE.json 此前残留 `ready_for_independent_qa` 中间状态，与 LOOP.yaml 不一致。已统一为 `closed`。
+- **合规声明**：独立 QA（T5）历史上**未实际执行**，此处闭环为历史状态收尾，**不构成正式 QA PASS**。若需正式独立 QA，需另建工作项在有 MySQL 凭据环境执行。
