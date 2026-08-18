@@ -24,11 +24,40 @@
     <vulnerabilityName>HTTP Request Smuggling</vulnerabilityName>
   </suppress>
 
-  <!-- CVE-2026-0994 假阳性豁免：该 CVE 仅影响 Python google.protobuf 的
-       json_format.ParseDict()（DoS，修复于 6.33.5）；OWASP 将其 CPE 误匹配到
-       Java 的 com.google.protobuf:protobuf-java。protobuf-java（Java 实现）不受影响。 -->
+  <!--
+    CVE-2026-0994 假阳性抑制（CLASSIFICATION=FALSE_POSITIVE_CONFIRMED）
+    AFFECTED_ECOSYSTEM=Python（google.protobuf.json_format.ParseDict() DoS，修复于 6.33.5）
+    SCANNED_COMPONENT=Java com.google.protobuf:protobuf-java
+    SUPPRESSION_SCOPE=CVE-2026-0994 only（精确绑定，无宽泛正则）
+    REVIEW_REQUIRED=YES
+    CREATED_AT=2026-08-18
+    OWNER_DECISION=APPROVE_P20_CASCADE_SECURITY_REMEDIATION_LIMITED
+    AUTHORITY=NVD / Google protobuf advisory（CVE 位于 Python 实现 json_format.ParseDict()，
+    不影响 Java protobuf-java）
+  -->
   <suppress>
     <packageUrl regex="true">^pkg:maven/com\.google\.protobuf/protobuf-java@.*$</packageUrl>
     <cve>CVE-2026-0994</cve>
+  </suppress>
+
+  <!--
+    Log4j 组件不匹配抑制（CLASSIFICATION=SCANNER_COMPONENT_MISMATCH）
+    以下 CVE 均位于 org.apache.logging.log4j:log4j-core（如 Rfc5424Layout 等布局/appender）。
+    本项目仅使用 log4j-to-slf4j + log4j-api（SLF4J 桥），无 log4j-core，无 log4j2 配置文件，
+    不引用任何受影响布局/appender；log4j-core 不存在，故这些 CVE 在本项目不可利用。
+    SUPPRESSION_SCOPE=log4j-api only，精确绑定下列 CVE，无宽泛正则
+    REVIEW_REQUIRED=YES
+    CREATED_AT=2026-08-18
+    OWNER_DECISION=APPROVE_P20_CASCADE_SECURITY_REMEDIATION_LIMITED
+    AUTHORITY=NVD（CVE-2026-34478 等位于 log4j-core Rfc5424Layout）
+  -->
+  <suppress>
+    <packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/log4j-api@.*$</packageUrl>
+    <cve>CVE-2026-34477</cve>
+    <cve>CVE-2026-34478</cve>
+    <cve>CVE-2026-34479</cve>
+    <cve>CVE-2026-34480</cve>
+    <cve>CVE-2026-34481</cve>
+    <cve>CVE-2025-68161</cve>
   </suppress>
 </suppressions>

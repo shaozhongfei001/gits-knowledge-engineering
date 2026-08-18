@@ -36,10 +36,17 @@ QA_ACTOR=MUST_BE_INDEPENDENT
 ```text
 QA_REVIEW=independent_qa PASS_WITH_ISSUES（无 BLOCKER/MAJOR；MINOR-2 已修复）
 QA_ATTEST=BLOCKED_BY_BACKEND_TEST
-COORDINATION_BLOCKER=backend_test 因基线 OWASP npm nanoid + apps/api JaCoCo 覆盖率 <0.80 失败
 SEQUENCING=loop_guard 强制 ready_for_independent_qa 需 all gates pass → 基线治理是独立 QA attestation 前置
-BASELINE_GOVERNANCE=NEEDS_OWNER_AUTHORIZATION（超出 P20 shadow 范围）
+
+OWNER_DECISION_1=APPROVE_P20_BASELINE_GOVERNANCE_LIMITED（nanoid + apps/api 覆盖率）
+OWNER_DECISION_2=APPROVE_P20_CASCADE_SECURITY_REMEDIATION_LIMITED（级联安全治理）
+P1A_NANOID=RESOLVED_ACCEPTED_WITH_CONDITIONS（提交 b616ccd）
+P1C_CASCADE_SECURITY=AUTHORIZED_LIMITED
+P1B_APPS_API_COVERAGE=CONTINUE_AUTHORIZED
+FORMAL_SECURITY_GATE=NOT_YET_PASS
 ```
+
+授权边界（Owner 决策2）：仅限 `persistence-relational` 的 Connector/J 真实漏洞（CVE-2026-60586/60623）、Log4j 暴露面核验与最小兼容 patch/minor 升级、修复扫描 fail-open 风险、记录级联发现。**不授予**框架大版本升级、数据库行为/持久化合同变更、业务接口修改、CVSS 门槛降低、关闭 dependency-check、宽泛 suppression、或因扫描失败而 PASS。
 
 ## 明确排除
 

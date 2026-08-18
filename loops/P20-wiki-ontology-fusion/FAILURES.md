@@ -72,10 +72,39 @@ CLASSIFICATION=environment/reproducibility (not a LinkML contract failure)
   - 用官方 registry 更新 lockfile → `nanoid@5.1.16`（Tencent 镜像仅到 5.1.9）；
   - `pom.xml` OWASP `failOnError=false`（OSS Index 401 外部服务不可达时不硬失败；`failBuildOnCVSS=7` 仍阻断真实 ≥7.0 漏洞，未弱化）；
   - `dependency-check-suppressions.xml`：修复损坏的无效 `justification` 子元素；并登记 CVE-2026-0994 假阳性豁免（该 CVE 仅影响 Python `google.protobuf.json_format.ParseDict()`，OWASP 误匹配到 Java `protobuf-java`）。
-- **级联发现（被先前 nanoid abort 掩盖，超出授权两阻断）**：
-  - `persistence-relational`: `mysql-connector-j@9.7.0` → CVE-2026-60586(7.7)/60193(8.5)/60317(7.4)/60192(8.1)/60623(7.1)，**真实 ≥7.0**，需升级；
-  - `persistence-relational`: `log4j-api@2.24.3` → CVE-2026-34478/479/480/481（6.3~6.9，<7.0，但被插件列为阻断，OSS Index CVSS 口径问题）；
+- **级联发现（被先前 nanoid abort 掩盖）——漏洞归属修正（依 Owner 决策 + Oracle 公告）**：
+  - `persistence-relational`: `mysql-connector-j@9.7.0`（Oracle 公告受影响区间 9.7.0–9.7.1）
+    - `CVE-2026-60586`(7.7) → **CONFIRMED_AFFECTED（Connector/J）**
+    - `CVE-2026-60623`(7.1) → **CONFIRMED_AFFECTED（Connector/J）**
+    - `CVE-2026-60192`(8.1)/`60193`(8.5)/`60317`(7.4) → **SCANNER_COMPONENT_MISMATCH**（Oracle 公告为 Connector/Net，非 Connector/J；无证据证明 Java Connector/J 受影响，除非另有权威证据）
+  - `persistence-relational`: `log4j-api@2.24.3` → CVE-2026-34478/479/480/481（6.3~6.9，<7.0；**EXPOSURE_PENDING**，需核验运行时组件是否实际存在）
   - 可能还有更多模块在继续扫描后暴露。
 - **CLASSIFICATION**: PRE_EXISTING_BASELINE（级联，非 P20 改动引入）
-- **NEXT_ACTION**: 向 Owner 申请更广的基线安全治理授权（mysql-connector-j 升级、log4j 处置等）；本批仅完成已授权的 nanoid 修复。
+- **NEXT_ACTION**: Owner 授权级联安全治理（APPROVE_P20_CASCADE_SECURITY_REMEDIATION_LIMITED）：升级 Connector/J 到不在影响区的最小稳定版本；Log4j 暴露面核验并按规则处置；修复扫描 fail-open；记录级联发现。
+- **OWNER_DECISION**: APPROVE_P20_CASCADE_SECURITY_REMEDIATION_LIMITED（2026-08-18）
+- **RECORDED_AT**: 2026-08-18
+
+---
+
+## FAILURE_ID: BASE-P20-G0-004（P1c 授权内处置 + gits-kno-api 级联新发现）
+
+- **GATE**: backend_test（OWASP dependency-check）
+- **COMMAND**: `make backend-test`
+- **RESULT**: FAIL（P1c 授权内项已处置；但暴露 gits-kno-api 级联新发现，超出授权范围，需新 Owner 决策）
+
+### P1c 授权内处置结果（已完成）
+- **P1C_MYSQL_CONNECTOR=RESOLVED**：`mysql-connector-j@9.7.0 → 9.6.0`（Maven Central 无 9.7.x 补丁；9.6.0 为不在 9.7.0-9.7.1 影响区的最小兼容稳定版本，同 9.x 系列，非大版本）。确认 Connector/J 的 CVE-2026-60586/60623 已消失。
+- **P1C_LOG4J=RESOLVED（组件不匹配）**：核验依赖树——项目仅有 `log4j-to-slf4j` + `log4j-api`，**无 `log4j-core`**、无 log4j2 配置文件、无 Rfc5424Layout/XmlLayout/Socket/Syslog appender。log4j-core 相关 CVE（CVE-2026-34477/478/479/480/481、CVE-2025-68161）因 log4j-core 不存在而**不可利用**，按组件不匹配窄抑制。
+- **CVE-2026-49844（log4j-api，真实但 <7.0）**：CVSS 5.9(NVD)/6.3(CVSS4)，**ADVISORY_BELOW_THRESHOLD**；利用需 JsonTemplateLayout/MapMessage.asJson（本项目未用）。**不抑制**（真实 log4j-api 漏洞），记录为 advisory。
+- **SCANNER_FAIL_CLOSED**：`failOnError=true` 恢复（执行/数据源错误 → FAIL）；OSS Index analyzer 用正确参数 `ossindexAnalyzerEnabled=false` 禁用（可选外部数据源 401 不可用，依 Owner 决策选项3）；新增 `scripts/dependency-check-guard.py` 完整性校验（报告非空/依赖>0/NVD 时间可识别/无 fatal/阻断漏洞）。
+
+### 级联新发现（超出授权范围，需新 Owner 决策）
+以下位于 `gits-kno-api` 运行时依赖，**真实且 ≥7.0**，**不在** `persistence-relational`/Log4j 授权范围，亦非 P20 引入：
+- `tomcat-embed-core@10.1.55`：CVE-2026-55276/53434/59083/59084（**CVSS 9.1**）、CVE-2026-66299/53404（7.3/7.5）——**真实高严重度，需升级嵌入式 Tomcat（影响 API 运行时，超出授权）**
+- `micrometer-registry-prometheus@1.15.12`：CVE-2026-42154（**7.5**）——真实，需升级（Spring Boot BOM 管理，超出授权）
+- `swagger-ui@5.17.14`（DOMPurify JS 3.1.4）：CVE-2026-65898（5.1，<7.0 advisory）
+- **CVE-2026-49844（log4j-api）**：advisory（<7.0，真实，未抑制）
+
+- **CLASSIFICATION**: PRE_EXISTING_BASELINE（级联，非 P20 改动引入）
+- **NEXT_ACTION**: 向 Owner 申请对 `gits-kno-api` 运行时依赖（tomcat-embed-core、micrometer-registry-prometheus）的安全治理授权；本批已完成授权范围内 P1c。
 - **RECORDED_AT**: 2026-08-18

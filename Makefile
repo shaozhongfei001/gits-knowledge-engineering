@@ -52,6 +52,7 @@ backend-deps-check: ## 验证semantic-jena的Jena依赖可从根统一治理解�
 backend-test: backend-deps-check ## Java 21/Maven真实编译和测试
 	@test -x $(MVNW) || { echo "FAIL: $(MVNW) missing or not executable"; exit 2; }
 	@$(MVNW) --batch-mode --no-transfer-progress verify
+	@$(PYTHON) scripts/dependency-check-guard.py --search-root .
 
 frontend-test: ## 前端锁文件安装、类型检查、测试和构建
 	@test -f frontend/package-lock.json || { echo "FAIL: frontend/package-lock.json missing; lock dependencies before testing"; exit 2; }

@@ -62,6 +62,16 @@
         <artifactId>jena-shacl</artifactId>
         <version>${jena.version}</version>
       </dependency>
+      <!--
+        P1c: mysql-connector-j 基线安全治理。
+        9.7.0-9.7.1 受 CVE-2026-60586/60623 影响；Maven Central 无 9.7.x 补丁，
+        最小兼容非受影响稳定版本为 9.6.0（同 9.x 系列，非大版本升级）。覆盖 Spring Boot BOM 的 9.7.0。
+      -->
+      <dependency>
+        <groupId>com.mysql</groupId>
+        <artifactId>mysql-connector-j</artifactId>
+        <version>9.6.0</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -104,10 +114,18 @@
         </executions>
         <configuration>
           <failBuildOnCVSS>7</failBuildOnCVSS>
-          <!-- OSS Index Analyzer 为可选外部服务；当其 401/网络不可达时不硬失败，
-               但真实 >=7.0 漏洞仍由 failBuildOnCVSS 阻断（不弱化安全检查）。 -->
-          <failOnError>false</failOnError>
+          <!-- 扫描器执行/数据源错误必须 FAIL（fail-closed），不因网络 401 等静默 PASS。 -->
+          <failOnError>true</failOnError>
+          <!-- OSS Index 为可选外部 analyzer；当前环境无 API 凭据且返回 401。
+               依项目安全策略明确禁用，主数据源 NVD 本地 analyzer 仍启用，
+               并由 scripts/dependency-check-guard.py 校验报告完整性/NVD 数据新鲜度。 -->
+          <ossindexAnalyzerEnabled>false</ossindexAnalyzerEnabled>
           <suppressionFile>dependency-check-suppressions.xml</suppressionFile>
+          <!-- 生成 JSON 报告供 completeness guard 校验结构化数据。 -->
+          <formats>
+            <format>HTML</format>
+            <format>JSON</format>
+          </formats>
         </configuration>
       </plugin>
     </plugins>
