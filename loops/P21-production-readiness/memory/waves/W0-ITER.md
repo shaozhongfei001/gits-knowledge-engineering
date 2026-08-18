@@ -16,3 +16,11 @@
 - Exit: `0`
 - Evidence: `loops/P21-production-readiness/evidence/prod_profile_fail_closed-20260818T181341Z.log`
 - SHA256: `1e8bf2c8cefb3262b723e4e3ff5b713bc2a8d45557d6c3d86c12a48008762e4d`
+
+## Attempt 1｜20260818T181647Z
+
+- Gate: `production_plan`
+- Command: `bash scripts/verify_production_plan.sh`
+- Exit: `0`
+- Evidence: `loops/P21-production-readiness/evidence/production_plan-20260818T181647Z.log`
+- SHA256: `7ad4da1c598a8682385a0303b2ed575f247babe7a8522c803a6b8ba90c995dfc`
