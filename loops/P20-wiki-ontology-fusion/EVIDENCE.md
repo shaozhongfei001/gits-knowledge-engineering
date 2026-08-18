@@ -196,3 +196,30 @@ CLAIM_SCOPE=
 - 全反应堆 `mvn -q compile` → EXIT 0；loop memory/evidence guard → PASS
 
 状态：DEV_SELF_CHECK（独立 QA 尚未签署，QA_PASS 不由此记录）。
+
+---
+
+## EVIDENCE_ID: EV-P20-CTX-007（上下文装配 Gap G4）
+
+```text
+EVIDENCE_ID=EV-P20-CTX-007
+GATE=context_assembly_gate（Gap G4，非正式 Loop Gate）
+ACTOR=feature_pilot
+TIMESTAMP=2026-08-18
+BASE_COMMIT=461f7c8
+COMMAND=mvn -pl modules/context-evidence -am test
+EXIT_CODE=0
+ARTIFACT_PATHS=modules/context-evidence（ContextAssemblyPort.PlanRequest / DefaultContextAssembler）
+CLAIM_SCOPE=
+  - 计划驱动装配：由 ActivationPlan 生成非空 EvidenceBundle（G4 退出条件）
+  - 权限完整：permissionDecisionId 缺失/PENDING 一律拒绝（fail-closed）
+  - 来源完整：evidence 由 selectedAssets 的来源 URI/版本/权限标签构成；candidateClaims 由 ruleChecks 派生
+  - 新增 context-evidence -> knowledge-architecture 依赖（均在 P20 scope 内）
+  - 不迁移生产、不启用 fusion、不改变现有业务行为（现有 assemble(Request) 保持原语义）
+```
+
+验证（DEV_SELF_CHECK）：
+- `mvn -pl modules/context-evidence -am test` → 19 测试通过（含 4 项新计划驱动装配测试）
+- 全反应堆 `mvn -q compile` → EXIT 0；`make check` → PASS
+
+状态：DEV_SELF_CHECK（独立 QA 尚未签署，QA_PASS 不由此记录）。

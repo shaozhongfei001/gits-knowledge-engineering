@@ -97,7 +97,8 @@ class DefaultContextAssemblerTest {
 
     @Test
     void assembleRejectsNullRequest() {
-        assertThrows(NullPointerException.class, () -> assembler.assemble(null));
+        ContextAssemblyPort.Request nullRequest = null;
+        assertThrows(NullPointerException.class, () -> assembler.assemble(nullRequest));
     }
 
     @Test
