@@ -1,0 +1,12 @@
+# GITS knowledge-engineering Python tooling dependencies.
+# Used by scripts/semantic_rule_gate.py (and its tooling test).
+#
+# Reproducible setup:
+#   python3 -m venv gits-kno-p20-venv
+#   ./gits-kno-p20-venv/bin/python -m pip install -r requirements-tooling.txt
+#
+# Declared here so a fresh environment can run `make check`'s
+# semantic-rule-gate and `make tooling-test` without ad-hoc installs.
+
+PyYAML>=6.0
+rdflib>=6.2

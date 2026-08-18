@@ -2,7 +2,12 @@
   "schema_version": "2.0",
   "loop_id": "P20-wiki-ontology-fusion",
   "title": "Wiki-first与Ontology融合架构验证",
-  "status": "planned",
+  "status": "in_progress",
+  "owner_decision": "APPROVE_P20_SHADOW_IMPLEMENTATION",
+  "parallel_with_p19": "AUTHORIZED_BY_OWNER",
+  "implementation_actor": "feature_pilot",
+  "production_ready": "no",
+  "frozen": "no",
   "implementation_actor": "tech_lead",
   "objective": [
     "Validate Knowledge Map, Asset Manifest and Activation Contract as an LLM-first control plane.",

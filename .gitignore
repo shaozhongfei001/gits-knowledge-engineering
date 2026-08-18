@@ -15,6 +15,9 @@ __pycache__/
 **/__pycache__/
 *.pyc
 
+# P20 tooling virtual environment
+gits-kno-p20-venv/
+
 # OS / editor noise
 .DS_Store
 .idea/

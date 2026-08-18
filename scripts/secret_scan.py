@@ -34,8 +34,21 @@ TEST_VALUE_PATTERN = re.compile(
 LITERAL_SECRET_PATTERN = re.compile(r"^[A-Za-z0-9+/=_\-]{12,}$")
 
 
+def _in_git_repo(root: Path) -> bool:
+    # 普通仓库 .git 是目录；git worktree 的 .git 是指向共享仓库的指针文件。
+    # 两者都代表“位于 git 控制下”，应使用 git ls-files 以尊重 .gitignore。
+    dot_git = root / ".git"
+    if dot_git.is_dir():
+        return True
+    if dot_git.is_file():
+        return True
+    return subprocess.run(
+        ["git", "rev-parse", "--git-dir"], cwd=root, text=True, capture_output=True, check=False
+    ).returncode == 0
+
+
 def files_for(root: Path):
-    if (root / ".git").is_dir():
+    if _in_git_repo(root):
         result = subprocess.run(["git", "ls-files", "-co", "--exclude-standard"], cwd=root, text=True, capture_output=True, check=False)
         if result.returncode != 0:
             raise ValueError("git ls-files failed")
