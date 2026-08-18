@@ -314,4 +314,39 @@ FORMAL_GATES=6/6_PASS（contract_generate/contract_check/knowledge_architecture_
 - `ReportStrategyCoverageTest`（12）：R5A 内部关系/R8 下次访前/R7 更新关系/R5B CRM 通话，LLM 成功/失败 fallback/空视图/富视图分支
 - `V11ScenarioDataLoaderTest`（20）：9 类数据 load 空路径 + 数据映射路径（customer/legal/group/credit/bank snapshot/external event/product card/kyc/interaction）
 
+---
+
+## EVIDENCE_ID: EV-P20-P34-011（源码中文注释 + P3 Shadow E2E 深化 + P4 合同核对）
+
+```text
+EVIDENCE_ID=EV-P20-P34-011
+GATE=P3_shadow_e2e_deepen / P4_contract_index_reconcile（非正式 Loop Gate）
+ACTOR=feature_pilot
+TIMESTAMP=2026-08-19
+BASE_COMMIT=8403b84696212a7bb28d4fac5d87459090633954
+COMMAND=
+  make check / make framework-test / make tooling-test / make security-check / make backend-test
+  python3 scripts/run_p20_shadow_e2e.py --mode shadow ...
+  python3 scripts/loop_guard.py --loop P20-wiki-ontology-fusion --memory-only / --evidence-only
+EXIT_CODE=0
+ARTIFACT_PATHS=modules/knowledge-architecture, adapters/knowledge-filesystem,
+  modules/semantic-runtime, modules/context-evidence（Java 源码中文注释）；
+  scripts/run_p20_shadow_e2e.py, scripts/dependency-check-guard.py（Python 源码中文注释）；
+  tests/tooling/test_shadow_e2e.py（P3 深化）
+CLAIM_SCOPE=
+  - 核心 Java/Python 源码添加详细人力可读中文注释（不改变任何逻辑，全反应堆编译 EXIT 0）
+  - P3 Shadow E2E 深化：重复运行证据一致、planHash 可重放（16 位 hex 稳定）、
+    formal_output_changed=False；production/writeback/第三场景/空/重复/不支持模式 fail-closed
+  - P4 合同核对：KnowledgeMap/AssetManifest/ActivationContract/RoutePolicy/ActivationPlan/EvidenceBundle
+    均注册于 CONTRACT_INDEX（CTR-KMAP-001/ASSET-001/ACTIVATION-001/ROUTE-001/PLAN-001/EVIDENCE-001）；
+    Semantic Query 合同基础经激活合同 semanticQueries ∪ 技能 semanticDependencies 的 9 个 SQ ID 精确匹配验证；
+    ADR-0015/16/17 已注册；make generate 无 diff；make check 合同哈希一致
+```
+
+验证（DEV_SELF_CHECK）：
+- `make check` → PASS；`make framework-test` → OK；`make tooling-test` → **32 tests OK**（+5 P3 深化）
+- `make security-check` → PASS（62 advisories 如实）；`make backend-test` → **PASS**（6/6）
+- shadow e2e → PASS（formal_output_changed=False，重复运行证据一致）
+- loop memory/evidence guard → PASS；全反应堆 `mvn -q compile` → EXIT 0
+
 状态：DEV_SELF_CHECK（独立 QA 尚未签署，QA_PASS 不由此记录）。
