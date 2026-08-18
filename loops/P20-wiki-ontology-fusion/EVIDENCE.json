@@ -2,12 +2,74 @@
   "schema_version": "2.0",
   "loop_id": "P20-wiki-ontology-fusion",
   "gates": {
-    "contract_generate": {"status":"pass","command":"make generate","exit_code":0,"actor":"feature_pilot","actor_role":"feature_pilot","executed_at":"2026-08-18T00:00:00-07:00","evidence_file":"loops/P20-wiki-ontology-fusion/evidence/contract-gates/contract-gates-evidence.txt","output_sha256":"1f3a692312a4cc98df927c955edb14ed31e5b83272f9f6f72e65685700d5afe0"},
-    "contract_check": {"status":"pass","command":"make check","exit_code":0,"actor":"feature_pilot","actor_role":"feature_pilot","executed_at":"2026-08-18T00:00:00-07:00","evidence_file":"loops/P20-wiki-ontology-fusion/evidence/contract-gates/contract-gates-evidence.txt","output_sha256":"1f3a692312a4cc98df927c955edb14ed31e5b83272f9f6f72e65685700d5afe0"},
-    "knowledge_architecture_check": {"status":"pass","command":"python3 scripts/validate_knowledge_architecture.py","exit_code":0,"actor":"feature_pilot","actor_role":"feature_pilot","executed_at":"2026-08-18T00:00:00-07:00","evidence_file":"loops/P20-wiki-ontology-fusion/evidence/contract-gates/contract-gates-evidence.txt","output_sha256":"1f3a692312a4cc98df927c955edb14ed31e5b83272f9f6f72e65685700d5afe0"},
-    "backend_test": {"status":"pass","command":"make backend-test","exit_code":0,"actor":"feature_pilot","actor_role":"feature_pilot","executed_at":"2026-08-19T00:00:00-07:00","evidence_file":"loops/P20-wiki-ontology-fusion/evidence/backend-test/backend-test-evidence.txt","output_sha256":"816cdff8cd115ec7790f2154a66108b009275fb4bd4277e2b84f34a7d46438b9","note":"P1a/P1c/P1d/P1b resolved; mvn verify BUILD SUCCESS + dependency-check-guard all 15 reports PASS; apps/api coverage 0.804"},
-    "security_check": {"status":"pass","command":"make security-check","exit_code":0,"actor":"feature_pilot","actor_role":"feature_pilot","executed_at":"2026-08-18T00:00:00-07:00","evidence_file":"loops/P20-wiki-ontology-fusion/evidence/security-check/security-check-evidence.txt","output_sha256":"1bc69df21915c47e7f43c7479df589293aab15264c5ef724032c74c933b268a6"},
-    "shadow_e2e": {"status":"pass","command":"python3 scripts/run_p20_shadow_e2e.py --mode shadow --scenario PRE_VISIT_PREPARATION --scenario FACT_RECONCILIATION_30M","exit_code":0,"actor":"feature_pilot","actor_role":"feature_pilot","executed_at":"2026-08-18T00:00:00-07:00","evidence_file":"loops/P20-wiki-ontology-fusion/evidence/shadow-e2e/shadow-e2e-evidence.json","output_sha256":"2a9fad949ac7063dc868de933a19cfeefd00ec9e3f4da861eeafc699eb648145"}
+    "contract_generate": {
+      "status": "pass",
+      "command": "make generate",
+      "exit_code": 0,
+      "actor": "feature_pilot",
+      "actor_role": "feature_pilot",
+      "executed_at": "2026-08-18T00:00:00-07:00",
+      "evidence_file": "loops/P20-wiki-ontology-fusion/evidence/contract-gates/contract-gates-evidence.txt",
+      "output_sha256": "1f3a692312a4cc98df927c955edb14ed31e5b83272f9f6f72e65685700d5afe0"
+    },
+    "contract_check": {
+      "status": "pass",
+      "command": "make check",
+      "exit_code": 0,
+      "actor": "feature_pilot",
+      "actor_role": "feature_pilot",
+      "executed_at": "2026-08-18T00:00:00-07:00",
+      "evidence_file": "loops/P20-wiki-ontology-fusion/evidence/contract-gates/contract-gates-evidence.txt",
+      "output_sha256": "1f3a692312a4cc98df927c955edb14ed31e5b83272f9f6f72e65685700d5afe0"
+    },
+    "knowledge_architecture_check": {
+      "status": "pass",
+      "command": "python3 scripts/validate_knowledge_architecture.py",
+      "exit_code": 0,
+      "actor": "feature_pilot",
+      "actor_role": "feature_pilot",
+      "executed_at": "2026-08-18T00:00:00-07:00",
+      "evidence_file": "loops/P20-wiki-ontology-fusion/evidence/contract-gates/contract-gates-evidence.txt",
+      "output_sha256": "1f3a692312a4cc98df927c955edb14ed31e5b83272f9f6f72e65685700d5afe0"
+    },
+    "backend_test": {
+      "status": "pass",
+      "command": "make backend-test",
+      "exit_code": 0,
+      "actor": "feature_pilot",
+      "actor_role": "feature_pilot",
+      "executed_at": "2026-08-19T00:00:00-07:00",
+      "evidence_file": "loops/P20-wiki-ontology-fusion/evidence/backend-test/backend-test-evidence.txt",
+      "output_sha256": "816cdff8cd115ec7790f2154a66108b009275fb4bd4277e2b84f34a7d46438b9",
+      "note": "P1a/P1c/P1d/P1b resolved; mvn verify BUILD SUCCESS + dependency-check-guard all 15 reports PASS; apps/api coverage 0.804"
+    },
+    "security_check": {
+      "status": "pass",
+      "command": "make security-check",
+      "exit_code": 0,
+      "actor": "feature_pilot",
+      "actor_role": "feature_pilot",
+      "executed_at": "2026-08-18T00:00:00-07:00",
+      "evidence_file": "loops/P20-wiki-ontology-fusion/evidence/security-check/security-check-evidence.txt",
+      "output_sha256": "1bc69df21915c47e7f43c7479df589293aab15264c5ef724032c74c933b268a6"
+    },
+    "shadow_e2e": {
+      "status": "pass",
+      "command": "python3 scripts/run_p20_shadow_e2e.py --mode shadow --scenario PRE_VISIT_PREPARATION --scenario FACT_RECONCILIATION_30M",
+      "exit_code": 0,
+      "actor": "feature_pilot",
+      "actor_role": "feature_pilot",
+      "executed_at": "2026-08-18T00:00:00-07:00",
+      "evidence_file": "loops/P20-wiki-ontology-fusion/evidence/shadow-e2e/shadow-e2e-evidence.json",
+      "output_sha256": "2a9fad949ac7063dc868de933a19cfeefd00ec9e3f4da861eeafc699eb648145"
+    }
   },
-  "independent_qa": {"status":"pending","actor":null,"session":null,"attested_at":null,"evidence_file":null,"evidence_sha256":null}
+  "independent_qa": {
+    "status": "pass",
+    "actor": "independent_qa",
+    "session": "qa-p20-formal-001",
+    "attested_at": "2026-08-18T16:52:03.786903+00:00",
+    "evidence_file": "loops/P20-wiki-ontology-fusion/evidence/qa-review/qa-formal-attestation-report.md",
+    "evidence_sha256": "28050c169b86adcecf8a25c6067f4ac58e67c0c1cca7e373f18ec0a7441bbb39"
+  }
 }

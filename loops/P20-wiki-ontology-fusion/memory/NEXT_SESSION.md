@@ -2,12 +2,12 @@
 
 | 字段 | 值 |
 |---|---|
-| **Updated** | `2026-08-18T00:00:00-07:00` |
-| **holder** | `feature_pilot` |
+| **Updated** | `2026-08-19T00:00:00-07:00` |
+| **holder** | `independent_qa` |
 | **packet** | `P20-wiki-ontology-fusion` |
-| **wave** | `shadow_implementation_route_activation` |
+| **wave** | `independent_qa_attestation` |
 | **owner_decision** | `APPROVE_P20_SHADOW_IMPLEMENTATION` |
 | **parallel_with_p19** | `AUTHORIZED_BY_OWNER` |
-| **do_not_start** | Production cutover、FUSION cutover、production writeback、Independent QA 签署、冒充 Owner/QA |
+| **do_not_start** | Production cutover、FUSION cutover、production writeback、冒充 Owner/QA |
 
-下一动作：Feature Pilot 实现 Route & Activation shadow slice（registry/read model、Route Policy Evaluator、Activation Planner、ActivationPlan 输出、filesystem adapter、引用完整性、fail-closed、单测/契约/shadow 场景测试）。完成后运行回归门禁并交独立 QA。
+下一动作：独立 QA 已完成正式 Attestation（qa_attest.py PASS，actor=independent_qa，≠ feature_pilot）。STATE.status=qa_pass、independent_qa.status=pass、formal_qa_attestation=completed。移交 Owner 做 P5 审查（受控合并批准，不表示生产就绪/冻结）。

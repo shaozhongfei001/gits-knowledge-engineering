@@ -1,15 +1,15 @@
 {
   "schema_version": "2.0",
   "loop_id": "P20-wiki-ontology-fusion",
-  "updated_at": "2026-08-18T00:00:00-07:00",
-  "updated_by": "feature_pilot",
-  "board_status": "in_progress",
+  "updated_at": "2026-08-19T00:00:00-07:00",
+  "updated_by": "independent_qa",
+  "board_status": "qa_pass",
   "owner_decision": "APPROVE_P20_SHADOW_IMPLEMENTATION",
   "parallel_with_p19": "AUTHORIZED_BY_OWNER",
   "baton": {
-    "holder": "feature_pilot",
+    "holder": "independent_qa",
     "packet": "P20-wiki-ontology-fusion",
-    "wave": "shadow_implementation_route_activation",
+    "wave": "independent_qa_attestation",
     "blocked_note": null,
     "parallel_allowed": []
   },
@@ -20,11 +20,11 @@
     },
     "feature_pilot": {
       "responsibility": "route_activation_shadow_slice_implementation",
-      "status": "in_progress"
+      "status": "completed"
     },
     "independent_qa": {
       "responsibility": "gate_review",
-      "status": "unassigned"
+      "status": "attested_pass"
     }
   }
 }
