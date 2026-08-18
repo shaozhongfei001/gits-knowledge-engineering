@@ -350,3 +350,26 @@ CLAIM_SCOPE=
 - loop memory/evidence guard → PASS；全反应堆 `mvn -q compile` → EXIT 0
 
 状态：DEV_SELF_CHECK（独立 QA 尚未签署，QA_PASS 不由此记录）。
+
+---
+
+## EVIDENCE_ID: EV-P20-GATES-012（6/6 正式 Gate 全绿，QA 前置就绪）
+
+```text
+EVIDENCE_ID=EV-P20-GATES-012
+GATE=all_formal_gates（6/6）
+ACTOR=feature_pilot
+TIMESTAMP=2026-08-19
+FINAL_HEAD=52fa6d5644f9c01257ceef64d8a93adf35493a11
+FORMAL_GATES=6/6_PASS
+  - contract_generate / contract_check / knowledge_architecture_check：pass（hash-attested）
+  - security_check：pass（62 advisories 如实报告）
+  - shadow_e2e：pass（formal_output_changed=False）
+  - backend_test：pass（mvn verify BUILD SUCCESS + dependency-check-guard all 15 reports PASS + apps/api coverage 0.804）
+LOOP_GUARD_MEMORY=PASS；LOOP_GUARD_EVIDENCE=PASS（6 gate 哈希证明全部校验通过）
+COMMENT=BASE-P20-G0-001~005 全部关闭；P1a/P1b/P1c/P1d/P3/P4 完成
+STATE=status=in_progress；gate_decision=ALL_GATES_PASS；gate_readiness=ready_for_independent_qa_conditions_met
+NEXT=独立 QA Actor 对最终 HEAD 52fa6d5 评审并执行 qa_attest.py
+```
+
+状态：DEV_SELF_CHECK（独立 QA 尚未签署，QA_PASS 不由此记录）。
