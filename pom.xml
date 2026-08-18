@@ -28,10 +28,12 @@
     <module>modules/human-action</module>
     <module>modules/evaluation</module>
     <module>modules/scenario-customer-journey</module>
+    <module>modules/knowledge-architecture</module>
     <module>scenario/execute</module>
     <module>adapters/semantic-jena</module>
     <module>adapters/persistence-relational</module>
     <module>adapters/oracle-source</module>
+    <module>adapters/knowledge-filesystem</module>
     <module>apps/api</module>
     <module>apps/worker</module>
   </modules>
