@@ -102,7 +102,7 @@ public class ReportGenerationService {
             String operatingCaseId, String journeyId,
             String customerId,
             String newEvidenceDescription, String previousReportId) {
-        UUID previousId = (previousReportId != null && !previousReportId.isBlank()) ? UUID.fromString(previousReportId) : null;
+        UUID previousId = parseReportIdSafely(previousReportId);
         Optional<RelationshipReport> previousReport = previousId != null
             ? reportRepo.findById(previousId) : Optional.empty();
         Optional<CustomerOperatingView> view = buildView(customerId, operatingCaseId);
@@ -123,13 +123,29 @@ public class ReportGenerationService {
             String customerId,
             PostvisitAnalysisContent previousAnalysis,
             String previousReportId) {
-        UUID previousId = (previousReportId != null && !previousReportId.isBlank()) ? UUID.fromString(previousReportId) : null;
+        UUID previousId = parseReportIdSafely(previousReportId);
         Optional<CustomerOperatingView> view = buildView(customerId, operatingCaseId);
 
         ReportContext ctx = ReportContext.forNextPrevisit(operatingCaseId, journeyId, customerId, previousAnalysis, previousId, view);
         RelationshipReport report = getStrategy(RelationshipReport.ReportType.NEXT_PREVISIT).generate(ctx);
         reportRepo.save(report);
         return report;
+    }
+
+    /**
+     * 容错解析报告 ID（UUID）。{@code previousReportId} 可能来自前端为 String 的报告 ID
+     * （如访前报告 {@code R1-<uuid>}），并非 {@link RelationshipReport} 的 UUID 报告 ID。
+     * 非合法 UUID 时返回 {@code null}（不抛异常，fail-safe），使 R7/R8 正常生成且不返回 400。
+     */
+    private static UUID parseReportIdSafely(String previousReportId) {
+        if (previousReportId == null || previousReportId.isBlank()) {
+            return null;
+        }
+        try {
+            return UUID.fromString(previousReportId);
+        } catch (IllegalArgumentException error) {
+            return null;
+        }
     }
 
     private Optional<CustomerOperatingView> buildView(String customerId, String operatingCaseId) {
