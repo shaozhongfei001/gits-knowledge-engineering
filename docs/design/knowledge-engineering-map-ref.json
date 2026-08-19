@@ -1,0 +1,968 @@
+{
+  "_meta": {
+    "source": "docs/dd/银行知识工程规范打样_fixed.xlsx",
+    "authority": "最高权威",
+    "exported_at": "2026-08-19",
+    "scenario": "经营与营销-智能访前作战单"
+  },
+  "scenarios": [
+    {
+      "scenario": "经营与营销-智能访前作战单",
+      "mainTaskScope": "客户拜访前一站式智能准备：信息装配、经营诊断、缺口发现、策略生成、行动规划",
+      "coreKnowledgeDomain": "KD-01, KD-02, KD-04, KD-05, KD-06, KD-08",
+      "keySkill": "SK-FRONT-000 流程编排（串接全部任务节点）; \nSK-FRONT-001 信息组装; \nSK-FRONT-002 供应链图谱分析;\n SK-FRONT-003 八维研判; \nSK-FRONT-004 事实对账与冲突检测; \nSK-FRONT-005 承诺话术生成; \nSK-FRONT-006 KYC缺口核验; \nSK-FRONT-007 产品组合推荐",
+      "deliveryForm": "一页H5作战单（移动端）+ PDF导出",
+      "businessValue": "将访前准备时间从数小时缩短至10分钟内；自动识别信息缺口、经营断点与潜在需求，生成可执行的话术和产品策略",
+      "priority": "P0",
+      "status": "设计阶段"
+    }
+  ],
+  "knowledge_domains": [
+    {
+      "id": "KD-01 客户知识域",
+      "name": "KD-01 客户知识域",
+      "cover": "客户基本信息(KI-009等)、企业关系(KI-015)"
+    },
+    {
+      "id": "KD-02 产品知识域",
+      "name": "KD-02 产品知识域",
+      "cover": "贷款/存款/理财等产品知识(KI-039~053)"
+    },
+    {
+      "id": "KD-04 流程知识域",
+      "name": "KD-04 流程知识域",
+      "cover": "拜访沟通流程、承诺跟踪流程"
+    },
+    {
+      "id": "KD-05 风险管理知识域",
+      "name": "KD-05 风险管理知识域",
+      "cover": "信用风险、合规风险等信号"
+    },
+    {
+      "id": "KD-06 合规知识域",
+      "name": "KD-06 合规知识域",
+      "cover": "KYC信息完整性、客户适当性管理"
+    },
+    {
+      "id": "KD-08 数据与智能知识域",
+      "name": "KD-08 数据与智能知识域",
+      "cover": "外部产业数据、供应链图谱、八维研判模型"
+    }
+  ],
+  "knowledge_items": [
+    {
+      "id": "KI-009",
+      "name": "企业客户基本信息",
+      "category": "实体",
+      "description": "企业工商注册及行内核心信息，作为所有分析的事实锚点",
+      "domain": "KD-01",
+      "subdomain": "SD-02",
+      "ontology": null,
+      "status": "设计"
+    },
+    {
+      "id": "KI-FRONT-001",
+      "name": "公司供应链图谱",
+      "category": "实体-关系",
+      "description": "客户自身的上游供应商和下游客户及其业务关系、金额占比、趋势",
+      "domain": "KD-01",
+      "subdomain": "SD-02",
+      "ontology": null,
+      "status": "设计"
+    },
+    {
+      "id": "KI-FRONT-002",
+      "name": "产业链八维研判",
+      "category": "分析模型",
+      "description": "通过获取企业相关行业/产业的各维度分析结果，与客户实际情况进行分析",
+      "domain": "KD-08",
+      "subdomain": "SD-46",
+      "ontology": null,
+      "status": "设计"
+    },
+    {
+      "id": "KI-FRONT-003",
+      "name": "行内变动行为",
+      "category": "事实",
+      "description": "客户在行内近期关键变动指标（营收、授信使用率、行业关联相关指数等）及冲突检测结果",
+      "domain": "KD-01",
+      "subdomain": "SD-02",
+      "ontology": null,
+      "status": "设计"
+    },
+    {
+      "id": "KI-FRONT-004",
+      "name": "事实承诺事项",
+      "category": "过程",
+      "description": "历史沟通中形成的承诺事项，附沟通记录、话术和行动计划",
+      "domain": "KD-01",
+      "subdomain": "SD-04",
+      "ontology": null,
+      "status": "设计"
+    },
+    {
+      "id": "KI-FRONT-005",
+      "name": "KYC信息缺口",
+      "category": "规则-检查",
+      "description": "通过事实对账识别的信息缺口，含触发源、核实话术和核实路径",
+      "domain": "KD-01",
+      "subdomain": "SD-02",
+      "ontology": null,
+      "status": "设计"
+    },
+    {
+      "id": "KI-FRONT-006",
+      "name": "产品候选组合",
+      "category": "决策",
+      "description": "基于KYC痛点、沟通记录和市场信号匹配的候选产品及组合建议",
+      "domain": "KD-02",
+      "subdomain": "SD-08",
+      "ontology": null,
+      "status": "设计"
+    }
+  ],
+  "knowledge_elements": [
+    {
+      "kiId": "KI-009",
+      "kiName": "企业客户基本信息",
+      "id": "KE-009-01",
+      "name": "客户全称",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "企业工商注册的完整法定名称，须与营业执照完全一致，作为客户身份识别的首要依据。系统通过MCP协议调用CRM系统接口实时拉取，展示时附带数据时点戳和来源标注。",
+      "sourceRef": "CRM系统",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-009",
+      "kiName": "企业客户基本信息",
+      "id": "KE-009-02",
+      "name": "客户编号",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "行内为每个企业客户分配的唯一内部标识编码，用于跨系统数据关联和业务追溯，格式为“HZB+10位数字”。系统从CRM系统实时拉取。",
+      "sourceRef": "CRM系统",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-009",
+      "kiName": "企业客户基本信息",
+      "id": "KE-009-03",
+      "name": "所属行业",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "企业所属的国民经济行业分类（GB/T 4754-2017）门类+大类代码（如“C制造业-C34通用设备制造业”），以及行内自定义的产业集群标签（如“汽车零部件产业集群”）。系统从CRM/数据平台接口拉取。",
+      "sourceRef": "CRM/数据平台",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-009",
+      "kiName": "企业客户基本信息",
+      "id": "KE-009-04",
+      "name": "企业规模",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "综合人员规模和年营收区间两个维度判定：①员工人数（区间）；②年营收区间（如“5000万-1亿”），用于匹配小微企业、中型企业或大型企业分类。系统从CRM/核心系统接口拉取。",
+      "sourceRef": "CRM/核心系统",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-009",
+      "kiName": "企业客户基本信息",
+      "id": "KE-009-05",
+      "name": "年营收（近12月）",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "客户近12个月在行内结算账户累计贷方发生额（含销售回款、政府补贴等经营性收入），作为衡量企业经营规模和现金流能力的基础指标。系统从核心系统接口拉取，展示时附带同比变化百分比。",
+      "sourceRef": "核心系统",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-009",
+      "kiName": "企业客户基本信息",
+      "id": "KE-009-06",
+      "name": "注册地址",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "企业营业执照登记的工商注册详细地址（精确到门牌号），用于风险评估中的属地化管理、实地调查及法律文书送达地址确认。系统从CRM系统接口拉取。",
+      "sourceRef": "CRM系统",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-009",
+      "kiName": "企业客户基本信息",
+      "id": "KE-009-07",
+      "name": "主要产品",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "企业主营业务产品或服务的名称及描述（如“精密齿轮制造，主要应用于新能源汽车变速箱”），用于理解企业商业模式和行业定位。系统从CRM系统接口拉取。",
+      "sourceRef": "CRM系统",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-009",
+      "kiName": "企业客户基本信息",
+      "id": "KE-009-08",
+      "name": "合作年限",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "自首次在杭州银行开立账户或建立信贷关系以来至当前日期的完整年数（向下取整），用于评估客户关系稳定性及忠诚度，辅助经营策略判断。系统从CRM系统接口计算拉取。",
+      "sourceRef": "CRM系统",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-001",
+      "kiName": "公司供应链图谱",
+      "id": "KE-FRONT-001-01",
+      "name": "上游供应商列表",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "客户公司自身的直接原材料/零部件供应商清单，每家供应商展示：企业全称、供应品类（如“锂电池电芯”）、近12个月采购额（万元）及占年总采购的比例（%）、采购价格趋势（持平/上涨X%/下跌X%）。系统通过MCP协议整合行内交易流水接口和外部工商数据接口，自动匹配并补全供应商工商信息，形成完整的上游供应关系图谱。",
+      "sourceRef": "行内交易流水+外部工商/产业数据",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-001",
+      "kiName": "公司供应链图谱",
+      "id": "KE-FRONT-001-02",
+      "name": "下游客户列表",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "客户公司自身的直接成品/服务销售客户清单，每家下游客户展示：企业全称、客户类型（经销商/终端制造商/政府机构等）、近12个月销售额（万元）及占年总销售的比例（%）、订单同比增长率（%）。系统通过MCP协议整合行内交易流水接口和外部工商数据接口，自动匹配并补全下游客户工商信息，形成完整的下游需求关系图谱。",
+      "sourceRef": "行内交易流水+外部工商/产业数据",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-001",
+      "kiName": "公司供应链图谱",
+      "id": "KE-FRONT-001-03",
+      "name": "供应链位置解读",
+      "attribute": "语义+方法",
+      "kind": "K-Type-E",
+      "description": "综合上游供应商集中度和下游客户分散度，定性评估客户在产业链中的位置角色（如“中游核心制造环节”）、对上下游的议价能力（强/中/弱）、供应链稳定性风险等级（高/中/低）。结论由LLM基于图谱数据和行业知识库综合推理生成，供客户经理快速理解客户在产业生态中的经营地位和风险暴露点。输出结构为三段式：“角色定位 + 议价能力评估 + 供应链稳定性判断”。",
+      "sourceRef": "市场慧眼智能体 + 供应链图谱数据",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-002",
+      "kiName": "产业链八维研判",
+      "id": "KE-FRONT-002-01",
+      "name": "政策维度研判",
+      "attribute": "工具+语义+方法",
+      "kind": "K-Type-F",
+      "description": "对客户所在产业链的政策支持力度进行研判：梳理国务院/发改委/工信部近2年出台的相关产业政策文件（如专项资金支持、税收优惠、准入负面清单），归纳政策导向标签（利好/中性/利空），并提炼1-2个关键政策要点（如“新能源汽车购置税减免延长至2027年”）。结论由市场慧眼智能体（LLM）基于政策文件库检索与分析生成。",
+      "sourceRef": "市场慧眼智能体（政策文件库+LLM分析）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-002",
+      "kiName": "产业链八维研判",
+      "id": "KE-FRONT-002-02",
+      "name": "市场维度研判",
+      "attribute": "工具+语义+方法",
+      "kind": "K-Type-F",
+      "description": "对下游终端需求趋势进行研判：分析市场规模变化（近3年CAGR）、下游景气度（如房地产新开工面积、汽车销量增速）、竞争格局（CR3集中度、进入壁垒），研判标签（扩张/平稳/萎缩），并提炼核心判断依据（如“工程机械行业进入下行周期，需求同比-15%”）。结论由市场慧眼智能体（LLM）基于行业研究报告和公开市场数据分析生成。",
+      "sourceRef": "市场慧眼智能体（行业报告+市场数据+LLM分析）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-002",
+      "kiName": "产业链八维研判",
+      "id": "KE-FRONT-002-03",
+      "name": "技术维度研判",
+      "attribute": "工具+语义+方法",
+      "kind": "K-Type-F",
+      "description": "对产业技术发展趋势进行研判：分析核心技术迭代速度（如“半导体行业每18个月制程升级一代”）、国产化率现状与目标（如“国产化率从30%提升至50%”）、行业平均研发投入强度（R&D/营收%），研判标签（领先/追赶/落后），并指出关键技术与国际差距。结论由市场慧眼智能体（LLM）基于技术报告和专利数据分析生成。",
+      "sourceRef": "市场慧眼智能体（技术报告+专利数据+LLM分析）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-002",
+      "kiName": "产业链八维研判",
+      "id": "KE-FRONT-002-04",
+      "name": "供应链维度研判",
+      "attribute": "工具+语义+方法",
+      "kind": "K-Type-F",
+      "description": "对上游原材料/零部件供应稳定性进行研判：分析上游集中度（如“全球锂矿CR3占比65%”）、关键材料采购价格波动趋势（近12个月涨跌幅）、国际物流效率（海运/陆运时效变化），研判标签（稳定/承压/紧张），并识别供应链瓶颈环节（如“高端芯片供应紧张影响交付”）。结论由市场慧眼智能体（LLM）基于大宗商品数据、物流指数和产业报告综合分析生成。",
+      "sourceRef": "市场慧眼智能体（大宗商品数据+物流指数+LLM分析）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-002",
+      "kiName": "产业链八维研判",
+      "id": "KE-FRONT-002-05",
+      "name": "区域维度研判",
+      "attribute": "工具+语义+方法",
+      "kind": "K-Type-F",
+      "description": "对客户所在区域的产业集聚效应进行研判：分析区域内同行业企业密度（如“深圳电子信息产业集群”）、上下游配套完善度（本地配套率%）、专业人才集聚程度（相关岗位招聘活跃度），研判标签（集聚/一般/分散），并指出区域政策红利或瓶颈（如“长三角一体化政策利好”）。结论由市场慧眼智能体（LLM）基于区域经济数据和产业园区报告综合分析生成。",
+      "sourceRef": "市场慧眼智能体（区域经济数据+产业园报告+LLM分析）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-002",
+      "kiName": "产业链八维研判",
+      "id": "KE-FRONT-002-06",
+      "name": "风险维度研判",
+      "attribute": "工具+语义+方法",
+      "kind": "K-Type-F",
+      "description": "对产业链核心风险进行综合研判：关注大宗商品价格波动风险（如“铜价年内+25%压缩下游利润”）、客户集中度风险（如“前三大客户占营收60%”）、政策突变风险（如“出口退税政策调整”）、替代品风险（如“钠电池对锂电池的潜在替代”），研判标签（可控/关注/高危），并排列Top 3风险项。结论由市场慧眼智能体（LLM）综合多源风险信号推理生成。",
+      "sourceRef": "市场慧眼智能体（多源风险信号+LLM分析）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-002",
+      "kiName": "产业链八维研判",
+      "id": "KE-FRONT-002-07",
+      "name": "指数维度量化评分",
+      "attribute": "工具+语义+方法",
+      "kind": "K-Type-M",
+      "description": "输出三项核心量化指数：①产业景气指数（0-100分，基于产能利用率、订单饱和度、库存周转天数加权计算，>70为景气扩张，<50为收缩）；②政策风险评分（1-10分，基于政策变动频率和影响幅度评估，>7为高风险）；③行业风险评分（1-10分，基于信用违约率、破产率、行业不良率综合评估，>7为高风险）。三项指数均由量化模型基于多源数据计算生成，附计算逻辑摘要。",
+      "sourceRef": "市场慧眼智能体（量化计算模型+多源数据集）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-002",
+      "kiName": "产业链八维研判",
+      "id": "KE-FRONT-002-08",
+      "name": "企业竞争力评估",
+      "attribute": "工具+语义+方法",
+      "kind": "K-Type-E",
+      "description": "基于客户自身财务数据与行业标杆企业（对标企业/行业均值）的对比，综合评估四项竞争力维度：①市占率（行业排名及市场份额%）；②客户质量（前五大客户是否为行业龙头/上市公司）；③技术认证（是否获得高新技术企业/专精特新/国家级实验室认证）；④成长确定性（在手订单覆盖率、营收CAGR、利润增长率），综合标签（强/中/弱），并给出竞争力对比雷达图的简版结论。结论由市场慧眼智能体（LLM）综合推理生成。",
+      "sourceRef": "市场慧眼智能体（财务对比数据+行业基准+LLM推理）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-002",
+      "kiName": "产业链八维研判",
+      "id": "KE-FRONT-002-09",
+      "name": "综合研判结论",
+      "attribute": "语义+方法",
+      "kind": "K-Type-E",
+      "description": "基于上述八个维度的分析结果进行综合归纳，输出三段式结构：①核心优势（客户在产业链中最突出的2-3项竞争力和成长确定性，如“处于光伏产业链高景气赛道，技术认证领先、下游客户质量优”）；②主要挑战（当前面临的关键经营瓶颈和风险敞口，如“上游硅料价格波动侵蚀利润、客户集中度过高”）；③战略判断（客户所处的经营阶段和关键窗口期，如“扩产关键期，需重点关注资金链安全和产能消化能力”）。该结论为客户经理提供拜访时的宏观判断依据和切入点建议。",
+      "sourceRef": "市场慧眼智能体（LLM综合推理 + 八维数据融合）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-003",
+      "kiName": "行内变动行为",
+      "id": "KE-FRONT-003-01",
+      "name": "近半年营收",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "最近6个月在行内结算账户累计经营性收入（剔除非经营性往来款），附同比变化率（%），用于快速判断企业近期经营规模是否扩张或收缩。系统从核心系统接口拉取，展示时标注“数据时点为近6个月累计”。",
+      "sourceRef": "核心系统",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-003",
+      "kiName": "行内变动行为",
+      "id": "KE-FRONT-003-02",
+      "name": "现有授信使用率",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "已用授信额度（含贷款余额、开证余额、保函余额等）占总额授信额度的比例（%），以及剩余可用的绝对额度（万元），用于评估客户授信饱和度和后续业务空间。系统从信贷系统接口拉取。",
+      "sourceRef": "信贷系统",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-003",
+      "kiName": "行内变动行为",
+      "id": "KE-FRONT-003-03",
+      "name": "近3个月用电量/进出口额",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "经客户授权后接入的国网电力数据，展示最近3个月月度用电量（千瓦时）及环比/同比变化幅度（%），作为企业经营活跃度的客观替代指标（尤其适用于制造业客户验证营收真实性）。系统从外部授权数据接口接入，展示时标注“需客户授权”。",
+      "sourceRef": "外部授权数据接口（国网电力）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-003",
+      "kiName": "行内变动行为",
+      "id": "KE-FRONT-003-04",
+      "name": "近6个月代发薪",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "最近6个月通过行内代发工资专户发放的员工薪酬总额（万元）及月度变化趋势，用于交叉验证企业用工规模和经营稳定性，间接反映企业实际经营状况（代发薪持续下滑可能预示裁员或经营困难）。系统从核心系统接口拉取。",
+      "sourceRef": "核心系统",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-003",
+      "kiName": "行内变动行为",
+      "id": "KE-FRONT-003-05",
+      "name": "近3个月结算量",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "最近3个月通过行内所有结算渠道（网银、柜面、银企直连等）发生的资金交易笔数及总金额（亿元），附同比/环比变化幅度，用于评估企业资金周转活跃度。系统从核心系统接口拉取。",
+      "sourceRef": "核心系统",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-003",
+      "kiName": "行内变动行为",
+      "id": "KE-FRONT-003-06",
+      "name": "冲突检测结果",
+      "attribute": "规则+语义+方法",
+      "kind": "K-Type-R",
+      "description": "系统基于预设的事实对账规则集，对上述多维指标进行交叉校验后输出的冲突/异常清单。典型场景包括：①逻辑矛盾（如“用电量上升30%但营收下降20%”）；②信号背离（如“扩产传闻 vs 无新增贷款记录”）；③数据异常（如“代发薪连续3个月下降>15%”）。系统自动逐项列出冲突项、涉及数据源、以及建议的核实问题。每条冲突标注规则编号，便于追溯。",
+      "sourceRef": "事实对账规则引擎（RUL-FRONT-001）",
+      "relatedRule": "RUL-FRONT-001",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-004",
+      "kiName": "事实承诺事项",
+      "id": "KE-FRONT-004-01",
+      "name": "沟通记录摘要",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "从CRM历史拜访记录和访后录音转写文本中提取的关键沟通信息，包括：①沟通时间（精确到日）；②沟通渠道（面访/电话/视频）；③参与人员（客户方角色+我行方人员）；④对话摘要（由NLP模型从转写文本中提取的200字以内核心要点）；⑤客户原话（1-2句最具代表性的客户直接引语，用于还原客户真实表达意图）。系统从CRM系统接口拉取原始记录，经NLP处理提取结构化摘要。",
+      "sourceRef": "CRM拜访记录 + 访后录音转写（NLP提取）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-004",
+      "kiName": "事实承诺事项",
+      "id": "KE-FRONT-004-02",
+      "name": "承诺内容及状态",
+      "attribute": "工具",
+      "kind": "K-Type-F/R",
+      "description": "从沟通记录中提取的客户方或银行方做出的承诺/待办事项，每条承诺包含：①承诺描述（如“客户承诺下月底前提供2025年审计报告”）；②承诺方（客户/银行）；③状态标签（已完成/待反馈/逾期未完成），依据约定时间与当前日期差值及系统记录的执行状态自动判定。系统由LLM基于沟通记录语义解析生成，客户经理可人工修正状态标签。",
+      "sourceRef": "客户洞察智能体（语义LLM解析CRM记录）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-004",
+      "kiName": "事实承诺事项",
+      "id": "KE-FRONT-004-03",
+      "name": "沟通话术",
+      "attribute": "语义+方法",
+      "kind": "K-Type-P",
+      "description": "针对每条承诺事项自动生成本次拜访时使用的开场/提问话术，包含四要素：①引用的事实出处（📌标注，如“2026-08-12沟通中您提到…”）；②面向的角色（如“面向财务总监李总”）；③核心话术文本（自然、具体的提问句式）；④预期目标（如“确认审计报告的完成进度”）。话术由语义LLM基于承诺原文、客户角色和拜访目标综合生成，客户经理可按需调整。",
+      "sourceRef": "话术生成模型（语义LLM + 沟通记录上下文）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-004",
+      "kiName": "事实承诺事项",
+      "id": "KE-FRONT-004-04",
+      "name": "行动计划",
+      "attribute": "语义+方法",
+      "kind": "K-Type-P",
+      "description": "针对每条承诺事项生成的标准化行动建议，包括：①责任人（行内客户经理或客户方对接人）；②截止时间（建议完成日期，基于约定日期倒推提醒）；③具体行动路径（分步骤描述，如“Step1: 8月20日前邮件催促客户准备报告 → Step2: 8月25日电话跟进确认进度 → Step3: 9月1日前更新CRM记录”）。行动计划由规则引擎根据承诺类型和约定时间自动生成初始版本，客户经理可手动编辑后确认。",
+      "sourceRef": "规则引擎（基于承诺类型+约定时间生成）+ 客户经理确认",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-005",
+      "kiName": "KYC信息缺口",
+      "id": "KE-FRONT-005-01",
+      "name": "缺口描述",
+      "attribute": "语义+方法",
+      "kind": "K-Type-R",
+      "description": "基于冲突检测结果生成的待核实问题清单，每个缺口以提问形式呈现，如“扩产项目的资金来源是否已通过股东注资解决？”，或“用电量增长30%但营收持平，是否存在未在行内结算的体外收入？”缺口描述须精准、具体、可回答，避免泛泛提问。由语义LLM基于触发源和业务上下文推理生成，同时根据资金安全、合规风险、经营决策三类优先级规则标注处理优先级（高/中/一般）。",
+      "sourceRef": "KYC问题辅助智能体（语义LLM推理 + 优先级规则）",
+      "relatedRule": "RUL-FRONT-002",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-005",
+      "kiName": "KYC信息缺口",
+      "id": "KE-FRONT-005-02",
+      "name": "触发源",
+      "attribute": "规则",
+      "kind": "K-Type-F",
+      "description": "触发该缺口的具体事实依据，引用事实对账引擎输出的冲突/异常项原文，如“【冲突】用电量同比+30%，但近半年营收同比-5%，数据背离超过阈值（阈值：±15%）”，或“【异常】近3个月代发薪连续下降，累计降幅22%，超过连续3个月降幅>10%的预警阈值”。每个触发源须关联规则编号（RUL-FRONT-001-xxx），便于审计追溯。系统从事实对账规则引擎结果中直接获取。",
+      "sourceRef": "事实对账规则引擎（RUL-FRONT-001）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-005",
+      "kiName": "KYC信息缺口",
+      "id": "KE-FRONT-005-03",
+      "name": "核实话术",
+      "attribute": "语义+方法",
+      "kind": "K-Type-P",
+      "description": "针对每个缺口生成在拜访中向客户提问的核实话术，包含三要素：①引用事实依据（“📌 我行数据显示近半年营收-5%，但贵司用电量+30%…”）；②具体提问内容（“请问是否部分销售通过非我行账户结算，导致我行数据未能完整反映？还是有其他特殊原因？”）；③核实目标（“目标：确认营收数据的完整性和体外收入规模”）。话术由语义LLM基于缺口描述和触发源生成，兼顾专业性和礼貌性，供客户经理直接使用或微调。",
+      "sourceRef": "话术生成模型（语义LLM + 缺口触发源 + 客户角色）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-005",
+      "kiName": "KYC信息缺口",
+      "id": "KE-FRONT-005-04",
+      "name": "核实目标及行动计划",
+      "attribute": "语义+方法",
+      "kind": "K-Type-P",
+      "description": "针对每个缺口生成可执行的核实行动方案，包括：①核实目标（通过提问希望达成的明确目标，如“验证用电量与营收数据背离的真实原因”）；②核实时机（建议在拜访的哪个阶段提出，如“财务数据讨论环节”）；③核实路径（具体操作步骤，如“Step1: 获取客户2025年度电费缴纳凭证 → Step2: 对比用电与产量数据 → Step3: 就差异向财务负责人确认”）。行动计划由规则引擎基于缺口类型和优先级生成初始版本，客户经理可根据实际拜访安排调整。",
+      "sourceRef": "规则引擎生成 + 客户经理确认",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-006",
+      "kiName": "产品候选组合",
+      "id": "KE-FRONT-006-01",
+      "name": "产品名称",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "候选产品的标准全称，取自产品知识库的正式产品名称，如“流动资金贷款”、“国内信用证”、“订单融资”、“应收账款池融资”等。系统从产品知识库检索匹配后输出。",
+      "sourceRef": "产品知识库",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-006",
+      "kiName": "产品候选组合",
+      "id": "KE-FRONT-006-02",
+      "name": "匹配度标签",
+      "attribute": "规则",
+      "kind": "K-Type-R",
+      "description": "基于硬约束校验结果和需求映射评估，为每个候选产品标注三档匹配度标签：①高匹配（客户现状/需求与产品准入条件高度契合，可直接推介）；②组合备选（适合与其他产品组合搭配，单独使用场景受限）；③待核实（存在关键前提条件未确认，需在拜访中验证后决定是否推介）。标签由产品组合规则引擎根据客户KYC画像、沟通记录中的需求表达和市场信号三源融合计算生成，附规则说明链接。",
+      "sourceRef": "产品组合规则引擎（RUL-FRONT-003）",
+      "relatedRule": "RUL-FRONT-003",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-006",
+      "kiName": "产品候选组合",
+      "id": "KE-FRONT-006-03",
+      "name": "产品描述",
+      "attribute": "工具",
+      "kind": "K-Type-F",
+      "description": "候选产品的简要功能说明和适用场景描述，由产品知识库提供标准文本，如“流动资金贷款：用于企业日常经营周转（采购原材料、支付工资等），期限灵活（1-12个月），可循环使用，适用于有稳定回款的中小企业”。系统从产品知识库检索匹配后输出。",
+      "sourceRef": "产品知识库",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-006",
+      "kiName": "产品候选组合",
+      "id": "KE-FRONT-006-04",
+      "name": "匹配依据",
+      "attribute": "语义",
+      "kind": "K-Type-F",
+      "description": "为每个候选产品提供可追溯的匹配依据，引用具体的输入来源：①KYC痛点（如“KYC缺口：企业扩产需补充流动资金”）；②沟通记录（如“📌 2026-08-12沟通，财务总监提出‘今年下半年原料采购资金有缺口’”）；③市场信号（如“处于光伏产业链扩张期，设备购置需求明确”）。每条匹配依据标注来源类型和原始出处，便于客户经理在拜访中向客户解释推荐理由时引用。由产品组合智能体（语义LLM）综合多源输入融合生成。",
+      "sourceRef": "产品组合智能体（语义LLM融合KYC痛点+沟通记录+市场信号）",
+      "relatedRule": "—",
+      "status": "设计"
+    },
+    {
+      "kiId": "KI-FRONT-006",
+      "kiName": "产品候选组合",
+      "id": "KE-FRONT-006-05",
+      "name": "待核实条件",
+      "attribute": "规则",
+      "kind": "K-Type-R",
+      "description": "在正式推介该产品前，需要客户经理在拜访中向客户确认的前提条件清单，如“①企业无当前逾期贷款记录”、“②企业成立满2年（营业执照生效日期）”、“③近6个月无重大行政处罚记录”、“④应收账款账期≤180天”等。每条条件标注核实方式和所需材料，如“核实方式：查询征信报告",
+      "sourceRef": "所需材料：近6个月纳税证明”。系统由产品组合规则引擎根据产品准入硬约束生成，满足全部条件后方可正式提交申请。",
+      "relatedRule": "RUL-FRONT-003",
+      "status": "设计"
+    }
+  ],
+  "rules": [
+    {
+      "id": "RUL-FRONT-001",
+      "name": "事实对账冲突检测规则",
+      "domain": "KD-01,KD-05",
+      "ruleType": "形式化规则（K-Type-R）",
+      "content": "当行内指标与外部数据出现逻辑矛盾且差异超过阈值时（如营收增速与用电量/结算量反向变动），自动标记冲突并生成冲突清单；冲突项须在作战单显著展示并给出核实建议",
+      "relatedSkillTool": "SK-FRONT-004 / T-CORE-001,T-EXT-001",
+      "status": "设计"
+    },
+    {
+      "id": "RUL-FRONT-002",
+      "name": "KYC缺口优先级规则",
+      "domain": "KD-01,KD-06",
+      "ruleType": "形式化规则（K-Type-R）",
+      "content": "按风险影响（安全等级≥S2优先）、可核实性与业务紧迫性对KYC信息缺口排序；高风险缺口须生成核实话术与核实路径，普通缺口仅提示",
+      "relatedSkillTool": "SK-FRONT-006 / T-LLM-001",
+      "status": "设计"
+    },
+    {
+      "id": "RUL-FRONT-003",
+      "name": "产品硬约束规则",
+      "domain": "KD-02",
+      "ruleType": "形式化规则（K-Type-R）",
+      "content": "产品推荐前强制校验客户类型、监管禁止、准入/互斥条件；任一硬约束不满足则禁止推荐该产品并标注原因，作为T-PRODUCT-001匹配引擎的硬性过滤",
+      "relatedSkillTool": "SK-FRONT-007 / T-PRODUCT-001",
+      "status": "设计"
+    },
+    {
+      "id": "RUL-FRONT-004",
+      "name": "话术事实引用规则",
+      "domain": "KD-01,KD-04",
+      "ruleType": "形式化规则（K-Type-R）",
+      "content": "生成的承诺话术与核实话术必须引用原始沟通记录或数据来源，禁止无依据陈述；引用缺失时标注“待核实”",
+      "relatedSkillTool": "SK-FRONT-005,SK-FRONT-006 / T-LLM-001",
+      "status": "设计"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "TASK-FRONT-000",
+      "name": "访前作战单全流程编排",
+      "taskType": "运营型",
+      "bizDomain": "经营与营销",
+      "knowledgeDomain": "KD-01,02,04,05,06,08",
+      "relatedKI": "KI-009, KI-FRONT-001~006（编排型例外：依赖全部知识条目）",
+      "description": "按任务依赖顺序编排 TASK-FRONT-001~007 的执行与数据传递，管理权限校验与冲突规则触发，汇总各模块产出为完整H5作战单",
+      "role": "客户经理+产品经理",
+      "input": "客户编号+拜访目标",
+      "output": "执行轨迹+完整H5作战单",
+      "riskLevel": "高",
+      "status": "设计"
+    },
+    {
+      "id": "TASK-FRONT-001",
+      "name": "客户基本信息装配",
+      "taskType": "执行型",
+      "bizDomain": "经营与营销",
+      "knowledgeDomain": "KD-01",
+      "relatedKI": "KI-009",
+      "description": "从CRM/核心系统自动拉取待拜访客户的核心基本信息，标注数据时点和来源，作为后续分析的事实锚点",
+      "role": "客户经理",
+      "input": "客户名称/编号",
+      "output": "客户信息摘要卡片",
+      "riskLevel": "低",
+      "status": "设计"
+    },
+    {
+      "id": "TASK-FRONT-002",
+      "name": "公司供应链图谱分析",
+      "taskType": "认知型",
+      "bizDomain": "经营与营销",
+      "knowledgeDomain": "KD-01,KD-08",
+      "relatedKI": "KI-FRONT-001",
+      "description": "整合行内交易数据和外部产业数据，生成上游供应商、下游客户及业务关系图谱，解读供应链位置和议价能力",
+      "role": "客户经理",
+      "input": "客户编号",
+      "output": "供应链图谱（三段式结构+解读）",
+      "riskLevel": "中",
+      "status": "设计"
+    },
+    {
+      "id": "TASK-FRONT-003",
+      "name": "产业链八维研判",
+      "taskType": "认知型",
+      "bizDomain": "经营与营销",
+      "knowledgeDomain": "KD-01,KD-08",
+      "relatedKI": "KI-FRONT-002",
+      "description": "基于市场慧眼智能体，从政策、市场、技术、供应链、区域、风险、指数、竞争力八个维度对客户所在产业链进行研判，输出综合经营判断",
+      "role": "客户经理",
+      "input": "客户行业代码",
+      "output": "八维卡片+综合结论",
+      "riskLevel": "中",
+      "status": "设计"
+    },
+    {
+      "id": "TASK-FRONT-004",
+      "name": "行内变动行为事实对账",
+      "taskType": "认知型",
+      "bizDomain": "经营与营销",
+      "knowledgeDomain": "KD-01,KD-05",
+      "relatedKI": "KI-FRONT-003",
+      "description": "展示客户在行内近期关键变动指标，自动检测数据冲突、异常和逻辑不一致，生成冲突清单",
+      "role": "客户经理",
+      "input": "客户编号",
+      "output": "指标列表+冲突检测结果",
+      "riskLevel": "中",
+      "status": "设计"
+    },
+    {
+      "id": "TASK-FRONT-005",
+      "name": "事实承诺事项提取与话术生成",
+      "taskType": "认知型",
+      "bizDomain": "经营与营销",
+      "knowledgeDomain": "KD-01,KD-04",
+      "relatedKI": "KI-FRONT-004",
+      "description": "从历史沟通记录中提取承诺事项，按时间线展示，并针对每项承诺生成基于事实的沟通话术和行动计划",
+      "role": "客户经理",
+      "input": "客户编号",
+      "output": "承诺事项卡片（含话术+行动）",
+      "riskLevel": "高",
+      "status": "设计"
+    },
+    {
+      "id": "TASK-FRONT-006",
+      "name": "KYC信息缺口识别与核实话术",
+      "taskType": "认知型",
+      "bizDomain": "经营与营销",
+      "knowledgeDomain": "KD-01,KD-06",
+      "relatedKI": "KI-FRONT-005",
+      "description": "基于事实对账和行业信号，自动识别信息缺口，为每个缺口生成核实话术和核实路径",
+      "role": "客户经理",
+      "input": "客户编号",
+      "output": "KYC缺口卡片（含话术+行动）",
+      "riskLevel": "高",
+      "status": "设计"
+    },
+    {
+      "id": "TASK-FRONT-007",
+      "name": "产品候选组合推荐",
+      "taskType": "认知型",
+      "bizDomain": "经营与营销",
+      "knowledgeDomain": "KD-02,KD-01",
+      "relatedKI": "KI-FRONT-006",
+      "description": "综合KYC痛点、实时沟通记录和市场慧眼信号，输出候选产品及组合，标注匹配依据和待核实条件",
+      "role": "客户经理+产品经理",
+      "input": "客户编号+沟通摘要",
+      "output": "产品推荐列表",
+      "riskLevel": "高",
+      "status": "设计"
+    }
+  ],
+  "skills": [
+    {
+      "id": "SK-FRONT-000",
+      "name": "访前作战单流程编排（串接全部任务节点）",
+      "skillType": "组合",
+      "domain": "KD-01,02,04,05,06,08",
+      "inputSchema": "{customerId, goal}",
+      "outputSchema": "执行轨迹（任务顺序+数据依赖）+ 完整H5作战单JSON",
+      "tools": "T-CRM-001,T-CORE-001,T-EXT-001,T-MARKET-001,T-LLM-001,T-PRODUCT-001,T-AUTH-001",
+      "rules": "RUL-FRONT-001~004",
+      "relatedKI": "KI-009, KI-FRONT-001~006",
+      "riskLevel": "高"
+    },
+    {
+      "id": "SK-FRONT-001",
+      "name": "信息组装",
+      "skillType": "组合",
+      "domain": "KD-01",
+      "inputSchema": "{customerId}",
+      "outputSchema": "客户信息摘要卡片（KI-009八要素，含数据时点与来源）",
+      "tools": "T-CRM-001,T-CORE-001",
+      "rules": "—",
+      "relatedKI": "KI-009",
+      "riskLevel": "低"
+    },
+    {
+      "id": "SK-FRONT-002",
+      "name": "供应链图谱分析",
+      "skillType": "组合",
+      "domain": "KD-01,08",
+      "inputSchema": "{customerId}",
+      "outputSchema": "图谱节点+边+解读",
+      "tools": "T-EXT-001,T-CORE-001",
+      "rules": "—",
+      "relatedKI": "KI-FRONT-001",
+      "riskLevel": "中"
+    },
+    {
+      "id": "SK-FRONT-003",
+      "name": "八维研判",
+      "skillType": "判断",
+      "domain": "KD-08",
+      "inputSchema": "{industryCode}",
+      "outputSchema": "八维评分+综合结论",
+      "tools": "T-MARKET-001",
+      "rules": "—",
+      "relatedKI": "KI-FRONT-002",
+      "riskLevel": "中"
+    },
+    {
+      "id": "SK-FRONT-004",
+      "name": "事实对账与冲突检测",
+      "skillType": "判断",
+      "domain": "KD-01,05",
+      "inputSchema": "{customerId}",
+      "outputSchema": "指标列表+冲突清单",
+      "tools": "T-CORE-001,T-EXT-001",
+      "rules": "RUL-FRONT-001",
+      "relatedKI": "KI-FRONT-003",
+      "riskLevel": "中"
+    },
+    {
+      "id": "SK-FRONT-005",
+      "name": "承诺话术生成",
+      "skillType": "生成",
+      "domain": "KD-01,04",
+      "inputSchema": "{customerId}",
+      "outputSchema": "承诺卡片（含话术+行动）",
+      "tools": "T-LLM-001",
+      "rules": "—",
+      "relatedKI": "KI-FRONT-004",
+      "riskLevel": "高"
+    },
+    {
+      "id": "SK-FRONT-006",
+      "name": "KYC缺口核验",
+      "skillType": "生成",
+      "domain": "KD-01,06",
+      "inputSchema": "{customerId, conflicts}",
+      "outputSchema": "缺口卡片（含话术+行动）",
+      "tools": "T-LLM-001",
+      "rules": "RUL-FRONT-002",
+      "relatedKI": "KI-FRONT-005",
+      "riskLevel": "高"
+    },
+    {
+      "id": "SK-FRONT-007",
+      "name": "产品组合推荐",
+      "skillType": "判断+生成",
+      "domain": "KD-02,01",
+      "inputSchema": "{customerId, needs}",
+      "outputSchema": "候选产品列表+依据",
+      "tools": "T-PRODUCT-001,T-LLM-001",
+      "rules": "RUL-FRONT-003",
+      "relatedKI": "KI-FRONT-006",
+      "riskLevel": "高"
+    }
+  ],
+  "tools": [
+    {
+      "id": "T-CRM-001",
+      "toolType": "api",
+      "provider": "CRM系统",
+      "riskLevel": "低",
+      "description": "查询客户基本信息",
+      "interfaceType": "REST",
+      "inputSchema": "customerId",
+      "outputSchema": "客户全称/编号/行业/规模/注册地址/主要产品/合作年限",
+      "status": "设计"
+    },
+    {
+      "id": "T-CORE-001",
+      "toolType": "api",
+      "provider": "核心系统",
+      "riskLevel": "中",
+      "description": "查询客户交易及财务指标",
+      "interfaceType": "REST",
+      "inputSchema": "customerId",
+      "outputSchema": "年营收/授信使用率/代发薪/结算量等",
+      "status": "设计"
+    },
+    {
+      "id": "T-EXT-001",
+      "toolType": "api",
+      "provider": "外部数据供应商",
+      "riskLevel": "中",
+      "description": "获取工商、产业、供应链数据",
+      "interfaceType": "REST",
+      "inputSchema": "creditCode/industry",
+      "outputSchema": "供应商/客户列表、产业链分析",
+      "status": "设计"
+    },
+    {
+      "id": "T-MARKET-001",
+      "toolType": "model",
+      "provider": "市场慧眼智能体",
+      "riskLevel": "中",
+      "description": "执行八维研判分析",
+      "interfaceType": "MCP+REST",
+      "inputSchema": "industryCode",
+      "outputSchema": "八个维度评分+综合结论",
+      "status": "设计"
+    },
+    {
+      "id": "T-LLM-001",
+      "toolType": "model",
+      "provider": "LLM服务",
+      "riskLevel": "中",
+      "description": "生成话术、问题、解释",
+      "interfaceType": "MCP",
+      "inputSchema": "prompt+context",
+      "outputSchema": "自然语言文本",
+      "status": "设计"
+    },
+    {
+      "id": "T-PRODUCT-001",
+      "toolType": "rule-engine",
+      "provider": "产品组合引擎",
+      "riskLevel": "高",
+      "description": "匹配候选产品并检查组合规则",
+      "interfaceType": "SDK",
+      "inputSchema": "customerProfile+needs",
+      "outputSchema": "产品列表+匹配依据+待核实条件",
+      "status": "设计"
+    },
+    {
+      "id": "T-AUTH-001",
+      "toolType": "api",
+      "provider": "权限服务",
+      "riskLevel": "高",
+      "description": "校验用户对客户数据的访问权限",
+      "interfaceType": "REST",
+      "inputSchema": "userId,customerId",
+      "outputSchema": "允许/拒绝",
+      "status": "设计"
+    }
+  ],
+  "datasets": [
+    {
+      "id": "DS-FRONT-001",
+      "name": "访前作战单测试集",
+      "bizDomain": "经营与营销",
+      "knowledgeDomain": "KD-01,KD-02,KD-08",
+      "scenario": "经营与营销-智能访前作战单",
+      "sourceType": "脱敏历史客户+专家构造",
+      "priority": "P0",
+      "securityLevel": "S2",
+      "status": "设计"
+    },
+    {
+      "id": "DS-FRONT-001-EVAL",
+      "name": "访前作战单Frozen评测集",
+      "bizDomain": "经营与营销",
+      "knowledgeDomain": "KD-01,KD-02,KD-08",
+      "scenario": "经营与营销-智能访前作战单",
+      "sourceType": "专家构造（含正常/边界/失败）",
+      "priority": "P0",
+      "securityLevel": "S2",
+      "status": "设计"
+    },
+    {
+      "id": "DS-FRONT-SUPPLY",
+      "name": "供应链图谱样本",
+      "bizDomain": "经营与营销",
+      "knowledgeDomain": "KD-01,KD-08",
+      "scenario": "经营与营销-智能访前作战单",
+      "sourceType": "外部公开数据+脱敏交易",
+      "priority": "P1",
+      "securityLevel": "S1",
+      "status": "设计"
+    }
+  ],
+  "memory_feedback": [
+    {
+      "id": "MEM-FRONT-001",
+      "name": "历史访前报告及客户经理反馈",
+      "description": "每次访前报告的用户确认与修改沉淀",
+      "source": "任务轨迹",
+      "flowTo": "评测集/回流",
+      "status": "设计"
+    }
+  ]
+}
