@@ -16,6 +16,7 @@ public record ActivationContract(
         String routeMode,
         Preconditions preconditions,
         List<Activation> activations,
+        List<String> knowledgeItemIds,
         List<String> semanticQueries,
         List<String> ruleChecks,
         List<String> skills,
@@ -25,6 +26,7 @@ public record ActivationContract(
 
     public ActivationContract {
         activations = orEmptyActivations(activations);
+        knowledgeItemIds = orEmpty(knowledgeItemIds);
         semanticQueries = orEmpty(semanticQueries);
         ruleChecks = orEmpty(ruleChecks);
         skills = orEmpty(skills);

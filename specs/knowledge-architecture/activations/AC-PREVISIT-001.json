@@ -20,6 +20,7 @@
     {"assetId": "ASSET-KNOW-PRODUCT-CARDS", "required": false, "purpose": "定向产品知识", "sequence": 8},
     {"assetId": "ASSET-KNOW-VISIT-SOP", "required": false, "purpose": "访前和离场作业约束", "sequence": 9}
   ],
+  "knowledgeItemIds": ["KI-009", "KI-FRONT-001", "KI-FRONT-002", "KI-FRONT-003", "KI-FRONT-004", "KI-FRONT-005", "KI-FRONT-006"],
   "semanticQueries": ["SQ-CUSTOMER-RELATIONSHIP", "SQ-RELATED-LEGAL-ENTITIES", "SQ-KYC-GAPS", "SQ-OPEN-COMMITMENTS", "SQ-ACTIVE-PRODUCT-VERSIONS"],
   "ruleChecks": ["CALLER_SCOPE_ALLOWED", "CLAIM_NOT_FACT", "SIGNAL_NOT_OPPORTUNITY", "PRODUCT_VERSION_ACTIVE"],
   "skills": ["SP-02", "SP-05", "SP-15", "SP-10"],

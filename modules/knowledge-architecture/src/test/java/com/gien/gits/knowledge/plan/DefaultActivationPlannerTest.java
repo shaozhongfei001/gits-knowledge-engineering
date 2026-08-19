@@ -40,6 +40,7 @@ class DefaultActivationPlannerTest {
                 new ActivationContract.Preconditions(List.of("callerId", "customerId"), List.of("RELATIONSHIP_MANAGER"), true),
                 List.of(new ActivationContract.Activation("ASSET-DATA-CUSTOMER-PROFILE", true, "p", 1),
                         new ActivationContract.Activation("ASSET-KNOW-CUSTOMER-ONTOLOGY", true, "p", 2)),
+                List.of("KI-009"),
                 List.of("SQ-CUSTOMER-RELATIONSHIP"), List.of("CLAIM_NOT_FACT"), List.of("SP-02"),
                 new ActivationContract.Context(12000, List.of("VERIFIED_FACT"), "CONTRACT_PRIORITY"),
                 List.of("HG-B01"), "FAIL_CLOSED");
@@ -205,6 +206,7 @@ class DefaultActivationPlannerTest {
                 "1.0.0", "AC-PREVISIT-001", "0.1.0", "PRE_VISIT_PREPARATION", "MAP_FIRST",
                 new ActivationContract.Preconditions(List.of("callerId", "customerId"), List.of("RELATIONSHIP_MANAGER"), true),
                 List.of(new ActivationContract.Activation("ASSET-DATA-CUSTOMER-PROFILE", true, "p", 1)),
+                List.of(),
                 List.of("SQ-CUSTOMER-RELATIONSHIP"), List.of("CLAIM_NOT_FACT"), List.of("SP-02"),
                 new ActivationContract.Context(12000, List.of("VERIFIED_FACT"), "CONTRACT_PRIORITY"),
                 List.of("HG-B01"), "FAIL_CLOSED");

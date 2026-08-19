@@ -192,6 +192,23 @@ public class EngagementConfig {
     }
 
     @Bean
+    public KnowledgeAssembler knowledgeAssembler(
+            com.gien.gits.knowledge.port.KnowledgeElementPort knowledgeElementPort,
+            com.gien.gits.knowledge.port.KnowledgeWikiPort knowledgeWikiPort) {
+        return new KnowledgeAssembler(knowledgeElementPort, knowledgeWikiPort);
+    }
+
+    @Bean
+    public KnowledgeDrivenPrevisitReportGenerator knowledgeDrivenPrevisitReportGenerator(
+            KnowledgeAssembler knowledgeAssembler,
+            LlmClient llmClient,
+            PrevisitWorkflowService previsitWorkflowService,
+            com.gien.gits.knowledge.port.ActivationContractPort activationContractPort) {
+        return new KnowledgeDrivenPrevisitReportGenerator(
+                knowledgeAssembler, llmClient, previsitWorkflowService, activationContractPort);
+    }
+
+    @Bean
     public PostvisitProcessingService postvisitProcessingService(
             KycInsightService kycInsightService,
             WritableCommitmentRepository commitmentRepo,
@@ -225,6 +242,7 @@ public class EngagementConfig {
             CustomerContextService customerContextService,
             KycInsightService kycInsightService,
             PrevisitWorkflowService previsitService,
+            KnowledgeDrivenPrevisitReportGenerator knowledgeDrivenPrevisitGenerator,
             PostvisitProcessingService postvisitService,
             ReportGenerationService reportService,
             CustomerJourneyService journeyService,
@@ -235,7 +253,7 @@ public class EngagementConfig {
             BusinessMetrics businessMetrics) {
         return new EngagementOrchestrator(
             customerContextService, kycInsightService,
-            previsitService, postvisitService, reportService,
+            previsitService, knowledgeDrivenPrevisitGenerator, postvisitService, reportService,
             journeyService, analysisContentRepo, journeyRepo, operatingCaseRepo,
             domainEventPublisher, businessMetrics);
     }

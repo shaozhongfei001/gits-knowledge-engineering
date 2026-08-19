@@ -54,6 +54,11 @@ public class MockLlmClient implements LlmClient {
                 || promptLower.contains("分析师")) {
             response = buildReportResponse();
         }
+        // 知识地图驱动访前场景 (P23): systemPrompt 含"知识地图/访前分析"，返回知识驱动 JSON
+        else if (promptLower.contains("知识地图") || promptLower.contains("knowledge map")
+                || promptLower.contains("访前分析") || promptLower.contains("previsit")) {
+            response = buildKnowledgeDrivenPrevisitResponse(userPrompt);
+        }
         // 脚本生成场景(通用): 返回包含content字段的JSON
         else if (promptLower.contains("脚本") || promptLower.contains("script")
                 || promptLower.contains("生成") || promptLower.contains("generate")) {
@@ -151,6 +156,20 @@ public class MockLlmClient implements LlmClient {
                     "generatedAt": "%s"
                   }
                 }""".formatted(java.time.Instant.now().toString());
+    }
+
+    private String buildKnowledgeDrivenPrevisitResponse(String userPrompt) {
+        // 从 userPrompt 提取知识地图/业务上下文片段，体现 LLM 消费知识地图
+        String hint = "基于知识地图";
+        if (userPrompt != null && userPrompt.contains("KI-009")) {
+            hint = "已读取知识地图（KI-009 客户基础 + KI-FRONT-001~006），基于权威知识条目生成";
+        }
+        return """
+                {
+                  "visitStrategy": "%s：先补全KYC未知项，再围绕设备采购融资确认授信需求与主体，避免直接推销。",
+                  "keyQuestions": ["确认Q3设备采购预算的真实用途与融资期限", "核实是否纳入现有授信主体", "了解近一年经营现金流变化"],
+                  "riskReminders": ["不得承诺授信额度（禁令#3）", "客户表达需语义消歧后再认定事实"]
+                }""".formatted(hint);
     }
 
     private String buildGenericResponse(String userPrompt) {

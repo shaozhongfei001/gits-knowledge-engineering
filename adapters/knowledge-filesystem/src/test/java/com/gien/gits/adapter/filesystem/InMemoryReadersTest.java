@@ -123,6 +123,7 @@ class InMemoryReadersTest {
         return new ActivationContract("1.0.0", id, "1", "TASK", "SHADOW",
                 new ActivationContract.Preconditions(java.util.List.of(), java.util.List.of(), false),
                 java.util.List.of(), java.util.List.of(), java.util.List.of(), java.util.List.of(),
+                java.util.List.of(),
                 new ActivationContract.Context(100, java.util.List.of(), "TRIM"),
                 java.util.List.of(), "DENY");
     }

@@ -27,6 +27,7 @@ public class EngagementOrchestrator {
     private final CustomerContextService customerContextService;
     private final KycInsightService kycInsightService;
     private final PrevisitWorkflowService previsitService;
+    private final KnowledgeDrivenPrevisitReportGenerator knowledgeDrivenPrevisitGenerator;
     private final PostvisitProcessingService postvisitService;
     private final ReportGenerationService reportService;
     private final CustomerJourneyService journeyService;
@@ -40,6 +41,7 @@ public class EngagementOrchestrator {
             CustomerContextService customerContextService,
             KycInsightService kycInsightService,
             PrevisitWorkflowService previsitService,
+            KnowledgeDrivenPrevisitReportGenerator knowledgeDrivenPrevisitGenerator,
             PostvisitProcessingService postvisitService,
             ReportGenerationService reportService,
             CustomerJourneyService journeyService,
@@ -51,6 +53,7 @@ public class EngagementOrchestrator {
         this.customerContextService = Objects.requireNonNull(customerContextService);
         this.kycInsightService = Objects.requireNonNull(kycInsightService);
         this.previsitService = Objects.requireNonNull(previsitService);
+        this.knowledgeDrivenPrevisitGenerator = Objects.requireNonNull(knowledgeDrivenPrevisitGenerator);
         this.postvisitService = Objects.requireNonNull(postvisitService);
         this.reportService = Objects.requireNonNull(reportService);
         this.journeyService = Objects.requireNonNull(journeyService);
@@ -119,8 +122,8 @@ public class EngagementOrchestrator {
         // 推进旅程到访前准备阶段
         journeyRepo.updateJourneyPhase(UUID.fromString(journeyId), JourneyPhase.PREVISIT_PREP);
 
-        // 生成访前报告 (R1)
-        PrevisitReportContent report = previsitService.generatePrevisitReport(
+        // 生成访前报告 (R1) — 知识地图驱动（LLM 读图+组装知识生成，失败 fallback 到规则）
+        PrevisitReportContent report = knowledgeDrivenPrevisitGenerator.generate(
             customerId, journeyId, operatingCaseId, visitObjective);
 
         // 生成60秒作战卡 (R2)
