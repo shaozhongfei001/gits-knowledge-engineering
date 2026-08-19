@@ -27,4 +27,11 @@ public interface KnowledgeElementPort {
      * @return 该 KI 下全部合法要素；为空时返回空数组，不返回 {@code null}
      */
     List<KnowledgeElement> listByKnowledgeItem(String knowledgeItemId);
+
+    /**
+     * 列出全部知识要素（供知识地图人侧只读浏览）。
+     *
+     * @return 全部合法要素；无数据时返回空数组，不返回 {@code null}
+     */
+    List<KnowledgeElement> listAll();
 }

@@ -382,6 +382,35 @@ export async function generateMeetingScript(customerId: string, rmId: string = '
   return data
 }
 
+/** 一键访前自动准备响应（P23/G6，知识地图任务映射驱动） */
+export interface PreparedPrevisitResponse {
+  outreachScript: OutreachScriptResponse
+  meetingScript: MeetingScriptResponse
+  previsitReport: PrevisitExecutionResponse['previsitReport']
+  battleCard: PrevisitExecutionResponse['battleCard']
+}
+
+/** 一键访前自动准备：合并外联 + 会面 + R1 + R2 为一次调用（知识地图驱动） */
+export async function preparePrevisit(
+  journeyId: string,
+  customerId: string,
+  operatingCaseId: string,
+  visitObjective: string = '',
+  rmId: string = '',
+  channel: string = 'EMAIL'
+): Promise<PreparedPrevisitResponse> {
+  const { data } = await api.post(`/journey/${journeyId}/prepare-previsit`, {
+    customerId,
+    rmId,
+    operatingCaseId,
+    journeyId,
+    channel,
+    visitObjective
+  })
+  return data
+  return data
+}
+
 /** 获取KYC缺口画像 */
 export async function fetchKycGapProfile(customerId: string): Promise<KycGapProfile> {
   const { data } = await api.get(`/kyc/${customerId}/gap-profile`)

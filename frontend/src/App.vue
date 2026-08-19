@@ -28,6 +28,7 @@ onMounted(initTheme)
 const menuOptions: MenuOption[] = [
   { label: '客户经营概览', key: 'Dashboard' },
   { label: '持续经营工作台', key: 'EngagementWorkspace' },
+  { label: '知识地图', key: 'KnowledgeMapView' },
   { label: '承诺与任务', key: 'CommitmentDashboard' },
   { label: '外部事件监控', key: 'ExternalEventMonitor' }
 ]

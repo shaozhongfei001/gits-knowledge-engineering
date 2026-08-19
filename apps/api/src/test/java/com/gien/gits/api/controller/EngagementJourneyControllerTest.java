@@ -5,6 +5,7 @@ import com.gien.gits.api.service.EngagementOrchestrator;
 import com.gien.gits.action.port.AuditLogPort;
 import com.gien.gits.api.service.MeetingScriptService;
 import com.gien.gits.api.service.OutreachScriptService;
+import com.gien.gits.api.service.PrevisitPreparationService;
 import com.gien.gits.customerjourney.CustomerJourney;
 import com.gien.gits.customerjourney.JourneyPhase;
 import com.gien.gits.engagement.port.OutreachScriptRepository;
@@ -40,6 +41,7 @@ class EngagementJourneyControllerTest {
     @MockitoBean MeetingScriptService meetingScriptService;
     @MockitoBean OutreachScriptRepository outreachScriptRepository;
     @MockitoBean MeetingScriptRepository meetingScriptRepository;
+    @MockitoBean PrevisitPreparationService previsitPreparationService;
     @MockitoBean AuditLogPort auditLogPort;
 
     private CustomerJourney sampleJourney() {

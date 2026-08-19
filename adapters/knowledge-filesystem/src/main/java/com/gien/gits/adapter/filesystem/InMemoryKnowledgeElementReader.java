@@ -35,4 +35,9 @@ public final class InMemoryKnowledgeElementReader implements KnowledgeElementPor
                 .filter(element -> knowledgeItemId.equals(element.knowledgeItemId()))
                 .toList();
     }
+
+    @Override
+    public List<KnowledgeElement> listAll() {
+        return List.copyOf(store.elements().values());
+    }
 }

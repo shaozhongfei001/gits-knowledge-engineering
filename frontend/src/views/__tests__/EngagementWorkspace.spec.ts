@@ -82,18 +82,16 @@ describe('EngagementWorkspace', () => {
     expect(labels).toContain('完成旅程')
   })
 
-  it('renders action panel with 6 actions', async () => {
+  it('renders action panel with 4 actions', async () => {
     const wrapper = await mountWorkspace()
     const actions = wrapper.findAll('.ew-act')
-    expect(actions).toHaveLength(6)
+    expect(actions).toHaveLength(4)
   })
 
   it('renders action titles', async () => {
     const wrapper = await mountWorkspace()
     const titles = wrapper.findAll('.ew-act-title').map(el => el.text())
-    expect(titles).toContain('生成外联脚本')
-    expect(titles).toContain('生成会面脚本')
-    expect(titles).toContain('执行访前准备')
+    expect(titles).toContain('执行访前准备（一键）')
     expect(titles).toContain('执行访后复盘')
     expect(titles).toContain('迭代决策')
     expect(titles).toContain('完成旅程')
@@ -111,7 +109,7 @@ describe('EngagementWorkspace', () => {
     const actions = wrapper.findAll('.ew-act')
     // All actions should be disabled (no journey started)
     const disabledActions = actions.filter(a => a.classes().includes('disabled'))
-    expect(disabledActions.length).toBeGreaterThanOrEqual(5)
+    expect(disabledActions.length).toBe(actions.length)
   })
 
   it('shows customer select button', async () => {

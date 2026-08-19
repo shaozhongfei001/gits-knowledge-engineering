@@ -316,6 +316,14 @@ public class EngagementConfig {
         return new MeetingScriptService(customerContextService, kycInsightService, journeyService, meetingScriptRepo, llmClient);
     }
 
+    @Bean
+    public PrevisitPreparationService previsitPreparationService(
+            OutreachScriptService outreachScriptService,
+            MeetingScriptService meetingScriptService,
+            EngagementOrchestrator orchestrator) {
+        return new PrevisitPreparationService(outreachScriptService, meetingScriptService, orchestrator);
+    }
+
     // --- P9 Loop G6: 客户经营视图服务 ---
 
     @Bean

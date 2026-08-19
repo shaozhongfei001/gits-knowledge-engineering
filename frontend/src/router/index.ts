@@ -41,6 +41,12 @@ const router = createRouter({
       meta: { title: '持续经营工作台' }
     },
     {
+      path: '/knowledge-map',
+      name: 'KnowledgeMapView',
+      component: () => import('../views/KnowledgeMapView.vue'),
+      meta: { title: '知识地图' }
+    },
+    {
       path: '/commitments',
       name: 'CommitmentDashboard',
       component: () => import('../views/CommitmentDashboard.vue'),

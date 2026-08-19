@@ -278,7 +278,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { NGrid, NGi, NCard, NButton, NModal, NInput, NEmpty, NTag, NDescriptions, NDescriptionsItem, NTable, useMessage } from 'naive-ui'
 import RiskBadge from '../components/RiskBadge.vue'
-import { fetchCustomers, generateOutreachScript, generateMeetingScript, executePrevisit, executePostvisit, startJourney, handleNewEvidence, completeJourney } from '../api/engagement'
+import { fetchCustomers, generateOutreachScript, generateMeetingScript, executePrevisit, preparePrevisit, executePostvisit, startJourney, handleNewEvidence, completeJourney } from '../api/engagement'
 import type { Customer, OutreachScriptResponse, MeetingScriptResponse, PrevisitExecutionResponse, PostvisitAnalysisContent, NewEvidenceResponse } from '../api/engagement'
 
 const msg = useMessage()
@@ -335,9 +335,7 @@ function chLabel(v:string) { return channels.find(c=>c.v===v)?.label||v }
 // 操作面板：根据当前阶段动态展示
 const currentActions = computed(() => {
   const actions = [
-    {k:'outreach',title:'生成外联脚本',desc:'基于客户画像和机会信号，生成电话/微信/邮件/面谈外联沟通脚本',icon:'✉',fn:handleOutreach,done:isDone('INTERACTION'),enabled:!!jid.value,roundHint: isDone('INTERACTION') ? `Round ${round.value} 已完成` : ''},
-    {k:'meeting',title:'生成会面脚本',desc:'基于访前报告和KYC缺口，生成结构化会面提纲',icon:'📋',fn:handleMeeting,done:isDone('INTERACTION'),enabled:!!jid.value,roundHint: ''},
-    {k:'previsit',title:'执行访前准备',desc:'生成R1访前报告 + R2速战卡',icon:'📈',fn:handlePrevisit,done:isDone('PREVISIT'),enabled:!!jid.value,roundHint: isDone('PREVISIT') ? `Round ${round.value} 已完成` : (round.value > 1 ? `R8 下轮访前已就绪` : '')},
+    {k:'previsit',title:'执行访前准备（一键）',desc:'按知识地图任务映射，自动生成外联脚本 + 会面脚本 + R1访前报告 + R2速战卡',icon:'📈',fn:handlePrevisit,done:isDone('PREVISIT'),enabled:!!jid.value,roundHint: isDone('PREVISIT') ? `Round ${round.value} 已完成` : (round.value > 1 ? `R8 下轮访前已就绪` : '')},
     {k:'postvisit',title:'执行访后复盘',desc:'R4分析 + R5A内部报告 + R5B CRM报告 + 事实对账',icon:'📊',fn:handlePostvisit,done:isDone('POSTVISIT'),enabled:!!jid.value && isDone('PREVISIT'),roundHint: !isDone('PREVISIT') ? '需先完成访前准备' : ''},
     {k:'iterate',title:'迭代决策',desc:'录入新证据 → R7更新报告 → R8下轮访前 → 进入下一轮',icon:'🔄',fn:handleIterate,done:isDone('ITERATE'),enabled:!!jid.value && isDone('POSTVISIT'),roundHint: !isDone('POSTVISIT') ? '需先完成访后复盘' : (round.value > 1 ? '可继续迭代或完成旅程' : '')},
     {k:'complete',title:'完成旅程',desc:'确认CRM回写，关闭经营旅程',icon:'🏁',fn:doComplete,done:isDone('COMPLETE'),enabled:!!jid.value && isDone('POSTVISIT'),roundHint: ''}
@@ -348,7 +346,7 @@ const currentActions = computed(() => {
 function clickPhase(phase: string) {
   if (phase === 'START') { if(!sc.value) showCS.value=true; else if(!jid.value) doStart() }
   else if (phase === 'PREVISIT') handlePrevisit()
-  else if (phase === 'INTERACTION') handleOutreach()
+  else if (phase === 'INTERACTION') handlePrevisit()
   else if (phase === 'POSTVISIT') handlePostvisit()
   else if (phase === 'ITERATE') handleIterate()
   else if (phase === 'COMPLETE') doComplete()
@@ -402,8 +400,16 @@ async function handlePrevisit() {
   if(!jid.value){msg.warning('请先启动旅程');return}
   if(!sc.value){msg.warning('请先选择客户');return}
   ld.value=true
-  try{const r=await executePrevisit(jid.value,sc.value.customerId,oid.value,`Round ${round.value} 访前调研`);preR.value=r;roundDone.value.add('PREVISIT');msg.success(`Round ${round.value} 访前报告已生成`)}
-  catch(e:any){msg.error(`执行访前报告失败：${e.message||'未知错误'}`)}
+  try{
+    const r=await preparePrevisit(jid.value,sc.value.customerId,oid.value,`Round ${round.value} 访前调研`,sc.value.rmId)
+    // 一键访前包：外联脚本 + 会面脚本 + R1 访前报告 + R2 速战卡（知识地图任务映射驱动）
+    outR.value=r.outreachScript||null
+    meetR.value=r.meetingScript||null
+    preR.value={previsitReport:r.previsitReport,battleCard:r.battleCard} as PrevisitExecutionResponse
+    roundDone.value.add('INTERACTION')
+    roundDone.value.add('PREVISIT')
+    msg.success(`Round ${round.value} 访前包已自动生成（外联+会面+R1+R2）`)
+  }catch(e:any){msg.error(`一键访前准备失败：${e.message||'未知错误'}`)}
   finally{ld.value=false}
 }
 

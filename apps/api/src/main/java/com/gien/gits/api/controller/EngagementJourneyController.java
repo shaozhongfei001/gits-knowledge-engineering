@@ -5,9 +5,11 @@ import com.gien.gits.api.dto.JourneyStartResponse;
 import com.gien.gits.api.dto.NewEvidenceResponse;
 import com.gien.gits.api.dto.PostvisitExecutionResponse;
 import com.gien.gits.api.dto.PrevisitExecutionResponse;
+import com.gien.gits.api.dto.PreparedPrevisitResponse;
 import com.gien.gits.api.service.EngagementOrchestrator;
 import com.gien.gits.api.service.MeetingScriptService;
 import com.gien.gits.api.service.OutreachScriptService;
+import com.gien.gits.api.service.PrevisitPreparationService;
 import com.gien.gits.customerjourney.CustomerJourney;
 import com.gien.gits.engagement.MeetingScript;
 import com.gien.gits.engagement.OutreachScript;
@@ -35,18 +37,21 @@ public class EngagementJourneyController {
     private final MeetingScriptService meetingScriptService;
     private final OutreachScriptRepository outreachScriptRepository;
     private final MeetingScriptRepository meetingScriptRepository;
+    private final PrevisitPreparationService previsitPreparationService;
 
     public EngagementJourneyController(
             EngagementOrchestrator orchestrator,
             OutreachScriptService outreachScriptService,
             MeetingScriptService meetingScriptService,
             OutreachScriptRepository outreachScriptRepository,
-            MeetingScriptRepository meetingScriptRepository) {
+            MeetingScriptRepository meetingScriptRepository,
+            PrevisitPreparationService previsitPreparationService) {
         this.orchestrator = Objects.requireNonNull(orchestrator);
         this.outreachScriptService = Objects.requireNonNull(outreachScriptService);
         this.meetingScriptService = Objects.requireNonNull(meetingScriptService);
         this.outreachScriptRepository = Objects.requireNonNull(outreachScriptRepository);
         this.meetingScriptRepository = Objects.requireNonNull(meetingScriptRepository);
+        this.previsitPreparationService = Objects.requireNonNull(previsitPreparationService);
     }
 
     @PostMapping("/start")
@@ -80,6 +85,36 @@ public class EngagementJourneyController {
             journeyId, request.customerId(), request.operatingCaseId(), request.visitObjective());
         return ResponseEntity.ok(new PrevisitExecutionResponse(
             result.previsitReport(), result.battleCard()));
+    }
+
+    /**
+     * P23/G6：一键访前自动准备（知识地图任务映射驱动）。
+     * 合并外联脚本 + 会面脚本 + 访前报告 R1 + 速战卡 R2 为一次调用。
+     */
+    @PostMapping("/{journeyId}/prepare-previsit")
+    public ResponseEntity<PreparedPrevisitResponse> preparePrevisit(
+            @PathVariable String journeyId,
+            @RequestBody PreparedPrevisitRequest request) {
+        if (request.operatingCaseId() == null || request.operatingCaseId().isBlank()
+                || request.customerId() == null || request.customerId().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+        OutreachChannel channel;
+        try {
+            channel = request.channel() == null || request.channel().isBlank()
+                    ? OutreachChannel.EMAIL
+                    : OutreachChannel.valueOf(request.channel());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+        PrevisitPreparationService.PreparedPrevisit prepared = previsitPreparationService.prepare(
+                journeyId, request.customerId(), request.rmId(),
+                request.operatingCaseId(), request.visitObjective(), channel);
+        return ResponseEntity.ok(new PreparedPrevisitResponse(
+                prepared.outreachScript(),
+                prepared.meetingScript(),
+                prepared.previsitReport(),
+                prepared.battleCard()));
     }
 
     @PostMapping("/{journeyId}/postvisit")
@@ -178,4 +213,5 @@ public class EngagementJourneyController {
     public record NewEvidenceRequest(String customerId, String operatingCaseId, String evidenceDescription, String previousReportId) {}
     public record OutreachScriptRequest(String customerId, String rmId, String operatingCaseId, String journeyId, String channel) {}
     public record MeetingScriptRequest(String customerId, String rmId, String operatingCaseId, String journeyId) {}
+    public record PreparedPrevisitRequest(String customerId, String rmId, String operatingCaseId, String journeyId, String channel, String visitObjective) {}
 }

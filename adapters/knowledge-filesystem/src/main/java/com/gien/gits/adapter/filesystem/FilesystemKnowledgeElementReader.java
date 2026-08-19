@@ -61,7 +61,8 @@ public final class FilesystemKnowledgeElementReader implements KnowledgeElementP
         return List.copyOf(result);
     }
 
-    private List<KnowledgeElement> listAll() {
+    @Override
+    public List<KnowledgeElement> listAll() {
         List<KnowledgeElement> result = new ArrayList<>();
         try (Stream<Path> dirs = Files.list(elementsDir)) {
             dirs.filter(Files::isDirectory)
