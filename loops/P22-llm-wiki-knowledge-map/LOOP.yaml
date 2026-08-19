@@ -2,9 +2,9 @@
   "schema_version": "2.0",
   "loop_id": "P22-llm-wiki-knowledge-map",
   "title": "LLM-WIKI 知识工程地图/目录（对齐权威规范 + 大模型优先读图）",
-  "status": "planned",
+  "status": "in_progress",
   "implementation_actor": "feature_pilot",
-  "owner_decision": "PENDING_CONTRACT_AUTHORIZATION",
+  "owner_decision": "OWNER_APPROVED_P22_CONTRACT_REGISTRATION_LIMITED",
   "objective": [
     "以《银行知识工程规范打样_fixed.xlsx》为最高权威，实现业务场景→知识域→知识条目(KI)→知识要素(KE)的分层受控知识地图与目录。",
     "支持大模型优先读图再执行任务（读图机制：方案 A，由规划器决定加载范围）。",

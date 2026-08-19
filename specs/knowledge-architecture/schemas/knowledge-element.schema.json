@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gientech.com/gits/kno/schemas/knowledge-element.json",
+  "title": "GITS Atomic Knowledge Element",
+  "description": "知识要素（KE）合同。以《银行知识工程规范打样_fixed.xlsx》4.4 为准：知识要素是知识条目（KI）下的原子要素，按生产方式分类（K-Type-F/R/P/E/M）。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "elementId",
+    "name",
+    "kind",
+    "knowledgeItemId",
+    "content",
+    "source",
+    "status"
+  ],
+  "properties": {
+    "schemaVersion": {"type": "string", "const": "1.0.0"},
+    "elementId": {
+      "type": "string",
+      "pattern": "^KE-[A-Z0-9-]+-\\d{2}$"
+    },
+    "name": {"type": "string", "minLength": 1},
+    "kind": {
+      "type": "string",
+      "enum": ["K-Type-F", "K-Type-R", "K-Type-P", "K-Type-E", "K-Type-M", "K-Type-F/R"]
+    },
+    "knowledgeItemId": {
+      "type": "string",
+      "pattern": "^KI-[A-Z0-9-]+$"
+    },
+    "content": {"type": "string", "minLength": 1},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceRef", "authority"],
+      "properties": {
+        "sourceRef": {"type": "string", "minLength": 1},
+        "authority": {
+          "type": "string",
+          "enum": ["AUTHORITATIVE", "REFERENCE", "DERIVED", "SYNTHETIC"]
+        }
+      }
+    },
+    "relatedRules": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^RUL-"}
+    },
+    "status": {
+      "type": "string",
+      "enum": ["DRAFT", "VALIDATION", "ACTIVE", "RETIRED"]
+    }
+  }
+}

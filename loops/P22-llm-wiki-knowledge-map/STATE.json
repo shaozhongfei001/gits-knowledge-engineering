@@ -1,16 +1,16 @@
 {
   "schema_version": "2.0",
   "loop_id": "P22-llm-wiki-knowledge-map",
-  "status": "planned",
-  "current_phase": "contract_candidate_review",
+  "status": "in_progress",
+  "current_phase": "contract_registered_implementation_pending",
   "baseline_commit": "33a93c4",
   "implementation_actor": "feature_pilot",
   "qa_actor": "independent_qa",
-  "owner_decision": "PENDING_CONTRACT_AUTHORIZATION",
+  "owner_decision": "OWNER_APPROVED_P22_CONTRACT_REGISTRATION_LIMITED",
   "gates": {
-    "contract_registration": "pending_owner_approval",
-    "contract_generate": "pending",
-    "contract_check": "pending",
+    "contract_registration": "done",
+    "contract_generate": "done",
+    "contract_check": "done",
     "knowledge_architecture_check": "pending",
     "element_read_gate": "pending",
     "llm_read_map_gate": "pending",
@@ -18,9 +18,14 @@
     "backend_test": "pending",
     "independent_qa": "pending"
   },
-  "progress": "0%",
-  "blocked": true,
-  "blocking_reason": "OWNER_CONTRACT_AUTHORIZATION_PENDING（合同变更：新增 KnowledgeElement + 扩展 AssetManifest/ActivationContract/KnowledgeMap 需 Owner/CCB 审批）",
-  "next_action": "Owner 审批 docs/design/LLM-WIKI-KNOWLEDGE-MAP.md 草案 §6 D7 合同变更范围后，登记 CONTRACT_INDEX 并推进",
-  "lastUpdated": "2026-08-19T12:00:00Z"
+  "progress": "15%",
+  "blocked": false,
+  "blocking_reason": null,
+  "next_action": "实现 KnowledgeElementPort + KnowledgeWikiPort（filesystem adapter）与 P20 对齐；AssetManifest knowledgeItemId 扩展在实现阶段测试保护下进行",
+  "decisions": {
+    "contract_scope": "新增 KnowledgeElement (CTR-KELEM-001) 已完成登记；AssetManifest/ActivationContract/KnowledgeMap 扩展推迟到实现阶段（G1/G2）在测试保护下进行，避免破坏 P20 已 qa_pass 成果",
+    "read_map_mechanism": "方案 A：规划器决定加载范围",
+    "real_platform": "选型留空，待 Owner 指定"
+  },
+  "lastUpdated": "2026-08-19T12:30:00Z"
 }

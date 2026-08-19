@@ -223,6 +223,15 @@
       "compatibility": "backward_compatible",
       "consumers": ["skill_registry", "activation_planner", "agent_orchestrator"],
       "generated": ["generated/knowledge-architecture/skill-descriptor.schema.json"]
+    },
+    {
+      "id": "CTR-KELEM-001",
+      "kind": "json_schema",
+      "authority_source": "specs/knowledge-architecture/schemas/knowledge-element.schema.json",
+      "owner": "knowledge_architecture_owner",
+      "compatibility": "backward_compatible",
+      "consumers": ["knowledge_map_registry", "asset_registry", "agent_orchestrator"],
+      "generated": ["generated/knowledge-architecture/knowledge-element.schema.json"]
     }
   ]
 }

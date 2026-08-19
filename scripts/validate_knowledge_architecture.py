@@ -102,8 +102,18 @@ def validate(root: Path) -> dict:
         fail(f"knowledge architecture directory missing: {base}")
 
     schema_paths = sorted((base / "schemas").glob("*.json"))
-    if len(schema_paths) != 6:
-        fail(f"exactly 6 schema contracts required, found {len(schema_paths)}")
+    required_schemas = [
+        "knowledge-map.schema.json",
+        "asset-manifest.schema.json",
+        "activation-contract.schema.json",
+        "route-policy.schema.json",
+        "activation-plan.schema.json",
+        "skill-descriptor.schema.json",
+    ]
+    schema_names = {p.name for p in schema_paths}
+    missing = [name for name in required_schemas if name not in schema_names]
+    if missing:
+        fail(f"required schema contracts missing: {missing}")
     for path in schema_paths:
         schema = read_json(path)
         if schema.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
