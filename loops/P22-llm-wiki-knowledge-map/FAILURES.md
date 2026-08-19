@@ -32,3 +32,51 @@
 - Root Cause: E1 `KnowledgeSnapshotLoader` 漏加载子目录 TASK 地图（`maps/corporate-rm/previsit-preparation.md`），且 `InMemoryKnowledgeStore.rootMap()` 硬编码 `"ROOT"` 键而实际根地图 mapId=`KM-GITS-ROOT`。
 - Fix: loader 改为 `Files.walk(maps)` 直接解析每个地图文件（不依赖 mapId→路径约定）；`rootMap()` 按 `mapType=ROOT` 匹配。
 - Resolution: 重跑 IT 全部通过（KnowledgeSnapshotLoaderIT 3/3 + KnowledgeWikiFilesystemAdapterIT 2/2），llm_read_map_gate EXIT=0。
+
+## 20260819T125822Z｜backend_test
+
+- Command: `make backend-test`
+- Exit: `2`
+- Evidence: `loops/P22-llm-wiki-knowledge-map/evidence/backend_test-20260819T125822Z.log`
+- Classification: `PENDING_ROOT_CAUSE`
+- Next: diagnose, record root cause, fix, rerun the original gate.
+
+## 20260819T130658Z｜independent_qa
+
+- Command: `make verify`
+- Exit: `2`
+- Evidence: `loops/P22-llm-wiki-knowledge-map/evidence/independent_qa-20260819T130658Z.log`
+- Classification: `PENDING_ROOT_CAUSE`
+- Next: diagnose, record root cause, fix, rerun the original gate.
+
+## 20260819T130713Z｜independent_qa
+
+- Command: `PYTHON=/home/szf/.workbuddy/binaries/python/versions/3.14.3/bin/python3 make verify`
+- Exit: `2`
+- Evidence: `loops/P22-llm-wiki-knowledge-map/evidence/independent_qa-20260819T130713Z.log`
+- Classification: `PENDING_ROOT_CAUSE`
+- Next: diagnose, record root cause, fix, rerun the original gate.
+
+## 20260819T130744Z｜independent_qa
+
+- Command: `PATH=/home/szf/.workbuddy/binaries/python/versions/3.14.3/bin:$PATH make verify`
+- Exit: `2`
+- Evidence: `loops/P22-llm-wiki-knowledge-map/evidence/independent_qa-20260819T130744Z.log`
+- Classification: `PENDING_ROOT_CAUSE`
+- Next: diagnose, record root cause, fix, rerun the original gate.
+
+## 20260819T131109Z｜independent_qa
+
+- Command: `PATH=/home/szf/.workbuddy/binaries/python/versions/3.14.3/bin:$PATH MAVEN_OPTS="-Ddependency.check.auto.update=false" make verify`
+- Exit: `2`
+- Evidence: `loops/P22-llm-wiki-knowledge-map/evidence/independent_qa-20260819T131109Z.log`
+- Classification: `PENDING_ROOT_CAUSE`
+- Next: diagnose, record root cause, fix, rerun the original gate.
+
+## 20260819T131337Z｜independent_qa
+
+- Command: `PATH=/home/szf/.workbuddy/binaries/python/versions/3.14.3/bin:$PATH MAVEN_OPTS="-Ddependency.check.auto.update=false" NPM_CONFIG_LEGACY_PEER_DEPS=true make verify`
+- Exit: `2`
+- Evidence: `loops/P22-llm-wiki-knowledge-map/evidence/independent_qa-20260819T131337Z.log`
+- Classification: `PENDING_ROOT_CAUSE`
+- Next: diagnose, record root cause, fix, rerun the original gate.

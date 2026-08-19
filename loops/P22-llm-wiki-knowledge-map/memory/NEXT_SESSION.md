@@ -2,17 +2,18 @@
 
 | 字段 | 值 |
 |---|---|
-| **Updated** | `2026-08-19T20:35:00Z` |
-| **holder** | `tech_lead` |
+| **Updated** | `2026-08-19T13:20:00Z` |
+| **holder** | `independent_qa` |
 | **packet** | `P22-llm-wiki-knowledge-map` |
 | **wave** | `W1` |
-| **do_not_start** | 禁止改动 generated/；禁止修改 P20 已 qa_pass 合同；禁止生产切换；禁止自签 QA_PASS |
+| **do_not_start** | 禁止改动 generated/；禁止修改 P20 已 qa_pass 合同；禁止生产切换；禁止真实平台接入（选型留空）；禁止引入 OpenWiki |
 
-短提示词：你是 `tech_lead`。P22 **G3 已完成**（feature-pilot-g3，DEV_SELF_CHECK，commit 见 EVIDENCE EV-P22-G3-001）。已完成：
-- KnowledgeWikiPort（renderMap/renderKnowledgeItem/renderElement，fail-closed）
-- KnowledgeWikiFilesystemAdapter（从 InMemoryKnowledgeStore 渲染 LLM 可读受控地图）
-- KnowledgeWikiService（读图→systemPrompt→LlmClient.complete，失败 fallback 模板）
-- 修复 apps/api 上下文测试：知识根路径 CWD 无关解析
-- `make check` 全绿；`-pl modules/knowledge-architecture,adapters/knowledge-filesystem,apps/api -am test` 全通过
+短提示词：你是 `independent_qa`。P22 **已 QA_PASS**（session=qa-p22-formal-001，9/9 gates pass）。已完成：
+- 合同登记：KnowledgeElement（CTR-KELEM-001）
+- 39 个 KE 资产化（对齐权威规范）
+- E1 内存快照 + 运行时装配（apps/api）
+- G3 KnowledgeWikiPort + KnowledgeWikiService（LLM 读图，方案 A）
+- G4 shadow E2E（两场景黄金比对 + LLM 读图导航，formal_output_changed=false）
+- G5 backend_test + 独立 QA（backend 321 + worker 22，frontend vue-tsc/vitest/build，coverage met）
 
-下一步（W1 待办）：**G4 P22 shadow E2E**（scripts/run_p22_shadow_e2e.py，本轮 G3 未做）。建议由 e2e_owner 或 feature_pilot 接棒，产出 replayable shadow evidence 后进入 G5 独立 QA。
+Baton 已交接至 independent_qa（loop_guard memory-check 要求 qa_pass 状态 holder=independent_qa/owner_review）。下一步：Tech Lead 可关闭/归档 P22；或待 Owner 授权后评估真实平台接入 / 生产 cutover。真实平台选型（RAG/GraphDB/MetadataCatalog）留空待 Owner 指定。

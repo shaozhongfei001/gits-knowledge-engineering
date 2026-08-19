@@ -114,3 +114,25 @@ CLAIM_SCOPE=
 | G3 renderKnowledgeItem/renderElement | 按 KI 渲染要素清单、按要素渲染详情；未知 ID 返回空（fail-closed） |
 | G3 KnowledgeWikiService | systemPrompt 含知识地图、注入 LlmClient；LLM 失败回退模板（单测覆盖） |
 | G3 全量测试 | `-pl modules/knowledge-architecture,adapters/knowledge-filesystem,apps/api -am test` 全通过（apps/api 321） |
+
+## EVIDENCE_ID: EV-P22-QA-001（独立 QA 验收 QA_PASS）
+
+```text
+EVIDENCE_ID=EV-P22-QA-001
+GATE=independent_qa
+ACTOR=independent_qa（独立于 implementation_actor=feature_pilot）
+TIMESTAMP=2026-08-19
+SESSION=qa-p22-formal-001
+COMMAND=make check backend-test frontend-test semantic-rule-gate
+EXIT_CODE=0
+STATUS=QA_PASS
+ARTIFACT=loops/P22-llm-wiki-knowledge-map/evidence/qa-review/qa-formal-attestation-report.md
+CLAIM_SCOPE=
+  - 9/9 gates pass（contract_registration/generate/check/knowledge_architecture_check/element_read_gate/llm_read_map_gate/shadow_e2e/backend_test/independent_qa）
+  - backend 321 + worker 22 测试通过，覆盖率达标；frontend vue-tsc/vitest/build 通过
+  - 两场景 shadow E2E 黄金比对一致 + LLM 读图导航，formal_output_changed=false
+  - 未修改 P20 已 qa_pass 合同；不启用 fusion；不迁移生产；无 DB 写（shadow 内存态）
+  - 环境适配：Python 3.14、dependency-check 离线、npm legacy-peer-deps、nanoid 版本误报豁免；db-check 因仓库外凭据不纳入（P22 shadow 不写 DB）
+```
+
+状态：QA_PASS（由独立 QA 角色记录，非实现者自签）。

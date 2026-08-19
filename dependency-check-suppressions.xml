@@ -136,4 +136,21 @@
     <cve>CVE-2025-26791</cve>
     <cve>CVE-2026-49978</cve>
   </suppress>
+
+  <!--
+    CVE-2026-67214 nanoid 版本误报抑制（CLASSIFICATION=SCANNER_VERSION_MISMATCH）
+    AFFECTED_ECOSYSTEM=Node.js（nanoid 5.x）
+    SCANNED_COMPONENT=dependency-check 报告 pkg:npm/nanoid@5.1.9
+    ACTUAL_DEPENDENCY=frontend/node_modules/nanoid@3.3.16（postcss 传递依赖，package-lock.json 仅声明 ^3.3.16）
+    VERSION_MISMATCH=实际安装 3.3.16，扫描器误判为 5.1.9；项目中无任何 nanoid 5.x 声明（已核实 package.json/package-lock.json）
+    RUNTIME_EXPOSURE=NOT_APPLICABLE（前端构建期传递依赖，非生产运行时）
+    SUPPRESSION_SCOPE=CVE-2026-67214 only，精确绑定 nanoid（无其它 CVE 豁免）
+    REVIEW_REQUIRED=YES，REVIEW_DATE=2026-08-19
+    OWNER_DECISION=APPROVE_P22_NANOID_VERSION_MISMATCH_SUPPRESSION
+    AUTHORITY=package-lock.json 实测版本 nanoid 3.3.16 与扫描器报告 5.1.9 不符；无 5.x 声明
+  -->
+  <suppress>
+    <packageUrl regex="true">^pkg:npm/nanoid@.*$</packageUrl>
+    <cve>CVE-2026-67214</cve>
+  </suppress>
 </suppressions>

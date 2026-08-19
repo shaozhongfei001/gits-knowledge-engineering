@@ -1,0 +1,169 @@
+{
+  "mode": "shadow",
+  "scenarios": [
+    {
+      "scenario": "FACT_RECONCILIATION_30M",
+      "plan": {
+        "schemaVersion": "1.0.0",
+        "planId": "AP-FACT_RECONCILIATION_30M-CUST-001-SHADOW",
+        "taskId": "TASK-FACT_RECONCILIATION_30M-CUST-001-SHADOW",
+        "taskType": "FACT_RECONCILIATION_30M",
+        "routeMode": "ONTOLOGY_FIRST",
+        "selectedAssets": [
+          {
+            "assetId": "ASSET-DATA-CUSTOMER-PROFILE",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 1
+          },
+          {
+            "assetId": "ASSET-DATA-INTERACTION-HISTORY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 2
+          },
+          {
+            "assetId": "ASSET-DATA-CREDIT-FACILITY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 3
+          },
+          {
+            "assetId": "ASSET-KNOW-CUSTOMER-ONTOLOGY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 4
+          },
+          {
+            "assetId": "ASSET-KNOW-EVIDENCE-POLICY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 5
+          },
+          {
+            "assetId": "ASSET-KNOW-CLAIM-RECONCILIATION",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 6
+          }
+        ],
+        "semanticQueries": [
+          "SQ-CLAIM-SUBJECT-RELATIONS",
+          "SQ-CREDIT-AND-PROJECT-AMOUNTS",
+          "SQ-PROJECT-AND-BORROWER-ENTITY"
+        ],
+        "ruleChecks": [
+          "CLAIM_NOT_FACT",
+          "AVAILABLE_CREDIT_NOT_NEW_NEED",
+          "PROJECT_NOT_BORROWER",
+          "SIGNAL_NOT_OPPORTUNITY",
+          "BANKABILITY_NOT_APPROVAL"
+        ],
+        "skills": [
+          "SP-02",
+          "SP-07"
+        ],
+        "context": {
+          "maxTokens": 8000,
+          "trimPolicy": "FAIL_ON_OVERFLOW"
+        },
+        "permissionDecisionId": "PD-SHADOW-ALLOW",
+        "planHash": "7feca49f022ab385"
+      },
+      "knowledge_map_nav": "# Knowledge Map (shadow) [AUTHORITATIVE]\n- scenario: `FACT_RECONCILIATION_30M`\n- **KI `KI-009`**\n  - `KE-009-01` 客户全称 [K-Type-F] [AUTHORITATIVE]\n  - `KE-009-02` 客户编号 [K-Type-F] [AUTHORITATIVE]\n  - `KE-009-03` 所属行业 [K-Type-F] [AUTHORITATIVE]\n  - `KE-009-04` 企业规模 [K-Type-F] [AUTHORITATIVE]\n  - `KE-009-05` 年营收（近12月） [K-Type-F] [AUTHORITATIVE]\n  - `KE-009-06` 注册地址 [K-Type-F] [AUTHORITATIVE]\n  - `KE-009-07` 主要产品 [K-Type-F] [AUTHORITATIVE]\n  - `KE-009-08` 合作年限 [K-Type-F] [AUTHORITATIVE]"
+    },
+    {
+      "scenario": "PRE_VISIT_PREPARATION",
+      "plan": {
+        "schemaVersion": "1.0.0",
+        "planId": "AP-PRE_VISIT_PREPARATION-CUST-001-SHADOW",
+        "taskId": "TASK-PRE_VISIT_PREPARATION-CUST-001-SHADOW",
+        "taskType": "PRE_VISIT_PREPARATION",
+        "routeMode": "ONTOLOGY_THEN_MAP",
+        "selectedAssets": [
+          {
+            "assetId": "ASSET-DATA-CUSTOMER-PROFILE",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 1
+          },
+          {
+            "assetId": "ASSET-KNOW-CUSTOMER-ONTOLOGY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 2
+          },
+          {
+            "assetId": "ASSET-DATA-CREDIT-FACILITY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 3
+          },
+          {
+            "assetId": "ASSET-DATA-INTERACTION-HISTORY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 4
+          },
+          {
+            "assetId": "ASSET-DATA-TRANSACTION-SUMMARY",
+            "version": "0.1.0",
+            "required": false,
+            "sequence": 5
+          },
+          {
+            "assetId": "ASSET-DATA-EXTERNAL-EVENT",
+            "version": "0.1.0",
+            "required": false,
+            "sequence": 6
+          },
+          {
+            "assetId": "ASSET-KNOW-KYC-QUESTION-LIBRARY",
+            "version": "0.1.0",
+            "required": true,
+            "sequence": 7
+          },
+          {
+            "assetId": "ASSET-KNOW-PRODUCT-CARDS",
+            "version": "0.1.0",
+            "required": false,
+            "sequence": 8
+          },
+          {
+            "assetId": "ASSET-KNOW-VISIT-SOP",
+            "version": "0.1.0",
+            "required": false,
+            "sequence": 9
+          }
+        ],
+        "semanticQueries": [
+          "SQ-CUSTOMER-RELATIONSHIP",
+          "SQ-RELATED-LEGAL-ENTITIES",
+          "SQ-KYC-GAPS",
+          "SQ-OPEN-COMMITMENTS",
+          "SQ-ACTIVE-PRODUCT-VERSIONS"
+        ],
+        "ruleChecks": [
+          "CALLER_SCOPE_ALLOWED",
+          "CLAIM_NOT_FACT",
+          "SIGNAL_NOT_OPPORTUNITY",
+          "PRODUCT_VERSION_ACTIVE"
+        ],
+        "skills": [
+          "SP-02",
+          "SP-05",
+          "SP-15",
+          "SP-10"
+        ],
+        "context": {
+          "maxTokens": 12000,
+          "trimPolicy": "CONTRACT_PRIORITY"
+        },
+        "permissionDecisionId": "PD-SHADOW-ALLOW",
+        "planHash": "e0d2519976d2646d"
+      },
+      "knowledge_map_nav": "# Knowledge Map (shadow) [AUTHORITATIVE]\n- scenario: `PRE_VISIT_PREPARATION`\n- **KI `KI-009`**\n  - `KE-009-01` 客户全称 [K-Type-F] [AUTHORITATIVE]\n  - `KE-009-02` 客户编号 [K-Type-F] [AUTHORITATIVE]\n  - `KE-009-03` 所属行业 [K-Type-F] [AUTHORITATIVE]\n  - `KE-009-04` 企业规模 [K-Type-F] [AUTHORITATIVE]\n  - `KE-009-05` 年营收（近12月） [K-Type-F] [AUTHORITATIVE]\n  - `KE-009-06` 注册地址 [K-Type-F] [AUTHORITATIVE]\n  - `KE-009-07` 主要产品 [K-Type-F] [AUTHORITATIVE]\n  - `KE-009-08` 合作年限 [K-Type-F] [AUTHORITATIVE]\n- **KI `KI-FRONT-001`**\n  - `KE-FRONT-001-01` 上游供应商列表 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-001-02` 下游客户列表 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-001-03` 供应链位置解读 [K-Type-E] [AUTHORITATIVE]\n- **KI `KI-FRONT-002`**\n  - `KE-FRONT-002-01` 政策维度研判 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-002-02` 市场维度研判 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-002-03` 技术维度研判 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-002-04` 供应链维度研判 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-002-05` 区域维度研判 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-002-06` 风险维度研判 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-002-07` 指数维度量化评分 [K-Type-M] [AUTHORITATIVE]\n  - `KE-FRONT-002-08` 企业竞争力评估 [K-Type-E] [AUTHORITATIVE]\n  - `KE-FRONT-002-09` 综合研判结论 [K-Type-E] [AUTHORITATIVE]\n- **KI `KI-FRONT-003`**\n  - `KE-FRONT-003-01` 近半年营收 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-003-02` 现有授信使用率 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-003-03` 近3个月用电量/进出口额 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-003-04` 近6个月代发薪 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-003-05` 近3个月结算量 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-003-06` 冲突检测结果 [K-Type-R] [AUTHORITATIVE]\n- **KI `KI-FRONT-004`**\n  - `KE-FRONT-004-01` 沟通记录摘要 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-004-02` 承诺内容及状态 [K-Type-F/R] [AUTHORITATIVE]\n  - `KE-FRONT-004-03` 沟通话术 [K-Type-P] [AUTHORITATIVE]\n  - `KE-FRONT-004-04` 行动计划 [K-Type-P] [AUTHORITATIVE]\n- **KI `KI-FRONT-005`**\n  - `KE-FRONT-005-01` 缺口描述 [K-Type-R] [AUTHORITATIVE]\n  - `KE-FRONT-005-02` 触发源 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-005-03` 核实话术 [K-Type-P] [AUTHORITATIVE]\n  - `KE-FRONT-005-04` 核实目标及行动计划 [K-Type-P] [AUTHORITATIVE]\n- **KI `KI-FRONT-006`**\n  - `KE-FRONT-006-01` 产品名称 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-006-02` 匹配度标签 [K-Type-R] [AUTHORITATIVE]\n  - `KE-FRONT-006-03` 产品描述 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-006-04` 匹配依据 [K-Type-F] [AUTHORITATIVE]\n  - `KE-FRONT-006-05` 待核实条件 [K-Type-R] [AUTHORITATIVE]"
+    }
+  ],
+  "formal_output_changed": false
+}

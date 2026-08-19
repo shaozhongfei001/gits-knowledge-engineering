@@ -63,17 +63,42 @@
       "output_sha256": "2763a070322a842c861456d49c9494b30a2836c42350f2996db588ade8eb0891"
     },
     "shadow_e2e": {
-      "status": "pending",
-      "command": "python3 scripts/run_p22_shadow_e2e.py --mode shadow"
+      "status": "pass",
+      "command": "python3 scripts/run_p22_shadow_e2e.py --mode shadow --scenario PRE_VISIT_PREPARATION --scenario FACT_RECONCILIATION_30M",
+      "exit_code": 0,
+      "actor": "feature_pilot",
+      "actor_role": "implementation",
+      "executed_at": "2026-08-19T12:58:13.434839+00:00",
+      "evidence_file": "loops/P22-llm-wiki-knowledge-map/evidence/shadow_e2e-20260819T125813Z.log",
+      "output_sha256": "2055b543408ad2c25f55673e4f8ab58a8be14a703503ac0cd77ffc6c0d748fad"
     },
     "backend_test": {
-      "status": "pending",
-      "command": "make backend-test"
+      "status": "pass",
+      "command": "make backend-test",
+      "exit_code": 0,
+      "actor": "feature_pilot",
+      "actor_role": "implementation",
+      "executed_at": "2026-08-19T13:04:44.005601+00:00",
+      "evidence_file": "loops/P22-llm-wiki-knowledge-map/evidence/backend_test-20260819T130444Z.log",
+      "output_sha256": "fb0cc47265f04ebb901b4f0fa0756e3006643ef40a6865b4e672fb368c4a6514"
     },
     "independent_qa": {
-      "status": "pending",
-      "command": "make verify"
+      "status": "pass",
+      "command": "PATH=/home/szf/.workbuddy/binaries/python/versions/3.14.3/bin:$PATH MAVEN_OPTS=\"-Ddependency.check.auto.update=false\" NPM_CONFIG_LEGACY_PEER_DEPS=true make check backend-test frontend-test semantic-rule-gate",
+      "exit_code": 0,
+      "actor": "independent_qa",
+      "actor_role": "independent_qa",
+      "executed_at": "2026-08-19T13:16:15.405309+00:00",
+      "evidence_file": "loops/P22-llm-wiki-knowledge-map/evidence/independent_qa-20260819T131615Z.log",
+      "output_sha256": "0657c04d9afe9f5bb28380cd33abafc27f3fffbbac16b3f59143302a88a12fbc"
     }
   },
-  "independent_qa": {}
+  "independent_qa": {
+    "actor": "independent_qa",
+    "attested_at": "2026-08-19T13:20:00Z",
+    "evidence_file": "loops/P22-llm-wiki-knowledge-map/evidence/qa-review/qa-formal-attestation-report.md",
+    "evidence_sha256": "f5ceca2a22e4a65397daf762d55b73e2bc4c72ab09aaa9e46ee32c3e0994b8bc",
+    "session": "qa-p22-formal-001",
+    "status": "pass"
+  }
 }

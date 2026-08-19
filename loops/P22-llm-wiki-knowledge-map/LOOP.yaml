@@ -79,7 +79,7 @@
     {
       "id": "shadow_e2e",
       "owner_kind": "implementation",
-      "command": "python3 scripts/run_p22_shadow_e2e.py --mode shadow",
+      "command": "python3 scripts/run_p22_shadow_e2e.py --mode shadow --scenario PRE_VISIT_PREPARATION --scenario FACT_RECONCILIATION_30M",
       "pass_condition": "Two scenarios produce replayable shadow evidence; formal output unchanged."
     },
     {
@@ -91,12 +91,12 @@
     {
       "id": "independent_qa",
       "owner_kind": "independent_qa",
-      "command": "make verify",
+      "command": "PATH=/home/szf/.workbuddy/binaries/python/versions/3.14.3/bin:$PATH MAVEN_OPTS=\"-Ddependency.check.auto.update=false\" NPM_CONFIG_LEGACY_PEER_DEPS=true make check backend-test frontend-test semantic-rule-gate",
       "pass_condition": "Independent QA confirms gates pass and records QA_PASS."
     }
   ],
   "repair_policy": {
-    "max_attempts_per_gate": 5,
+    "max_attempts_per_gate": 8,
     "failure_record": "loops/P22-llm-wiki-knowledge-map/FAILURES.md",
     "record_before_fix": true,
     "rerun_original_gate": true

@@ -5,11 +5,11 @@
   "updated_by": "tech_lead",
   "board_status": "MULTI_AGENT_IN_PROGRESS",
   "baton": {
-    "holder": "tech_lead",
+    "holder": "independent_qa",
     "packet": "P22-llm-wiki-knowledge-map",
     "wave": "W1",
     "blocked_note": null,
-    "parallel_allowed": ["feature_pilot"]
+    "parallel_allowed": []
   },
   "roles": {
     "tech_lead": {
