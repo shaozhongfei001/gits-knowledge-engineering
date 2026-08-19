@@ -19,11 +19,12 @@ decision_source=Human Owner directive supplied through the execution prompt
 
 | 字段 | 值 |
 |---|---|
-| status | planned |
+| status | qa_pass |
 | baseline_commit | `11e2cfe4fb2bd455b809095578fd8f704ff20598` |
-| baton_holder | `tech_lead` |
-| current_wave | `W0` |
-| updated_at | `2026-08-19T02:20:00+08:00` |
+| baton_holder | `independent_qa` |
+| current_wave | `independent_qa_attestation` |
+| qa_actor | `independent_qa` |
+| updated_at | `2026-08-19T02:50:00+08:00` |
 
 ## 不变量
 
@@ -38,4 +39,11 @@ decision_source=Human Owner directive supplied through the execution prompt
 
 | 角色 | 状态 | 结果 | Handoff |
 |---|---|---|---|
-| `tech_lead` | planned | 规划生产就绪准备 Loop | `memory/handoffs/tech_lead.md` |
+| `tech_lead` | completed | 6/6 实现 gate PASS（prod fail-closed + production plan + contract/security/backend） | `memory/handoffs/tech_lead.md` |
+| `independent_qa` | attested_pass | 正式 QA PASS（actor=independent_qa，qa_attest.py EXIT=0） | — |
+
+## 收尾说明
+
+- P21 为生产就绪**准备** Loop：6/6 实现 gate + 正式独立 QA 均 PASS，STATE=`qa_pass`。
+- `make verify` 除 `db-check`（需外部 GITS_KEDB_PASSWORD，P21 用 H2 不需 MySQL）外全绿；后端 317+22 tests、前端 100 tests、dependency-check 15 reports 全 PASS。
+- **边界**：FUSION/PRODUCTION CUTOVER=NOT_EXECUTED；实际生产切换须 Owner 另行批准。真实平台 Port 合同候选待登记 CONTRACT_INDEX（禁止直接实现）。

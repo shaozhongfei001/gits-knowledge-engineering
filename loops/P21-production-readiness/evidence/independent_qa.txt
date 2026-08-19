@@ -1,0 +1,41 @@
+P21 独立 QA 正式 Attestation 证据
+=================================
+Loop: P21 (P20 wiki-ontology fusion 生产就绪准备)
+QA Actor: independent_qa (≠ implementation_actor=tech_lead, 满足"开发不得自签"红线)
+Session: qa-p21-formal-001
+日期: 2026-08-19
+对象 HEAD: main @ 65e8152
+
+一、正式 Gate 复核（EVIDENCE.json hash-attested，6/6 实现 gate PASS）
+-------------------------------------------------------------
+1. contract_generate      : PASS (make generate, exit=0)
+2. contract_check         : PASS (make check: contract/knowledge-arch/loop-guard/secret-scan/enum/semantic-rule)
+3. security_check         : PASS (make security-check: secret-scan 72 advisory 非阻塞, permissions, oracle-guard)
+4. prod_profile_fail_closed : PASS (verify_prod_profile_fail_closed.sh)
+5. production_plan        : PASS (verify_production_plan.sh: cutover/回滚 + real-platform Port 合同候选)
+6. backend_test           : PASS (make backend-test: 317+22 tests 0 fail, dependency-check 15 reports PASS)
+
+二、独立 QA 复现验证（make verify 全量 + P21 专属脚本）
+------------------------------------------------------
+- bootstrap-check            : PASS
+- contract-generate/check    : PASS
+- knowledge-architecture-check : PASS
+- loop-guard / secret-scan / enum-consistency : PASS
+- semantic-rule-gate         : PASS (SHACL / Schema JSON / DMN / LinkML)
+- backend-test               : PASS (apps/api 317 tests, worker 22 tests, 0 fail; dependency-check 15 reports PASS; BUILD SUCCESS)
+- frontend-test              : PASS (vue-tsc + vitest 9 files/100 tests + vite build)
+- verify_prod_profile_fail_closed.sh : PASS
+- verify_production_plan.sh           : PASS
+- db-check                   : 环境依赖阻塞 (需外部 GITS_KEDB_PASSWORD; P21 用 H2 不需 MySQL)
+
+三、QA 判定
+-----------
+VERDICT: PASS (INDEPENDENT_QA)
+- P21 6/6 实现 gate 全部 hash-attested PASS;
+- 独立 QA 复现 make verify 除 db-check(外部凭据环境依赖) 外全绿;
+- 后端 317+22 tests + 前端 100 tests + dependency-check 15 reports 全绿;
+- P21 专属 gate 脚本 (prod fail-closed + production plan) 独立复现 PASS。
+
+环境约束声明:
+1. db-check 需外部 MySQL GITS_KEDB_PASSWORD, 当前无人值守环境不可用; 该检查针对生产 gits_ke 管理库, P21 采用本地 H2, 不阻塞 P21 判定。
+2. P21 为生产就绪**准备** (FUSION_CUTOVER=NOT_EXECUTED, PRODUCTION_CUTOVER=NOT_EXECUTED), 不含实际生产切换/写回。

@@ -1,18 +1,18 @@
 {
   "schema_version": "2.0",
   "loop_id": "P21-production-readiness",
-  "updated_at": "2026-08-18T18:06:17.758804+00:00",
-  "updated_by": "tech_lead",
-  "board_status": "PLANNED",
+  "updated_at": "2026-08-19T02:45:00+08:00",
+  "updated_by": "independent_qa",
+  "board_status": "READY_FOR_QA",
   "baton": {
-    "holder": "tech_lead",
+    "holder": "independent_qa",
     "packet": "P21-production-readiness",
-    "wave": "W0",
+    "wave": "independent_qa_attestation",
     "blocked_note": "",
     "parallel_allowed": []
   },
   "roles": {
-    "tech_lead": {"responsibility": "implementation", "status": "planned"},
-    "independent_qa": {"responsibility": "gate_review", "status": "unassigned"}
+    "tech_lead": {"responsibility": "implementation", "status": "completed"},
+    "independent_qa": {"responsibility": "gate_review", "status": "attesting"}
   }
 }
