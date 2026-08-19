@@ -2,8 +2,8 @@
   "schema_version": "2.0",
   "loop_id": "P22-llm-wiki-knowledge-map",
   "status": "in_progress",
-  "current_phase": "g1g2_complete_pending_llm_read_map",
-  "baseline_commit": "e54f236",
+  "current_phase": "e1_complete_pending_llm_read_map",
+  "baseline_commit": "6247048",
   "implementation_actor": "feature_pilot",
   "qa_actor": "independent_qa",
   "owner_decision": "OWNER_APPROVED_P22_CONTRACT_REGISTRATION_LIMITED",
@@ -18,19 +18,27 @@
     "backend_test": "pending",
     "independent_qa": "pending"
   },
-  "progress": "35%",
+  "progress": "50%",
   "blocked": false,
   "blocking_reason": null,
   "next_action": "G3：实现 KnowledgeWikiPort（渲染 LLM 可读地图/目录，方案 A）+ LlmClient 注入",
   "decisions": {
-    "contract_scope": "新增 KnowledgeElement (CTR-KELEM-001) 已登记；AssetManifest/ActivationContract/KnowledgeMap 扩展推迟到实现阶段测试保护下进行",
+    "contract_scope": "新增 KnowledgeElement (CTR-KELEM-001) 已登记；AssetManifest 扩展推迟到实现阶段测试保护下进行",
     "read_map_mechanism": "方案 A：规划器决定加载范围",
-    "real_platform": "选型留空，待 Owner 指定"
+    "real_platform": "选型留空，待 Owner 指定",
+    "openwiki": "放弃引入（代码级评估三大硬伤）；增强 Git 控制面至生产可用；保留人机共读目标"
+  },
+  "enhancements": {
+    "e1": {
+      "status": "done",
+      "desc": "生产可用控制面：InMemoryKnowledgeStore 不可变快照 + KnowledgeSnapshotLoader 启动加载 + 5 个 InMemory*Reader + KnowledgeArchitectureConfig 装配进 apps/api",
+      "gaps_closed": ["GAP-1 运行时集成", "GAP-2 每请求扫盘"]
+    }
   },
   "evidence": {
-    "g1_ke_assets": "39 KE assetized (KI-009×8, FRONT-001×3, 002×9, 003×6, 004×4, 005×4, 006×5)",
-    "g2_tests": "unit 6/6 + IT 4/4; knowledge-architecture 19 + knowledge-filesystem 38 = 57 pass",
-    "make_check": "PASS"
+    "g1_ke_assets": "39 KE assetized",
+    "g2_tests": "unit 6/6 + IT 4/4",
+    "e1_tests": "knowledge-architecture 19 + knowledge-filesystem 44 pass; apps/api compile PASS; make check green"
   },
-  "lastUpdated": "2026-08-19T14:00:00Z"
+  "lastUpdated": "2026-08-19T16:00:00Z"
 }
