@@ -1,0 +1,75 @@
+{
+  "schemaVersion": "1.0.0",
+  "knowledgeItems": [
+    {
+      "knowledgeItemId": "KI-009",
+      "name": "企业客户基本信息",
+      "category": "实体",
+      "description": "企业工商注册及行内核心信息，作为所有分析的事实锚点",
+      "knowledgeDomain": "KD-01",
+      "subdomain": "SD-02",
+      "elementCount": 8,
+      "status": "DRAFT"
+    },
+    {
+      "knowledgeItemId": "KI-FRONT-001",
+      "name": "公司供应链图谱",
+      "category": "实体-关系",
+      "description": "客户自身的上游供应商和下游客户及其业务关系、金额占比、趋势",
+      "knowledgeDomain": "KD-01",
+      "subdomain": "SD-02",
+      "elementCount": 3,
+      "status": "DRAFT"
+    },
+    {
+      "knowledgeItemId": "KI-FRONT-002",
+      "name": "产业链八维研判",
+      "category": "分析模型",
+      "description": "通过获取企业相关行业/产业的各维度分析结果，与客户实际情况进行分析",
+      "knowledgeDomain": "KD-08",
+      "subdomain": "SD-46",
+      "elementCount": 9,
+      "status": "DRAFT"
+    },
+    {
+      "knowledgeItemId": "KI-FRONT-003",
+      "name": "行内变动行为",
+      "category": "事实",
+      "description": "客户在行内近期关键变动指标（营收、授信使用率、行业关联相关指数等）及冲突检测结果",
+      "knowledgeDomain": "KD-01",
+      "subdomain": "SD-02",
+      "elementCount": 6,
+      "status": "DRAFT"
+    },
+    {
+      "knowledgeItemId": "KI-FRONT-004",
+      "name": "事实承诺事项",
+      "category": "过程",
+      "description": "历史沟通中形成的承诺事项，附沟通记录、话术和行动计划",
+      "knowledgeDomain": "KD-01",
+      "subdomain": "SD-04",
+      "elementCount": 4,
+      "status": "DRAFT"
+    },
+    {
+      "knowledgeItemId": "KI-FRONT-005",
+      "name": "KYC信息缺口",
+      "category": "规则-检查",
+      "description": "通过事实对账识别的信息缺口，含触发源、核实话术和核实路径",
+      "knowledgeDomain": "KD-01",
+      "subdomain": "SD-02",
+      "elementCount": 4,
+      "status": "DRAFT"
+    },
+    {
+      "knowledgeItemId": "KI-FRONT-006",
+      "name": "产品候选组合",
+      "category": "决策",
+      "description": "基于KYC痛点、沟通记录和市场信号匹配的候选产品及组合建议",
+      "knowledgeDomain": "KD-02",
+      "subdomain": "SD-08",
+      "elementCount": 5,
+      "status": "DRAFT"
+    }
+  ]
+}

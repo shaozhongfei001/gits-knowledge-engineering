@@ -2,8 +2,8 @@
   "schema_version": "2.0",
   "loop_id": "P22-llm-wiki-knowledge-map",
   "status": "in_progress",
-  "current_phase": "contract_registered_implementation_pending",
-  "baseline_commit": "33a93c4",
+  "current_phase": "g1g2_complete_pending_llm_read_map",
+  "baseline_commit": "e54f236",
   "implementation_actor": "feature_pilot",
   "qa_actor": "independent_qa",
   "owner_decision": "OWNER_APPROVED_P22_CONTRACT_REGISTRATION_LIMITED",
@@ -11,21 +11,26 @@
     "contract_registration": "done",
     "contract_generate": "done",
     "contract_check": "done",
-    "knowledge_architecture_check": "pending",
-    "element_read_gate": "pending",
+    "knowledge_architecture_check": "done",
+    "element_read_gate": "done",
     "llm_read_map_gate": "pending",
     "shadow_e2e": "pending",
     "backend_test": "pending",
     "independent_qa": "pending"
   },
-  "progress": "15%",
+  "progress": "35%",
   "blocked": false,
   "blocking_reason": null,
-  "next_action": "实现 KnowledgeElementPort + KnowledgeWikiPort（filesystem adapter）与 P20 对齐；AssetManifest knowledgeItemId 扩展在实现阶段测试保护下进行",
+  "next_action": "G3：实现 KnowledgeWikiPort（渲染 LLM 可读地图/目录，方案 A）+ LlmClient 注入",
   "decisions": {
-    "contract_scope": "新增 KnowledgeElement (CTR-KELEM-001) 已完成登记；AssetManifest/ActivationContract/KnowledgeMap 扩展推迟到实现阶段（G1/G2）在测试保护下进行，避免破坏 P20 已 qa_pass 成果",
+    "contract_scope": "新增 KnowledgeElement (CTR-KELEM-001) 已登记；AssetManifest/ActivationContract/KnowledgeMap 扩展推迟到实现阶段测试保护下进行",
     "read_map_mechanism": "方案 A：规划器决定加载范围",
     "real_platform": "选型留空，待 Owner 指定"
   },
-  "lastUpdated": "2026-08-19T12:30:00Z"
+  "evidence": {
+    "g1_ke_assets": "39 KE assetized (KI-009×8, FRONT-001×3, 002×9, 003×6, 004×4, 005×4, 006×5)",
+    "g2_tests": "unit 6/6 + IT 4/4; knowledge-architecture 19 + knowledge-filesystem 38 = 57 pass",
+    "make_check": "PASS"
+  },
+  "lastUpdated": "2026-08-19T14:00:00Z"
 }
