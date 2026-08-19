@@ -51,9 +51,12 @@ public final class InMemoryKnowledgeStore {
         return elements;
     }
 
-    /** 根知识地图（ROOT）或为空。 */
+    /** 根知识地图（mapType=ROOT）或为空。 */
     public KnowledgeMap rootMap() {
-        return maps.get("ROOT");
+        return maps.values().stream()
+                .filter(map -> "ROOT".equals(map.mapType()))
+                .findFirst()
+                .orElse(null);
     }
 
     /** 构建器：快照装载入口，填充后必须 {@link #build()}。 */

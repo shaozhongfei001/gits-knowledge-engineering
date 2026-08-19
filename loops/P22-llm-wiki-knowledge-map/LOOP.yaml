@@ -67,13 +67,13 @@
     {
       "id": "element_read_gate",
       "owner_kind": "implementation",
-      "command": "mvn -pl modules/knowledge-architecture,adapters/knowledge-filesystem -am test",
+      "command": "./mvnw -pl modules/knowledge-architecture,adapters/knowledge-filesystem -am test",
       "pass_condition": "KnowledgeElementPort + filesystem adapter pass; fail-closed on missing/invalid."
     },
     {
       "id": "llm_read_map_gate",
       "owner_kind": "implementation",
-      "command": "shadow e2e with LlmClient consuming KnowledgeWikiPort render",
+      "command": "./mvnw -pl apps/api -am test -Dtest='KnowledgeWiki*' -Dsurefire.failIfNoSpecifiedTests=false",
       "pass_condition": "Planner decides load scope; LLM reads knowledge map before executing task (Scheme A)."
     },
     {

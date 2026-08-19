@@ -100,7 +100,10 @@ class InMemoryReadersTest {
     // ---- fixtures ----
 
     private static KnowledgeMap map(String id) {
-        return new KnowledgeMap("1.0.0", id, id, "1", "active", "ROOT",
+        // mapId=ROOT 时为根地图（mapType=ROOT），否则为普通地图（mapType=DOMAIN），
+        // 使 InMemoryKnowledgeStore.rootMap() 能按 mapType=ROOT 正确解析。
+        String mapType = "ROOT".equals(id) ? "ROOT" : "DOMAIN";
+        return new KnowledgeMap("1.0.0", id, id, "1", "active", mapType,
                 new KnowledgeMap.Entrypoints(java.util.List.of(), java.util.List.of()),
                 java.util.List.of(), java.util.List.of(), java.util.List.of(),
                 java.util.List.of(), "RP-CORP-RM-001", "DENY", 0);

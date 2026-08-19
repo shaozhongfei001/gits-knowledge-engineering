@@ -1,10 +1,12 @@
 package com.gien.gits.adapter.filesystem;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.gien.gits.knowledge.repository.InMemoryKnowledgeStore;
 import java.nio.file.Path;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -15,8 +17,17 @@ import org.junit.jupiter.api.Test;
  */
 class KnowledgeWikiFilesystemAdapterIT {
 
-    private static final Path KNOWLEDGE_ROOT =
-            Path.of("specs/knowledge-architecture").toAbsolutePath();
+    private static Path KNOWLEDGE_ROOT;
+
+    @BeforeAll
+    static void resolveKnowledgeRoot() {
+        Path root = Path.of(".").toAbsolutePath().normalize();
+        while (root != null && !root.resolve("specs/knowledge-architecture").toFile().isDirectory()) {
+            root = root.getParent();
+        }
+        assertNotNull(root, "specs/knowledge-architecture not found");
+        KNOWLEDGE_ROOT = root.resolve("specs/knowledge-architecture");
+    }
 
     @Test
     void renderMapContainsRealKnowledgeItemsAndElements() {

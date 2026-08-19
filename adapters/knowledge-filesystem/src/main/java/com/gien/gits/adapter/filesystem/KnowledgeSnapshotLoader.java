@@ -56,17 +56,31 @@ public final class KnowledgeSnapshotLoader {
         if (!Files.isDirectory(mapsDir)) {
             return;
         }
-        FilesystemKnowledgeMapReader mapReader = new FilesystemKnowledgeMapReader(mapsDir);
-        mapReader.loadRoot().ifPresent(builder::putMap);
-        // 遍历 <maps>/<domain>/DOMAIN_MAP.md
-        try (Stream<Path> dirs = Files.list(mapsDir)) {
-            dirs.filter(Files::isDirectory)
+        // 遍历 <maps>/**/*.md：既含 <domain>/DOMAIN_MAP.md，也含子目录中的 TASK 地图
+        //（如 <domain>/previsit-preparation.md）。每个文件直接解析为 KnowledgeMap（不依赖
+        // mapId→路径命名约定，因文件命名可能与 mapId 不一致）。
+        FailClosedJsonReader mapReader = new FailClosedJsonReader();
+        try (Stream<Path> files = Files.walk(mapsDir)) {
+            files.filter(path -> path.getFileName().toString().endsWith(".md"))
                     .sorted()
-                    .forEach(domainDir -> mapReader.load(domainDir.getFileName().toString())
+                    .forEach(path -> mapReader.read(path, KnowledgeMap.class, KnowledgeSnapshotLoader::isValidMap)
                             .ifPresent(builder::putMap));
         } catch (IOException | SecurityException error) {
             throw fail("maps enumeration", error);
         }
+    }
+
+    /** KnowledgeMap 必需字段校验（fail-closed）。 */
+    private static boolean isValidMap(com.gien.gits.knowledge.KnowledgeMap map) {
+        if (map == null) {
+            return false;
+        }
+        return hasText(map.mapId()) && hasText(map.name()) && hasText(map.status())
+                && hasText(map.mapType()) && map.entrypoints() != null && hasText(map.routePolicyRef());
+    }
+
+    private static boolean hasText(String value) {
+        return value != null && !value.isBlank();
     }
 
     private void loadAssets(InMemoryKnowledgeStore.Builder builder) {

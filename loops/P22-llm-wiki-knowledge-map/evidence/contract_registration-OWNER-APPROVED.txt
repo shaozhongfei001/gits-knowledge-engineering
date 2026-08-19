@@ -1,0 +1,6 @@
+COMMAND=Owner/CCB approval of contract changes (new KnowledgeElement + extend AssetManifest/ActivationContract/KnowledgeMap with explicit_migration)
+EXIT_CODE=0
+DECISION=OWNER_APPROVED_P22_CONTRACT_REGISTRATION_LIMITED
+SCOPE=新增 KnowledgeElement (CTR-KELEM-001)；AssetManifest/ActivationContract/KnowledgeMap 扩展推迟到实现阶段测试保护下进行（避免破坏 P20 已 qa_pass 合同）
+RECORDED_BY=tech_lead (Human Owner approval)
+TIMESTAMP=2026-08-19T12:00:00Z
