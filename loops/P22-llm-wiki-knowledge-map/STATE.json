@@ -1,0 +1,26 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P22-llm-wiki-knowledge-map",
+  "status": "planned",
+  "current_phase": "contract_candidate_review",
+  "baseline_commit": "33a93c4",
+  "implementation_actor": "feature_pilot",
+  "qa_actor": "independent_qa",
+  "owner_decision": "PENDING_CONTRACT_AUTHORIZATION",
+  "gates": {
+    "contract_registration": "pending_owner_approval",
+    "contract_generate": "pending",
+    "contract_check": "pending",
+    "knowledge_architecture_check": "pending",
+    "element_read_gate": "pending",
+    "llm_read_map_gate": "pending",
+    "shadow_e2e": "pending",
+    "backend_test": "pending",
+    "independent_qa": "pending"
+  },
+  "progress": "0%",
+  "blocked": true,
+  "blocking_reason": "OWNER_CONTRACT_AUTHORIZATION_PENDING（合同变更：新增 KnowledgeElement + 扩展 AssetManifest/ActivationContract/KnowledgeMap 需 Owner/CCB 审批）",
+  "next_action": "Owner 审批 docs/design/LLM-WIKI-KNOWLEDGE-MAP.md 草案 §6 D7 合同变更范围后，登记 CONTRACT_INDEX 并推进",
+  "lastUpdated": "2026-08-19T12:00:00Z"
+}

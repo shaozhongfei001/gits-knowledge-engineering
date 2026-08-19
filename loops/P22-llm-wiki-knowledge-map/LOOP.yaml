@@ -1,0 +1,105 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P22-llm-wiki-knowledge-map",
+  "title": "LLM-WIKI 知识工程地图/目录（对齐权威规范 + 大模型优先读图）",
+  "status": "planned",
+  "implementation_actor": "feature_pilot",
+  "owner_decision": "PENDING_CONTRACT_AUTHORIZATION",
+  "objective": [
+    "以《银行知识工程规范打样_fixed.xlsx》为最高权威，实现业务场景→知识域→知识条目(KI)→知识要素(KE)的分层受控知识地图与目录。",
+    "支持大模型优先读图再执行任务（读图机制：方案 A，由规划器决定加载范围）。",
+    "将规范 KI/KE/RUL/SK/T/DS 全量资产化，与 P20 运行时控制面对齐（规范=语义层，P20=运行层）。"
+  ],
+  "authority": {
+    "spec": "docs/dd/银行知识工程规范打样_fixed.xlsx",
+    "design_draft": "docs/design/LLM-WIKI-KNOWLEDGE-MAP.md",
+    "map_ref": "docs/design/knowledge-engineering-map-ref.json"
+  },
+  "scope": {
+    "include": [
+      "specs/knowledge-architecture/schemas/knowledge-element.schema.json",
+      "specs/knowledge-architecture/",
+      "modules/knowledge-architecture/",
+      "adapters/knowledge-filesystem/",
+      "specs/CONTRACT_INDEX.yaml",
+      "docs/dispatch/P22-llm-wiki-knowledge-map.md",
+      "docs/design/LLM-WIKI-KNOWLEDGE-MAP.md",
+      "docs/design/knowledge-engineering-map-ref.json",
+      "loops/P22-llm-wiki-knowledge-map/"
+    ],
+    "exclude": [
+      "real_rag_platform",
+      "graphdb_connection",
+      "openmetadata_connection",
+      "oracle_writeback",
+      "quarantined_assets",
+      "production_credentials",
+      "production_cutover",
+      "direct_crm_writeback",
+      "unrelated_features"
+    ]
+  },
+  "gates": [
+    {
+      "id": "contract_registration",
+      "owner_kind": "owner_review",
+      "command": "Owner/CCB approval of contract changes (new KnowledgeElement + extend AssetManifest/ActivationContract/KnowledgeMap with explicit_migration)",
+      "pass_condition": "Owner approves contract candidate; CONTRACT_INDEX updated with new/extended contracts."
+    },
+    {
+      "id": "contract_generate",
+      "owner_kind": "implementation",
+      "command": "make generate",
+      "pass_condition": "All registered contracts compile without placeholders."
+    },
+    {
+      "id": "contract_check",
+      "owner_kind": "implementation",
+      "command": "make check",
+      "pass_condition": "Generated artifacts exactly match authoritative contract sources."
+    },
+    {
+      "id": "knowledge_architecture_check",
+      "owner_kind": "implementation",
+      "command": "python3 scripts/validate_knowledge_architecture.py",
+      "pass_condition": "KI/KE/RUL/SK/T/DS assets validate against authoritative spec; fail-closed."
+    },
+    {
+      "id": "element_read_gate",
+      "owner_kind": "implementation",
+      "command": "mvn -pl modules/knowledge-architecture,adapters/knowledge-filesystem -am test",
+      "pass_condition": "KnowledgeElementPort + filesystem adapter pass; fail-closed on missing/invalid."
+    },
+    {
+      "id": "llm_read_map_gate",
+      "owner_kind": "implementation",
+      "command": "shadow e2e with LlmClient consuming KnowledgeWikiPort render",
+      "pass_condition": "Planner decides load scope; LLM reads knowledge map before executing task (Scheme A)."
+    },
+    {
+      "id": "shadow_e2e",
+      "owner_kind": "implementation",
+      "command": "python3 scripts/run_p22_shadow_e2e.py --mode shadow",
+      "pass_condition": "Two scenarios produce replayable shadow evidence; formal output unchanged."
+    },
+    {
+      "id": "backend_test",
+      "owner_kind": "implementation",
+      "command": "make backend-test",
+      "pass_condition": "All Java tests pass; coverage >= 0.80."
+    },
+    {
+      "id": "independent_qa",
+      "owner_kind": "independent_qa",
+      "command": "make verify",
+      "pass_condition": "Independent QA confirms gates pass and records QA_PASS."
+    }
+  ],
+  "repair_policy": {
+    "max_attempts_per_gate": 5,
+    "failure_record": "loops/P22-llm-wiki-knowledge-map/FAILURES.md",
+    "record_before_fix": true,
+    "rerun_original_gate": true
+  },
+  "exit_states": ["ready_for_independent_qa", "blocked"]
+}

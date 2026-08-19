@@ -1,0 +1,28 @@
+{
+  "schema_version": "2.0",
+  "loop_id": "P22-llm-wiki-knowledge-map",
+  "updated_at": "2026-08-19T12:00:00Z",
+  "updated_by": "tech_lead",
+  "board_status": "PLANNED_AWAITING_OWNER_CONTRACT_APPROVAL",
+  "baton": {
+    "holder": "tech_lead",
+    "packet": "P22-llm-wiki-knowledge-map",
+    "wave": "W0",
+    "blocked_note": "blocked by OWNER_CONTRACT_AUTHORIZATION_PENDING",
+    "parallel_allowed": []
+  },
+  "roles": {
+    "tech_lead": {
+      "responsibility": "contract_candidate_holder",
+      "status": "in_progress"
+    },
+    "feature_pilot": {
+      "responsibility": "implementation",
+      "status": "unassigned"
+    },
+    "independent_qa": {
+      "responsibility": "gate_review",
+      "status": "unassigned"
+    }
+  }
+}
