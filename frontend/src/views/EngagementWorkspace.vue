@@ -182,51 +182,7 @@
     <!-- 访前报告 -->
     <div v-if="preR" class="ew-result">
       <h3>访前报告 & 速战卡 <n-tag size="small" type="info">Round {{ round }}</n-tag> <n-button text size="small" @click="preR=null">关闭</n-button></h3>
-      <n-grid :cols="2" :x-gap="12" :y-gap="12">
-        <n-gi><n-card title="访前报告" size="small">
-          <div class="sf"><b>拜访目标：</b>{{preR.previsitReport.visitObjective}}</div>
-          <div class="sf"><b>客户概览：</b>
-            <n-descriptions label-placement="left" :column="1" size="small" bordered>
-              <n-descriptions-item label="行业">{{preR.previsitReport.customerOverview?.industry}}</n-descriptions-item>
-              <n-descriptions-item label="规模">{{preR.previsitReport.customerOverview?.enterpriseScale}}</n-descriptions-item>
-              <n-descriptions-item label="层级">{{preR.previsitReport.customerOverview?.customerTier}}</n-descriptions-item>
-              <n-descriptions-item label="注册资本">{{preR.previsitReport.customerOverview?.registeredCapitalCny}}万</n-descriptions-item>
-              <n-descriptions-item label="风险等级">{{preR.previsitReport.customerOverview?.riskLevel}}</n-descriptions-item>
-            </n-descriptions>
-          </div>
-          <div class="sf"><b>KYC缺口：</b>
-            <div class="gaps">
-              <div v-if="preR.previsitReport.kycGapSummary?.knownItems?.length"><n-tag size="small" type="success">已知</n-tag><span v-for="(x,i) in preR.previsitReport.kycGapSummary.knownItems" :key="'k'+i" class="gi">{{x}}</span></div>
-              <div v-if="preR.previsitReport.kycGapSummary?.partialKnownItems?.length"><n-tag size="small" type="warning">部分已知</n-tag><span v-for="(x,i) in preR.previsitReport.kycGapSummary.partialKnownItems" :key="'p'+i" class="gi">{{x}}</span></div>
-              <div v-if="preR.previsitReport.kycGapSummary?.unknownItems?.length"><n-tag size="small" type="error">未知</n-tag><span v-for="(x,i) in preR.previsitReport.kycGapSummary.unknownItems" :key="'u'+i" class="gi">{{x}}</span></div>
-              <div v-if="preR.previsitReport.kycGapSummary?.priorityQuestions?.length"><n-tag size="small" type="info">优先问题</n-tag><ul><li v-for="(q,i) in preR.previsitReport.kycGapSummary.priorityQuestions" :key="'q'+i">{{q}}</li></ul></div>
-            </div>
-          </div>
-          <div v-if="preR.previsitReport.productSchemes?.length" class="sf"><b>产品方案：</b>
-            <n-card v-for="(ps,i) in preR.previsitReport.productSchemes" :key="i" size="small" class="ps-card">
-              <div class="ps-h"><b>{{ps.productName}}</b><n-tag size="small" type="info">{{ps.suggestedAmount}}</n-tag></div>
-              <div>{{ps.matchReason}}</div>
-              <div v-if="ps.suggestedTerm">期限：{{ps.suggestedTerm}}</div>
-              <div v-if="ps.keyConditions?.length">关键条件：<span v-for="(c,j) in ps.keyConditions" :key="j" class="gi">{{c}}</span></div>
-              <div v-if="ps.requiredMaterials?.length">所需材料：<span v-for="(m,j) in ps.requiredMaterials" :key="j" class="gi">{{m}}</span></div>
-              <div v-if="ps.riskPoints?.length">风险点：<span v-for="(r,j) in ps.riskPoints" :key="j" class="gi ri">{{r}}</span></div>
-            </n-card>
-          </div>
-          <div v-if="preR.previsitReport.keyQuestions?.length" class="sf"><b>关键问题：</b><ul><li v-for="(q,i) in preR.previsitReport.keyQuestions" :key="i">{{q}}</li></ul></div>
-          <div v-if="preR.previsitReport.riskReminders?.length" class="sf"><b>风险提醒：</b><ul><li v-for="(r,i) in preR.previsitReport.riskReminders" :key="i" class="ri">{{r}}</li></ul></div>
-          <div v-if="preR.previsitReport.visitStrategy" class="sf"><b>拜访策略：</b><span class="hl">{{preR.previsitReport.visitStrategy}}</span></div>
-        </n-card></n-gi>
-        <n-gi><n-card title="速战卡" size="small" type="warning">
-          <div v-if="preR.battleCard">
-            <div class="bc-h"><b>{{preR.battleCard.customerName}}</b><n-tag size="small" type="info">{{preR.battleCard.customerTier}}</n-tag><n-tag size="small" :type="preR.battleCard.riskLevel==='HIGH'?'error':'default'">{{preR.battleCard.riskLevel}}</n-tag></div>
-            <div class="bc-obj">{{preR.battleCard.visitObjective}}</div>
-            <div v-if="preR.battleCard.keyPoints?.length"><b>要点：</b><ul><li v-for="(p,i) in preR.battleCard.keyPoints" :key="i">{{p}}</li></ul></div>
-            <div v-if="preR.battleCard.productHints?.length"><b>产品提示：</b><ul><li v-for="(h,i) in preR.battleCard.productHints" :key="i">{{h}}</li></ul></div>
-            <div v-if="preR.battleCard.dontForget?.length"><b>别忘了：</b><ul><li v-for="(d,i) in preR.battleCard.dontForget" :key="i">{{d}}</li></ul></div>
-            <div v-if="preR.battleCard.bottomLine"><b>底线：</b><span class="hl">{{preR.battleCard.bottomLine}}</span></div>
-          </div>
-        </n-card></n-gi>
-      </n-grid>
+      <KnowledgePrevisitReport :report="preR.previsitReport" :battle-card="preR.battleCard" />
     </div>
 
     <!-- 访后分析 -->
@@ -279,6 +235,7 @@ import { ref, computed, onMounted } from 'vue'
 import { NGrid, NGi, NCard, NButton, NModal, NInput, NEmpty, NTag, NDescriptions, NDescriptionsItem, NTable, useMessage } from 'naive-ui'
 import RiskBadge from '../components/RiskBadge.vue'
 import { fetchCustomers, generateOutreachScript, generateMeetingScript, executePrevisit, preparePrevisit, executePostvisit, startJourney, handleNewEvidence, completeJourney } from '../api/engagement'
+import KnowledgePrevisitReport from '../components/KnowledgePrevisitReport.vue'
 import type { Customer, OutreachScriptResponse, MeetingScriptResponse, PrevisitExecutionResponse, PostvisitAnalysisContent, NewEvidenceResponse } from '../api/engagement'
 
 const msg = useMessage()
