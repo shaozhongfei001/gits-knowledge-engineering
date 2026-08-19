@@ -67,6 +67,38 @@ CLAIM_SCOPE=
 
 ---
 
+## EVIDENCE_ID: EV-P22-G3-001（G3 大模型优先读图 + LlmClient 注入）
+
+```text
+EVIDENCE_ID=EV-P22-G3-001
+GATE=llm_read_map_gate（方案 A：规划器决定加载范围）
+ACTOR=feature_pilot (feature-pilot-g3)
+TIMESTAMP=2026-08-19
+BASE_COMMIT=d158a3f
+COMMAND=
+  ./mvnw -pl modules/knowledge-architecture,adapters/knowledge-filesystem,apps/api -am test
+  make check
+EXIT_CODE=0
+ARTIFACT_PATHS=
+  - modules/knowledge-architecture/.../port/KnowledgeWikiPort.java（新增 Port：renderMap/renderKnowledgeItem/renderElement，fail-closed 空文本）
+  - adapters/knowledge-filesystem/.../KnowledgeWikiFilesystemAdapter.java（实现 KnowledgeWikiPort，从 InMemoryKnowledgeStore 渲染 LLM 可读受控地图，含 AUTHORITATIVE 标注）
+  - apps/api/.../config/KnowledgeArchitectureConfig.java（装配 KnowledgeWikiPort bean + 知识根路径 CWD 无关解析）
+  - apps/api/.../service/KnowledgeWikiService.java（读图→systemPrompt→LlmClient.complete，LLM 失败 fallback 模板）
+  - 测试：KnowledgeWikiFilesystemAdapterTest(7) + KnowledgeWikiFilesystemAdapterIT(2) + KnowledgeWikiServiceTest(4)
+CLAIM_SCOPE=
+  - 大模型优先读图：KnowledgeWikiService 执行任务前先 renderMap(scope) 得到 LLM 可读受控知识地图，作为 systemPrompt 注入 LlmClient 再执行（方案 A）
+  - 加载范围 scope 由规划器依据 ActivationPlan.taskType 决定（调用方注入）
+  - renderMap 输出含场景→知识域→KI→KE 分层导航 + [AUTHORITATIVE] 权威标注
+  - fail-closed：未知 ID / 无匹配返回空字符串，不返回 null、不抛异常
+  - 纯增量：不修改 P20 合同，不改变现有业务行为
+  - 修复既有 apps/api 上下文测试：知识根目录路径解析改为与 KnowledgeSnapshotLoaderIT 一致的 CWD 无关（walk-up）
+  - 测试：knowledge-filesystem 52 + apps/api 321（含新增 13 单测/IT）全通过；make check 全绿
+```
+
+状态：DEV_SELF_CHECK（独立 QA 尚未签署，QA_PASS 不由此记录）。
+
+---
+
 ## 验证记录（DEV_SELF_CHECK）
 
 | 检查项 | 结果 |
@@ -78,3 +110,7 @@ CLAIM_SCOPE=
 | 快照加载 fail-closed | 空/缺失根目录拒绝启动（IT 覆盖） |
 | 内存读取 fail-closed | 5 类 Port 未命中返回 empty/空数组（单测覆盖） |
 | 合同一致性 | generated 与 specs 哈希一致 |
+| G3 renderMap | 输出非空，含 KI/KE 导航 + [AUTHORITATIVE]（单测 + 真实数据 IT） |
+| G3 renderKnowledgeItem/renderElement | 按 KI 渲染要素清单、按要素渲染详情；未知 ID 返回空（fail-closed） |
+| G3 KnowledgeWikiService | systemPrompt 含知识地图、注入 LlmClient；LLM 失败回退模板（单测覆盖） |
+| G3 全量测试 | `-pl modules/knowledge-architecture,adapters/knowledge-filesystem,apps/api -am test` 全通过（apps/api 321） |

@@ -1,28 +1,39 @@
 {
   "schema_version": "2.0",
   "loop_id": "P22-llm-wiki-knowledge-map",
-  "updated_at": "2026-08-19T12:00:00Z",
+  "updated_at": "2026-08-19T17:00:00Z",
   "updated_by": "tech_lead",
-  "board_status": "PLANNED_AWAITING_OWNER_CONTRACT_APPROVAL",
+  "board_status": "MULTI_AGENT_IN_PROGRESS",
   "baton": {
     "holder": "tech_lead",
     "packet": "P22-llm-wiki-knowledge-map",
-    "wave": "W0",
-    "blocked_note": "blocked by OWNER_CONTRACT_AUTHORIZATION_PENDING",
-    "parallel_allowed": []
+    "wave": "W1",
+    "blocked_note": null,
+    "parallel_allowed": ["feature_pilot"]
   },
   "roles": {
     "tech_lead": {
-      "responsibility": "contract_candidate_holder",
+      "responsibility": "orchestrate multi-agent P22 completion",
       "status": "in_progress"
     },
     "feature_pilot": {
-      "responsibility": "implementation",
-      "status": "unassigned"
+      "responsibility": "implementation (G3 KnowledgeWikiPort + LlmClient wiring; G4 shadow E2E)",
+      "status": "g3_done",
+      "agent": "feature-pilot-g3",
+      "g3_evidence": "EV-P22-G3-001 (DEV_SELF_CHECK)"
+    },
+    "e2e_owner": {
+      "responsibility": "shadow e2e + integration verify (after G3/G4)",
+      "status": "pending"
     },
     "independent_qa": {
-      "responsibility": "gate_review",
-      "status": "unassigned"
+      "responsibility": "gate_review + QA_PASS (G5)",
+      "status": "pending"
     }
+  },
+  "team": {
+    "name": "p22-wiki-knowledge-map",
+    "status": "active",
+    "members": ["tech_lead(main)", "feature-pilot-g3"]
   }
 }

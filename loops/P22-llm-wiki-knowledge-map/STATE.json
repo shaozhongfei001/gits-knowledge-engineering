@@ -2,8 +2,8 @@
   "schema_version": "2.0",
   "loop_id": "P22-llm-wiki-knowledge-map",
   "status": "in_progress",
-  "current_phase": "e1_complete_pending_llm_read_map",
-  "baseline_commit": "6247048",
+  "current_phase": "g3_llm_read_map_complete_pending_shadow_e2e",
+  "baseline_commit": "d158a3fbbddf41d337366f004fcd7316391b1279",
   "implementation_actor": "feature_pilot",
   "qa_actor": "independent_qa",
   "owner_decision": "OWNER_APPROVED_P22_CONTRACT_REGISTRATION_LIMITED",
@@ -13,15 +13,15 @@
     "contract_check": "done",
     "knowledge_architecture_check": "done",
     "element_read_gate": "done",
-    "llm_read_map_gate": "pending",
+    "llm_read_map_gate": "done",
     "shadow_e2e": "pending",
     "backend_test": "pending",
     "independent_qa": "pending"
   },
-  "progress": "50%",
+  "progress": "70%",
   "blocked": false,
   "blocking_reason": null,
-  "next_action": "G3：实现 KnowledgeWikiPort（渲染 LLM 可读地图/目录，方案 A）+ LlmClient 注入",
+  "next_action": "G4：P22 shadow E2E 脚本 scripts/run_p22_shadow_e2e.py（本轮不做，留给后续）",
   "decisions": {
     "contract_scope": "新增 KnowledgeElement (CTR-KELEM-001) 已登记；AssetManifest 扩展推迟到实现阶段测试保护下进行",
     "read_map_mechanism": "方案 A：规划器决定加载范围",
@@ -38,7 +38,8 @@
   "evidence": {
     "g1_ke_assets": "39 KE assetized",
     "g2_tests": "unit 6/6 + IT 4/4",
-    "e1_tests": "knowledge-architecture 19 + knowledge-filesystem 44 pass; apps/api compile PASS; make check green"
+    "e1_tests": "knowledge-architecture 19 + knowledge-filesystem 44 pass; apps/api compile PASS; make check green",
+    "g3_llm_read_map": "KnowledgeWikiPort + KnowledgeWikiFilesystemAdapter + KnowledgeWikiService(LlmClient) wired; unit 13 + IT 4; apps/api 321 tests PASS; make check green"
   },
   "lastUpdated": "2026-08-19T16:00:00Z"
 }
