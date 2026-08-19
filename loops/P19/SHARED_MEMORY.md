@@ -31,3 +31,4 @@
 - 独立 QA 复现 `make verify`：除 db-check（外部 GITS_KEDB_PASSWORD 环境依赖，P19 用 H2 不需 MySQL）外全绿；后端 317+22 tests、前端 100 tests、dependency-check 15 reports 全 PASS。
 - QA 期间修复 scope 外预存前端问题（FAILURES.md F-4）：`fetchCustomerJourneys` 测试断言与实现不一致、vitest 排除 e2e/ 目录。
 - 移交 Owner 做 P5 审查（受控合并批准，不表示生产就绪）。
+- **main 分支交叉复核（2026-08-19）**：在 `main` HEAD `9f04a04b` 上独立实测，make check PASS、后端 8082 健康 UP、E2E 29/29 PASS、EngagementScenarioE2eIT 14 tests 0 fail、前端 vue-tsc PASS + vitest 100 tests PASS + vite build PASS。既有 QA_PASS 跨分支成立，详见 `EVIDENCE.md` 第六节。

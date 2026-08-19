@@ -57,3 +57,20 @@ G4 E2E 验证需由独立 QA 角色记录 QA_PASS（开发角色仅记录 DEV_SE
 - 复现验证：`make verify` 除 db-check（外部 GITS_KEDB_PASSWORD 环境依赖）外全绿；后端 317+22 tests、前端 100 tests（vue-tsc+vitest+build）、dependency-check 15 reports 全 PASS。
 - QA 期间修复 scope 外预存前端问题（FAILURES.md F-4）：`fetchCustomerJourneys` 测试断言对齐空数组实现；`vitest.config.ts` 排除 e2e/ 目录。
 - loop-guard evidence + memory 均 PASS；Baton 交接至 `independent_qa`。
+
+## 六、main 分支交叉复核（2026-08-19，actor=independent_qa，本会话实测）
+
+> 目的：既有 QA Attestation 对象 HEAD 为 `feature/p20-wiki-ontology-fusion`；本会话在 **`main` 分支（HEAD `9f04a04b`）** 上独立实测复现，确认 P19 结论在当前基线依然成立，消除分支漂移疑虑。
+
+| 复核项 | 实测命令 | 结果 |
+|--------|---------|------|
+| 合同/防护网 | `make check` | PASS（contract-check / knowledge-architecture / loop-guard / secret-scan 74 advisory 无真实密钥 / enum-consistency 2族19文件 / semantic-rule-gate SHACL+Schema+DMN+LinkML 全 PASS） |
+| 后端启动 | `./mvnw -pl apps/api spring-boot:run --server.port=8082` | 健康 UP（`/actuator/health` 200） |
+| 剧本 E2E 端点 | `bash scripts/e2e-29-endpoints.sh http://localhost:8082` | **29/29 PASS，EXIT=0**（含旅程启动 201、访前/外联/会面/访后/证据迭代/信号/门禁/承诺/CRM/审计/主张/交易等全 200） |
+| 剧本核心集成测试 | `./mvnw -pl apps/api test -Dtest=EngagementScenarioE2eIT` | **14 tests, 0 fail / 0 error**（AT-001 3000万语义 → AT-010 经营视图，完整业务主链） |
+| 前端类型检查 | `cd frontend && npx vue-tsc --noEmit` | PASS（EXIT=0） |
+| 前端单测 | `cd frontend && npx vitest run` | **9 文件 / 100 tests 全 PASS**（含 EngagementWorkspace.spec 9 tests） |
+| 前端构建 | `cd frontend && npx vite build` | PASS（`✓ built in 479ms`，EngagementWorkspace 产物正常） |
+
+**结论**：P19 的 QA_PASS 在 **`main` 分支当前 HEAD（`9f04a04b`）** 交叉复核成立。客户持续经营剧本在数据（华东精工 CUST-CORP-0001 种子）、后端编排（EngagementOrchestrator 完整主链 + AT-001~AT-010）、前端界面（EngagementWorkspace 螺旋迭代 UI）三层均实测可达。
+- 已记录红线提示：29 端点脚本为"状态码 2xx"断言，业务内容正确性由 `EngagementScenarioE2eIT`（14 tests）与前端 `EngagementWorkspace.spec` 互补覆盖；本复核未做浏览器四态人工走查，建议演示前由演示者按 HANDOFF 步骤浏览器过一遍。
