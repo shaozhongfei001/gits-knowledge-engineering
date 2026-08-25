@@ -1,7 +1,35 @@
 <template>
-  <div class="ew">
-    <div class="ew-header"><h1>持续经营工作台</h1><p>螺旋迭代闭环，驱动客户关系持续深化</p></div>
+  <div class="ew" data-testid="p11-engagement-workspace">
+    <ObjectHeader
+      :page-id="PAGE_ID"
+      :object-type="OBJECT_TYPE"
+      :object-status="objectStatus"
+      title="互动记录·访前路径"
+    />
+    <div class="p11-context" data-testid="p11-object-context">
+      <span>对象：{{ sc ? sc.customerName : '未选择客户' }}</span>
+      <span>旅程：{{ jid || '未启动' }}</span>
+      <span>持续经营工作台（螺旋路径保留）</span>
+    </div>
+    <nav class="p11-subnav" data-testid="p11-subnav">
+      <button type="button" data-testid="p11-link-gaps" @click="goSlice('/engagement/previsit/gaps')">访前目标与缺口</button>
+      <button type="button" data-testid="p11-link-evidence" @click="goSlice('/engagement/previsit/evidence')">访前证据装配</button>
+      <button type="button" data-testid="p11-link-pack" @click="goSlice('/engagement/previsit/pack')">访前包预览</button>
+      <button type="button" data-testid="p11-link-postvisit" @click="goSlice('/engagement/postvisit')">访后事实对账</button>
+      <button type="button" data-testid="p11-link-crm" @click="goSlice('/engagement/crm-writeback')">CRM 受控回写</button>
+      <button type="button" data-testid="p11-link-in-meeting" @click="goInMeeting">会中工作区</button>
+    </nav>
+    <div class="p11-gated">
+      <DisabledAction
+        label="将访前草稿记为正式 Claim"
+        :disabled="true"
+        reason="访前路径不将草稿写成正式 Claim/Evidence"
+        unlockPath="须经既有 HumanGate 后才能形成正式证据"
+      />
+    </div>
 
+    <PageState :status="status" :error="error" idle-description="尚未加载客户列表" @retry="loadCustomers">
+    <p v-if="!custs.length" class="p11-empty">暂无客户对象</p>
     <!-- 状态栏 -->
     <div class="ew-bar">
       <span>当前客户：<n-tag v-if="sc" type="info">{{ sc.customerName }}</n-tag><em v-else>未选择</em></span>
@@ -227,18 +255,35 @@
         </n-card>
       </div>
     </n-modal>
+    </PageState>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { NGrid, NGi, NCard, NButton, NModal, NInput, NEmpty, NTag, NDescriptions, NDescriptionsItem, NTable, useMessage } from 'naive-ui'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { NGrid, NGi, NCard, NButton, NModal, NInput, NEmpty, NTag, NTable, useMessage } from 'naive-ui'
 import RiskBadge from '../components/RiskBadge.vue'
-import { fetchCustomers, generateOutreachScript, generateMeetingScript, executePrevisit, preparePrevisit, executePostvisit, startJourney, handleNewEvidence, completeJourney } from '../api/engagement'
+import ObjectHeader from '../components/shell/ObjectHeader.vue'
+import PageState from '../components/shell/PageState.vue'
+import DisabledAction from '../components/shell/DisabledAction.vue'
+import { fetchCustomers, generateOutreachScript, generateMeetingScript, preparePrevisit, executePostvisit, startJourney, handleNewEvidence, completeJourney } from '../api/engagement'
 import KnowledgePrevisitReport from '../components/KnowledgePrevisitReport.vue'
 import type { Customer, OutreachScriptResponse, MeetingScriptResponse, PrevisitExecutionResponse, PostvisitAnalysisContent, NewEvidenceResponse } from '../api/engagement'
+import { deriveResourceStatus } from '../composables/useResourceStatus'
+import { engagementQuery } from '../composables/useEngagementContext'
+import { usePageReferenceStore } from '../stores/pageReference'
+
+const PAGE_ID = 'P11'
+const OBJECT_TYPE = '互动 Interaction'
 
 const msg = useMessage()
+const router = useRouter()
+const route = useRoute()
+const pageRefs = usePageReferenceStore()
+const loading = ref(true)
+const error = ref('')
+const requested = ref(false)
 const ld = ref(false)
 const custs = ref<Customer[]>([])
 const sc = ref<Customer|null>(null)
@@ -440,7 +485,69 @@ async function doComplete() {
   finally{ld.value=false}
 }
 
-onMounted(async()=>{try{custs.value=await fetchCustomers()}catch(e){console.error('Failed to load customers:',e)}})
+const status = computed(() =>
+  deriveResourceStatus({
+    loading: loading.value,
+    error: error.value,
+    hasData: requested.value,
+    requested: requested.value,
+  }),
+)
+const objectStatus = computed(() => sc.value?.customerName || '缺对象')
+
+function persistReference() {
+  pageRefs.capture(PAGE_ID, {
+    objectType: OBJECT_TYPE,
+    customerId: sc.value?.customerId,
+    recordId: jid.value || undefined,
+    viewId: 'previsit_path',
+    scrollAnchor: typeof window !== 'undefined' ? window.scrollY : 0,
+  })
+}
+
+function sliceQuery() {
+  return engagementQuery({
+    customerId: sc.value?.customerId,
+    journeyId: jid.value,
+    operatingCaseId: oid.value,
+    rmId: sc.value?.rmId,
+  })
+}
+
+function goSlice(path: string) {
+  persistReference()
+  router.push({ path, query: sliceQuery() })
+}
+
+function goInMeeting() {
+  persistReference()
+  if (jid.value) {
+    router.push({ name: 'InMeetingAssistant', params: { id: jid.value }, query: sliceQuery() })
+    return
+  }
+  router.push({ path: '/in-meeting', query: sliceQuery() })
+}
+
+async function loadCustomers() {
+  loading.value = true
+  error.value = ''
+  requested.value = true
+  try {
+    custs.value = await fetchCustomers()
+    const qid = String(route.query.customerId || '')
+    if (qid) {
+      sc.value = custs.value.find(c => c.customerId === qid) || sc.value
+    }
+  } catch (e: unknown) {
+    error.value = e instanceof Error ? e.message : '无法获取客户列表'
+    custs.value = []
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(loadCustomers)
+onBeforeUnmount(persistReference)
 </script>
 
 <style scoped>
@@ -448,6 +555,31 @@ onMounted(async()=>{try{custs.value=await fetchCustomers()}catch(e){console.erro
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--space-6);
+}
+
+.p11-context,
+.p11-subnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.p11-subnav button {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--border-normal);
+  border-radius: 6px;
+  background: var(--bg-surface);
+  cursor: pointer;
+}
+.p11-gated {
+  margin-bottom: 12px;
+}
+.p11-empty {
+  color: var(--text-tertiary);
+  font-size: 13px;
 }
 
 .ew-header h1 {

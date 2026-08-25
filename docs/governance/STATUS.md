@@ -49,3 +49,6 @@ QA_ACCEPTANCE_KIT=P18_CHECKLIST_48_ITEMS_EVIDENCE_PACK
 | 2026-08-06 | PROD_VERIFY_SCRIPT | _(新增)_ | P18_SCRIPTS_PROD_VERIFY_SH | 生产环境接口连通性验证脚本 |
 | 2026-08-06 | E2E_ACCEPTANCE_SUITE | _(新增)_ | P18_42_TEST_CASES_5_BUSINESS_CHAINS | 42项E2E验收用例+自动化脚本 |
 | 2026-08-06 | QA_ACCEPTANCE_KIT | _(新增)_ | P18_CHECKLIST_48_ITEMS_EVIDENCE_PACK | QA验收检查清单+证据包模板 |
+| 2026-08-25 | BASELINE_INPUTS | P16冻结包 | + UX-PLAN V1.0 + UX-DESIGN V3.2 | OD-GITS-BANK-UX-2026-08-25；NOT_FROZEN；非实现 |
+| 2026-08-25 | P30 | _(新增)_ | LOOP in_progress；baton feature_pilot | 壳层+P01–P03只读；契约源不变 |
+| 2026-08-26 | GITS_BANK_UX | P30 in_progress | P30–P37 `qa_pass`（C0/C2 壳）；W9 Owner UAT 未签 | LONGHAUL W1–W8；`docs/dispatch/W9-gits-bank-uat-release.md`；非 UAT/FROZEN |

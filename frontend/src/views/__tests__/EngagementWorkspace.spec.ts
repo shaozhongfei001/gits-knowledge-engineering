@@ -1,5 +1,7 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
+import { createMemoryHistory, createRouter } from 'vue-router'
 import EngagementWorkspace from '../EngagementWorkspace.vue'
 import type { Customer } from '../../api/engagement'
 
@@ -8,6 +10,7 @@ vi.mock('../../api/engagement', () => ({
   generateOutreachScript: vi.fn(),
   generateMeetingScript: vi.fn(),
   executePrevisit: vi.fn(),
+  preparePrevisit: vi.fn(),
   executePostvisit: vi.fn(),
   startJourney: vi.fn(),
   handleNewEvidence: vi.fn(),
@@ -36,39 +39,90 @@ const stubs = {
   NGrid: { template: '<div class="n-grid"><slot /></div>' },
   NGi: { template: '<div class="n-gi"><slot /></div>' },
   NCard: { template: '<div class="n-card"><slot /></div>' },
-  NButton: { template: '<button class="n-button"><slot /></button>' },
+  NButton: {
+    props: ['disabled'],
+    template: '<button class="n-button" :disabled="disabled"><slot /></button>',
+  },
   NModal: true,
   NInput: { template: '<input class="n-input" />' },
   NEmpty: { template: '<div class="n-empty" />' },
   NTag: { template: '<span class="n-tag"><slot /></span>' },
-  NDescriptions: { template: '<div class="n-descriptions"><slot /></div>' },
-  NDescriptionsItem: { template: '<div class="n-descriptions-item"><slot /></div>' },
   NTable: { template: '<div class="n-table"><slot /></div>' },
+  NSpin: { template: '<div class="n-spin" />' },
+  NResult: { template: '<div class="n-result"><slot name="footer" /></div>' },
+  NTooltip: { template: '<div><slot name="trigger" /><slot /></div>' },
   RiskBadge: { template: '<span class="risk-badge">{{ $attrs.level }}</span>' },
 }
 
 async function mountWorkspace() {
   const { fetchCustomers } = await import('../../api/engagement')
   ;(fetchCustomers as ReturnType<typeof vi.fn>).mockResolvedValue(mockCustomers)
-
+  setActivePinia(createPinia())
+  const router = createRouter({
+    history: createMemoryHistory(),
+    routes: [
+      { path: '/engagement', name: 'EngagementWorkspace', component: EngagementWorkspace },
+      { path: '/engagement/previsit/gaps', name: 'PrevisitGaps', component: { template: '<div/>' } },
+      { path: '/in-meeting/:id?', name: 'InMeetingAssistant', component: { template: '<div/>' } },
+    ],
+  })
+  await router.push('/engagement')
   const wrapper = mount(EngagementWorkspace, {
-    global: { stubs },
+    global: { plugins: [router], stubs },
   })
   await flushPromises()
   return wrapper
 }
 
-describe('EngagementWorkspace', () => {
-  it('renders page title', async () => {
-    const wrapper = await mountWorkspace()
-    expect(wrapper.find('h1').text()).toBe('持续经营工作台')
+describe('P11 EngagementWorkspace', () => {
+  beforeEach(() => {
+    sessionStorage.clear()
   })
 
-  it('renders spiral flow with start node', async () => {
+  it('enters successfully with object context and spiral workbench', async () => {
     const wrapper = await mountWorkspace()
-    const nodes = wrapper.findAll('.sp-node')
-    // Start, PREVISIT, INTERACTION, POSTVISIT, ITERATE (decision), COMPLETE = 6 nodes
-    expect(nodes.length).toBeGreaterThanOrEqual(5)
+    expect(wrapper.get('[data-testid="p11-engagement-workspace"]').text()).toContain('互动 Interaction')
+    expect(wrapper.text()).toContain('互动记录·访前路径')
+    expect(wrapper.get('[data-testid="p11-object-context"]').text()).toMatch(/未选择|旅程/)
+    expect(wrapper.find('[data-testid="success-state"]').exists()).toBe(true)
+    expect(wrapper.findAll('.sp-node').length).toBeGreaterThanOrEqual(5)
+  })
+
+  it('shows empty success when the customer list is empty', async () => {
+    const { fetchCustomers } = await import('../../api/engagement')
+    ;(fetchCustomers as ReturnType<typeof vi.fn>).mockResolvedValue([])
+    setActivePinia(createPinia())
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [{ path: '/engagement', name: 'EngagementWorkspace', component: EngagementWorkspace }],
+    })
+    await router.push('/engagement')
+    const wrapper = mount(EngagementWorkspace, { global: { plugins: [router], stubs } })
+    await flushPromises()
+    expect(wrapper.find('[data-testid="success-state"]').exists()).toBe(true)
+    expect(wrapper.text()).toMatch(/暂无/)
+  })
+
+  it('shows error four-state when fetchCustomers fails', async () => {
+    const { fetchCustomers } = await import('../../api/engagement')
+    ;(fetchCustomers as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('upstream'))
+    setActivePinia(createPinia())
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [{ path: '/engagement', name: 'EngagementWorkspace', component: EngagementWorkspace }],
+    })
+    await router.push('/engagement')
+    const wrapper = mount(EngagementWorkspace, { global: { plugins: [router], stubs } })
+    await flushPromises()
+    expect(wrapper.find('[data-testid="error-state"]').exists()).toBe(true)
+  })
+
+  it('disables writing a formal Claim and keeps spiral actions gated without a journey', async () => {
+    const wrapper = await mountWorkspace()
+    expect((wrapper.get('[data-testid="gated-action"]').element as HTMLButtonElement).disabled).toBe(true)
+    const actions = wrapper.findAll('.ew-act')
+    const disabledActions = actions.filter(a => a.classes().includes('disabled'))
+    expect(disabledActions.length).toBe(actions.length)
   })
 
   it('renders spiral node labels', async () => {
@@ -80,12 +134,6 @@ describe('EngagementWorkspace', () => {
     expect(labels).toContain('访后复盘')
     expect(labels).toContain('迭代决策')
     expect(labels).toContain('完成旅程')
-  })
-
-  it('renders action panel with 4 actions', async () => {
-    const wrapper = await mountWorkspace()
-    const actions = wrapper.findAll('.ew-act')
-    expect(actions).toHaveLength(4)
   })
 
   it('renders action titles', async () => {
@@ -100,16 +148,7 @@ describe('EngagementWorkspace', () => {
   it('marks start node as active when no journey', async () => {
     const wrapper = await mountWorkspace()
     const nodes = wrapper.findAll('.sp-node')
-    // First node (START) should be active
     expect(nodes[0].classes()).toContain('active')
-  })
-
-  it('action cards are disabled when no journey started', async () => {
-    const wrapper = await mountWorkspace()
-    const actions = wrapper.findAll('.ew-act')
-    // All actions should be disabled (no journey started)
-    const disabledActions = actions.filter(a => a.classes().includes('disabled'))
-    expect(disabledActions.length).toBe(actions.length)
   })
 
   it('shows customer select button', async () => {

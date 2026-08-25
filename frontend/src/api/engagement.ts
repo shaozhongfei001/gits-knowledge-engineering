@@ -147,6 +147,27 @@ export interface Interaction {
   endedAt?: string
 }
 
+/** OpenAPI Channel（GET /api/v1/interactions）。 */
+export type InteractionChannel = 'IN_PERSON' | 'PHONE' | 'VIDEO' | 'EMAIL' | 'WECHAT' | 'OTHER'
+
+/**
+ * OpenAPI Interaction（operationId=listInteractions）。
+ * 与旅程 Interaction DTO 分列，字段只对齐合同，不发明关系人图或日历写回。
+ */
+export interface ListedInteraction {
+  interactionId: string
+  customerId: string
+  channel: InteractionChannel | string
+  transcript?: string
+  summary?: string
+  recordingConsentId?: string
+  durationSeconds?: number
+  participants?: string[]
+  interactionDate?: string
+  createdAt?: string
+  updatedAt?: string
+}
+
 export interface Participant {
   participantId: string
   role: string
@@ -155,11 +176,13 @@ export interface Participant {
 
 export interface Claim {
   claimId: string
+  customerId?: string
   operatingCaseId?: string
   journeyId?: string
   claimType: string
   content: string
   status: string
+  evidenceRef?: string
   evidenceRefs?: string[]
   createdAt?: string
 }
@@ -178,6 +201,8 @@ export interface CustomerContext {
   customer: Customer
   kycGapProfile?: KycGapProfile
   opportunitySignals: OpportunitySignal[]
+  /** OpenAPI listClaims 组合进上下文；非正式 Need。缺省视为空数组。 */
+  claims?: Claim[]
   recentInteractions: Interaction[]
   activeJourneys: CustomerJourney[]
   recentTransactions: TransactionRecord[]
@@ -248,25 +273,28 @@ export async function fetchCustomer(customerId: string): Promise<Customer> {
 /** 获取客户上下文（含KYC、信号、交互、旅程、交易） */
 export async function fetchCustomerContext(customerId: string): Promise<CustomerContext> {
   // 后端无单一上下文端点，组合多个调用
-  const [operatingView, kycProfile, signals, transactions] = await Promise.allSettled([
+  const [operatingView, kycProfile, signals, transactions, claims] = await Promise.allSettled([
     api.get(`/customer/${customerId}/operating-view`),
     api.get(`/kyc/${customerId}/gap-profile`),
     api.get(`/signal/${customerId}`),
-    api.get(`/customer/${customerId}/transactions`)
+    api.get(`/customer/${customerId}/transactions`),
+    api.get('/claims', { params: { customerId } }),
   ])
 
   const viewData = operatingView.status === 'fulfilled' ? operatingView.value.data : null
   const kycData = kycProfile.status === 'fulfilled' ? kycProfile.value.data : undefined
   const signalsData = signals.status === 'fulfilled' ? signals.value.data : []
   const txData = transactions.status === 'fulfilled' ? transactions.value.data : []
+  const claimsData = claims.status === 'fulfilled' ? claims.value.data : []
 
   return {
     customer: viewData?.customer ?? { customerId, customerName: customerId },
     kycGapProfile: kycData,
-    opportunitySignals: signalsData,
+    opportunitySignals: Array.isArray(signalsData) ? signalsData : [],
+    claims: Array.isArray(claimsData) ? claimsData : [],
     recentInteractions: [],
     activeJourneys: [],
-    recentTransactions: txData
+    recentTransactions: Array.isArray(txData) ? txData : [],
   }
 }
 
@@ -423,11 +451,27 @@ export async function fetchOpportunitySignals(operatingCaseId: string): Promise<
   return data
 }
 
+/** GET /api/v1/engagement/claims?customerId=（OpenAPI operationId=listClaims）。只读，非正式 Need。 */
+export async function listClaims(customerId?: string): Promise<Claim[]> {
+  const params = customerId ? { customerId } : undefined
+  const { data } = await api.get('/claims', { params })
+  return Array.isArray(data) ? data : []
+}
+
 /** 获取交易流水 */
 export async function fetchTransactions(customerId: string): Promise<TransactionRecord[]> {
   const { data } = await api.get(`/customer/${customerId}/transactions`)
   return data
 }
+
+/** GET /api/v1/interactions?customerId=（OpenAPI operationId=listInteractions） */
+export async function listInteractions(customerId?: string): Promise<ListedInteraction[]> {
+  const params = customerId ? { customerId } : undefined
+  const { data } = await rootApi.get('/api/v1/interactions', { params })
+  return Array.isArray(data) ? data : []
+}
+
+export const fetchInteractions = listInteractions
 
 /** 确认信号 */
 export async function confirmSignal(signalId: string): Promise<void> {
@@ -711,6 +755,15 @@ export const REPORT_TYPE_LABELS: Record<ReportType, string> = {
   CRM_CALL: 'R5B CRM通话报告',
   UPDATED_RELATIONSHIP: 'R7 更新关系报告',
   NEXT_PREVISIT: 'R8 下一轮访前报告'
+}
+
+export const INTERACTION_CHANNEL_LABELS: Record<InteractionChannel, string> = {
+  IN_PERSON: '面访',
+  PHONE: '电话',
+  VIDEO: '视频',
+  EMAIL: '邮件',
+  WECHAT: '微信',
+  OTHER: '其他',
 }
 
 export const INTERACTION_TYPE_LABELS: Record<InteractionType, string> = {

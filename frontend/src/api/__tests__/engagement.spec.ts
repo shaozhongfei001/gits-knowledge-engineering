@@ -67,6 +67,8 @@ import {
   fetchKycGapProfile,
   fetchOpportunitySignals,
   fetchTransactions,
+  listInteractions,
+  fetchInteractions,
 } from '../engagement'
 
 // Get references to the mock functions from the mocked module
@@ -355,5 +357,15 @@ describe('engagement API - API function signatures', () => {
     mockGet.mockResolvedValue({ data: [] })
     await fetchTransactions('c1')
     expect(mockGet).toHaveBeenCalledWith('/customer/c1/transactions')
+  })
+
+  it('listInteractions calls GET /api/v1/interactions with optional customerId', async () => {
+    mockGet.mockResolvedValue({ data: [{ interactionId: 'int-1', customerId: 'c1', channel: 'PHONE' }] })
+    const result = await listInteractions('c1')
+    expect(mockGet).toHaveBeenCalledWith('/api/v1/interactions', expect.objectContaining({
+      params: { customerId: 'c1' },
+    }))
+    expect(result[0]?.interactionId).toBe('int-1')
+    expect(fetchInteractions).toBe(listInteractions)
   })
 })

@@ -122,30 +122,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Validate CONTRACT_INDEX.yaml references
-        run: |
-          echo "Checking specs/CONTRACT_INDEX.yaml consistency..."
-          if [ ! -f specs/CONTRACT_INDEX.yaml ]; then
-            echo "ERROR: specs/CONTRACT_INDEX.yaml not found"
-            exit 1
-          fi
-          # Extract referenced file paths and verify each exists
-          FAILED=0
-          while IFS= read -r ref; do
-            if [ -n "$ref" ]; then
-              if [ ! -f "$ref" ]; then
-                echo "MISSING: $ref"
-                FAILED=1
-              else
-                echo "OK: $ref"
-              fi
-            fi
-          done < <(grep -oP 'path:\s*\K\S+' specs/CONTRACT_INDEX.yaml 2>/dev/null || true)
-          if [ "$FAILED" -ne 0 ]; then
-            echo "FAIL: Some contract references are missing"
-            exit 1
-          fi
-          echo "PASS: All contract references verified"
+        run: python3 scripts/check_contract_index_refs.py
 
   security-check:
     name: Security Check

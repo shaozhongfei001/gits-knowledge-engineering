@@ -14,6 +14,8 @@ frontend/node_modules/
 __pycache__/
 **/__pycache__/
 *.pyc
+.venv/
+venv/
 
 # P20 tooling virtual environment
 gits-kno-p20-venv/
@@ -47,3 +49,6 @@ graphify-out/
 
 # Team communication (temporary)
 .codebuddy/teams/
+
+# Unpacked UX design trees. ZIPs under docs/dd/ are BASELINE_INDEX authority_file.
+docs/dd/ui/

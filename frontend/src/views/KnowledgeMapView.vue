@@ -1,64 +1,22 @@
-<template>
-  <div class="knowledge-map">
-    <div class="page-header">
-      <h1>知识地图（只读）</h1>
-      <p class="subtitle">
-        业务场景 → 知识域 → 知识条目(KI) → 知识要素(KE)，权威源受控导航（人机共读）
-      </p>
-    </div>
-
-    <!-- 加载中 -->
-    <div v-if="loading" class="loading-box">知识地图加载中...</div>
-
-    <!-- 错误 -->
-    <div v-else-if="error" class="error-box">
-      <p>加载失败：{{ error }}</p>
-      <button class="retry-btn" @click="load">重试</button>
-    </div>
-
-    <!-- 成功：KI 分组折叠 -->
-    <n-collapse v-else accordion class="ki-collapse">
-      <n-collapse-item v-for="ki in itemOrder" :key="ki" :title="kiTitle(ki)" :name="ki">
-        <div class="ki-elements">
-          <div v-for="element in grouped[ki]" :key="element.elementId" class="element-card">
-            <div class="element-head">
-              <span class="element-id">{{ element.elementId }}</span>
-              <span class="element-name">{{ element.name }}</span>
-              <span class="kind-tag" :class="kindClass(element.kind)">{{ element.kind }}</span>
-              <span class="authority-tag" :class="authorityClass(element.source.authority)">
-                {{ element.source.authority }}
-              </span>
-              <span class="status-tag">{{ element.status }}</span>
-            </div>
-            <div class="element-body">
-              <p class="element-content">{{ element.content }}</p>
-              <p class="element-source" v-if="element.source?.sourceRef">
-                来源：{{ element.source.sourceRef }}
-              </p>
-            </div>
-          </div>
-          <div v-if="grouped[ki].length === 0" class="empty-row">该知识条目暂无要素</div>
-        </div>
-      </n-collapse-item>
-    </n-collapse>
-
-    <!-- 空状态 -->
-    <div v-if="!loading && !error && itemOrder.length === 0" class="empty-box">
-      暂无知识地图数据（请确认后端知识要素已资产化）。
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { NCollapse, NCollapseItem } from 'naive-ui'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { fetchKnowledgeMap, type KnowledgeElement } from '../api/knowledge'
+import ObjectHeader from '../components/shell/ObjectHeader.vue'
+import PageState from '../components/shell/PageState.vue'
+import DisabledAction from '../components/shell/DisabledAction.vue'
+import { deriveResourceStatus } from '../composables/useResourceStatus'
+import { usePageReferenceStore } from '../stores/pageReference'
 
+const PAGE_ID = 'P38'
+const OBJECT_TYPE = '知识要素 KE（只读）'
+const KNOWLEDGE_UNLOCK = '待产品适用边界写合同批准后由独立 Loop 启用；本页 KE 保持只读'
+
+const pageRefs = usePageReferenceStore()
 const loading = ref(true)
 const error = ref('')
+const requested = ref(false)
 const grouped = ref<Record<string, KnowledgeElement[]>>({})
 
-// 按 KI 顺序展示（KI-009 在前，其余按字母序）
 const itemOrder = computed(() => {
   const keys = Object.keys(grouped.value)
   return keys.sort((a, b) => {
@@ -67,6 +25,23 @@ const itemOrder = computed(() => {
     return a.localeCompare(b)
   })
 })
+
+const status = computed(() =>
+  deriveResourceStatus({
+    loading: loading.value,
+    error: error.value,
+    hasData: requested.value,
+    requested: requested.value,
+  }),
+)
+
+function persistReference() {
+  pageRefs.capture(PAGE_ID, {
+    objectType: OBJECT_TYPE,
+    viewId: 'knowledge_map_readonly',
+    scrollAnchor: typeof window !== 'undefined' ? window.scrollY : 0,
+  })
+}
 
 function kiTitle(kiId: string): string {
   const first = grouped.value[kiId]?.[0]
@@ -85,36 +60,96 @@ function authorityClass(authority: string): string {
 async function load() {
   loading.value = true
   error.value = ''
+  requested.value = true
   try {
     grouped.value = await fetchKnowledgeMap()
   } catch (e: unknown) {
     error.value = e instanceof Error ? e.message : String(e)
+    grouped.value = {}
   } finally {
     loading.value = false
   }
 }
 
 onMounted(load)
+onBeforeUnmount(persistReference)
 </script>
 
+<template>
+  <div class="knowledge-map" data-testid="p38-knowledge-map">
+    <ObjectHeader
+      :page-id="PAGE_ID"
+      :object-type="OBJECT_TYPE"
+      object-status="只读"
+      title="知识卡与产品适用边界"
+    />
+    <div class="toolbar">
+      <DisabledAction
+        label="比较产品"
+        :disabled="true"
+        reason="产品适用边界比较写未授权，禁止比较产品写回"
+        :unlock-path="KNOWLEDGE_UNLOCK"
+      />
+      <DisabledAction
+        label="反馈知识"
+        :disabled="true"
+        reason="知识反馈写未授权，禁止从本页反馈知识"
+        :unlock-path="KNOWLEDGE_UNLOCK"
+      />
+    </div>
+    <p class="hint">KE 只读。权威源受控导航（人机共读）。本页不提供产品比较或知识反馈写回。</p>
+    <PageState :status="status" :error="error" idle-description="尚未加载知识地图" @retry="load">
+      <section v-if="itemOrder.length" class="ki-list" data-testid="p38-ki-list">
+        <article v-for="ki in itemOrder" :key="ki" class="ki-group">
+          <h2>{{ kiTitle(ki) }}</h2>
+          <div class="ki-elements">
+            <div v-for="element in grouped[ki]" :key="element.elementId" class="element-card">
+              <div class="element-head">
+                <span class="element-id">{{ element.elementId }}</span>
+                <span class="element-name">{{ element.name }}</span>
+                <span class="kind-tag" :class="kindClass(element.kind)">{{ element.kind }}</span>
+                <span class="authority-tag" :class="authorityClass(element.source.authority)">
+                  {{ element.source.authority }}
+                </span>
+                <span class="status-tag">{{ element.status }}</span>
+              </div>
+              <div class="element-body">
+                <p class="element-content">{{ element.content }}</p>
+                <p v-if="element.source?.sourceRef" class="element-source">
+                  来源：{{ element.source.sourceRef }}
+                </p>
+              </div>
+            </div>
+            <div v-if="grouped[ki].length === 0" class="empty-row">该知识条目暂无要素</div>
+          </div>
+        </article>
+      </section>
+      <p v-else class="empty" data-testid="p38-empty">暂无知识地图数据（请确认后端知识要素已资产化）。</p>
+    </PageState>
+  </div>
+</template>
+
 <style scoped>
-.knowledge-map {
-  padding: 24px;
-  max-width: 1100px;
-  margin: 0 auto;
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 16px;
 }
-.page-header h1 {
-  font-size: 24px;
-  margin: 0 0 4px;
-  color: #1a1a2e;
-}
-.subtitle {
-  color: #666;
-  margin: 0 0 20px;
+.hint,
+.empty {
+  color: var(--text-tertiary);
   font-size: 13px;
 }
-.ki-collapse {
-  margin-top: 8px;
+.ki-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.ki-group h2 {
+  margin: 0 0 8px;
+  font-size: 15px;
 }
 .ki-elements {
   display: flex;
@@ -122,10 +157,10 @@ onMounted(load)
   gap: 10px;
 }
 .element-card {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border-light);
   border-radius: 8px;
   padding: 12px 14px;
-  background: #fafbfc;
+  background: var(--bg-surface);
 }
 .element-head {
   display: flex;
@@ -135,90 +170,42 @@ onMounted(load)
   margin-bottom: 6px;
 }
 .element-id {
-  font-family: monospace;
+  font-family: ui-monospace, monospace;
   font-size: 12px;
-  color: #333;
-  background: #eef2ff;
-  padding: 2px 6px;
-  border-radius: 4px;
 }
 .element-name {
   font-weight: 600;
-  color: #1a1a2e;
   font-size: 14px;
 }
-.kind-tag {
+.kind-tag,
+.authority-tag,
+.status-tag {
   font-size: 11px;
   padding: 1px 6px;
   border-radius: 4px;
-  border: 1px solid #c7d2fe;
-  color: #4338ca;
-  background: #eef2ff;
-}
-.authority-tag {
-  font-size: 11px;
-  padding: 1px 6px;
-  border-radius: 4px;
+  border: 1px solid var(--border-light);
 }
 .auth-authoritative {
   background: #dcfce7;
   color: #166534;
-  border: 1px solid #86efac;
 }
 .auth-reference {
   background: #e0f2fe;
   color: #075985;
-  border: 1px solid #7dd3fc;
 }
 .auth-derived {
   background: #fef9c3;
   color: #854d0e;
-  border: 1px solid #fde047;
-}
-.status-tag {
-  font-size: 11px;
-  color: #666;
-  border: 1px solid #e5e7eb;
-  padding: 1px 6px;
-  border-radius: 4px;
 }
 .element-content {
   margin: 0;
-  color: #374151;
   font-size: 13px;
   line-height: 1.5;
 }
-.element-source {
-  margin: 6px 0 0;
-  color: #888;
-  font-size: 12px;
-}
-.loading-box,
-.empty-box {
-  padding: 40px;
-  text-align: center;
-  color: #666;
-}
-.error-box {
-  padding: 20px;
-  text-align: center;
-  color: #b91c1c;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
-}
-.retry-btn {
-  margin-top: 12px;
-  padding: 6px 16px;
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
+.element-source,
 .empty-row {
-  color: #999;
-  font-size: 13px;
-  padding: 8px;
+  margin: 6px 0 0;
+  color: var(--text-tertiary);
+  font-size: 12px;
 }
 </style>
