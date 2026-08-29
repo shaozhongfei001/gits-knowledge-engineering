@@ -53,10 +53,11 @@ test.describe('GITS+KERT 联合 E2E — 5 大业务场景', () => {
     // Step 3: 启动旅程
     await expect(page.getByTestId('p11-start-journey')).toBeEnabled();
     await page.getByTestId('p11-start-journey').click();
-    await expect(page.getByTestId('p11-object-context')).not.toContainText('未启动', { timeout: 30000 });
+    // p11-object-context 已移除；改用 .ew-bar 文本断言
+    await expect(page.locator('.ew-bar')).not.toContainText('未启动', { timeout: 30000 });
 
     // Step 4: 查看 Gate 状态
-    await page.getByTestId('p11-link-gaps').click();
+    await page.getByTestId('p11-open-previsit').click();
     await expect(page.getByTestId('p12-previsit-gaps')).toBeVisible();
 
     expect(failures, `HTTP 500 errors:\n${failures.join('\n')}`).toEqual([]);
@@ -79,23 +80,23 @@ test.describe('GITS+KERT 联合 E2E — 5 大业务场景', () => {
     // Step 3: 访前差距分析（回到 engagement 主页面再点击子导航）
     await page.goto('/engagement', { waitUntil: 'networkidle' });
     await expect(page.getByTestId('p11-engagement-workspace')).toBeVisible();
-    const gapsLink = page.getByTestId('p11-link-gaps');
+    const gapsLink = page.getByTestId('p11-open-previsit');
     if (await gapsLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await gapsLink.click();
       await expect(page.getByTestId('p12-previsit-gaps')).toBeVisible();
     }
 
     // Step 4: 访前证据
-    await page.goto('/engagement', { waitUntil: 'networkidle' });
-    const evidenceLink = page.getByTestId('p11-link-evidence');
+    await page.goto('/engagement/previsit/gaps', { waitUntil: 'networkidle' });
+    const evidenceLink = page.getByTestId('p12-go-evidence');
     if (await evidenceLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await evidenceLink.click();
       await expect(page.getByTestId('p13-previsit-evidence')).toBeVisible();
     }
 
     // Step 5: 访前包
-    await page.goto('/engagement', { waitUntil: 'networkidle' });
-    const packLink = page.getByTestId('p11-link-pack');
+    await page.goto('/engagement/previsit/evidence', { waitUntil: 'networkidle' });
+    const packLink = page.getByTestId('p13-go-pack');
     if (await packLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await packLink.click();
       await expect(page.getByTestId('p14-previsit-pack')).toBeVisible();
@@ -174,7 +175,7 @@ test.describe('GITS+KERT 联合 E2E — 5 大业务场景', () => {
     await expect(page.getByTestId('p11-engagement-workspace')).toBeVisible();
 
     // Step 3: KYC 差距分析
-    const gapsLink = page.getByTestId('p11-link-gaps');
+    const gapsLink = page.getByTestId('p11-open-previsit');
     if (await gapsLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await gapsLink.click();
       await expect(page.getByTestId('p12-previsit-gaps')).toBeVisible();
@@ -217,7 +218,8 @@ test.describe('GITS+KERT 联合 E2E — 5 大业务场景', () => {
     await page.goto('/engagement', { waitUntil: 'networkidle' });
     await expect(page.getByTestId('p11-engagement-workspace')).toBeVisible();
     await page.getByTestId('p11-start-journey').click();
-    await expect(page.getByTestId('p11-object-context')).not.toContainText('未启动', { timeout: 30000 });
+    // p11-object-context 已移除；改用 .ew-bar 文本断言
+    await expect(page.locator('.ew-bar')).not.toContainText('未启动', { timeout: 30000 });
 
     // 验证没有 500 错误
     expect(failures, `HTTP 500 errors:\n${failures.join('\n')}`).toEqual([]);

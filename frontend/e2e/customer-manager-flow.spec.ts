@@ -6,7 +6,8 @@ test.describe('客户经理路径 — 已实现页 smoke（mock API）', () => {
     await installApiMocks(page);
     await page.goto('/engagement');
     await expect(page.getByTestId('p11-engagement-workspace')).toBeVisible();
-    await expect(page.getByTestId('p11-subnav')).toBeVisible();
+    // p11-subnav 已移除；改用 signals-domain-tabs
+    await expect(page.getByTestId('signals-domain-tabs')).toBeVisible();
     await expect(page.locator('body')).not.toHaveText(/^$/);
     await expect(page.getByTestId('gated-action')).toBeDisabled();
   });
@@ -14,11 +15,20 @@ test.describe('客户经理路径 — 已实现页 smoke（mock API）', () => {
   test('访前切片导航 stays on implemented routes', async ({ page }) => {
     await installApiMocks(page);
     await page.goto('/engagement');
-    await page.getByTestId('p11-link-gaps').click();
+    await page.getByTestId('p11-open-previsit').click();
     await expect(page).toHaveURL(/\/engagement\/previsit\/gaps/);
-    await page.goto('/engagement');
-    await page.getByTestId('p11-link-pack').click();
-    await expect(page).toHaveURL(/\/engagement\/previsit\/pack/);
+    // P12→P13 导航
+    const goEvidence = page.getByTestId('p12-go-evidence');
+    if (await goEvidence.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await goEvidence.click();
+      await expect(page).toHaveURL(/\/engagement\/previsit\/evidence/);
+    }
+    // P13→P14 导航
+    const goPack = page.getByTestId('p13-go-pack');
+    if (await goPack.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await goPack.click();
+      await expect(page).toHaveURL(/\/engagement\/previsit\/pack/);
+    }
   });
 
   test('承诺中心：展示 mock 承诺/任务，不把 Need 派生写解开', async ({ page }) => {

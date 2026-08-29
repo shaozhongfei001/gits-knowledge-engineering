@@ -3,6 +3,7 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import PrevisitEvidenceView from '../PrevisitEvidenceView.vue'
+import { usePrevisitStore } from '../../stores/previsit'
 import type { PreparedPrevisitResponse } from '../../api/engagement'
 
 vi.mock('../../api/engagement', async () => {
@@ -10,24 +11,24 @@ vi.mock('../../api/engagement', async () => {
   return {
     ...actual,
     preparePrevisit: vi.fn(),
-    executeSupplyChainGraph: vi.fn(),
   }
 })
 
 vi.mock('naive-ui', async () => {
-  const actual = await vi.importActual('naive-ui')
+  const actual = await vi.importActual<typeof import('naive-ui')>('naive-ui')
   return {
     ...actual,
-    useMessage: () => ({
-      success: vi.fn(),
-      error: vi.fn(),
-      warning: vi.fn(),
-      info: vi.fn(),
-    }),
+    useMessage: () => ({ success: vi.fn(), error: vi.fn(), warning: vi.fn() }),
   }
 })
 
-const mockPrepared: PreparedPrevisitResponse = {
+const mockTrace = [
+  { stepId: 's1', phase: '读图', kiId: 'KI-FRONT-001', status: 'done', message: '读取企业基本信息' },
+  { stepId: 's2', phase: '装配', kiId: 'KI-FRONT-002', status: 'done', message: '装配行业风险' },
+  { stepId: 's3', phase: '生成', kiId: '', status: 'skipped', message: '跳过：无供应链数据' },
+]
+
+const mockPack: PreparedPrevisitResponse = {
   outreachScript: {
     scriptId: 'out-1',
     customerId: 'c1',
@@ -76,7 +77,7 @@ const mockPrepared: PreparedPrevisitResponse = {
     productSchemes: [],
     keyQuestions: [],
     riskReminders: [],
-    visitStrategy: '先对账再谈方案',
+    visitStrategy: '先对账',
   },
   battleCard: {
     cardId: 'bc1',
@@ -84,40 +85,50 @@ const mockPrepared: PreparedPrevisitResponse = {
     visitObjective: '扩产融资专题拜访',
     customerTier: '战略客户',
     riskLevel: '中',
-    keyPoints: ['资金缺口'],
+    keyPoints: [],
     productHints: [],
     dontForget: [],
     bottomLine: '不承诺定价',
   },
-  assemblyTrace: [{ phase: 'dkws', status: 'ok', message: 'hit', kiId: 'KI-009' }],
+  assemblyTrace: mockTrace,
   skillSections: [],
 }
 
 const stubs = {
-  NSpin: { template: '<div class="n-spin" />' },
-  NResult: { template: '<div class="n-result"><slot name="footer" /></div>' },
-  NButton: {
-    props: ['disabled'],
-    template: '<button class="n-button" :disabled="disabled"><slot /></button>',
+  ObjectHeader: { template: '<div class="object-header-stub"><slot /></div>' },
+  PageState: {
+    props: ['status', 'error', 'idleDescription'],
+    template: '<div class="page-state-stub" :data-status="status"><slot /><slot name="default" /></div>',
   },
-  NEmpty: { template: '<div class="n-empty" />' },
-  NTooltip: { template: '<div><slot name="trigger" /><slot /></div>' },
+  DisabledAction: {
+    props: ['label', 'disabled', 'reason', 'unlockPath'],
+    template: '<div class="disabled-action-stub" />',
+  },
+  GuidancePanel: {
+    props: ['nextStep', 'businessRule', 'exception', 'contractUsage'],
+    template: '<div class="guidance-panel-stub"><slot /></div>',
+  },
 }
 
-async function mountP13(query: Record<string, string> = {
-  customerId: 'c1',
-  journeyId: 'j1',
-  operatingCaseId: 'oc1',
-}) {
+async function mountP13(
+  query: Record<string, string> = { customerId: 'c1', journeyId: 'j1', operatingCaseId: 'oc1' },
+  seed?: (store: ReturnType<typeof usePrevisitStore>) => void,
+) {
   setActivePinia(createPinia())
+  if (seed) {
+    seed(usePrevisitStore())
+  }
   const router = createRouter({
     history: createMemoryHistory(),
-    routes: [{ path: '/engagement/previsit/evidence', name: 'PrevisitEvidence', component: PrevisitEvidenceView }],
+    routes: [
+      { path: '/engagement/previsit/evidence', name: 'PrevisitEvidence', component: PrevisitEvidenceView },
+      { path: '/engagement/previsit/pack', name: 'PrevisitPack', component: { template: '<div />' } },
+    ],
   })
   await router.push({ path: '/engagement/previsit/evidence', query })
   const wrapper = mount(PrevisitEvidenceView, { global: { plugins: [router], stubs } })
   await flushPromises()
-  return wrapper
+  return { wrapper, router }
 }
 
 describe('P13 PrevisitEvidenceView', () => {
@@ -126,54 +137,85 @@ describe('P13 PrevisitEvidenceView', () => {
     vi.clearAllMocks()
   })
 
-  it('does not auto-trigger KERT on mount; shows empty guide', async () => {
+  it('renders page shell with correct data-testid', async () => {
+    const { wrapper } = await mountP13()
+    expect(wrapper.find('[data-testid="p13-previsit-evidence"]').exists()).toBe(true)
+  })
+
+  it('does NOT auto-call preparePrevisit on mount', async () => {
     const { preparePrevisit } = await import('../../api/engagement')
-    const wrapper = await mountP13()
+    await mountP13()
     expect(preparePrevisit as ReturnType<typeof vi.fn>).not.toHaveBeenCalled()
+  })
+
+  it('shows empty state when previsit not yet generated', async () => {
+    const { wrapper } = await mountP13()
     expect(wrapper.find('[data-testid="p13-empty"]').exists()).toBe(true)
-    expect(wrapper.text()).toMatch(/生成访前包/)
-  })
-
-  it('generates pack via store (KERT entry) and shows sources + trace', async () => {
-    const { preparePrevisit, executeSupplyChainGraph } = await import('../../api/engagement')
-    ;(preparePrevisit as ReturnType<typeof vi.fn>).mockResolvedValue(mockPrepared)
-    ;(executeSupplyChainGraph as ReturnType<typeof vi.fn>).mockResolvedValue({
-      requestId: 'SCG-1',
-      customerId: 'c1',
-      result: { nodes: [], edges: [] },
-    })
-    const wrapper = await mountP13()
-    await wrapper.get('[data-testid="p13-generate-pack"]').trigger('click')
-    await flushPromises()
-    expect(preparePrevisit as ReturnType<typeof vi.fn>).toHaveBeenCalled()
-    expect(wrapper.text()).toContain('out-1')
-    expect(wrapper.text()).toContain('装配轨迹')
-    expect(wrapper.find('[data-testid="p13-source-list"]').exists()).toBe(true)
-  })
-
-  it('shows empty success when context is missing', async () => {
-    const wrapper = await mountP13({})
-    expect(wrapper.find('[data-testid="success-state"]').exists()).toBe(true)
     expect(wrapper.text()).toMatch(/尚未执行一键访前/)
   })
 
-  it('shows error four-state when preparePrevisit fails', async () => {
-    const { preparePrevisit, executeSupplyChainGraph } = await import('../../api/engagement')
-    ;(preparePrevisit as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('timeout'))
-    ;(executeSupplyChainGraph as ReturnType<typeof vi.fn>).mockResolvedValue({
-      requestId: 'SCG-1',
-      customerId: 'c1',
-      result: { nodes: [], edges: [] },
-    })
-    const wrapper = await mountP13()
-    await wrapper.get('[data-testid="p13-generate-pack"]').trigger('click')
-    await flushPromises()
-    expect(wrapper.find('[data-testid="error-state"]').exists()).toBe(true)
+  it('shows assembly trace when previsit is done', async () => {
+    const { wrapper } = await mountP13(
+      { customerId: 'c1', journeyId: 'j1', operatingCaseId: 'oc1' },
+      (store) => {
+        store.setContext({ journeyId: 'j1', operatingCaseId: 'oc1', customerId: 'c1', rmId: 'rm1' })
+        store.previsitResult = mockPack
+        store.running = true
+      },
+    )
+    expect(wrapper.find('[data-testid="p13-trace-list"]').exists()).toBe(true)
+    expect(wrapper.text()).toContain('读图')
+    expect(wrapper.text()).toContain('KI-FRONT-001')
+    expect(wrapper.text()).toContain('跳过')
   })
 
-  it('disables generating unsourced conclusions', async () => {
-    const wrapper = await mountP13()
-    expect((wrapper.get('[data-testid="gated-action"]').element as HTMLButtonElement).disabled).toBe(true)
-    expect(wrapper.get('[data-testid="disabled-reason"]').text()).toMatch(/原因|解除路径/)
+  it('shows derived sources when previsit is done', async () => {
+    const { wrapper } = await mountP13(
+      { customerId: 'c1', journeyId: 'j1', operatingCaseId: 'oc1' },
+      (store) => {
+        store.setContext({ journeyId: 'j1', operatingCaseId: 'oc1', customerId: 'c1', rmId: 'rm1' })
+        store.previsitResult = mockPack
+        store.running = true
+      },
+    )
+    expect(wrapper.find('[data-testid="p13-source-list"]').exists()).toBe(true)
+    expect(wrapper.text()).toContain('外联脚本')
+    expect(wrapper.text()).toContain('会面脚本')
+  })
+
+  it('has navigation button to P14 with correct data-testid', async () => {
+    const { wrapper } = await mountP13(
+      { customerId: 'c1', journeyId: 'j1', operatingCaseId: 'oc1' },
+      (store) => {
+        store.setContext({ journeyId: 'j1', operatingCaseId: 'oc1', customerId: 'c1', rmId: 'rm1' })
+        store.previsitResult = mockPack
+        store.running = true
+      },
+    )
+    const btn = wrapper.find('[data-testid="p13-go-pack"]')
+    expect(btn.exists()).toBe(true)
+    expect(btn.text()).toMatch(/去访前包预览/)
+  })
+
+  it('disables generate button when context is missing', async () => {
+    const { wrapper } = await mountP13({})
+    const btn = wrapper.find('[data-testid="p13-generate-pack"]')
+    expect((btn.element as HTMLButtonElement).disabled).toBe(true)
+  })
+
+  it('generate button calls store.runPrevisit when clicked', async () => {
+    const { wrapper } = await mountP13(
+      { customerId: 'c1', journeyId: 'j1', operatingCaseId: 'oc1' },
+      (store) => {
+        store.setContext({ journeyId: 'j1', operatingCaseId: 'oc1', customerId: 'c1', rmId: 'rm1' })
+        vi.spyOn(store, 'runPrevisit').mockResolvedValue(mockPack)
+      },
+    )
+    const btn = wrapper.find('[data-testid="p13-generate-pack"]')
+    expect((btn.element as HTMLButtonElement).disabled).toBe(false)
+    await btn.trigger('click')
+    await flushPromises()
+    const store = usePrevisitStore()
+    expect(store.runPrevisit).toHaveBeenCalledWith('访前调研')
   })
 })

@@ -172,8 +172,8 @@ onBeforeUnmount(persistReference)
               <button
                 type="button"
                 class="link-btn link-btn--primary"
-                data-testid="p13-goto-p14"
-                @click="router.push({ name: 'PrevisitPack' })"
+                data-testid="p13-go-pack"
+                @click="router.push({ name: 'PrevisitPack', query: { customerId: customerId, journeyId: journeyId, operatingCaseId: operatingCaseId, rmId: rmId } })"
               >
                 去访前包预览 →
               </button>

@@ -12,6 +12,7 @@ import {
 import { deriveResourceStatus } from '../composables/useResourceStatus'
 import { useEngagementContext } from '../composables/useEngagementContext'
 import { usePageReferenceStore } from '../stores/pageReference'
+import GuidancePanel from '../components/shell/GuidancePanel.vue'
 
 const PAGE_ID = 'P17'
 const OBJECT_TYPE = '互动 Interaction'
@@ -108,42 +109,64 @@ onBeforeUnmount(persistReference)
       :object-status="objectStatus"
       title="离场确认"
     />
-    <div class="toolbar">
-      <button
-        v-if="exitGate"
-        type="button"
-        class="link-btn"
-        data-testid="p17-end-meeting"
-        :disabled="ending"
-        @click="endMeeting"
+    <div class="p17-body">
+      <main class="p17-main">
+        <div class="toolbar">
+          <button
+            v-if="exitGate"
+            type="button"
+            class="link-btn"
+            data-testid="p17-end-meeting"
+            :disabled="ending"
+            @click="endMeeting"
+          >
+            结束会谈
+          </button>
+          <DisabledAction
+            v-else
+            label="结束会谈"
+            :disabled="true"
+            reason="无待处理 E01_EXIT_CONFIRM HumanGate，禁止提交结束会谈"
+            unlockPath="仅当既有 HumanGate 类型 E01_EXIT_CONFIRM 处于 PENDING 时才可提交"
+          />
+        </div>
+        <PageState :status="status" :error="error" idle-description="尚未加载离场确认" @retry="loadGates">
+          <p class="hint">
+            双方确认清单为只读/草稿。结束会谈必须走既有 HumanGate（{{ GATE_TYPE_LABELS.E01_EXIT_CONFIRM }} / E01_EXIT_CONFIRM）。
+          </p>
+          <ul class="item-list" data-testid="p17-checklist">
+            <li v-for="item in checklist" :key="item.id" class="item">
+              <label>
+                <input v-model="item.checked" type="checkbox" />
+                {{ item.label }}
+              </label>
+            </li>
+          </ul>
+        </PageState>
+      </main>
+
+      <GuidancePanel
+        next-step="确认离场清单 → 审批 E01_EXIT_CONFIRM 门禁 → 会谈结束"
+        business-rule="结束会谈必须走既有 HumanGate（E01_EXIT_CONFIRM）；清单为草稿，不写入权威。"
+        exception="门禁加载失败时保持上下文，展示原因与重试按钮。"
+        contract-usage="REUSE_EXISTING：消费既有 HumanGate 契约；无支持能力时禁用。"
       >
-        结束会谈
-      </button>
-      <DisabledAction
-        v-else
-        label="结束会谈"
-        :disabled="true"
-        reason="无待处理 E01_EXIT_CONFIRM HumanGate，禁止提交结束会谈"
-        unlockPath="仅当既有 HumanGate 类型 E01_EXIT_CONFIRM 处于 PENDING 时才可提交"
-      />
+        <p class="gp-note">离场确认是人工审批节点，不可自动跳过。</p>
+      </GuidancePanel>
     </div>
-    <PageState :status="status" :error="error" idle-description="尚未加载离场确认" @retry="loadGates">
-      <p class="hint">
-        双方确认清单为只读/草稿。结束会谈必须走既有 HumanGate（{{ GATE_TYPE_LABELS.E01_EXIT_CONFIRM }} / E01_EXIT_CONFIRM）。
-      </p>
-      <ul class="item-list" data-testid="p17-checklist">
-        <li v-for="item in checklist" :key="item.id" class="item">
-          <label>
-            <input v-model="item.checked" type="checkbox" />
-            {{ item.label }}
-          </label>
-        </li>
-      </ul>
-    </PageState>
   </div>
 </template>
 
 <style scoped>
+.p17-body {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.p17-main {
+  flex: 1;
+  min-width: 0;
+}
 .toolbar {
   display: flex;
   gap: 12px;

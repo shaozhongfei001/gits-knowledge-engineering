@@ -28,11 +28,12 @@ test.describe('GITS Experience Shell — implemented-page smoke', () => {
     await expect(page.getByTestId('p04-customer-record')).toContainText('测试企业A');
   });
 
-  test('4. engagement workspace keeps spiral path and gated Claim write', async ({ page }) => {
+  test('4. engagement workspace keeps stage path and gated Claim write', async ({ page }) => {
     await installApiMocks(page);
     await page.goto('/engagement');
     await expect(page.getByTestId('p11-engagement-workspace')).toBeVisible();
-    await expect(page.getByTestId('p11-object-context')).toContainText('螺旋');
+    // p11-object-context 已移除；改用 stage-path 断言
+    await expect(page.getByTestId('stage-path')).toBeVisible();
     await expect(page.getByTestId('gated-action')).toBeDisabled();
     await expect(page.getByTestId('disabled-reason')).toContainText(/Claim|解除路径|原因/);
   });

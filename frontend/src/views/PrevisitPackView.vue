@@ -92,7 +92,7 @@ onBeforeUnmount(persistReference)
             type="button"
             class="link-btn"
             data-testid="p14-back-evidence"
-            @click="router.push({ name: 'PrevisitEvidence' })"
+            @click="router.push({ name: 'PrevisitEvidence', query: { customerId: customerId, journeyId: journeyId, operatingCaseId: operatingCaseId, rmId: rmId } })"
           >
             ← 返回装配
           </button>
