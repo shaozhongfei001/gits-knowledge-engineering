@@ -205,17 +205,36 @@ export interface Participant {
   displayName: string
 }
 
+/**
+ * Claim 兼容两种后端形状：
+ * - statement 型（GET /api/claim/case/{caseId}，ontology.Claim）：claimId/caseId/statement/recordedAt…
+ * - content 型（GET /api/v1/engagement/claims，OpenAPI Claim）：claimId/customerId/content/evidenceRef…
+ * 前端共用同一接口，公共必填字段仅 claimId/claimType/status。
+ */
 export interface Claim {
   claimId: string
-  caseId: string
   claimType: string
   status: string
-  statement: string
+  // statement 型（ontology.Claim）
+  caseId?: string
+  statement?: string
   validFrom?: string | null
   validTo?: string | null
-  recordedAt: string
+  recordedAt?: string
   supersedesClaimId?: string | null
   authoritative?: boolean
+  // content 型（OpenAPI Claim）
+  customerId?: string
+  content?: string
+  evidenceRef?: string
+  evidenceRefs?: string[]
+  confidence?: number
+  conflictWith?: string
+  createdAt?: string
+  updatedAt?: string
+  notFact?: boolean
+  requiresReconciliation?: boolean
+  sourceInteractionId?: string
 }
 
 export interface TransactionRecord {

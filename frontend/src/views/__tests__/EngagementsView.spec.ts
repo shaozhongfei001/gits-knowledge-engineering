@@ -10,7 +10,8 @@ vi.mock('../../api/engagement', async () => {
   return {
     ...actual,
     listInteractions: vi.fn(),
-    fetchInteractions: vi.fn(),
+    fetchCustomers: vi.fn(),
+    fetchCustomerJourneys: vi.fn(),
   }
 })
 
@@ -40,6 +41,11 @@ const stubs = {
 }
 
 async function mountP10() {
+  const { fetchCustomers, fetchCustomerJourneys } = await import('../../api/engagement')
+  ;(fetchCustomers as ReturnType<typeof vi.fn>).mockResolvedValue([
+    { customerId: 'c1', customerName: '企业A' },
+  ])
+  ;(fetchCustomerJourneys as ReturnType<typeof vi.fn>).mockResolvedValue([])
   setActivePinia(createPinia())
   const router = createRouter({
     history: createMemoryHistory(),

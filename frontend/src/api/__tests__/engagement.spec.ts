@@ -282,12 +282,12 @@ describe('engagement API - API function signatures', () => {
     expect(mockGet).toHaveBeenCalled()
   })
 
-  it('fetchCustomerJourneys returns empty list without network call (no dedicated backend endpoint)', async () => {
+  it('fetchCustomerJourneys calls GET /journey with customerId and returns empty on empty data', async () => {
     mockGet.mockClear()
+    mockGet.mockResolvedValue({ data: [] })
     const journeys = await fetchCustomerJourneys('c1')
     expect(journeys).toEqual([])
-    // 后端无专用列表端点，实现为 fail-safe 返回空数组，不应发起网络调用
-    expect(mockGet).not.toHaveBeenCalled()
+    expect(mockGet).toHaveBeenCalled()
   })
 
   it('fetchJourney calls GET with journey id', async () => {

@@ -50,7 +50,7 @@ export function rowsFromContext(customer: Customer, ctx: CustomerContext): NeedA
       sourceId: claim.claimId,
       customerId: customer.customerId,
       customerName: customer.customerName,
-      summary: claim.content,
+      summary: claim.content ?? claim.statement ?? '',
       kindLabel: 'Claim（只读近似）',
       claim,
       kyc: ctx.kycGapProfile,

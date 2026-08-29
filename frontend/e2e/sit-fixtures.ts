@@ -242,6 +242,10 @@ function jsonForPath(pathname: string): unknown {
       ],
     }
   }
+  if (pathname.startsWith('/api/v1/engagement/journey/')) {
+    // fetchJourney / fetchJourneyReports 共用；reports 由前端 Array.isArray 兜底返回 []
+    return mockJourney;
+  }
   if (pathname.startsWith('/api/journey/')) {
     return mockJourney;
   }
