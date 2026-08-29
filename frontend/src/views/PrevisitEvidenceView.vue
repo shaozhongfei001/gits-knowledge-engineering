@@ -130,6 +130,15 @@ onBeforeUnmount(persistReference)
           >
             {{ previsitStore.loading ? '生成中…' : '生成访前包' }}
           </button>
+          <button
+            type="button"
+            class="link-btn"
+            data-testid="p13-go-pack"
+            :disabled="!customerId"
+            @click="router.push({ name: 'PrevisitPack', query: { customerId: customerId, journeyId: journeyId, operatingCaseId: operatingCaseId, rmId: rmId } })"
+          >
+            去访前包预览 →
+          </button>
           <DisabledAction
             label="生成无来源结论"
             :disabled="true"
@@ -166,18 +175,6 @@ onBeforeUnmount(persistReference)
                 <span>{{ row.summary || '-' }}</span>
               </li>
             </ul>
-
-            <!-- T1: P13→P14 导航按钮 -->
-            <div class="nav-next">
-              <button
-                type="button"
-                class="link-btn link-btn--primary"
-                data-testid="p13-go-pack"
-                @click="router.push({ name: 'PrevisitPack', query: { customerId: customerId, journeyId: journeyId, operatingCaseId: operatingCaseId, rmId: rmId } })"
-              >
-                去访前包预览 →
-              </button>
-            </div>
           </template>
           <p v-else class="empty" data-testid="p13-empty">
             尚未执行一键访前。请先点击「生成访前包」触发 KERT（外联 + 会面 + R1 报告），装配轨迹将在此展示。

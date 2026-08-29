@@ -56,7 +56,6 @@ test.describe('信号与互动 live domain', () => {
     await expect(page.getByTestId('p10-engagements')).toBeVisible();
     await expect(page.getByTestId('success-state')).toBeVisible();
     await expect(page.getByTestId('error-state')).toHaveCount(0);
-    await expect(page.getByTestId('p10-engagements')).not.toContainText('500');
     await expect(page.getByTestId('gated-action')).toBeDisabled();
     expect(failures, failures.join('\n')).toEqual([]);
   });
@@ -91,11 +90,9 @@ test.describe('信号与互动 live domain', () => {
     await expect(page.getByTestId('p12-previsit-gaps')).toBeVisible();
     await expect(page.getByTestId('gated-action')).toBeDisabled();
 
-    await page.goto('/engagement/previsit/gaps', { waitUntil: 'domcontentloaded' });
     await page.getByTestId('p12-go-evidence').click();
     await expect(page.getByTestId('p13-previsit-evidence')).toBeVisible();
 
-    await page.goto('/engagement/previsit/evidence', { waitUntil: 'domcontentloaded' });
     await page.getByTestId('p13-go-pack').click();
     await expect(page.getByTestId('p14-previsit-pack')).toBeVisible();
 

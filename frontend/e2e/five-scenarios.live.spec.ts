@@ -80,27 +80,16 @@ test.describe('GITS+KERT 联合 E2E — 5 大业务场景', () => {
     // Step 3: 访前差距分析（回到 engagement 主页面再点击子导航）
     await page.goto('/engagement', { waitUntil: 'networkidle' });
     await expect(page.getByTestId('p11-engagement-workspace')).toBeVisible();
-    const gapsLink = page.getByTestId('p11-open-previsit');
-    if (await gapsLink.isVisible({ timeout: 5000 }).catch(() => false)) {
-      await gapsLink.click();
-      await expect(page.getByTestId('p12-previsit-gaps')).toBeVisible();
-    }
+    await page.getByTestId('p11-open-previsit').click();
+    await expect(page.getByTestId('p12-previsit-gaps')).toBeVisible();
 
     // Step 4: 访前证据
-    await page.goto('/engagement/previsit/gaps', { waitUntil: 'networkidle' });
-    const evidenceLink = page.getByTestId('p12-go-evidence');
-    if (await evidenceLink.isVisible({ timeout: 5000 }).catch(() => false)) {
-      await evidenceLink.click();
-      await expect(page.getByTestId('p13-previsit-evidence')).toBeVisible();
-    }
+    await page.getByTestId('p12-go-evidence').click();
+    await expect(page.getByTestId('p13-previsit-evidence')).toBeVisible();
 
     // Step 5: 访前包
-    await page.goto('/engagement/previsit/evidence', { waitUntil: 'networkidle' });
-    const packLink = page.getByTestId('p13-go-pack');
-    if (await packLink.isVisible({ timeout: 5000 }).catch(() => false)) {
-      await packLink.click();
-      await expect(page.getByTestId('p14-previsit-pack')).toBeVisible();
-    }
+    await page.getByTestId('p13-go-pack').click();
+    await expect(page.getByTestId('p14-previsit-pack')).toBeVisible();
 
     expect(failures, `HTTP 500 errors:\n${failures.join('\n')}`).toEqual([]);
   });

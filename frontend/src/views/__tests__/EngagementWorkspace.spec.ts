@@ -138,11 +138,15 @@ describe('P11 EngagementWorkspace', () => {
     expect(wrapper.find('[data-testid="error-state"]').exists()).toBe(true)
   })
 
-  it('shows guidance panel and keeps previsit/meeting actions gated without a journey', async () => {
+  it('shows guidance panel: open-previsit enabled with customer, mark-ready gated until previsit', async () => {
     const wrapper = await mountWorkspace()
     expect(wrapper.find('[data-testid="guidance-panel"]').exists()).toBe(true)
-    expect((wrapper.get('[data-testid="p11-open-previsit"]').element as HTMLButtonElement).disabled).toBe(true)
+    // 打开访前工作区：只需客户选择（P12 KYC 缺口仅需 customerId），客户已自动选中 → 启用
+    expect((wrapper.get('[data-testid="p11-open-previsit"]').element as HTMLButtonElement).disabled).toBe(false)
+    // 标记准备完成：需完成访前准备（previsitDone），未完成 → 禁用
     expect((wrapper.get('[data-testid="p11-mark-ready"]').element as HTMLButtonElement).disabled).toBe(true)
+    // 记为正式 Claim 仍为受控写（DisabledAction）
+    expect((wrapper.get('[data-testid="gated-action"]').element as HTMLButtonElement).disabled).toBe(true)
   })
 
   it('shows customer select button', async () => {

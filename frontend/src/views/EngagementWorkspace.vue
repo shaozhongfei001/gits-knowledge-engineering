@@ -99,7 +99,7 @@
             type="primary"
             block
             data-testid="p11-open-previsit"
-            :disabled="!jid"
+            :disabled="!sc"
             @click="goPrevisit"
           >
             打开访前工作区
@@ -112,6 +112,12 @@
           >
             标记准备完成
           </n-button>
+          <DisabledAction
+            label="将访前草稿记为正式 Claim"
+            :disabled="true"
+            reason="访前草稿为候选内容，需经人工门禁确认后才能转为正式 Claim"
+            unlockPath="完成访前→会中→门禁确认后写入正式 Claim"
+          />
         </GuidancePanel>
       </div>
     </PageState>
@@ -149,6 +155,7 @@ import type { StagePathStage } from '../components/shell/StagePath.vue'
 import HighlightsMetrics from '../components/shell/HighlightsMetrics.vue'
 import type { MetricItem } from '../components/shell/HighlightsMetrics.vue'
 import GuidancePanel from '../components/shell/GuidancePanel.vue'
+import DisabledAction from '../components/shell/DisabledAction.vue'
 import { fetchCustomers, startJourney, completeJourney, formatApiError, type Customer } from '../api/engagement'
 import { usePrevisitStore } from '../stores/previsit'
 import { deriveResourceStatus } from '../composables/useResourceStatus'
