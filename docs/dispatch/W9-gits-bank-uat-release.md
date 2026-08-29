@@ -2,15 +2,17 @@
 
 ```text
 DISPATCH_ID=W9-GITS-BANK-UAT-RELEASE
-STATUS=OWNER_PACK_OPEN
-OWNER_DECISION=OD-GITS-BANK-UX-2026-08-25
+STATUS=OWNER_UAT_FAIL
+OWNER_DECISION=OD-GITS-BANK-UX-W9A-FAIL-2026-08-26
 WORKING_BRANCH=feature/P30-gits-bank-experience-shell
 DEPENDS_ON=P30…P37 qa_pass
 CONTRACT_CHANGE=NOT_AUTHORIZED
 AUTHORITY_SOURCE_CHANGE=NO
+UAT_SCOPE=W9-A
 UAT_PASS=NO
 FROZEN=NO
 PRODUCTION_READY=NO
+COMMIT=797f3ebd4a15422d844e0def08526916359d0e12
 ```
 
 本波不是 Feature Loop。Tech Lead 只准备验收包与范围分叉；**不得**由开发、Tech Lead 或 Independent QA 签署 `UAT_PASS` / `FROZEN` / `PRODUCTION_READY`。`qa_pass` ≠ UAT。
@@ -34,7 +36,7 @@ Experience Shell + 页面 P01–P44 的 **C0 复用或 C2 降级壳**。适用�
 | **W9-A**（推荐默认） | 已交付的导航壳、C0 查询、C2 禁用/降级说明 | 可以 | **否**。最多冻结「C2 体验壳候选」 |
 | **W9-B** | V3.2 设计中的正式对象与真写 | **不可以**。先 CC2 + 独立合同 Loop | 在合同 Loop 与独立 QA 之后再开第二轮 UAT |
 
-未勾选不得签署 UAT。勾选 W9-B 却没有合同源变更，视为范围错误，退回。
+**Owner 已于 2026-08-26 勾选 W9-A**（`OD-GITS-BANK-UX-W9A-2026-08-26`）。未勾选不得签署 UAT。勾选 W9-B 却没有合同源变更，视为范围错误，退回。
 
 ### Tech Lead 建议
 
@@ -80,26 +82,26 @@ C3 候选登记：`docs/governance/contract-candidates/CCC-GITS-BANK-20260825-IN
 
 环境：`feature/P30-gits-bank-experience-shell` 已推远程；对照 commit 填入下表。
 
-| # | 检查 | Owner |
-|---|---|---|
-| 1 | 左导航可进入 P01–P44 对应路由；对象头/页签不丢上下文 | ☐ |
-| 2 | C0 页（工作台、客户查询、互动、承诺、审批、审计等）数据来自既有 API，不是静态假对象 | ☐ |
-| 3 | C2 页主动作禁用，文案说明原因与解除路径（合同未批准），没有可点的假写 | ☐ |
-| 4 | 未把灰按钮当成缺陷而要求现场改合同 | ☐ |
-| 5 | 同意本签署 **不是** 264 PASS、**不是** 44/44 功能完成、**不是** 生产发布 | ☐ |
-| 6 | 发布/回滚/监控/培训：本波 **未** 交付，不得勾选 PRODUCTION_READY | ☐ |
+| # | 检查 | Owner | Tech Lead 陪跑 |
+|---|---|---|---|
+| 1 | 左导航可进入 P01–P44 对应路由；对象头/页签不丢上下文 | ☐ | **PASS** 44/44（`docs/dispatch/W9-A_ESCORT_LOG.md`） |
+| 2 | C0 页（工作台、客户查询、互动、承诺、审批、审计等）数据来自既有 API，不是静态假对象 | ☐ | 陪跑使用 SIT mock；本机 `8080` 未起，**不能**代替活后端 |
+| 3 | C2 页主动作禁用，文案说明原因与解除路径（合同未批准），没有可点的假写 | ☐ | **PASS**（有 `gated-action` 的页均 disabled + 原因/解除路径） |
+| 4 | 未把灰按钮当成缺陷而要求现场改合同 | ☑ 已由 OD-W9A 接受 | — |
+| 5 | 同意本签署 **不是** 264 PASS、**不是** 44/44 功能完成、**不是** 生产发布 | ☑ 已由 OD-W9A 接受 | — |
+| 6 | 发布/回滚/监控/培训：本波 **未** 交付，不得勾选 PRODUCTION_READY | ☑ 已由 OD-W9A 接受 | — |
 
-签署区（仅人类 Owner；Agent 不得代填）：
+签署区（仅人类 Owner；Agent 不得代填 `UAT_PASS`）：
 
 ```text
-UAT_SCOPE=W9-A | W9-B | DEFER
+UAT_SCOPE=W9-A
 UAT_PASS=NO
 FROZEN=NO
 PRODUCTION_READY=NO
-OWNER_NAME=
-DATE=
-COMMIT=
-NOTES=
+OWNER_NAME=HUMAN_OWNER
+DATE=2026-08-26
+COMMIT=797f3ebd4a15422d844e0def08526916359d0e12
+NOTES=人工测试不通过：左导航/菜单逻辑/配色与 V3.2 设计图不符；点选「互动对象」GET /api/v1/interactions 500。见 OD-GITS-BANK-UX-W9A-FAIL-2026-08-26。
 ```
 
 ## 本波明确不做

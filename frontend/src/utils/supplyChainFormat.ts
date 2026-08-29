@@ -39,10 +39,58 @@ export const RELATION_LABEL: Record<string, string> = {
   sale: '销售',
 }
 
+/** V3.2 描边色：本企业蓝、上游青绿、下游浅蓝。 */
 export const LAYER_COLOR: Record<string, string> = {
-  supplier: '#4d9fff',
-  enterprise: '#ef476f',
-  customer: '#2dd4a7',
+  supplier: '#12a7a0',
+  enterprise: '#1976d2',
+  customer: '#48a7e8',
+}
+
+/** V3.2 节点填充：白底圆 + 分层浅底，对应 05 集团关系图。 */
+export const LAYER_FILL: Record<string, string> = {
+  supplier: '#e8f8f6',
+  enterprise: '#ffffff',
+  customer: '#eaf4fe',
+}
+
+export type GraphInsightInput = {
+  supplyChainPosition?: string
+  concentrationRisk?: string[]
+  keyChanges?: string
+  overallAssessment?: string
+  followUpQuestions?: string[]
+}
+
+export type GraphInsightStrip = {
+  tone: 'blue' | 'amber' | 'teal'
+  label: string
+  text: string
+}
+
+/** 图谱底部三色分隔条：只展示 Skill 已返回字段，不编造文案。 */
+export function graphInsightStrips(interp?: GraphInsightInput | null): GraphInsightStrip[] {
+  if (!interp) {
+    return []
+  }
+  const strips: GraphInsightStrip[] = []
+  const judgment = nonBlank(interp.overallAssessment) || nonBlank(interp.supplyChainPosition)
+  if (judgment) {
+    strips.push({ tone: 'blue', label: '关键判断', text: judgment })
+  }
+  const gap = (interp.concentrationRisk || []).map(nonBlank).filter(Boolean).join('；')
+    || nonBlank(interp.keyChanges)
+  if (gap) {
+    strips.push({ tone: 'amber', label: '信息缺口', text: gap })
+  }
+  const action = nonBlank(interp.followUpQuestions?.[0])
+  if (action) {
+    strips.push({ tone: 'teal', label: '建议动作', text: action })
+  }
+  return strips
+}
+
+function nonBlank(value?: string | null): string {
+  return value && value.trim() ? value.trim() : ''
 }
 
 export function formatConfidence(value: unknown): string {

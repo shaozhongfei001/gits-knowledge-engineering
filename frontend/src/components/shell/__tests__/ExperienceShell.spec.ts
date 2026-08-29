@@ -9,14 +9,16 @@ const stubs = {
   NLayoutSider: { template: '<aside class="n-layout-sider"><slot /></aside>' },
   NLayoutHeader: { template: '<header class="n-layout-header"><slot /></header>' },
   NLayoutContent: { template: '<main class="n-layout-content"><slot /></main>' },
-  NSwitch: { template: '<button class="n-switch" />' },
-  NMenu: { template: '<div class="n-menu" data-mode="vertical" />' },
   NTag: { template: '<span />' },
   NButton: { template: '<button><slot /></button>' },
+  AppSidebar: {
+    template:
+      '<nav data-testid="shell-sidebar"><button data-testid="shell-brand">GITS Bank 对公客户经营工作台</button>日常作业</nav>',
+  },
 }
 
 describe('ExperienceShell', () => {
-  it('brands GITS Bank and keeps a left grouped shell', async () => {
+  it('brands GITS Bank in the left shell with search chrome', async () => {
     setActivePinia(createPinia())
     const router = createRouter({
       history: createMemoryHistory(),
@@ -31,6 +33,8 @@ describe('ExperienceShell', () => {
     expect(wrapper.get('[data-testid="shell-brand"]').text()).toContain('GITS Bank')
     expect(wrapper.find('[data-testid="shell-sidebar"]').exists()).toBe(true)
     expect(wrapper.find('[data-testid="workspace-tabs"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="shell-search"]').exists()).toBe(true)
+    expect(wrapper.get('[data-testid="global-new"]').attributes('disabled')).toBeDefined()
     expect(wrapper.text()).toContain('日常作业')
   })
 })

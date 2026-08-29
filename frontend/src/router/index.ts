@@ -36,6 +36,12 @@ const router = createRouter({
       meta: { title: '客户记录·集团关系', pageId: 'P05', objectType: '客户 Account', objectStatus: '集团关系' }
     },
     {
+      path: '/supply-chain-report/:requestId',
+      name: 'SupplyChainGraphReport',
+      component: () => import('../views/SupplyChainGraphReport.vue'),
+      meta: { title: '供应链图谱分析报告', objectType: '知识图谱（DKWS）', objectStatus: 'Skill' }
+    },
+    {
       path: '/customers/:id/funds',
       name: 'CustomerFundsView',
       component: () => import('../views/CustomerFundsView.vue'),

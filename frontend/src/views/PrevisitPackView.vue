@@ -1,36 +1,46 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import ObjectHeader from '../components/shell/ObjectHeader.vue'
 import PageState from '../components/shell/PageState.vue'
 import DisabledAction from '../components/shell/DisabledAction.vue'
-import { executePrevisit, type PrevisitExecutionResponse } from '../api/engagement'
+import GuidancePanel from '../components/shell/GuidancePanel.vue'
+import KnowledgePrevisitReport from '../components/KnowledgePrevisitReport.vue'
 import { deriveResourceStatus } from '../composables/useResourceStatus'
 import { useEngagementContext } from '../composables/useEngagementContext'
 import { usePageReferenceStore } from '../stores/pageReference'
+import { usePrevisitStore } from '../stores/previsit'
 
 const PAGE_ID = 'P14'
 const OBJECT_TYPE = '互动 Interaction'
 
+const router = useRouter()
 const pageRefs = usePageReferenceStore()
-const { customerId, journeyId, operatingCaseId } = useEngagementContext()
+const previsitStore = usePrevisitStore()
+const { customerId, journeyId, operatingCaseId, rmId } = useEngagementContext()
 
-const pack = ref<PrevisitExecutionResponse | null>(null)
-const confirmed = ref(false)
-const loading = ref(false)
-const error = ref('')
 const requested = ref(true)
 
+// 本页只读消费 store 的一键访前结果；不调用 executePrevisit（消除 KERT 重复调用）。
 const status = computed(() =>
   deriveResourceStatus({
-    loading: loading.value,
-    error: error.value,
-    hasData: requested.value,
+    loading: previsitStore.loading,
+    error: previsitStore.error,
+    hasData: previsitStore.previsitDone || requested.value,
     requested: requested.value,
   }),
 )
 
-const objectStatus = computed(() => (journeyId.value ? journeyId.value : '缺对象'))
-const canExecute = computed(() => Boolean(journeyId.value && customerId.value))
+const objectStatus = computed(() => (journeyId.value || '缺对象'))
+const canComplete = computed(() => Boolean(journeyId.value && customerId.value && previsitStore.previsitDone))
+
+const outR = computed(() => previsitStore.previsitResult?.outreachScript || null)
+const meetR = computed(() => previsitStore.previsitResult?.meetingScript || null)
+
+function channelLabel(channel?: string): string {
+  const labels: Record<string, string> = { PHONE: '电话', WECHAT: '微信', EMAIL: '邮件', FACE_TO_FACE: '面谈' }
+  return channel ? (labels[channel] || channel) : ''
+}
 
 function persistReference() {
   pageRefs.capture(PAGE_ID, {
@@ -38,36 +48,30 @@ function persistReference() {
     customerId: customerId.value || undefined,
     recordId: journeyId.value || undefined,
     viewId: 'previsit_pack',
-    draftId: confirmed.value ? 'confirmed' : undefined,
     scrollAnchor: typeof window !== 'undefined' ? window.scrollY : 0,
   })
 }
 
-async function runExecute() {
-  if (!confirmed.value || !canExecute.value) {
-    return
+function goMeeting() {
+  persistReference()
+  if (journeyId.value) {
+    router.push({ name: 'InMeetingAssistant', params: { id: journeyId.value }, query: {
+      ...(customerId.value ? { customerId: customerId.value } : {}),
+      ...(journeyId.value ? { journeyId: journeyId.value } : {}),
+      ...(operatingCaseId.value ? { operatingCaseId: operatingCaseId.value } : {}),
+      ...(rmId.value ? { rmId: rmId.value } : {}),
+    } })
   }
-  loading.value = true
-  error.value = ''
-  try {
-    pack.value = await executePrevisit(journeyId.value, customerId.value, operatingCaseId.value, '访前包预览')
-  } catch (e: unknown) {
-    error.value = e instanceof Error ? e.message : '执行访前包失败'
-    pack.value = null
-  } finally {
-    loading.value = false
-  }
-}
-
-function retry() {
-  error.value = ''
-  pack.value = null
-  loading.value = false
 }
 
 onMounted(() => {
-  const restored = pageRefs.restore(PAGE_ID, OBJECT_TYPE)
-  confirmed.value = restored.draftId === 'confirmed'
+  requested.value = true
+  previsitStore.setContext({
+    journeyId: journeyId.value,
+    operatingCaseId: operatingCaseId.value,
+    customerId: customerId.value,
+    rmId: rmId.value,
+  })
 })
 onBeforeUnmount(persistReference)
 </script>
@@ -80,74 +84,184 @@ onBeforeUnmount(persistReference)
       :object-status="objectStatus"
       title="访前包预览"
     />
-    <PageState :status="status" :error="error" idle-description="尚未预览访前包" @retry="retry">
-      <p v-if="!canExecute" class="empty">缺对象，暂无访前包可执行</p>
-      <DisabledAction
-        v-if="!canExecute"
-        label="执行访前包"
-        :disabled="true"
-        reason="缺少旅程/客户对象，禁止调用 executePrevisit"
-        unlockPath="从互动记录·访前路径选择客户并启动旅程后再预览"
-      />
-      <template v-else>
-        <p class="hint">可调用既有 executePrevisit，但必须人工确认。失败走四态，不自动提交。</p>
-        <label class="confirm">
-          <input v-model="confirmed" type="checkbox" data-testid="p14-confirm" />
-          我已预览访前包并确认执行
-        </label>
-        <button
-          type="button"
-          class="link-btn"
-          data-testid="p14-execute"
-          :disabled="!confirmed"
-          @click="runExecute"
-        >
-          执行访前包
-        </button>
-        <div v-if="pack" class="item" data-testid="p14-pack-result">
-          <span>来源·访前报告 {{ pack.previsitReport.reportId }}</span>
-          <span>{{ pack.previsitReport.visitObjective }}</span>
-          <span>速战卡 {{ pack.battleCard.cardId }}</span>
+
+    <div class="p14-layout">
+      <main class="p14-main">
+        <div class="toolbar">
+          <button
+            type="button"
+            class="link-btn"
+            data-testid="p14-back-evidence"
+            @click="router.push({ name: 'PrevisitEvidence' })"
+          >
+            ← 返回装配
+          </button>
+          <button
+            type="button"
+            class="link-btn link-btn--primary"
+            data-testid="p14-complete"
+            :disabled="!canComplete"
+            @click="goMeeting"
+          >
+            完成准备，进入会中
+          </button>
+          <DisabledAction
+            label="发送到移动端"
+            :disabled="true"
+            reason="移动端离线包发送为写操作且无本 Loop 合同"
+            unlockPath="待合同批准后由后续 Loop 启用"
+          />
         </div>
-      </template>
-    </PageState>
+
+        <PageState :status="status" :error="previsitStore.error" idle-description="尚未预览访前包" @retry="goMeeting">
+          <p v-if="!previsitStore.previsitDone" class="empty" data-testid="p14-empty">
+            尚未生成访前包。请先在「访前知识证据装配」点击「生成访前包」（KERT 一键访前）。
+          </p>
+          <template v-else>
+            <div class="pack-preview">
+              <div v-if="outR" class="pack-card">
+                <div class="pack-card-header">
+                  <span class="pack-card-icon">📞</span>
+                  <span>外联脚本</span>
+                  <span v-if="outR.channel" class="chip">{{ channelLabel(outR.channel) }}</span>
+                </div>
+                <div class="pack-card-body">
+                  <p v-if="outR.objective"><b>目标：</b>{{ outR.objective }}</p>
+                  <p v-if="outR.openingLine"><b>开场白：</b>{{ outR.openingLine }}</p>
+                  <p v-if="outR.talkingPoints?.length"><b>话题要点：</b>{{ outR.talkingPoints.length }} 条</p>
+                </div>
+              </div>
+
+              <div v-if="meetR" class="pack-card">
+                <div class="pack-card-header">
+                  <span class="pack-card-icon">🤝</span>
+                  <span>会面脚本</span>
+                </div>
+                <div class="pack-card-body">
+                  <p v-if="meetR.meetingObjective"><b>会面目标：</b>{{ meetR.meetingObjective }}</p>
+                  <p v-if="meetR.agendaItems?.length"><b>议程：</b>{{ meetR.agendaItems.length }} 项</p>
+                  <p v-if="meetR.kycQuestions?.length"><b>KYC 探查：</b>{{ meetR.kycQuestions.length }} 题</p>
+                </div>
+              </div>
+
+              <div class="pack-card pack-card-report" data-testid="p14-pack-result">
+                <div class="pack-card-header">
+                  <span class="pack-card-icon">📋</span>
+                  <span>R1 访前报告 & R2 速战卡</span>
+                </div>
+                <div class="pack-card-body">
+                  <KnowledgePrevisitReport
+                    :report="previsitStore.previsitResult!.previsitReport"
+                    :battle-card="previsitStore.previsitResult!.battleCard"
+                    :assembly-trace="previsitStore.previsitResult!.assemblyTrace || []"
+                    :skill-sections="previsitStore.previsitResult!.skillSections || []"
+                    :skill-executive-summary="previsitStore.previsitResult!.skillExecutiveSummary || ''"
+                    :supply-chain-report="previsitStore.supplyChainReport"
+                    :supply-chain-loading="false"
+                  />
+                </div>
+              </div>
+            </div>
+          </template>
+        </PageState>
+      </main>
+
+      <GuidancePanel
+        next-step="完成准备后 Path 进入会中；版本锁定但仍可追加紧急证据"
+        business-rule="访前包生成后锁定版本；新增材料以新版本或补充附件处理。"
+        exception="依赖失败或权限不足时保持上下文，展示原因、重试与返回路径。"
+        contract-usage="REUSE_EXISTING：仅消费既有查询、状态与对象契约；无支持能力时禁用或降级。"
+      >
+        <p class="gp-note">本页为只读派生视图，复用「生成访前包」（P13）的一键访前结果，不重复调用 KERT。</p>
+      </GuidancePanel>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.hint,
-.empty {
-  color: var(--text-tertiary);
-  font-size: 13px;
+.p14-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 16px;
+  align-items: start;
 }
-.confirm {
+.toolbar {
   display: flex;
-  gap: 8px;
-  align-items: center;
-  margin: 12px 0;
-  font-size: 13px;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 16px;
 }
 .link-btn {
   height: 32px;
-  padding: 0 12px;
+  padding: 0 14px;
   border: 1px solid var(--border-normal);
   border-radius: 6px;
   background: var(--bg-surface);
   cursor: pointer;
 }
+.link-btn--primary {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: #fff;
+  font-weight: 600;
+}
 .link-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
-.item {
-  margin-top: 16px;
+.empty {
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+.gp-note {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+.pack-preview {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 12px 14px;
-  background: var(--bg-surface);
+  gap: 12px;
+}
+.pack-card {
   border: 1px solid var(--border-light);
   border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-surface);
+}
+.pack-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--bg-surface-soft);
   font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.pack-card-icon {
+  font-size: 16px;
+}
+.chip {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-hover);
+  padding: 1px 8px;
+  border-radius: 10px;
+}
+.pack-card-body {
+  padding: 12px;
+}
+.pack-card-body p {
+  margin: 0 0 4px;
+  font-size: 13px;
+}
+@media (max-width: 900px) {
+  .p14-layout {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

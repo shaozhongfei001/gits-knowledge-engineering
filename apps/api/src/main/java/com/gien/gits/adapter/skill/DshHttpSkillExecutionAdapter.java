@@ -50,6 +50,7 @@ public class DshHttpSkillExecutionAdapter implements SkillExecutionPort {
     private final RestClient restClient;
     private final ObjectMapper objectMapper;
     private final String baseUrl;
+    private final String executePath;
     private final DshJobPoller jobPoller;
 
     /**
@@ -68,20 +69,34 @@ public class DshHttpSkillExecutionAdapter implements SkillExecutionPort {
      */
     public DshHttpSkillExecutionAdapter(RestClient.Builder restClientBuilder, String baseUrl,
                                         long asyncTimeoutMs, long asyncPollIntervalMs) {
+        this(restClientBuilder, baseUrl, asyncTimeoutMs, asyncPollIntervalMs, EXECUTE_PATH, "/v1/jobs");
+    }
+
+    public DshHttpSkillExecutionAdapter(RestClient.Builder restClientBuilder, String baseUrl,
+                                        long asyncTimeoutMs, long asyncPollIntervalMs,
+                                        String skillExecutePath, String jobPathPrefix) {
         if (baseUrl == null || baseUrl.isBlank()) {
             throw new IllegalArgumentException(
                 "dsh.base-url must be configured for HTTP mode");
         }
         this.restClient = restClientBuilder.build();
         this.baseUrl = baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
+        this.executePath = normalizePath(skillExecutePath, EXECUTE_PATH);
         this.objectMapper = new ObjectMapper();
-        this.jobPoller = new DshJobPoller(this.restClient, this.baseUrl, asyncTimeoutMs, asyncPollIntervalMs);
-        log.info("DshHttpSkillExecutionAdapter configured: base-url={}", this.baseUrl);
+        this.jobPoller = new DshJobPoller(
+                this.restClient, this.baseUrl, asyncTimeoutMs, asyncPollIntervalMs, jobPathPrefix);
+        log.info("DshHttpSkillExecutionAdapter configured: base-url={} execute={} jobs={}",
+                 this.baseUrl, this.executePath, jobPathPrefix);
+    }
+
+    private static String normalizePath(String path, String fallback) {
+        String value = (path == null || path.isBlank()) ? fallback : path.trim();
+        return value.startsWith("/") ? value : "/" + value;
     }
 
     @Override
     public SkillExecutionResult execute(SkillExecutionCommand command) {
-        String url = this.baseUrl + EXECUTE_PATH;
+        String url = this.baseUrl + this.executePath;
         log.info("[SKILL-HTTP] execute skillId={} requestId={} customerId={} async={} url={}",
                  command.skillId(), command.requestId(), command.customerId(), command.async(), url);
 

@@ -3,26 +3,20 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import KnowledgeMapView from '../KnowledgeMapView.vue'
-import type { KnowledgeElement } from '../../api/knowledge'
 
-vi.mock('../../api/knowledge', async () => {
-  const actual = await vi.importActual<typeof import('../../api/knowledge')>('../../api/knowledge')
+vi.mock('../../api/engagement', async () => {
+  const actual = await vi.importActual<typeof import('../../api/engagement')>('../../api/engagement')
   return {
     ...actual,
-    fetchKnowledgeMap: vi.fn(),
+    fetchCustomers: vi.fn(),
+    fetchAssembledKnowledgeMap: vi.fn(),
+    matchProducts: vi.fn(),
   }
 })
 
-const element: KnowledgeElement = {
-  schemaVersion: '1',
-  elementId: 'KE-1',
-  name: '适用边界',
-  kind: 'K-Type-P',
-  knowledgeItemId: 'KI-009',
-  content: '只读知识要素',
-  source: { sourceRef: 'CTR-KELEM-001', authority: 'AUTHORITATIVE' },
-  status: 'ACTIVE',
-}
+vi.mock('../../api/knowledge', () => ({
+  fetchKnowledgeMap: vi.fn(),
+}))
 
 const stubs = {
   NSpin: { template: '<div class="n-spin" />' },
@@ -47,43 +41,48 @@ async function mountP38() {
   return wrapper
 }
 
-describe('P38 KnowledgeMapView C2 upgrade', () => {
+describe('P38 KnowledgeMapView DKWS', () => {
   beforeEach(async () => {
     sessionStorage.clear()
-    const { fetchKnowledgeMap } = await import('../../api/knowledge')
-    ;(fetchKnowledgeMap as ReturnType<typeof vi.fn>).mockReset()
+    const { fetchCustomers, fetchAssembledKnowledgeMap, matchProducts } = await import('../../api/engagement')
+    ;(fetchCustomers as ReturnType<typeof vi.fn>).mockResolvedValue([
+      { customerId: 'CUST-CORP-0001', customerName: '华东精工装备集团' },
+    ])
+    ;(fetchAssembledKnowledgeMap as ReturnType<typeof vi.fn>).mockResolvedValue({
+      customerId: 'CUST-CORP-0001',
+      skillSections: [],
+      assemblyTrace: [],
+    })
+    ;(matchProducts as ReturnType<typeof vi.fn>).mockResolvedValue([])
   })
 
-  it('enters successfully and keeps KE read-only', async () => {
+  it('does not fill the page from the GITS knowledge snapshot', async () => {
     const { fetchKnowledgeMap } = await import('../../api/knowledge')
-    ;(fetchKnowledgeMap as ReturnType<typeof vi.fn>).mockResolvedValue({ 'KI-009': [element] })
     const wrapper = await mountP38()
     expect(wrapper.get('[data-testid="p38-knowledge-map"]').text()).toContain('知识卡与产品适用边界')
     expect(wrapper.text()).toContain('知识要素 KE（只读）')
     expect(wrapper.find('[data-testid="success-state"]').exists()).toBe(true)
-    expect(wrapper.text()).toContain('KE-1')
-    expect(wrapper.text()).toContain('只读知识要素')
+    expect(wrapper.get('[data-testid="p38-empty"]').text()).toContain('DKWS 未返回知识地图')
+    expect(wrapper.text()).not.toContain('KE-1')
     expect(wrapper.text()).not.toContain('NEED-826')
+    expect(fetchKnowledgeMap).not.toHaveBeenCalled()
   })
 
-  it('shows empty success when the map has no items', async () => {
-    const { fetchKnowledgeMap } = await import('../../api/knowledge')
-    ;(fetchKnowledgeMap as ReturnType<typeof vi.fn>).mockResolvedValue({})
+  it('renders DKWS skill sections when the Skill returns them', async () => {
+    const { fetchAssembledKnowledgeMap } = await import('../../api/engagement')
+    ;(fetchAssembledKnowledgeMap as ReturnType<typeof vi.fn>).mockResolvedValue({
+      customerId: 'CUST-CORP-0001',
+      skillReportTitle: '访前知识地图',
+      skillSections: [{ heading: 'KI-009 企业客户基本信息', content: '行业：装备制造' }],
+      assemblyTrace: [{ phase: 'retrieve', status: 'ok', message: '平台库取到', kiId: 'KI-009' }],
+    })
     const wrapper = await mountP38()
-    expect(wrapper.find('[data-testid="success-state"]').exists()).toBe(true)
-    expect(wrapper.text()).toMatch(/暂无/)
-  })
-
-  it('shows error four-state when fetchKnowledgeMap fails', async () => {
-    const { fetchKnowledgeMap } = await import('../../api/knowledge')
-    ;(fetchKnowledgeMap as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('map down'))
-    const wrapper = await mountP38()
-    expect(wrapper.find('[data-testid="error-state"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="p38-empty"]').exists()).toBe(false)
+    expect(wrapper.get('[data-testid="p38-sections"]').text()).toContain('行业：装备制造')
+    expect(wrapper.get('[data-testid="p38-trace"]').text()).toContain('平台库取到')
   })
 
   it('keeps 比较产品 and 反馈知识 disabled', async () => {
-    const { fetchKnowledgeMap } = await import('../../api/knowledge')
-    ;(fetchKnowledgeMap as ReturnType<typeof vi.fn>).mockResolvedValue({})
     const wrapper = await mountP38()
     expect(wrapper.text()).toContain('比较产品')
     expect(wrapper.text()).toContain('反馈知识')

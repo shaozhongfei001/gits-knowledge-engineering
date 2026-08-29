@@ -65,6 +65,7 @@ describe('P23 ProposalsView C2 degrade', () => {
 
   it('keeps 导入草稿 disabled and can open the wizard degrade shell', async () => {
     const { wrapper, router } = await mountP23()
+    expect(wrapper.get('[data-testid="p23-open-wizard"]').text()).toBe('新建建议书')
     expect(wrapper.text()).toContain('导入草稿')
     expect((wrapper.get('[data-testid="gated-action"]').element as HTMLButtonElement).disabled).toBe(true)
     expect(wrapper.get('[data-testid="disabled-reason"]').text()).toMatch(/原因|解除路径/)

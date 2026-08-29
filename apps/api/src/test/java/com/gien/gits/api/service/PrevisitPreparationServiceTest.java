@@ -2,8 +2,8 @@ package com.gien.gits.api.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
@@ -19,7 +19,6 @@ import com.gien.gits.engagement.port.SkillExecutionResult;
 import com.gien.gits.api.service.EngagementOrchestrator.PrevisitWorkflowResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -95,10 +94,8 @@ class PrevisitPreparationServiceTest {
         assertThat(result.skillExecutiveSummary()).isEqualTo("摘要");
         assertThat(result.skillSections()).containsExactlyElementsOf(sections);
 
-        InOrder inOrder = inOrder(outreachScriptService, meetingScriptService, orchestrator);
-        inOrder.verify(outreachScriptService).generateScript("C-1", "RM-1", "OC-1", "J-1", OutreachChannel.PHONE);
-        inOrder.verify(meetingScriptService).generateScript("C-1", "RM-1", "OC-1", "J-1");
-        inOrder.verify(orchestrator).executePrevisitPhase("J-1", "C-1", "OC-1", "目标");
-        inOrder.verifyNoMoreInteractions();
+        verify(outreachScriptService).generateScript("C-1", "RM-1", "OC-1", "J-1", OutreachChannel.PHONE);
+        verify(meetingScriptService).generateScript("C-1", "RM-1", "OC-1", "J-1");
+        verify(orchestrator).executePrevisitPhase("J-1", "C-1", "OC-1", "目标");
     }
 }

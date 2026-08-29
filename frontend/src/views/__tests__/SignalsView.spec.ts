@@ -58,6 +58,8 @@ async function mountP08() {
     routes: [
       { path: '/signals', name: 'SignalsHome', component: SignalsView },
       { path: '/signals/:id', name: 'SignalRecord', component: { template: '<div/>' } },
+      { path: '/engagements', name: 'EngagementsHome', component: { template: '<div/>' } },
+      { path: '/engagement', name: 'EngagementWorkspace', component: { template: '<div/>' } },
     ],
   })
   await router.push('/signals')
@@ -107,5 +109,17 @@ describe('P08 SignalsView', () => {
     const wrapper = await mountP08()
     expect((wrapper.get('[data-testid="gated-action"]').element as HTMLButtonElement).disabled).toBe(true)
     expect(wrapper.get('[data-testid="disabled-reason"]').text()).toMatch(/原因|解除路径/)
+  })
+
+  it('links 互动对象 to P10 and 经营旅程 to P11', async () => {
+    const { fetchCustomers, fetchCustomerContext } = await import('../../api/engagement')
+    ;(fetchCustomers as ReturnType<typeof vi.fn>).mockResolvedValue([mockCustomer])
+    ;(fetchCustomerContext as ReturnType<typeof vi.fn>).mockResolvedValue(mockContext)
+    const wrapper = await mountP08()
+    expect(wrapper.get('[data-testid="p08-open-engagements"]').attributes('href')).toBe('/engagements')
+    expect(wrapper.get('[data-testid="p08-open-journey"]').attributes('href')).toBe('/engagement')
+    expect(wrapper.get('[data-testid="signals-tab-p11"]').attributes('href')).toBe('/engagement')
+    expect(wrapper.get('[data-testid="signals-tab-p08"]').attributes('href')).toBe('/signals')
+    expect(wrapper.get('[data-testid="signals-tab-p10"]').attributes('href')).toBe('/engagements')
   })
 })

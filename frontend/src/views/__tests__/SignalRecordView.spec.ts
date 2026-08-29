@@ -57,6 +57,8 @@ async function mountP09(id = 'sig-1') {
     routes: [
       { path: '/signals', name: 'SignalsHome', component: { template: '<div/>' } },
       { path: '/signals/:id', name: 'SignalRecord', component: SignalRecordView },
+      { path: '/engagements', name: 'EngagementsHome', component: { template: '<div/>' } },
+      { path: '/engagement', name: 'EngagementWorkspace', component: { template: '<div/>' } },
     ],
   })
   await router.push(`/signals/${id}`)

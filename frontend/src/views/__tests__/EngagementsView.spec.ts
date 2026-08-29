@@ -51,7 +51,7 @@ async function mountP10() {
   await router.push('/engagements')
   const wrapper = mount(EngagementsView, { global: { plugins: [router], stubs } })
   await flushPromises()
-  return wrapper
+  return { wrapper, router }
 }
 
 describe('P10 EngagementsView', () => {
@@ -62,7 +62,7 @@ describe('P10 EngagementsView', () => {
   it('enters successfully via listInteractions', async () => {
     const { listInteractions } = await import('../../api/engagement')
     ;(listInteractions as ReturnType<typeof vi.fn>).mockResolvedValue(mockItems)
-    const wrapper = await mountP10()
+    const { wrapper } = await mountP10()
     expect(wrapper.get('[data-testid="p10-engagements"]').text()).toContain('互动')
     expect(wrapper.text()).toContain('例行回访')
     expect(wrapper.find('[data-testid="success-state"]').exists()).toBe(true)
@@ -71,7 +71,7 @@ describe('P10 EngagementsView', () => {
   it('shows empty success when the interaction list is empty', async () => {
     const { listInteractions } = await import('../../api/engagement')
     ;(listInteractions as ReturnType<typeof vi.fn>).mockResolvedValue([])
-    const wrapper = await mountP10()
+    const { wrapper } = await mountP10()
     expect(wrapper.find('[data-testid="success-state"]').exists()).toBe(true)
     expect(wrapper.text()).toMatch(/暂无/)
   })
@@ -79,16 +79,30 @@ describe('P10 EngagementsView', () => {
   it('shows error four-state when listInteractions fails', async () => {
     const { listInteractions } = await import('../../api/engagement')
     ;(listInteractions as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('upstream'))
-    const wrapper = await mountP10()
+    const { wrapper } = await mountP10()
     expect(wrapper.find('[data-testid="error-state"]').exists()).toBe(true)
   })
 
   it('disables 同步日历', async () => {
     const { listInteractions } = await import('../../api/engagement')
     ;(listInteractions as ReturnType<typeof vi.fn>).mockResolvedValue(mockItems)
-    const wrapper = await mountP10()
+    const { wrapper } = await mountP10()
     expect(wrapper.text()).toContain('同步日历')
     expect((wrapper.get('[data-testid="gated-action"]').element as HTMLButtonElement).disabled).toBe(true)
     expect(wrapper.get('[data-testid="disabled-reason"]').text()).toMatch(/原因|解除路径/)
+  })
+
+  it('links to the P11 journey workspace without starting a write', async () => {
+    const { listInteractions } = await import('../../api/engagement')
+    ;(listInteractions as ReturnType<typeof vi.fn>).mockResolvedValue([])
+    const { wrapper } = await mountP10()
+    expect(wrapper.get('[data-testid="p10-open-journey"]').attributes('href')).toBe('/engagement')
+  })
+
+  it('opens the journey workspace with customerId when a row is clicked', async () => {
+    const { listInteractions } = await import('../../api/engagement')
+    ;(listInteractions as ReturnType<typeof vi.fn>).mockResolvedValue(mockItems)
+    const { wrapper } = await mountP10()
+    expect(wrapper.get('[data-testid="p10-interaction-row"]').attributes('href')).toBe('/engagement?customerId=c1')
   })
 })

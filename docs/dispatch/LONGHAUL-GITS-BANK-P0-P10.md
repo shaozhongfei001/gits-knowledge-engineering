@@ -36,7 +36,7 @@ Owner 验收包：`docs/dispatch/W9-gits-bank-uat-release.md`。默认范围是 
 
 W1–W8 Agent 链已结束。P37 Independent QA `qa_pass`（session `iqa-p37-20260825T175104Z`）。
 
-**W9 在人类 Owner。** 验收包已打开。不自动签署 `UAT_PASS` / `FROZEN` / `PRODUCTION_READY`。`qa_pass` ≠ UAT。不声称 264 PASS / 44/44。
+**W9-A 人类 Owner 人工测试不通过**（`OD-GITS-BANK-UX-W9A-FAIL-2026-08-26`）：左导航把阶段页塞进一级域，配色未对齐 V3.2 Token；点选「互动对象」因 `GET /api/v1/interactions` 未实现被打成 500。`UAT_PASS=NO`。壳层已按 `NAV_GROUPS` 与 Token 返工；该 GET 正在按既有合同补只读实现。不改合同源。
 
 Agent 链 `qa_pass` 会话（供 Owner 查阅，不是发布结论）：
 

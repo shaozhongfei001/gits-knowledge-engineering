@@ -63,13 +63,13 @@ test.describe('GITS Experience Shell — implemented-page smoke', () => {
   test('7. shell sidebar navigates implemented routes', async ({ page }) => {
     await installApiMocks(page);
     await page.goto('/');
-    const menu = page.getByTestId('shell-side-menu');
-    await menu.getByText('访前路径', { exact: true }).click();
-    await expect(page).toHaveURL(/\/engagement$/);
-    await menu.getByText('任务与承诺', { exact: true }).click();
+    const menu = page.getByTestId('shell-sidebar');
+    await menu.getByRole('button', { name: '信号与互动' }).click();
+    await expect(page).toHaveURL(/\/engagement/);
+    await menu.getByRole('button', { name: '我的任务与承诺' }).click();
     await expect(page).toHaveURL(/\/commitments/);
-    await menu.getByText('外部事件监控', { exact: true }).click();
-    await expect(page).toHaveURL(/\/external-events/);
+    await menu.getByRole('button', { name: '客户组合' }).click();
+    await expect(page).toHaveURL(/\/accounts/);
     await page.getByTestId('shell-brand').click();
     await expect(page).toHaveURL(/\/workbench\/?$/);
   });

@@ -154,7 +154,40 @@ function jsonForPath(pathname: string): unknown {
     return mockCustomers;
   }
   if (pathname.endsWith('/operating-view')) {
-    return { customer: mockCustomers[0] };
+    return {
+      customer: mockCustomers[0],
+      entities: [
+        {
+          entityId: 'ENT-GRP-0001',
+          name: '测试企业A',
+          role: '集团本部/母公司',
+          ownership: '100%',
+          relationshipStatus: 'ACTIVE',
+          evidenceRef: 'EV-SIT-001',
+          bankCustomerId: 'cust-001',
+        },
+        {
+          entityId: 'ENT-SUB-0001',
+          name: '测试企业A智能制造',
+          role: '核心子公司',
+          ownership: '60%',
+          relationshipStatus: 'ACTIVE',
+          evidenceRef: 'EV-SIT-001',
+          bankCustomerId: 'cust-002',
+        },
+      ],
+      groupRelationships: [
+        {
+          id: 'rel-001',
+          groupId: 'cust-001',
+          fromEntityId: 'ENT-GRP-0001',
+          toEntityId: 'ENT-SUB-0001',
+          relationshipType: 'OWNS',
+          ownershipRatio: 60,
+        },
+      ],
+      creditFacilities: [{ facilityId: 'FAC-SIT-1', borrowerEntity: '测试企业A' }],
+    }
   }
   if (pathname.includes('/kyc/') && pathname.endsWith('/gap-profile')) {
     return mockKyc;
@@ -195,6 +228,20 @@ function jsonForPath(pathname: string): unknown {
   if (pathname === '/api/v1/product-knowledge/recent') {
     return [];
   }
+  if (pathname.endsWith('/knowledge-map') && pathname.includes('/engagement/customer/')) {
+    return {
+      customerId: 'cust-001',
+      skillReportTitle: 'DKWS 知识地图',
+      skillExecutiveSummary: 'SIT mock Skill',
+      skillSections: [
+        { heading: 'KI-009 企业客户基本信息', content: '行业：装备制造（DKWS）' },
+        { heading: 'KI-FRONT-006 产品候选组合', content: '供应链金融（DKWS）' },
+      ],
+      assemblyTrace: [
+        { phase: 'retrieve', status: 'ok', message: 'SIT mock assembly', kiId: 'KI-009' },
+      ],
+    }
+  }
   if (pathname.startsWith('/api/journey/')) {
     return mockJourney;
   }
@@ -212,6 +259,27 @@ function isBackendApi(url: URL): boolean {
   return url.pathname === '/api' || url.pathname.startsWith('/api/');
 }
 
+const mockSupplyChainGraph = {
+  requestId: 'SCG-SIT-001',
+  customerId: 'cust-001',
+  customerName: '测试企业A',
+  status: 'ok',
+  result: {
+    schemaVersion: '1.0',
+    buildStatus: 'ok',
+    nodes: [
+      { id: 'n-core', name: '测试企业A', layer: 'enterprise', type: 'core', dataSource: 'DKWS' },
+      { id: 'n-up', name: 'DKWS上游钢厂', layer: 'supplier', type: 'supplier', dataSource: 'DKWS' },
+    ],
+    edges: [{ source: 'n-up', target: 'n-core', relation: 'purchase' }],
+    interpretation: {},
+  },
+}
+
+const mockProductMatches = [
+  { productId: 'PROD-DKWS-1', productName: '供应链金融', matchScore: 0.8, matchReasons: ['DKWS Skill'] },
+]
+
 /** Intercept browser API calls. Does not authorize C2/C3 writes. */
 export async function installApiMocks(page: Page, mode: ApiMockMode = 'success'): Promise<void> {
   await page.route(url => isBackendApi(url), async (route: Route) => {
@@ -219,14 +287,23 @@ export async function installApiMocks(page: Page, mode: ApiMockMode = 'success')
       await route.fulfill({ status: 500, body: 'upstream failed' });
       return;
     }
-    if (route.request().method() !== 'GET') {
+    const pathname = new URL(route.request().url()).pathname;
+    const method = route.request().method();
+    if (method === 'POST' && pathname.endsWith('/supply-chain-graph')) {
+      await route.fulfill({ json: mockSupplyChainGraph });
+      return;
+    }
+    if (method === 'POST' && pathname.endsWith('/product-matching')) {
+      await route.fulfill({ json: mockProductMatches });
+      return;
+    }
+    if (method !== 'GET') {
       await route.fulfill({
         status: 403,
         json: { message: 'SIT mock refuses unapproved writes' },
       });
       return;
     }
-    const pathname = new URL(route.request().url()).pathname;
     await route.fulfill({ json: jsonForPath(pathname) });
   });
 }

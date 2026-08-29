@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { NInput } from 'naive-ui'
 import ObjectHeader from '../components/shell/ObjectHeader.vue'
 import PageState from '../components/shell/PageState.vue'
@@ -13,6 +13,7 @@ import { usePageReferenceStore } from '../stores/pageReference'
 const PAGE_ID = 'P02'
 const OBJECT_TYPE = '客户 Account'
 
+const route = useRoute()
 const router = useRouter()
 const pageRefs = usePageReferenceStore()
 
@@ -70,7 +71,7 @@ function openCustomer(id: string) {
 
 onMounted(() => {
   const restored = pageRefs.restore(PAGE_ID, OBJECT_TYPE)
-  filter.value = restored.filter ?? ''
+  filter.value = String(route.query.q || restored.filter || '')
   subtab.value = restored.subtab ?? 'table'
   loadCustomers()
 })
@@ -101,6 +102,9 @@ onBeforeUnmount(persistReference)
         style="max-width: 240px"
         @update:value="persistReference"
       />
+      <router-link class="related-link" to="/accounts/portfolio" data-testid="p02-open-portfolio">
+        客户分层看板
+      </router-link>
     </div>
 
     <PageState :status="status" :error="error" idle-description="尚未请求客户 Account 列表" @retry="loadCustomers">
@@ -126,9 +130,14 @@ onBeforeUnmount(persistReference)
   margin-bottom: 16px;
 }
 .hint,
-.empty {
+.empty,
+.related-link {
   color: var(--text-tertiary);
   font-size: 13px;
+}
+.related-link {
+  color: var(--brand-primary);
+  align-self: center;
 }
 .customer-grid {
   display: grid;

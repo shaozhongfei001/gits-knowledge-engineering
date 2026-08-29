@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { NLayout, NLayoutContent, NLayoutHeader, NLayoutSider, NSwitch } from 'naive-ui'
+import { NLayout, NLayoutContent, NLayoutHeader, NLayoutSider } from 'naive-ui'
 import AppSidebar from '../components/shell/AppSidebar.vue'
 import WorkspaceTabs from '../components/shell/WorkspaceTabs.vue'
 import { useWorkspaceTabsStore } from '../stores/workspaceTabs'
@@ -15,13 +15,10 @@ const emit = defineEmits<{ 'update:isDark': [value: boolean] }>()
 const route = useRoute()
 const router = useRouter()
 const tabs = useWorkspaceTabsStore()
+const search = ref('')
 
-function toggleTheme(dark: boolean) {
-  emit('update:isDark', dark)
-}
-
-const objectType = computed(() => String(route.meta.objectType || '工作区'))
 const pageTitle = computed(() => String(route.meta.title || 'GITS Bank'))
+const objectType = computed(() => String(route.meta.objectType || '工作区'))
 
 watch(
   () => route.fullPath,
@@ -41,97 +38,173 @@ watch(
   { immediate: true },
 )
 
-function goHome() {
-  router.push('/workbench')
+function submitSearch() {
+  const q = search.value.trim()
+  router.push({ path: '/accounts', query: q ? { q } : {} })
 }
 </script>
 
 <template>
   <n-layout class="experience-shell" data-testid="experience-shell" has-sider>
-      <n-layout-sider
-        bordered
-        :width="232"
-        :collapsed-width="64"
-        content-style="padding: 0;"
-        class="shell-sider"
-      >
-        <AppSidebar />
-      </n-layout-sider>
-      <n-layout>
-        <n-layout-header class="shell-header" bordered>
-          <button type="button" class="brand" data-testid="shell-brand" @click="goHome">
-            <span class="brand-mark">G</span>
-            <span class="brand-copy">
-              <span class="brand-name">GITS Bank</span>
-              <span class="brand-sub">对公客户经营</span>
-            </span>
-          </button>
-          <WorkspaceTabs />
-          <n-switch :value="isDark" size="small" @update:value="toggleTheme">
-            <template #checked>暗色</template>
-            <template #unchecked>亮色</template>
-          </n-switch>
-        </n-layout-header>
-        <n-layout-content class="shell-content">
-          <slot />
-        </n-layout-content>
-      </n-layout>
+    <n-layout-sider
+      :width="226"
+      :collapsed-width="64"
+      :show-trigger="false"
+      :bordered="false"
+      :native-scrollbar="true"
+      content-style="padding: 0; background: #08233B;"
+      class="shell-sider"
+    >
+      <AppSidebar />
+    </n-layout-sider>
+    <n-layout class="shell-main">
+      <n-layout-header class="shell-header" bordered>
+        <form class="shell-search" data-testid="shell-search" @submit.prevent="submitSearch">
+          <span class="search-glyph" aria-hidden="true">⌕</span>
+          <input
+            v-model="search"
+            type="search"
+            placeholder="搜索客户、关系人、互动、建议书、知识或命令"
+            aria-label="全局搜索"
+          />
+        </form>
+        <button type="button" class="global-new" data-testid="global-new" disabled title="全局新建写未授权；解除路径：CC2 后独立合同 Loop">
+          ＋ 全局新建
+        </button>
+        <span class="header-spacer" />
+        <button type="button" class="header-icon" aria-label="帮助">？</button>
+        <button type="button" class="header-icon" aria-label="通知">♢</button>
+        <button
+          type="button"
+          class="theme-toggle"
+          data-testid="theme-toggle"
+          @click="emit('update:isDark', !isDark)"
+        >
+          {{ isDark ? '暗色' : '亮色' }}
+        </button>
+        <div class="header-user" data-testid="shell-header-user">
+          <span class="header-avatar">开</span>
+          <span class="header-user-copy">
+            <span>开发会话</span>
+            <span>总行公司金融部</span>
+          </span>
+        </div>
+      </n-layout-header>
+      <div class="shell-tabbar">
+        <WorkspaceTabs />
+      </div>
+      <n-layout-content class="shell-content">
+        <slot />
+      </n-layout-content>
     </n-layout>
+  </n-layout>
 </template>
 
 <style scoped>
 .experience-shell {
   min-height: 100vh;
+  background: var(--gits-page);
 }
 .shell-sider {
   background: #08233b;
 }
+.shell-main {
+  background: var(--gits-page);
+}
 .shell-header {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   height: 56px;
-  padding: 0 16px;
-  background: var(--bg-header);
+  padding: 0 16px 0 20px;
+  background: #fff;
+  border-bottom: 1px solid var(--gits-line);
 }
-.brand {
+.shell-search {
   display: flex;
   align-items: center;
   gap: 8px;
+  flex: 1;
+  max-width: 514px;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--gits-line);
+  border-radius: 18px;
+  background: #f7f9fc;
+}
+.search-glyph {
+  color: var(--gits-muted);
+}
+.shell-search input {
+  flex: 1;
   border: 0;
   background: transparent;
-  cursor: pointer;
-  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--gits-text);
+  outline: none;
 }
-.brand-mark {
+.global-new {
+  height: 32px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--gits-blue-600);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+.global-new:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.header-spacer {
+  flex: 1;
+}
+.header-icon,
+.theme-toggle {
+  border: 0;
+  background: transparent;
+  color: var(--gits-muted);
+  cursor: pointer;
+  font-size: 13px;
+}
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.header-avatar {
   width: 28px;
   height: 28px;
-  border-radius: 6px;
-  background: var(--brand-primary);
-  color: #fff;
-  font-weight: 700;
+  border-radius: 50%;
+  border: 2px solid var(--gits-teal-500);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 11px;
+  color: var(--gits-teal-700);
 }
-.brand-copy {
+.header-user-copy {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   line-height: 1.15;
+  font-size: 9px;
+  color: var(--gits-text);
 }
-.brand-name {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-primary);
+.header-user-copy span:last-child {
+  color: var(--gits-muted);
 }
-.brand-sub {
-  font-size: 10px;
-  color: var(--text-tertiary);
+.shell-tabbar {
+  height: 42px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--gits-line);
 }
 .shell-content {
   padding: 20px 24px 32px;
-  background: var(--bg-page);
-  min-height: calc(100vh - 56px);
+  background: var(--gits-page);
+  min-height: calc(100vh - 98px);
 }
 </style>

@@ -29,6 +29,7 @@ public class DshJobPoller {
     private final RestClient restClient;
     private final ObjectMapper objectMapper;
     private final String baseUrl;
+    private final String jobsPath;
     private final long timeoutMs;
     private final long pollIntervalMs;
 
@@ -39,6 +40,11 @@ public class DshJobPoller {
      * @param pollIntervalMs 轮询间隔（毫秒）
      */
     public DshJobPoller(RestClient restClient, String baseUrl, long timeoutMs, long pollIntervalMs) {
+        this(restClient, baseUrl, timeoutMs, pollIntervalMs, JOBS_PATH);
+    }
+
+    public DshJobPoller(RestClient restClient, String baseUrl, long timeoutMs, long pollIntervalMs,
+                        String jobPathPrefix) {
         if (timeoutMs <= 0 || pollIntervalMs <= 0) {
             throw new IllegalArgumentException("async timeout/poll-interval must be positive");
         }
@@ -46,7 +52,16 @@ public class DshJobPoller {
         this.baseUrl = baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
         this.timeoutMs = timeoutMs;
         this.pollIntervalMs = pollIntervalMs;
+        this.jobsPath = normalizeJobsPath(jobPathPrefix);
         this.objectMapper = new ObjectMapper();
+    }
+
+    private static String normalizeJobsPath(String prefix) {
+        String value = (prefix == null || prefix.isBlank()) ? JOBS_PATH : prefix.trim();
+        if (!value.startsWith("/")) {
+            value = "/" + value;
+        }
+        return value.endsWith("/") ? value : value + "/";
     }
 
     /**
@@ -83,7 +98,7 @@ public class DshJobPoller {
     }
 
     private JobStatusRecord fetch(String jobId) {
-        String url = this.baseUrl + JOBS_PATH + jobId;
+        String url = this.baseUrl + this.jobsPath + jobId;
         String body;
         try {
             body = restClient.get()

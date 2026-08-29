@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { NTag } from 'naive-ui'
 import ObjectHeader from '../components/shell/ObjectHeader.vue'
 import PageState from '../components/shell/PageState.vue'
 import DisabledAction from '../components/shell/DisabledAction.vue'
+import GuidancePanel from '../components/shell/GuidancePanel.vue'
+import HighlightsMetrics from '../components/shell/HighlightsMetrics.vue'
+import type { MetricItem } from '../components/shell/HighlightsMetrics.vue'
 import CrmWritebackApproval from '../components/CrmWritebackApproval.vue'
 import {
   decideCrmWritebackCommand,
@@ -39,6 +43,17 @@ const status = computed(() =>
 )
 
 const objectStatus = computed(() => (journeyId.value || customerId.value || '待筛选'))
+
+const metrics = computed<MetricItem[]>(() => {
+  const pending = commands.value.filter((c) => c.status === 'PENDING').length
+  const totalFields = commands.value.reduce((sum, c) => sum + Object.keys(c.payload || {}).length, 0)
+  return [
+    { label: '写回命令', value: String(commands.value.length), tone: 'blue' },
+    { label: '拟写字段', value: String(totalFields), tone: 'blue' },
+    { label: '待审批', value: String(pending), tone: 'amber' },
+    { label: '幂等', value: '已生成', tone: 'teal' },
+  ]
+})
 
 function persistReference() {
   pageRefs.capture(PAGE_ID, {
@@ -114,36 +129,56 @@ onBeforeUnmount(persistReference)
       :object-status="objectStatus"
       title="CRM 受控回写"
     />
-    <div class="toolbar">
-      <DisabledAction
-        label="直接写回"
-        :disabled="true"
-        reason="禁止跳过预览与人工确认的 CRM 写回"
-        unlockPath="先预览既有 writeback-commands payload，再经 decideCrmWritebackCommand 确认"
-      />
+
+    <HighlightsMetrics :items="metrics" />
+
+    <div class="p19-layout">
+      <main class="p19-main">
+        <div class="toolbar">
+          <DisabledAction
+            label="直接写回"
+            :disabled="true"
+            reason="禁止跳过预览与人工确认的 CRM 写回"
+            unlockPath="先预览既有 writeback-commands payload，再经 decideCrmWritebackCommand 确认"
+          />
+        </div>
+        <PageState :status="status" :error="error" idle-description="尚未加载写回命令" @retry="loadCommands">
+          <p class="hint">复用 GET/decide /api/v1/crm/writeback-commands。只展示合同 payload 字段，必须预览后人工确认。</p>
+          <ul v-if="commands.length" class="item-list" data-testid="p19-command-list">
+            <li v-for="command in commands" :key="command.commandId" class="item">
+              <div class="item-head">
+                <strong>{{ command.commandId }}</strong>
+                <span>{{ command.operation }} · {{ command.targetEntity }}</span>
+                <n-tag size="small" :type="command.status === 'PENDING' ? 'warning' : command.status === 'SENT' ? 'success' : 'default'">
+                  {{ CRM_WRITEBACK_STATUS_LABELS[command.status] || command.status }}
+                </n-tag>
+              </div>
+              <dl class="payload" data-testid="p19-diff-preview">
+                <div v-for="entry in payloadEntries(command)" :key="entry.field">
+                  <dt>{{ entry.field }}</dt>
+                  <dd class="payload-old">—</dd>
+                  <dd class="payload-new">{{ entry.value }}</dd>
+                </div>
+              </dl>
+              <button type="button" class="link-btn" data-testid="p19-preview-action" @click="preview(command)">
+                预览并确认
+              </button>
+            </li>
+          </ul>
+          <p v-else class="empty">暂无 CRM 写回命令</p>
+        </PageState>
+      </main>
+
+      <GuidancePanel
+        next-step="确认后调用受控Action；回执、失败补偿和撤销入口必须可见"
+        business-rule="CRM写回必须先差异预览，再确认、执行并展示幂等回执。"
+        exception="Action失败时展示回执、失败字段与可重试/撤销能力。"
+        contract-usage="CONTROLLED_ACTION：只调用既有Action/审批/交付能力，先预览与确认，保留回执。"
+      >
+        <p class="gp-note">拟写字段为合同 payload；原值列在当前合同未提供，完整「原值→新值」差异需后端补字段（本轮零后端变更）。</p>
+      </GuidancePanel>
     </div>
-    <PageState :status="status" :error="error" idle-description="尚未加载写回命令" @retry="loadCommands">
-      <p class="hint">复用 GET/decide /api/v1/crm/writeback-commands。只展示合同 payload 字段，必须预览后人工确认。</p>
-      <ul v-if="commands.length" class="item-list" data-testid="p19-command-list">
-        <li v-for="command in commands" :key="command.commandId" class="item">
-          <div>
-            <strong>{{ command.commandId }}</strong>
-            <span>{{ command.operation }} · {{ command.targetEntity }}</span>
-            <span>{{ CRM_WRITEBACK_STATUS_LABELS[command.status] || command.status }}</span>
-          </div>
-          <dl class="payload">
-            <div v-for="entry in payloadEntries(command)" :key="entry.field">
-              <dt>{{ entry.field }}</dt>
-              <dd>{{ entry.value }}</dd>
-            </div>
-          </dl>
-          <button type="button" class="link-btn" data-testid="p19-preview-action" @click="preview(command)">
-            预览并确认
-          </button>
-        </li>
-      </ul>
-      <p v-else class="empty">暂无 CRM 写回命令</p>
-    </PageState>
+
     <CrmWritebackApproval
       v-model:show="showApproval"
       :command="selected"
@@ -154,6 +189,12 @@ onBeforeUnmount(persistReference)
 </template>
 
 <style scoped>
+.p19-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 16px;
+  align-items: start;
+}
 .toolbar {
   display: flex;
   gap: 12px;
@@ -163,6 +204,12 @@ onBeforeUnmount(persistReference)
 .empty {
   color: var(--text-tertiary);
   font-size: 13px;
+}
+.gp-note {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
 }
 .item-list {
   list-style: none;
@@ -181,6 +228,12 @@ onBeforeUnmount(persistReference)
   flex-direction: column;
   gap: 8px;
 }
+.item-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
 .payload {
   display: grid;
   gap: 4px;
@@ -188,7 +241,7 @@ onBeforeUnmount(persistReference)
 }
 .payload div {
   display: grid;
-  grid-template-columns: 8rem 1fr;
+  grid-template-columns: 8rem 4rem 1fr;
   gap: 8px;
 }
 dt {
@@ -196,6 +249,13 @@ dt {
 }
 dd {
   margin: 0;
+}
+.payload-old {
+  color: var(--text-tertiary);
+}
+.payload-new {
+  color: var(--brand-primary);
+  font-weight: 500;
 }
 .link-btn {
   align-self: flex-start;
@@ -205,5 +265,10 @@ dd {
   border-radius: 6px;
   background: var(--bg-surface);
   cursor: pointer;
+}
+@media (max-width: 900px) {
+  .p19-layout {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

@@ -10,6 +10,20 @@ vi.mock('../../api/engagement', async () => {
   return {
     ...actual,
     preparePrevisit: vi.fn(),
+    executeSupplyChainGraph: vi.fn(),
+  }
+})
+
+vi.mock('naive-ui', async () => {
+  const actual = await vi.importActual('naive-ui')
+  return {
+    ...actual,
+    useMessage: () => ({
+      success: vi.fn(),
+      error: vi.fn(),
+      warning: vi.fn(),
+      info: vi.fn(),
+    }),
   }
 })
 
@@ -75,6 +89,8 @@ const mockPrepared: PreparedPrevisitResponse = {
     dontForget: [],
     bottomLine: '不承诺定价',
   },
+  assemblyTrace: [{ phase: 'dkws', status: 'ok', message: 'hit', kiId: 'KI-009' }],
+  skillSections: [],
 }
 
 const stubs = {
@@ -110,34 +126,52 @@ describe('P13 PrevisitEvidenceView', () => {
     vi.clearAllMocks()
   })
 
-  it('enters successfully from preparePrevisit sources', async () => {
+  it('does not auto-trigger KERT on mount; shows empty guide', async () => {
     const { preparePrevisit } = await import('../../api/engagement')
-    ;(preparePrevisit as ReturnType<typeof vi.fn>).mockResolvedValue(mockPrepared)
     const wrapper = await mountP13()
-    expect(wrapper.get('[data-testid="p13-previsit-evidence"]').text()).toContain('证据装配')
-    expect(wrapper.text()).toContain('out-1')
-    expect(wrapper.text()).toContain('来源')
-    expect(wrapper.find('[data-testid="success-state"]').exists()).toBe(true)
+    expect(preparePrevisit as ReturnType<typeof vi.fn>).not.toHaveBeenCalled()
+    expect(wrapper.find('[data-testid="p13-empty"]').exists()).toBe(true)
+    expect(wrapper.text()).toMatch(/生成访前包/)
   })
 
-  it('shows empty success with no unsourced conclusion when context is missing', async () => {
-    const { preparePrevisit } = await import('../../api/engagement')
+  it('generates pack via store (KERT entry) and shows sources + trace', async () => {
+    const { preparePrevisit, executeSupplyChainGraph } = await import('../../api/engagement')
+    ;(preparePrevisit as ReturnType<typeof vi.fn>).mockResolvedValue(mockPrepared)
+    ;(executeSupplyChainGraph as ReturnType<typeof vi.fn>).mockResolvedValue({
+      requestId: 'SCG-1',
+      customerId: 'c1',
+      result: { nodes: [], edges: [] },
+    })
+    const wrapper = await mountP13()
+    await wrapper.get('[data-testid="p13-generate-pack"]').trigger('click')
+    await flushPromises()
+    expect(preparePrevisit as ReturnType<typeof vi.fn>).toHaveBeenCalled()
+    expect(wrapper.text()).toContain('out-1')
+    expect(wrapper.text()).toContain('装配轨迹')
+    expect(wrapper.find('[data-testid="p13-source-list"]').exists()).toBe(true)
+  })
+
+  it('shows empty success when context is missing', async () => {
     const wrapper = await mountP13({})
-    expect(preparePrevisit as ReturnType<typeof vi.fn>).not.toHaveBeenCalled()
     expect(wrapper.find('[data-testid="success-state"]').exists()).toBe(true)
-    expect(wrapper.text()).toMatch(/无来源/)
+    expect(wrapper.text()).toMatch(/尚未执行一键访前/)
   })
 
   it('shows error four-state when preparePrevisit fails', async () => {
-    const { preparePrevisit } = await import('../../api/engagement')
+    const { preparePrevisit, executeSupplyChainGraph } = await import('../../api/engagement')
     ;(preparePrevisit as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('timeout'))
+    ;(executeSupplyChainGraph as ReturnType<typeof vi.fn>).mockResolvedValue({
+      requestId: 'SCG-1',
+      customerId: 'c1',
+      result: { nodes: [], edges: [] },
+    })
     const wrapper = await mountP13()
+    await wrapper.get('[data-testid="p13-generate-pack"]').trigger('click')
+    await flushPromises()
     expect(wrapper.find('[data-testid="error-state"]').exists()).toBe(true)
   })
 
   it('disables generating unsourced conclusions', async () => {
-    const { preparePrevisit } = await import('../../api/engagement')
-    ;(preparePrevisit as ReturnType<typeof vi.fn>).mockResolvedValue(mockPrepared)
     const wrapper = await mountP13()
     expect((wrapper.get('[data-testid="gated-action"]').element as HTMLButtonElement).disabled).toBe(true)
     expect(wrapper.get('[data-testid="disabled-reason"]').text()).toMatch(/原因|解除路径/)

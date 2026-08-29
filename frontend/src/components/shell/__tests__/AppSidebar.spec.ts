@@ -1,119 +1,130 @@
-import { describe, it, expect } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { mount, flushPromises } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import AppSidebar from '../AppSidebar.vue'
-import { SHELL_NAV_GROUPS } from '../../../layouts/navConfig'
+import { SHELL_NAV_GROUPS, SHELL_NAV_ITEMS, navDomainForPath } from '../../../layouts/navConfig'
 
-    const naiveStubs = {
-  NMenu: {
-    props: ['mode', 'options', 'value'],
-    template: '<div class="n-menu-stub" data-testid="shell-side-menu" :data-mode="mode"><slot /></div>',
-  },
-  'n-menu': {
-    props: ['mode', 'options', 'value'],
-    template: '<div class="n-menu-stub" data-testid="shell-side-menu" :data-mode="mode"><slot /></div>',
-  },
-}
+vi.mock('../../../api/v11', () => ({
+  fetchCommitments: vi.fn().mockResolvedValue([]),
+}))
 
-async function mountSidebar() {
+vi.mock('../../../api/engagement', () => ({
+  fetchCustomers: vi.fn().mockResolvedValue([]),
+  fetchOperatingView: vi.fn().mockResolvedValue({
+    customer: { customerId: 'x', customerName: 'x' },
+    entities: [],
+    groupRelationships: [],
+    creditFacilities: [],
+  }),
+}))
+
+async function mountSidebar(path = '/workbench') {
+  setActivePinia(createPinia())
   const router = createRouter({
     history: createMemoryHistory(),
     routes: [
       { path: '/workbench', name: 'Workbench', component: { template: '<div/>' } },
       { path: '/accounts', name: 'AccountsHome', component: { template: '<div/>' } },
-      { path: '/accounts/portfolio', name: 'PortfolioBoard', component: { template: '<div/>' } },
       { path: '/commitments', name: 'CommitmentDashboard', component: { template: '<div/>' } },
+      { path: '/signals', name: 'SignalsHome', component: { template: '<div/>' } },
+      { path: '/engagement', name: 'EngagementWorkspace', component: { template: '<div/>' } },
+      { path: '/needs', name: 'NeedsHome', component: { template: '<div/>' } },
+      { path: '/proposals', name: 'ProposalsHome', component: { template: '<div/>' } },
+      { path: '/collab', name: 'CollabHome', component: { template: '<div/>' } },
+      { path: '/account-plans', name: 'AccountPlansHome', component: { template: '<div/>' } },
+      { path: '/claims', name: 'ClaimsHome', component: { template: '<div/>' } },
+      { path: '/approvals', name: 'ApprovalsHome', component: { template: '<div/>' } },
+      { path: '/customers/:id/group', name: 'CustomerGroupView', component: { template: '<div/>' } },
+      { path: '/customers/:id', name: 'CustomerOperatingView', component: { template: '<div/>' } },
     ],
   })
-  await router.push('/workbench')
+  await router.push(path)
   await router.isReady()
-  return mount(AppSidebar, { global: { plugins: [router], stubs: naiveStubs } })
+  const wrapper = mount(AppSidebar, { global: { plugins: [router] } })
+  await flushPromises()
+  return { wrapper, router }
 }
 
-describe('AppSidebar', () => {
-  it('renders V3.2 nav groups including mobile degrade', async () => {
-    const wrapper = await mountSidebar()
-    expect(wrapper.text()).toContain('日常作业')
-    expect(wrapper.text()).toContain('客户经营')
-    expect(wrapper.text()).toContain('方案与交付')
-    expect(wrapper.text()).toContain('知识与治理')
-    expect(wrapper.text()).toContain('移动端（降级）')
+describe('AppSidebar V3.2 L1', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('renders the four V3.2 groups and eleven stable domains', async () => {
+    const { wrapper } = await mountSidebar()
     expect(SHELL_NAV_GROUPS.map(group => group.label)).toEqual([
       '日常作业',
       '客户经营',
       '方案与交付',
       '知识与治理',
-      '移动端（降级）',
     ])
+    expect(SHELL_NAV_ITEMS).toHaveLength(11)
+    expect(wrapper.text()).toContain('客户经营作战台')
+    expect(wrapper.text()).toContain('我的任务与承诺')
+    expect(wrapper.text()).toContain('客户组合')
+    expect(wrapper.text()).toContain('客户全景')
+    expect(wrapper.text()).toContain('信号与互动')
+    expect(wrapper.text()).toContain('需求与机会')
+    expect(wrapper.text()).toContain('服务建议书')
+    expect(wrapper.text()).toContain('专家协同')
+    expect(wrapper.text()).toContain('账户计划与价值')
+    expect(wrapper.text()).toContain('证据与知识')
+    expect(wrapper.text()).toContain('审批与审计')
+    expect(wrapper.text()).not.toContain('访前路径')
+    expect(wrapper.text()).not.toContain('移动端（降级）')
+    expect(wrapper.get('[data-testid="shell-brand"]').text()).toContain('GITS Bank')
+    expect(wrapper.get('[data-testid="shell-brand"]').text()).toContain('对公客户经营工作台')
   })
 
-  it('uses vertical side menu rather than a horizontal header menu', async () => {
-    const wrapper = await mountSidebar()
-    expect(wrapper.find('[data-testid="shell-sidebar"]').exists()).toBe(true)
-    expect(wrapper.find('[data-testid="shell-side-menu"]').exists()).toBe(true)
-    expect(wrapper.find('.header-menu').exists()).toBe(false)
-  })
-
-  it('keeps P30 enabled items and adds P08/P10 while P04 enters via customer list', () => {
-    const accounts = SHELL_NAV_GROUPS.find(group => group.key === 'accounts')
-    expect(accounts).toBeTruthy()
-    const tos = accounts!.children.map(item => item.to)
+  it('keeps /commitments in 日常作业 and does not put stage pages in L1', () => {
+    const tos = SHELL_NAV_ITEMS.map(item => item.to)
+    expect(tos).toContain('/workbench')
+    expect(tos).toContain('/commitments')
     expect(tos).toContain('/accounts')
-    expect(tos).toContain('/accounts/portfolio')
     expect(tos).toContain('/engagement')
-    expect(tos).toContain('/external-events')
-    expect(tos).toContain('/signals')
-    expect(tos).toContain('/engagements')
-    expect(tos).toContain('/engagement/previsit/gaps')
-    expect(tos).toContain('/engagement/previsit/evidence')
-    expect(tos).toContain('/engagement/previsit/pack')
-    expect(tos).toContain('/engagement/postvisit')
-    expect(tos).toContain('/engagement/crm-writeback')
-    expect(accounts!.children.some(item => item.to === '/accounts')).toBe(true)
+    expect(tos).toContain('/needs')
+    expect(tos).toContain('/proposals')
+    expect(tos).not.toContain('/in-meeting')
+    expect(tos).not.toContain('/m/today')
+    expect(tos).not.toContain('/external-events')
+    expect(tos).not.toContain('/accounts/portfolio')
   })
 
-  it('adds degraded needs and enables 服务建议书 at /proposals while keeping /commitments in 日常作业', () => {
-    const delivery = SHELL_NAV_GROUPS.find(group => group.key === 'delivery')
-    expect(delivery).toBeTruthy()
-    expect(delivery!.children.some(item => item.to === '/needs' && item.label.includes('需求/机会'))).toBe(true)
-    const proposal = delivery!.children.find(item => item.label === '服务建议书')
-    expect(proposal?.disabled).toBeFalsy()
-    expect(proposal?.to).toBe('/proposals')
-    expect(proposal?.routeName).toBe('ProposalsHome')
-    const daily = SHELL_NAV_GROUPS.find(group => group.key === 'daily')
-    expect(daily!.children.some(item => item.to === '/commitments' && item.label === '任务与承诺')).toBe(true)
+  it('selects 客户组合 on portfolio and 客户全景 on customer record', () => {
+    expect(navDomainForPath('/accounts')).toBe('accounts')
+    expect(navDomainForPath('/accounts/portfolio')).toBe('accounts')
+    expect(navDomainForPath('/customers/CUST-1')).toBe('panorama')
+    expect(navDomainForPath('/engagement/previsit/gaps')).toBe('signals')
+    expect(navDomainForPath('/m/today')).toBe('workbench')
   })
 
-  it('enables 审批工作中心 and Claim / Evidence 中心 without changing /commitments', () => {
-    const delivery = SHELL_NAV_GROUPS.find(group => group.key === 'delivery')
-    const approval = delivery!.children.find(item => item.label === '审批工作中心')
-    expect(approval?.disabled).toBeFalsy()
-    expect(approval?.to).toBe('/approvals')
-    const governance = SHELL_NAV_GROUPS.find(group => group.key === 'governance')
-    const claims = governance!.children.find(item => item.label === 'Claim / Evidence 中心')
-    expect(claims?.disabled).toBeFalsy()
-    expect(claims?.to).toBe('/claims')
-    const daily = SHELL_NAV_GROUPS.find(group => group.key === 'daily')
-    expect(daily!.children.some(item => item.to === '/commitments')).toBe(true)
-    expect(governance!.children.some(item => item.to === '/knowledge-map')).toBe(true)
-    expect(governance!.children.some(item => item.to === '/audit-trace')).toBe(true)
+  it('navigates 客户组合 from the side nav', async () => {
+    const { wrapper, router } = await mountSidebar()
+    await wrapper.get('[data-testid="nav-item-portfolio"]').trigger('click')
+    await flushPromises()
+    expect(router.currentRoute.value.path).toBe('/accounts')
   })
 
-  it('adds 移动端（降级） P41-P44 without changing /commitments', () => {
-    const mobile = SHELL_NAV_GROUPS.find(group => group.key === 'mobile')
-    expect(mobile?.label).toBe('移动端（降级）')
-    const tos = mobile!.children.map(item => item.to)
-    expect(tos).toEqual(['/m/today', '/m/previsit', '/m/notes', '/m/checkout'])
-    const daily = SHELL_NAV_GROUPS.find(group => group.key === 'daily')
-    expect(daily!.children.some(item => item.to === '/workbench')).toBe(true)
-    expect(daily!.children.some(item => item.to === '/commitments')).toBe(true)
-    const accounts = SHELL_NAV_GROUPS.find(group => group.key === 'accounts')
-    expect(accounts!.children.some(item => item.to === '/engagement')).toBe(true)
-    const delivery = SHELL_NAV_GROUPS.find(group => group.key === 'delivery')
-    expect(delivery!.children.some(item => item.to === '/in-meeting')).toBe(true)
-    expect(delivery!.children.some(item => item.to === '/approvals')).toBe(true)
-    const governance = SHELL_NAV_GROUPS.find(group => group.key === 'governance')
-    expect(governance!.children.some(item => item.to === '/claims')).toBe(true)
+  it('opens the first customer from 客户全景 when no workspace tab exists', async () => {
+    const { fetchCustomers, fetchOperatingView } = await import('../../../api/engagement')
+    ;(fetchCustomers as ReturnType<typeof vi.fn>).mockResolvedValue([{ customerId: 'CUST-1', customerName: '测试企业A' }])
+    ;(fetchOperatingView as ReturnType<typeof vi.fn>).mockResolvedValue({
+      customer: { customerId: 'CUST-1', customerName: '测试企业A' },
+      entities: [{ entityId: 'ENT-1', name: '测试企业A', role: '集团本部/母公司' }],
+      groupRelationships: [],
+      creditFacilities: [],
+    })
+    const { wrapper, router } = await mountSidebar()
+    await wrapper.get('[data-testid="nav-item-panorama"]').trigger('click')
+    await flushPromises()
+    expect(router.currentRoute.value.path).toBe('/customers/CUST-1/group')
+  })
+
+  it('opens 客户经营旅程 from L1 信号与互动', async () => {
+    const { wrapper, router } = await mountSidebar()
+    await wrapper.get('[data-testid="nav-item-signals"]').trigger('click')
+    await flushPromises()
+    expect(router.currentRoute.value.path).toBe('/engagement')
   })
 })
-

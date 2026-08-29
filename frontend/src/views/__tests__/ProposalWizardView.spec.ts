@@ -15,6 +15,15 @@ vi.mock('../../composables/proposalDegrade', async () => {
   }
 })
 
+vi.mock('../../api/engagement', () => ({
+  fetchCustomers: vi.fn(),
+  formatApiError: (e: unknown, fallback: string) => (e instanceof Error ? e.message : fallback),
+}))
+
+vi.mock('../../api/v14', () => ({
+  generateServiceProposal: vi.fn(),
+}))
+
 const stubs = {
   NSpin: { template: '<div class="n-spin" />' },
   NResult: { template: '<div class="n-result"><slot name="footer" /></div>' },
@@ -42,7 +51,7 @@ async function mountP24() {
 }
 
 describe('P24 ProposalWizardView C2 degrade', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     sessionStorage.clear()
     vi.mocked(loadProposalWizardShell).mockReset()
     vi.mocked(loadProposalWizardShell).mockResolvedValue({
@@ -50,6 +59,12 @@ describe('P24 ProposalWizardView C2 degrade', () => {
       emptyDraft: true,
       degradeLabel: '非正式 / C2 降级',
     })
+    const { fetchCustomers } = await import('../../api/engagement')
+    const { generateServiceProposal } = await import('../../api/v14')
+    ;(fetchCustomers as ReturnType<typeof vi.fn>).mockResolvedValue([
+      { customerId: 'CUST-CORP-0001', customerName: '华东精工装备集团' },
+    ])
+    ;(generateServiceProposal as ReturnType<typeof vi.fn>).mockReset()
   })
 
   it('enters successfully as an empty informal wizard, not /proposals/:id', async () => {
@@ -72,5 +87,27 @@ describe('P24 ProposalWizardView C2 degrade', () => {
     expect(wrapper.text()).toContain('保存并继续')
     expect((wrapper.get('[data-testid="gated-action"]').element as HTMLButtonElement).disabled).toBe(true)
     expect(wrapper.get('[data-testid="disabled-reason"]').text()).toMatch(/原因|解除路径/)
+  })
+
+  it('requests DKWS SP-20 draft without saving a formal proposal', async () => {
+    const { generateServiceProposal } = await import('../../api/v14')
+    ;(generateServiceProposal as ReturnType<typeof vi.fn>).mockResolvedValue({
+      skillId: 'SP-20',
+      status: 'SUCCESS',
+      content: { proposalDraft: '第一章 客户概况' },
+      citations: [],
+      unknowns: [],
+      limitations: [],
+    })
+    const wrapper = await mountP24()
+    await wrapper.get('[data-testid="p24-generate"]').trigger('click')
+    await flushPromises()
+    expect(generateServiceProposal).toHaveBeenCalledWith(
+      expect.stringMatching(/^REQ-SP20-/),
+      'CUST-CORP-0001',
+      {},
+    )
+    expect(wrapper.get('[data-testid="p24-skill-draft"]').text()).toContain('第一章 客户概况')
+    expect(wrapper.text()).toContain('非正式草稿')
   })
 })

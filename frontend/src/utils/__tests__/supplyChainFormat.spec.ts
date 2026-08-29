@@ -3,7 +3,9 @@ import {
   formatAmountYuan,
   formatConfidence,
   formatShare,
+  graphInsightStrips,
   isPartialBuild,
+  LAYER_COLOR,
 } from '../supplyChainFormat'
 
 describe('supplyChainFormat', () => {
@@ -28,5 +30,19 @@ describe('supplyChainFormat', () => {
   it('detects partial buildStatus', () => {
     expect(isPartialBuild('partial')).toBe(true)
     expect(isPartialBuild('complete')).toBe(false)
+  })
+
+  it('uses V3.2 layer colors from the 05 group-relationship template', () => {
+    expect(LAYER_COLOR.enterprise).toBe('#1976d2')
+    expect(LAYER_COLOR.supplier).toBe('#12a7a0')
+    expect(LAYER_COLOR.customer).toBe('#48a7e8')
+  })
+
+  it('builds insight strips only from returned Skill fields', () => {
+    expect(graphInsightStrips(null)).toEqual([])
+    expect(graphInsightStrips({ overallAssessment: ' 位置稳  ', followUpQuestions: ['问账期'] })).toEqual([
+      { tone: 'blue', label: '关键判断', text: '位置稳' },
+      { tone: 'teal', label: '建议动作', text: '问账期' },
+    ])
   })
 })

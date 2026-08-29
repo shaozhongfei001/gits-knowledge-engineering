@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import ObjectHeader from '../components/shell/ObjectHeader.vue'
 import PageState from '../components/shell/PageState.vue'
 import DisabledAction from '../components/shell/DisabledAction.vue'
+import SignalsDomainTabs from '../components/shell/SignalsDomainTabs.vue'
 import {
   fetchCustomers,
   fetchCustomerContext,
@@ -90,6 +91,7 @@ onBeforeUnmount(persistReference)
       object-status="记录"
       :title="title"
     />
+    <SignalsDomainTabs />
     <div class="toolbar">
       <DisabledAction
         label="忽略"

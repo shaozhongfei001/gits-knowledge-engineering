@@ -3,7 +3,8 @@ import { mount, flushPromises } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import PrevisitPackView from '../PrevisitPackView.vue'
-import type { PrevisitExecutionResponse } from '../../api/engagement'
+import { usePrevisitStore } from '../../stores/previsit'
+import type { PreparedPrevisitResponse } from '../../api/engagement'
 
 vi.mock('../../api/engagement', async () => {
   const actual = await vi.importActual<typeof import('../../api/engagement')>('../../api/engagement')
@@ -13,7 +14,41 @@ vi.mock('../../api/engagement', async () => {
   }
 })
 
-const mockPack: PrevisitExecutionResponse = {
+vi.mock('../../components/KnowledgePrevisitReport.vue', () => ({
+  default: { template: '<div class="knowledge-previsit-stub" />' },
+}))
+
+const mockPack: PreparedPrevisitResponse = {
+  outreachScript: {
+    scriptId: 'out-1',
+    customerId: 'c1',
+    rmId: 'rm1',
+    operatingCaseId: 'oc1',
+    journeyId: 'j1',
+    channel: 'EMAIL',
+    objective: '确认扩产节奏',
+    openingLine: '开场',
+    talkingPoints: [],
+    riskReminders: [],
+    closingLine: '结束',
+    followUpAction: '预约会面',
+    createdAt: '2026-08-25T00:00:00Z',
+  },
+  meetingScript: {
+    scriptId: 'meet-1',
+    customerId: 'c1',
+    rmId: 'rm1',
+    operatingCaseId: 'oc1',
+    journeyId: 'j1',
+    meetingObjective: '扩产融资专题',
+    previsitSummary: '摘要',
+    agendaItems: [],
+    kycQuestions: [],
+    productDiscussions: [],
+    riskPoints: [],
+    closingSummary: '收口',
+    createdAt: '2026-08-25T00:00:00Z',
+  },
   previsitReport: {
     reportId: 'r1',
     customerId: 'c1',
@@ -45,6 +80,8 @@ const mockPack: PrevisitExecutionResponse = {
     dontForget: [],
     bottomLine: '不承诺定价',
   },
+  assemblyTrace: [],
+  skillSections: [],
 }
 
 const stubs = {
@@ -58,8 +95,14 @@ const stubs = {
   NTooltip: { template: '<div><slot name="trigger" /><slot /></div>' },
 }
 
-async function mountP14(query: Record<string, string> = { customerId: 'c1', journeyId: 'j1', operatingCaseId: 'oc1' }) {
+async function mountP14(
+  query: Record<string, string> = { customerId: 'c1', journeyId: 'j1', operatingCaseId: 'oc1' },
+  seed?: (store: ReturnType<typeof usePrevisitStore>) => void,
+) {
   setActivePinia(createPinia())
+  if (seed) {
+    seed(usePrevisitStore())
+  }
   const router = createRouter({
     history: createMemoryHistory(),
     routes: [{ path: '/engagement/previsit/pack', name: 'PrevisitPack', component: PrevisitPackView }],
@@ -73,42 +116,36 @@ async function mountP14(query: Record<string, string> = { customerId: 'c1', jour
 describe('P14 PrevisitPackView', () => {
   beforeEach(() => {
     sessionStorage.clear()
+    vi.clearAllMocks()
   })
 
-  it('enters successfully and requires human confirm before executePrevisit', async () => {
+  it('shows full pack read-only from store without calling executePrevisit', async () => {
     const { executePrevisit } = await import('../../api/engagement')
-    ;(executePrevisit as ReturnType<typeof vi.fn>).mockResolvedValue(mockPack)
-    const wrapper = await mountP14()
+    const wrapper = await mountP14(
+      { customerId: 'c1', journeyId: 'j1', operatingCaseId: 'oc1' },
+      (store) => {
+        store.setContext({ journeyId: 'j1', operatingCaseId: 'oc1', customerId: 'c1', rmId: 'rm1' })
+        store.previsitResult = mockPack
+        store.running = true
+      },
+    )
     expect(wrapper.get('[data-testid="p14-previsit-pack"]').text()).toContain('访前包')
     expect(wrapper.find('[data-testid="success-state"]').exists()).toBe(true)
-    expect((wrapper.get('[data-testid="p14-execute"]').element as HTMLButtonElement).disabled).toBe(true)
+    expect(wrapper.find('[data-testid="p14-pack-result"]').exists()).toBe(true)
+    expect(wrapper.text()).toContain('外联脚本')
     expect(executePrevisit as ReturnType<typeof vi.fn>).not.toHaveBeenCalled()
-    await wrapper.get('[data-testid="p14-confirm"]').setValue(true)
-    await wrapper.get('[data-testid="p14-execute"]').trigger('click')
-    await flushPromises()
-    expect(executePrevisit as ReturnType<typeof vi.fn>).toHaveBeenCalled()
-    expect(wrapper.text()).toContain('r1')
   })
 
-  it('shows empty success when journey context is missing', async () => {
-    const wrapper = await mountP14({})
-    expect(wrapper.find('[data-testid="success-state"]').exists()).toBe(true)
-    expect(wrapper.text()).toMatch(/暂无|缺对象/)
-  })
-
-  it('shows error four-state when executePrevisit fails', async () => {
-    const { executePrevisit } = await import('../../api/engagement')
-    ;(executePrevisit as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('pack failed'))
+  it('shows empty success when previsit not yet generated', async () => {
     const wrapper = await mountP14()
-    await wrapper.get('[data-testid="p14-confirm"]').setValue(true)
-    await wrapper.get('[data-testid="p14-execute"]').trigger('click')
-    await flushPromises()
-    expect(wrapper.find('[data-testid="error-state"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="success-state"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="p14-empty"]').exists()).toBe(true)
+    expect(wrapper.text()).toMatch(/尚未生成访前包/)
   })
 
-  it('disables execute when the journey object is missing', async () => {
+  it('disables complete when journey object is missing', async () => {
     const wrapper = await mountP14({})
-    expect((wrapper.get('[data-testid="gated-action"]').element as HTMLButtonElement).disabled).toBe(true)
+    expect((wrapper.get('[data-testid="p14-complete"]').element as HTMLButtonElement).disabled).toBe(true)
     expect(wrapper.get('[data-testid="disabled-reason"]').text()).toMatch(/原因|解除路径/)
   })
 })

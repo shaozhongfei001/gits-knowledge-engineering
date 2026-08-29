@@ -57,4 +57,31 @@ describe('KnowledgePrevisitReport R2', () => {
     expect(wrapper.text()).toContain('供应链票据贴现方案')
     expect(wrapper.text()).not.toContain('DKWS 未返回速战卡')
   })
+
+  it('renders V3.2 metric separators on the supply-chain block', () => {
+    const wrapper = mount(KnowledgePrevisitReport, {
+      props: {
+        report: { reportId: 'R1-1', visitObjective: '了解二期' },
+        skillSections: [],
+        supplyChainReport: {
+          requestId: 'SCG-1',
+          customerId: 'c1',
+          result: {
+            nodes: [
+              { id: 'e', name: '华东精工', layer: 'enterprise' },
+              { id: 's', name: '钢厂', layer: 'supplier' },
+              { id: 'c', name: '主机厂', layer: 'customer' },
+            ],
+            edges: [{ source: 's', target: 'e' }],
+            interpretation: { overallAssessment: '位置稳固', followUpQuestions: ['核对应收'] },
+          },
+        },
+      },
+      global: { stubs },
+    })
+    expect(wrapper.text()).toContain('图谱节点')
+    expect(wrapper.text()).toContain('上游')
+    expect(wrapper.find('.sc-metric-teal').exists()).toBe(true)
+    expect(wrapper.find('.sc-viz').exists()).toBe(true)
+  })
 })

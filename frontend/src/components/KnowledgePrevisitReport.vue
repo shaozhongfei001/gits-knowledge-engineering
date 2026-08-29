@@ -35,10 +35,35 @@
           <span v-if="graphPartial" class="sc-partial">部分降级，仅供参考</span>
           <a v-if="fullReportPath" class="sc-full" :href="fullReportPath" @click.prevent="openFull">完整报告页</a>
         </h3>
-        <div v-if="supplyChainLoading" class="ki-note">正在生成三段式力导向图谱…</div>
-        <div v-else-if="graphNodes.length" class="sc-viz">
-          <SupplyChainForceGraph :nodes="graphNodes" :edges="graphEdges" compact />
-        </div>
+        <div v-if="supplyChainLoading" class="ki-note">正在生成供应链图谱…</div>
+        <template v-else-if="graphNodes.length">
+          <div class="sc-metrics">
+            <article class="sc-metric sc-metric-blue">
+              <span>图谱节点</span>
+              <strong>{{ graphNodes.length }}</strong>
+            </article>
+            <article class="sc-metric sc-metric-teal">
+              <span>上游</span>
+              <strong>{{ graphUpstream }}</strong>
+            </article>
+            <article class="sc-metric sc-metric-blue">
+              <span>下游</span>
+              <strong>{{ graphDownstream }}</strong>
+            </article>
+            <article class="sc-metric sc-metric-amber">
+              <span>关系边</span>
+              <strong>{{ graphEdges.length }}</strong>
+            </article>
+          </div>
+          <div class="sc-viz">
+            <SupplyChainForceGraph
+              :nodes="graphNodes"
+              :edges="graphEdges"
+              :interpretation="supplyChainReport?.result.interpretation"
+              compact
+            />
+          </div>
+        </template>
         <div v-else-if="sectionOf('KI-FRONT-001')" class="ki-body">
           <p class="ki-skill">{{ sectionOf('KI-FRONT-001') }}</p>
         </div>
@@ -165,6 +190,8 @@ const props = defineProps<{
 const router = useRouter()
 const graphNodes = computed(() => props.supplyChainReport?.result.nodes || [])
 const graphEdges = computed(() => props.supplyChainReport?.result.edges || [])
+const graphUpstream = computed(() => graphNodes.value.filter(n => n.layer === 'supplier').length)
+const graphDownstream = computed(() => graphNodes.value.filter(n => n.layer === 'customer').length)
 const graphPartial = computed(() => isPartialBuild(props.supplyChainReport?.result.buildStatus))
 const fullReportPath = computed(() =>
   props.supplyChainReport?.requestId ? `/supply-chain-report/${props.supplyChainReport.requestId}` : '')
@@ -211,11 +238,7 @@ const consoleReady = ref(false)
 const activeKiId = ref('')
 const kiOutcome = ref<Record<string, string>>({})
 
-const consoleTitle = computed(() =>
-  (props.assemblyTrace && props.assemblyTrace.length > 0)
-    ? '🖥️ DSH Skill 装配轨迹（Debug）'
-    : '🖥️ 知识组装控制台（Debug）'
-)
+const consoleTitle = computed(() => '🖥️ DSH Skill 装配轨迹（Debug）')
 
 const PHASE_ICON: Record<string, string> = {
   resolve: '🧭',
@@ -278,9 +301,39 @@ onMounted(() => { playAssembly() })
 .task-mapping { margin: 4px 0 0; color: #888; font-size: 12px; }
 .ki-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .ki-supplychain { grid-column: 1 / -1; }
-.ki-title .sc-partial { margin-left: auto; font-size: 11px; color: #b45309; background: #fef3c7; padding: 1px 8px; border-radius: 10px; font-weight: 600; }
-.ki-title .sc-full { font-size: 12px; color: #4338ca; font-weight: 500; }
-.sc-viz { background: #0b1322; border-radius: 10px; padding: 8px 10px 12px; min-height: 360px; }
+.sc-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.sc-metric {
+  position: relative;
+  background: #fff;
+  border: 1px solid #d8e2ec;
+  border-radius: 6px;
+  padding: 10px 14px 10px 18px;
+}
+.sc-metric::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 6px 0 0 6px;
+}
+.sc-metric-blue::before { background: #1976d2; }
+.sc-metric-teal::before { background: #12a7a0; }
+.sc-metric-amber::before { background: #f2b84b; }
+.sc-metric span { display: block; font-size: 11px; color: #596779; }
+.sc-metric strong { display: block; margin-top: 4px; font-size: 20px; color: #0b2e4f; }
+.ki-title .sc-partial { margin-left: auto; font-size: 11px; color: #7a4b00; background: #fff5dc; padding: 1px 8px; border-radius: 10px; font-weight: 600; }
+.ki-title .sc-full { font-size: 12px; color: #1976d2; font-weight: 500; }
+.sc-viz { background: #fff; border: 1px solid #d8e2ec; border-radius: 6px; padding: 8px 10px 12px; min-height: 360px; }
+@media (max-width: 900px) {
+  .sc-metrics { grid-template-columns: 1fr 1fr; }
+}
 .ki-block { border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px 14px; background: #fafbfc; transition: box-shadow .15s, border-color .15s, background .15s; }
 .ki-block.ki-active { outline: 2px solid #4338ca; box-shadow: 0 0 0 3px #c7d2fe; }
 .ki-block.ki-hit { border-color: #86efac; background: #f0fdf4; }

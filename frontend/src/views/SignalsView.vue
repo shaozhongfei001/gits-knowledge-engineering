@@ -5,6 +5,7 @@ import { NInput } from 'naive-ui'
 import ObjectHeader from '../components/shell/ObjectHeader.vue'
 import PageState from '../components/shell/PageState.vue'
 import DisabledAction from '../components/shell/DisabledAction.vue'
+import SignalsDomainTabs from '../components/shell/SignalsDomainTabs.vue'
 import {
   fetchCustomers,
   fetchCustomerContext,
@@ -112,6 +113,7 @@ onBeforeUnmount(persistReference)
       object-status="列表"
       title="经营信号对象主页"
     />
+    <SignalsDomainTabs />
     <div class="toolbar">
       <DisabledAction
         label="批量指派"
@@ -126,8 +128,14 @@ onBeforeUnmount(persistReference)
         style="max-width: 240px"
         @update:value="persistReference"
       />
+      <router-link class="related-link" to="/engagements" data-testid="p08-open-engagements">
+        互动对象
+      </router-link>
+      <router-link class="related-link" to="/engagement" data-testid="p08-open-journey">
+        经营旅程
+      </router-link>
     </div>
-    <p class="hint">C1 候选列表：由 fetchCustomers + fetchCustomerContext.opportunitySignals 装配，不等于自动执行。</p>
+    <p class="hint">C1 候选列表：由 fetchCustomers + fetchCustomerContext.opportunitySignals 装配，不等于自动执行。互动对象打开 P10 列表；经营旅程打开 P11 访前路径工作台（在那里启动旅程）。</p>
     <PageState :status="status" :error="error" idle-description="尚未请求经营信号" @retry="loadSignals">
       <ul v-if="visible.length" class="signal-list" data-testid="p08-signal-list">
         <li v-for="item in visible" :key="item.signalId" class="signal-item">
@@ -152,9 +160,14 @@ onBeforeUnmount(persistReference)
   margin-bottom: 16px;
 }
 .hint,
-.empty {
+.empty,
+.related-link {
   color: var(--text-tertiary);
   font-size: 13px;
+}
+.related-link {
+  color: var(--brand-primary);
+  align-self: center;
 }
 .signal-list {
   list-style: none;
