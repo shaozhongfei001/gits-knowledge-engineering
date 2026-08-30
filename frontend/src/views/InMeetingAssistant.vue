@@ -167,7 +167,7 @@ onUnmounted(() => {
           进入实时捕获
         </n-button>
         <n-button size="small" type="primary" :disabled="!journeyId" data-testid="p15-go-checkout" @click="goCheckout">
-          进入离场确认 →
+          结束会谈 →
         </n-button>
         <n-tooltip>
           <template #trigger>
