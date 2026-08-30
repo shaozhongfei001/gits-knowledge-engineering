@@ -3,7 +3,7 @@ import { ref, computed, onMounted, onUnmounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   NLayout, NLayoutContent, NLayoutSider, NCard, NTabs, NTabPane,
-  NSpace, NTag, NButton, NInput, NBadge, NDivider, NSpin, NEmpty,
+  NSpace, NTag, NButton, NInput, NBadge, NDivider, NSpin, NEmpty, NTooltip,
 } from 'naive-ui'
 import {
   type HumanGate, type CrmWritebackCommand, type GateDecision,
@@ -12,11 +12,11 @@ import {
 import { useHumanGate, useCrmWriteback } from '../composables/useHumanGate'
 import { deriveResourceStatus } from '../composables/useResourceStatus'
 import { useEngagementContext } from '../composables/useEngagementContext'
-import GuidancePanel from '../components/shell/GuidancePanel.vue'
+import StagePath from '../components/shell/StagePath.vue'
+import type { StagePathStage } from '../components/shell/StagePath.vue'
 import { usePageReferenceStore } from '../stores/pageReference'
 import ObjectHeader from '../components/shell/ObjectHeader.vue'
 import PageState from '../components/shell/PageState.vue'
-import DisabledAction from '../components/shell/DisabledAction.vue'
 import HumanGateDialog from '../components/HumanGateDialog.vue'
 import CrmWritebackApproval from '../components/CrmWritebackApproval.vue'
 
@@ -26,6 +26,16 @@ const OBJECT_TYPE = '互动 Interaction'
 const router = useRouter()
 const pageRefs = usePageReferenceStore()
 const { journeyId } = useEngagementContext()
+
+// 访前向导步骤（3.2 向导步骤条风格；会中为第 4 步）
+const stages: StagePathStage[] = [
+  { key: 'gaps', label: '访前目标' },
+  { key: 'evidence', label: '证据装配' },
+  { key: 'pack', label: '访前包预览' },
+  { key: 'meeting', label: '会中工作区' },
+]
+const completedKeys = computed<string[]>(() => ['gaps', 'evidence', 'pack'])
+const currentKey = 'meeting'
 
 const { gates: pendingGates, loading: gatesLoading, error: gatesError, loadGates, decide: decideGate } = useHumanGate()
 const { commands: crmCommands, loading: crmLoading, error: crmError, loadCommands, decideCommand } = useCrmWriteback()
@@ -151,25 +161,28 @@ onUnmounted(() => {
       :object-type="OBJECT_TYPE"
       :object-status="objectStatus"
       title="互动记录·会中工作区"
-    />
-    <div class="p15-body">
-      <main class="p15-main">
-        <div class="toolbar">
-          <n-button size="small" :disabled="!journeyId" data-testid="p15-go-capture" @click="goCapture">
-            进入实时捕获
-          </n-button>
-          <n-button size="small" :disabled="!journeyId" data-testid="p15-go-checkout" @click="goCheckout">
-            进入离场确认
-          </n-button>
-          <DisabledAction
-            label="记为正式 Claim"
-            :disabled="true"
-            reason="会中记录仅为草稿，禁止直接写成正式 Claim/Evidence"
-            unlockPath="须经既有 HumanGate 后才能形成正式证据"
-          />
-        </div>
+    >
+      <template #actions>
+        <n-button size="small" :disabled="!journeyId" data-testid="p15-go-capture" @click="goCapture">
+          进入实时捕获
+        </n-button>
+        <n-button size="small" type="primary" :disabled="!journeyId" data-testid="p15-go-checkout" @click="goCheckout">
+          进入离场确认 →
+        </n-button>
+        <n-tooltip>
+          <template #trigger>
+            <span>
+              <n-button size="small" disabled>记为正式 Claim</n-button>
+            </span>
+          </template>
+          会中记录仅为草稿，须经 HumanGate 审批后才能形成正式 Claim/Evidence
+        </n-tooltip>
+      </template>
+    </ObjectHeader>
 
-        <PageState :status="status" :error="gatesError || crmError || ''" idle-description="尚未加载会中工作区" @retry="loadWorkspace">
+    <StagePath :stages="stages" :current-key="currentKey" :completed-keys="completedKeys" />
+
+    <PageState :status="status" :error="gatesError || crmError || ''" idle-description="尚未加载会中工作区" @retry="loadWorkspace">
       <NLayout has-sider>
         <NLayoutSider bordered width="320" content-style="padding: 16px;">
           <h3>
@@ -251,17 +264,6 @@ onUnmounted(() => {
         </NLayoutContent>
       </NLayout>
     </PageState>
-      </main>
-
-      <GuidancePanel
-        next-step="审批待决门禁 → 确认 CRM 写回 → 进入离场确认"
-        business-rule="会中记录仅为候选草稿；正式 Claim/Evidence 须经 HumanGate 审批。"
-        exception="门禁加载失败时保持上下文，展示原因与重试按钮。"
-        contract-usage="REUSE_EXISTING：消费既有 HumanGate / CRMWriteback 契约；无支持能力时禁用或降级。"
-      >
-        <p class="gp-note">草稿不等于事实；AI 输出必须经人工确认才能写入权威。</p>
-      </GuidancePanel>
-    </div>
 
     <HumanGateDialog
       v-model:show="showGateDialog"
@@ -279,22 +281,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.p15-body {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-}
-.p15-main {
-  flex: 1;
-  min-width: 0;
-}
-.toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: flex-start;
-  margin-bottom: 16px;
-}
 h3 {
   margin: 0 0 12px;
 }

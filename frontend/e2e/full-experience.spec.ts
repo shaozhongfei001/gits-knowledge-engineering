@@ -34,8 +34,7 @@ test.describe('GITS Experience Shell — implemented-page smoke', () => {
     await expect(page.getByTestId('p11-engagement-workspace')).toBeVisible();
     // p11-object-context 已移除；改用 stage-path 断言
     await expect(page.getByTestId('stage-path')).toBeVisible();
-    await expect(page.getByTestId('gated-action')).toBeDisabled();
-    await expect(page.getByTestId('disabled-reason')).toContainText(/Claim|解除路径|原因/);
+    await expect(page.getByRole('button', { name: '记为正式 Claim' })).toBeDisabled();
   });
 
   test('5. commitments center keeps pageId P36 and Need-derived write disabled', async ({ page }) => {

@@ -146,6 +146,15 @@ describe('P14 PrevisitPackView', () => {
   it('disables complete when journey object is missing', async () => {
     const wrapper = await mountP14({})
     expect((wrapper.get('[data-testid="p14-complete"]').element as HTMLButtonElement).disabled).toBe(true)
-    expect(wrapper.get('[data-testid="disabled-reason"]').text()).toMatch(/原因|解除路径/)
+    expect((wrapper.get('[data-testid="p14-send-mobile"]').element as HTMLButtonElement).disabled).toBe(true)
+  })
+
+  it('renders 3.2 wizard step path', async () => {
+    const wrapper = await mountP14()
+    expect(wrapper.find('[data-testid="stage-path"]').exists()).toBe(true)
+    expect(wrapper.text()).toContain('访前目标')
+    expect(wrapper.text()).toContain('证据装配')
+    expect(wrapper.text()).toContain('访前包预览')
+    expect(wrapper.text()).toContain('会中工作区')
   })
 })

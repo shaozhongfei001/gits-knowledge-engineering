@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { NButton, NTooltip } from 'naive-ui'
 import ObjectHeader from '../components/shell/ObjectHeader.vue'
 import PageState from '../components/shell/PageState.vue'
-import DisabledAction from '../components/shell/DisabledAction.vue'
-import GuidancePanel from '../components/shell/GuidancePanel.vue'
+import StagePath from '../components/shell/StagePath.vue'
+import type { StagePathStage } from '../components/shell/StagePath.vue'
 import { deriveResourceStatus } from '../composables/useResourceStatus'
 import { useEngagementContext } from '../composables/useEngagementContext'
 import { usePageReferenceStore } from '../stores/pageReference'
@@ -17,6 +18,16 @@ const router = useRouter()
 const pageRefs = usePageReferenceStore()
 const previsitStore = usePrevisitStore()
 const { customerId, journeyId, operatingCaseId, rmId } = useEngagementContext()
+
+// 访前向导步骤（3.2 向导步骤条风格）
+const stages: StagePathStage[] = [
+  { key: 'gaps', label: '访前目标' },
+  { key: 'evidence', label: '证据装配' },
+  { key: 'pack', label: '访前包预览' },
+  { key: 'meeting', label: '会中工作区' },
+]
+const completedKeys = computed<string[]>(() => [])
+const currentKey = 'gaps'
 
 const loading = ref(true)
 const error = ref('')
@@ -97,95 +108,51 @@ onBeforeUnmount(persistReference)
       :object-type="OBJECT_TYPE"
       :object-status="objectStatus"
       title="访前目标与信息缺口"
-    />
-
-    <div class="p12-layout">
-      <main class="p12-main">
-        <div class="toolbar">
-          <button
-            type="button"
-            class="link-btn link-btn--primary"
-            data-testid="p12-go-evidence"
-            :disabled="!customerId"
-            @click="goEvidence"
-          >
-            进入证据装配
-          </button>
-          <DisabledAction
-            label="自动填补缺口"
-            :disabled="true"
-            reason="缺口填补为写操作且无本 Loop 合同"
-            unlockPath="待合同批准后由后续 Loop 启用"
-          />
-        </div>
-        <PageState :status="status" :error="error || previsitStore.kycError" idle-description="尚未请求缺口画像" @retry="loadProfile">
-          <p v-if="!customerId" class="empty">缺客户对象，暂无访前缺口</p>
-          <template v-else-if="previsitStore.kycGapProfile">
-            <p class="hint">数据来源：GET /api/v1/engagement/kyc/{customerId}/gap-profile（纯查询，不触发 KERT）。</p>
-            <ul v-if="gapItems.length" class="item-list" data-testid="p12-gap-list">
-              <li v-for="(row, idx) in gapItems" :key="idx" class="item">
-                <span class="kind">{{ row.kind }}</span>
-                <span>{{ row.item }}</span>
-              </li>
-            </ul>
-            <p v-else class="empty">暂无信息缺口</p>
+    >
+      <template #actions>
+        <n-tooltip>
+          <template #trigger>
+            <span>
+              <n-button size="small" disabled>自动填补缺口</n-button>
+            </span>
           </template>
-        </PageState>
-      </main>
+          缺口填补为写操作且无本 Loop 合同
+        </n-tooltip>
+        <n-button
+          size="small"
+          type="primary"
+          data-testid="p12-go-evidence"
+          :disabled="!customerId"
+          @click="goEvidence"
+        >
+          进入证据装配 →
+        </n-button>
+      </template>
+    </ObjectHeader>
 
-      <GuidancePanel
-        next-step="点击信息缺口直接创建问题；完成阻断项后才能生成访前包"
-        business-rule="工作假设必须显式标识，信息缺口可转为会谈问题。"
-        exception="依赖失败或权限不足时保持上下文，展示原因、重试与返回路径。"
-        contract-usage="REUSE_EXISTING：仅消费既有查询、状态与对象契约；无支持能力时禁用或降级。"
-      >
-        <p class="gp-note">缺口信息是触发一键访前的决策依据；本页不触发 KERT。</p>
-      </GuidancePanel>
-    </div>
+    <StagePath :stages="stages" :current-key="currentKey" :completed-keys="completedKeys" />
+
+    <PageState :status="status" :error="error || previsitStore.kycError" idle-description="尚未请求缺口画像" @retry="loadProfile">
+      <p v-if="!customerId" class="empty">缺客户对象，暂无访前缺口</p>
+      <template v-else-if="previsitStore.kycGapProfile">
+        <p class="hint">数据来源：GET /api/v1/engagement/kyc/{customerId}/gap-profile（纯查询，不触发 KERT）。</p>
+        <ul v-if="gapItems.length" class="item-list" data-testid="p12-gap-list">
+          <li v-for="(row, idx) in gapItems" :key="idx" class="item">
+            <span class="kind">{{ row.kind }}</span>
+            <span>{{ row.item }}</span>
+          </li>
+        </ul>
+        <p v-else class="empty">暂无信息缺口</p>
+      </template>
+    </PageState>
   </div>
 </template>
 
 <style scoped>
-.p12-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 16px;
-  align-items: start;
-}
-.toolbar {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  margin-bottom: 16px;
-}
-.link-btn {
-  height: 32px;
-  padding: 0 14px;
-  border: 1px solid var(--border-normal);
-  border-radius: 6px;
-  background: var(--bg-surface);
-  cursor: pointer;
-}
-.link-btn--primary {
-  background: var(--brand-primary);
-  border-color: var(--brand-primary);
-  color: #fff;
-  font-weight: 600;
-}
-.link-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
 .hint,
 .empty {
   color: var(--text-tertiary);
   font-size: 13px;
-}
-.gp-note {
-  margin: 0;
-  font-size: 12px;
-  color: var(--text-tertiary);
-  line-height: 1.5;
 }
 .item-list {
   list-style: none;
@@ -206,10 +173,5 @@ onBeforeUnmount(persistReference)
 }
 .kind {
   color: var(--text-tertiary);
-}
-@media (max-width: 900px) {
-  .p12-layout {
-    grid-template-columns: 1fr;
-  }
 }
 </style>

@@ -91,7 +91,6 @@ describe('P17 MeetingCheckoutView', () => {
     const { fetchHumanGates } = await import('../../api/v11')
     ;(fetchHumanGates as ReturnType<typeof vi.fn>).mockResolvedValue([])
     const wrapper = await mountP17()
-    expect((wrapper.get('[data-testid="gated-action"]').element as HTMLButtonElement).disabled).toBe(true)
-    expect(wrapper.get('[data-testid="disabled-reason"]').text()).toMatch(/E01_EXIT_CONFIRM/)
+    expect((wrapper.get('[data-testid="p17-end-meeting"]').element as HTMLButtonElement).disabled).toBe(true)
   })
 })

@@ -93,7 +93,10 @@ describe('P12 PrevisitGapsView', () => {
     const { fetchKycGapProfile } = await import('../../api/engagement')
     ;(fetchKycGapProfile as ReturnType<typeof vi.fn>).mockResolvedValue(mockProfile)
     const { wrapper, router } = await mountP12()
-    expect((wrapper.get('[data-testid="gated-action"]').element as HTMLButtonElement).disabled).toBe(true)
+    // "自动填补缺口" 是禁用的分支动作
+    const autoFill = wrapper.findAll('button').find((b) => b.text().includes('自动填补缺口'))
+    expect(autoFill).toBeTruthy()
+    expect((autoFill!.element as HTMLButtonElement).disabled).toBe(true)
     await wrapper.get('[data-testid="p12-go-evidence"]').trigger('click')
     await flushPromises()
     expect(router.currentRoute.value.path).toBe('/engagement/previsit/evidence')

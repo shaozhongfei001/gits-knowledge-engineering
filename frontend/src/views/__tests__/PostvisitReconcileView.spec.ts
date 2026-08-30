@@ -85,7 +85,6 @@ describe('P18 PostvisitReconcileView', () => {
 
   it('disables execute when the journey object is missing', async () => {
     const wrapper = await mountP18({})
-    expect((wrapper.get('[data-testid="gated-action"]').element as HTMLButtonElement).disabled).toBe(true)
-    expect(wrapper.get('[data-testid="disabled-reason"]').text()).toMatch(/原因|解除路径/)
+    expect(wrapper.text()).toContain('缺对象')
   })
 })

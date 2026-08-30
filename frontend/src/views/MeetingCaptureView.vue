@@ -1,20 +1,33 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { NButton, NTooltip } from 'naive-ui'
 import ObjectHeader from '../components/shell/ObjectHeader.vue'
 import PageState from '../components/shell/PageState.vue'
-import DisabledAction from '../components/shell/DisabledAction.vue'
+import StagePath from '../components/shell/StagePath.vue'
+import type { StagePathStage } from '../components/shell/StagePath.vue'
 import { fetchJourney, type CustomerJourney } from '../api/engagement'
 import { fetchLatestRecordingConsent } from '../api/v11'
 import { deriveResourceStatus } from '../composables/useResourceStatus'
 import { useEngagementContext } from '../composables/useEngagementContext'
 import { usePageReferenceStore } from '../stores/pageReference'
-import GuidancePanel from '../components/shell/GuidancePanel.vue'
 
 const PAGE_ID = 'P16'
 const OBJECT_TYPE = '互动 Interaction'
 
+const router = useRouter()
 const pageRefs = usePageReferenceStore()
 const { journeyId } = useEngagementContext()
+
+// 访前向导步骤（3.2 向导步骤条风格；会中为第 4 步）
+const stages: StagePathStage[] = [
+  { key: 'gaps', label: '访前目标' },
+  { key: 'evidence', label: '证据装配' },
+  { key: 'pack', label: '访前包预览' },
+  { key: 'meeting', label: '会中工作区' },
+]
+const completedKeys = computed<string[]>(() => ['gaps', 'evidence', 'pack'])
+const currentKey = 'meeting'
 
 const journey = ref<CustomerJourney | null>(null)
 const notes = ref('')
@@ -42,6 +55,13 @@ function persistReference() {
     draftId: notes.value || undefined,
     scrollAnchor: typeof window !== 'undefined' ? window.scrollY : 0,
   })
+}
+
+function goBackToMeeting() {
+  persistReference()
+  if (journeyId.value) {
+    router.push({ name: 'InMeetingAssistant', params: { id: journeyId.value } })
+  }
 }
 
 async function tryTranscribe() {
@@ -97,69 +117,52 @@ onBeforeUnmount(persistReference)
       :object-type="OBJECT_TYPE"
       :object-status="objectStatus"
       title="会中实时捕获"
-    />
-    <div class="p16-body">
-      <main class="p16-main">
-        <div class="toolbar">
-          <span class="candidate" data-testid="p16-candidate-label">候选 · 非正式 Claim / Evidence</span>
-          <DisabledAction
-            label="提交正式 Claim"
-            :disabled="true"
-            reason="会中草稿不是正式 Claim，禁止直接 recordClaim"
-            unlockPath="须经既有 HumanGate 完成后才能形成正式证据"
-          />
-        </div>
-        <PageState :status="status" :error="error" idle-description="尚未打开捕获" @retry="loadCapture">
-          <p v-if="transcriptionFailed" class="banner" data-testid="p16-manual-fallback">
-            转写失败，已切手工速记。草稿仅保存在本地。
-          </p>
-          <label class="hint">手工速记（候选）</label>
-          <textarea
-            v-model="notes"
-            class="draft"
-            data-testid="p16-draft"
-            rows="8"
-            placeholder="记录会中要点，此内容为候选草稿"
-            @change="persistReference"
-          />
-          <p v-if="!notes" class="empty">暂无捕获草稿</p>
-        </PageState>
-      </main>
+    >
+      <template #actions>
+        <n-button size="small" :disabled="!journeyId" @click="goBackToMeeting">
+          ← 返回会中工作区
+        </n-button>
+        <n-tooltip>
+          <template #trigger>
+            <span>
+              <n-button size="small" disabled>提交正式 Claim</n-button>
+            </span>
+          </template>
+          会中草稿不是正式 Claim，须经 HumanGate 审批后才能形成正式证据
+        </n-tooltip>
+      </template>
+    </ObjectHeader>
 
-      <GuidancePanel
-        next-step="完成会中捕获 → 返回会中工作区 → 审批门禁"
-        business-rule="会中草稿仅为候选，禁止直接 recordClaim；须经 HumanGate 审批。"
-        exception="转写失败时自动降级为手工速记；草稿仅存本地，刷新丢失。"
-        contract-usage="REUSE_EXISTING：消费既有 Journey / RecordingConsent 契约。"
-      >
-        <p class="gp-note">草稿 ≠ 事实；AI 输出须经人工确认。</p>
-      </GuidancePanel>
-    </div>
+    <StagePath :stages="stages" :current-key="currentKey" :completed-keys="completedKeys" />
+
+    <PageState :status="status" :error="error" idle-description="尚未打开捕获" @retry="loadCapture">
+      <p v-if="transcriptionFailed" class="banner" data-testid="p16-manual-fallback">
+        转写失败，已切手工速记。草稿仅保存在本地。
+      </p>
+      <p class="candidate" data-testid="p16-candidate-label">候选 · 非正式 Claim / Evidence</p>
+      <label class="hint">手工速记（候选）</label>
+      <textarea
+        v-model="notes"
+        class="draft"
+        data-testid="p16-draft"
+        rows="8"
+        placeholder="记录会中要点，此内容为候选草稿"
+        @change="persistReference"
+      />
+      <p v-if="!notes" class="empty">暂无捕获草稿</p>
+    </PageState>
   </div>
 </template>
 
 <style scoped>
-.p16-body {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-}
-.p16-main {
-  flex: 1;
-  min-width: 0;
-}
-.toolbar {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  margin-bottom: 16px;
-}
 .candidate {
   font-size: 12px;
   color: var(--color-warning);
   padding: 6px 8px;
   border: 1px dashed var(--border-normal);
   border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 8px;
 }
 .banner {
   color: var(--color-warning);

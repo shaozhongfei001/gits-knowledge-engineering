@@ -88,7 +88,7 @@ test.describe('信号与互动 live domain', () => {
     await page.goto('/engagement', { waitUntil: 'networkidle' });
     await page.getByTestId('p11-open-previsit').click();
     await expect(page.getByTestId('p12-previsit-gaps')).toBeVisible();
-    await expect(page.getByTestId('gated-action')).toBeDisabled();
+    await expect(page.getByRole('button', { name: '自动填补缺口' })).toBeDisabled();
 
     await page.getByTestId('p12-go-evidence').click();
     await expect(page.getByTestId('p13-previsit-evidence')).toBeVisible();

@@ -5,7 +5,24 @@
       :object-type="OBJECT_TYPE"
       :object-status="objectStatus"
       title="互动记录·访前路径"
-    />
+    >
+      <template #actions>
+        <n-button size="small" :disabled="!previsitStore.previsitDone" data-testid="p11-mark-ready" @click="goInMeeting">
+          标记准备完成
+        </n-button>
+        <n-tooltip>
+          <template #trigger>
+            <span>
+              <n-button size="small" disabled>记为正式 Claim</n-button>
+            </span>
+          </template>
+          访前草稿为候选内容，需经人工门禁确认后才能转为正式 Claim
+        </n-tooltip>
+        <n-button size="small" type="primary" data-testid="p11-open-previsit" :disabled="!sc" @click="goPrevisit">
+          打开访前工作区 →
+        </n-button>
+      </template>
+    </ObjectHeader>
     <SignalsDomainTabs />
 
     <PageState :status="status" :error="error" idle-description="尚未加载客户列表" @retry="loadCustomers">
@@ -44,9 +61,8 @@
       <!-- 阶段 Path -->
       <StagePath :stages="stages" :current-key="currentStage" :completed-keys="completedStages" />
 
-      <!-- 主区域：左右分栏 -->
-      <div class="ew-main">
-        <main class="ew-body">
+      <!-- 主区域 -->
+      <main class="ew-body">
           <!-- 四项关键指标 -->
           <HighlightsMetrics :items="metrics" />
 
@@ -86,40 +102,7 @@
               </div>
             </div>
           </section>
-        </main>
-
-        <!-- 右侧门禁面板 -->
-        <GuidancePanel
-          next-step="完成必填项后进入会中；未满足门禁时按钮解释阻断原因"
-          business-rule="Path 主动作由当前阶段和门禁决定；阻断原因必须可解释。"
-          exception="依赖失败或权限不足时保持上下文，展示原因、重试与返回路径。"
-          contract-usage="REUSE_EXISTING：仅消费既有查询、状态与对象契约；无支持能力时禁用或降级。"
-        >
-          <n-button
-            type="primary"
-            block
-            data-testid="p11-open-previsit"
-            :disabled="!sc"
-            @click="goPrevisit"
-          >
-            打开访前工作区
-          </n-button>
-          <n-button
-            block
-            data-testid="p11-mark-ready"
-            :disabled="!previsitStore.previsitDone"
-            @click="goInMeeting"
-          >
-            标记准备完成
-          </n-button>
-          <DisabledAction
-            label="将访前草稿记为正式 Claim"
-            :disabled="true"
-            reason="访前草稿为候选内容，需经人工门禁确认后才能转为正式 Claim"
-            unlockPath="完成访前→会中→门禁确认后写入正式 Claim"
-          />
-        </GuidancePanel>
-      </div>
+      </main>
     </PageState>
 
     <!-- 客户选择 -->
@@ -145,7 +128,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { NButton, NModal, NInput, NEmpty, NTag, useMessage } from 'naive-ui'
+import { NButton, NModal, NInput, NEmpty, NTag, NTooltip, useMessage } from 'naive-ui'
 import RiskBadge from '../components/RiskBadge.vue'
 import ObjectHeader from '../components/shell/ObjectHeader.vue'
 import PageState from '../components/shell/PageState.vue'
@@ -154,8 +137,6 @@ import StagePath from '../components/shell/StagePath.vue'
 import type { StagePathStage } from '../components/shell/StagePath.vue'
 import HighlightsMetrics from '../components/shell/HighlightsMetrics.vue'
 import type { MetricItem } from '../components/shell/HighlightsMetrics.vue'
-import GuidancePanel from '../components/shell/GuidancePanel.vue'
-import DisabledAction from '../components/shell/DisabledAction.vue'
 import { fetchCustomers, startJourney, completeJourney, formatApiError, type Customer } from '../api/engagement'
 import { usePrevisitStore } from '../stores/previsit'
 import { deriveResourceStatus } from '../composables/useResourceStatus'

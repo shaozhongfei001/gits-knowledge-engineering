@@ -95,19 +95,16 @@ const mockPack: PreparedPrevisitResponse = {
 }
 
 const stubs = {
-  ObjectHeader: { template: '<div class="object-header-stub"><slot /></div>' },
+  ObjectHeader: { template: '<div class="object-header-stub"><slot /><slot name="actions" /></div>' },
   PageState: {
     props: ['status', 'error', 'idleDescription'],
     template: '<div class="page-state-stub" :data-status="status"><slot /><slot name="default" /></div>',
   },
-  DisabledAction: {
-    props: ['label', 'disabled', 'reason', 'unlockPath'],
-    template: '<div class="disabled-action-stub" />',
+  NButton: {
+    props: ['disabled'],
+    template: '<button class="n-button" :disabled="disabled"><slot /></button>',
   },
-  GuidancePanel: {
-    props: ['nextStep', 'businessRule', 'exception', 'contractUsage'],
-    template: '<div class="guidance-panel-stub"><slot /></div>',
-  },
+  NTooltip: { template: '<div><slot name="trigger" /><slot /></div>' },
 }
 
 async function mountP13(

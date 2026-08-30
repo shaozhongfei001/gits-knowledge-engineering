@@ -9,7 +9,7 @@ test.describe('客户经理路径 — 已实现页 smoke（mock API）', () => {
     // p11-subnav 已移除；改用 signals-domain-tabs
     await expect(page.getByTestId('signals-domain-tabs')).toBeVisible();
     await expect(page.locator('body')).not.toHaveText(/^$/);
-    await expect(page.getByTestId('gated-action')).toBeDisabled();
+    await expect(page.getByRole('button', { name: '记为正式 Claim' })).toBeDisabled();
   });
 
   test('访前切片导航 stays on implemented routes', async ({ page }) => {

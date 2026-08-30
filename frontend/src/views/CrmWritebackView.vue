@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { NTag } from 'naive-ui'
+import { NTag, NButton, NTooltip } from 'naive-ui'
 import ObjectHeader from '../components/shell/ObjectHeader.vue'
 import PageState from '../components/shell/PageState.vue'
-import DisabledAction from '../components/shell/DisabledAction.vue'
-import GuidancePanel from '../components/shell/GuidancePanel.vue'
+import StagePath from '../components/shell/StagePath.vue'
+import type { StagePathStage } from '../components/shell/StagePath.vue'
 import HighlightsMetrics from '../components/shell/HighlightsMetrics.vue'
 import type { MetricItem } from '../components/shell/HighlightsMetrics.vue'
 import CrmWritebackApproval from '../components/CrmWritebackApproval.vue'
@@ -24,6 +24,14 @@ const OBJECT_TYPE = '互动 Interaction'
 
 const pageRefs = usePageReferenceStore()
 const { customerId, journeyId } = useEngagementContext()
+
+// 访后向导步骤（3.2 向导步骤条风格）
+const stages: StagePathStage[] = [
+  { key: 'reconcile', label: '访后事实对账' },
+  { key: 'crm', label: 'CRM 受控回写' },
+]
+const completedKeys = computed<string[]>(() => ['reconcile'])
+const currentKey = 'crm'
 
 const commands = ref<CrmWritebackCommand[]>([])
 const selected = ref<CrmWritebackCommand | null>(null)
@@ -128,56 +136,48 @@ onBeforeUnmount(persistReference)
       :object-type="OBJECT_TYPE"
       :object-status="objectStatus"
       title="CRM 受控回写"
-    />
+    >
+      <template #actions>
+        <n-tooltip>
+          <template #trigger>
+            <span>
+              <n-button size="small" disabled>直接写回</n-button>
+            </span>
+          </template>
+          禁止跳过预览与人工确认的 CRM 写回
+        </n-tooltip>
+      </template>
+    </ObjectHeader>
+
+    <StagePath :stages="stages" :current-key="currentKey" :completed-keys="completedKeys" />
 
     <HighlightsMetrics :items="metrics" />
 
-    <div class="p19-layout">
-      <main class="p19-main">
-        <div class="toolbar">
-          <DisabledAction
-            label="直接写回"
-            :disabled="true"
-            reason="禁止跳过预览与人工确认的 CRM 写回"
-            unlockPath="先预览既有 writeback-commands payload，再经 decideCrmWritebackCommand 确认"
-          />
-        </div>
-        <PageState :status="status" :error="error" idle-description="尚未加载写回命令" @retry="loadCommands">
-          <p class="hint">复用 GET/decide /api/v1/crm/writeback-commands。只展示合同 payload 字段，必须预览后人工确认。</p>
-          <ul v-if="commands.length" class="item-list" data-testid="p19-command-list">
-            <li v-for="command in commands" :key="command.commandId" class="item">
-              <div class="item-head">
-                <strong>{{ command.commandId }}</strong>
-                <span>{{ command.operation }} · {{ command.targetEntity }}</span>
-                <n-tag size="small" :type="command.status === 'PENDING' ? 'warning' : command.status === 'SENT' ? 'success' : 'default'">
-                  {{ CRM_WRITEBACK_STATUS_LABELS[command.status] || command.status }}
-                </n-tag>
-              </div>
-              <dl class="payload" data-testid="p19-diff-preview">
-                <div v-for="entry in payloadEntries(command)" :key="entry.field">
-                  <dt>{{ entry.field }}</dt>
-                  <dd class="payload-old">—</dd>
-                  <dd class="payload-new">{{ entry.value }}</dd>
-                </div>
-              </dl>
-              <button type="button" class="link-btn" data-testid="p19-preview-action" @click="preview(command)">
-                预览并确认
-              </button>
-            </li>
-          </ul>
-          <p v-else class="empty">暂无 CRM 写回命令</p>
-        </PageState>
-      </main>
-
-      <GuidancePanel
-        next-step="确认后调用受控Action；回执、失败补偿和撤销入口必须可见"
-        business-rule="CRM写回必须先差异预览，再确认、执行并展示幂等回执。"
-        exception="Action失败时展示回执、失败字段与可重试/撤销能力。"
-        contract-usage="CONTROLLED_ACTION：只调用既有Action/审批/交付能力，先预览与确认，保留回执。"
-      >
-        <p class="gp-note">拟写字段为合同 payload；原值列在当前合同未提供，完整「原值→新值」差异需后端补字段（本轮零后端变更）。</p>
-      </GuidancePanel>
-    </div>
+    <PageState :status="status" :error="error" idle-description="尚未加载写回命令" @retry="loadCommands">
+      <p class="hint">复用 GET/decide /api/v1/crm/writeback-commands。只展示合同 payload 字段，必须预览后人工确认。</p>
+      <ul v-if="commands.length" class="item-list" data-testid="p19-command-list">
+        <li v-for="command in commands" :key="command.commandId" class="item">
+          <div class="item-head">
+            <strong>{{ command.commandId }}</strong>
+            <span>{{ command.operation }} · {{ command.targetEntity }}</span>
+            <n-tag size="small" :type="command.status === 'PENDING' ? 'warning' : command.status === 'SENT' ? 'success' : 'default'">
+              {{ CRM_WRITEBACK_STATUS_LABELS[command.status] || command.status }}
+            </n-tag>
+          </div>
+          <dl class="payload" data-testid="p19-diff-preview">
+            <div v-for="entry in payloadEntries(command)" :key="entry.field">
+              <dt>{{ entry.field }}</dt>
+              <dd class="payload-old">—</dd>
+              <dd class="payload-new">{{ entry.value }}</dd>
+            </div>
+          </dl>
+          <button type="button" class="link-btn" data-testid="p19-preview-action" @click="preview(command)">
+            预览并确认
+          </button>
+        </li>
+      </ul>
+      <p v-else class="empty">暂无 CRM 写回命令</p>
+    </PageState>
 
     <CrmWritebackApproval
       v-model:show="showApproval"
@@ -189,27 +189,10 @@ onBeforeUnmount(persistReference)
 </template>
 
 <style scoped>
-.p19-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 16px;
-  align-items: start;
-}
-.toolbar {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
-}
 .hint,
 .empty {
   color: var(--text-tertiary);
   font-size: 13px;
-}
-.gp-note {
-  margin: 0;
-  font-size: 12px;
-  color: var(--text-tertiary);
-  line-height: 1.5;
 }
 .item-list {
   list-style: none;
@@ -265,10 +248,5 @@ dd {
   border-radius: 6px;
   background: var(--bg-surface);
   cursor: pointer;
-}
-@media (max-width: 900px) {
-  .p19-layout {
-    grid-template-columns: 1fr;
-  }
 }
 </style>

@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { NButton, NTooltip } from 'naive-ui'
 import ObjectHeader from '../components/shell/ObjectHeader.vue'
 import PageState from '../components/shell/PageState.vue'
-import DisabledAction from '../components/shell/DisabledAction.vue'
+import StagePath from '../components/shell/StagePath.vue'
+import type { StagePathStage } from '../components/shell/StagePath.vue'
 import {
   decideHumanGate,
   fetchHumanGates,
@@ -12,13 +14,22 @@ import {
 import { deriveResourceStatus } from '../composables/useResourceStatus'
 import { useEngagementContext } from '../composables/useEngagementContext'
 import { usePageReferenceStore } from '../stores/pageReference'
-import GuidancePanel from '../components/shell/GuidancePanel.vue'
 
 const PAGE_ID = 'P17'
 const OBJECT_TYPE = '互动 Interaction'
 
 const pageRefs = usePageReferenceStore()
 const { journeyId } = useEngagementContext()
+
+// 访前向导步骤（3.2 向导步骤条风格；会中为第 4 步）
+const stages: StagePathStage[] = [
+  { key: 'gaps', label: '访前目标' },
+  { key: 'evidence', label: '证据装配' },
+  { key: 'pack', label: '访前包预览' },
+  { key: 'meeting', label: '会中工作区' },
+]
+const completedKeys = computed<string[]>(() => ['gaps', 'evidence', 'pack'])
+const currentKey = 'meeting'
 
 const gates = ref<HumanGate[]>([])
 const ending = ref(false)
@@ -108,81 +119,49 @@ onBeforeUnmount(persistReference)
       :object-type="OBJECT_TYPE"
       :object-status="objectStatus"
       title="离场确认"
-    />
-    <div class="p17-body">
-      <main class="p17-main">
-        <div class="toolbar">
-          <button
-            v-if="exitGate"
-            type="button"
-            class="link-btn"
-            data-testid="p17-end-meeting"
-            :disabled="ending"
-            @click="endMeeting"
-          >
-            结束会谈
-          </button>
-          <DisabledAction
-            v-else
-            label="结束会谈"
-            :disabled="true"
-            reason="无待处理 E01_EXIT_CONFIRM HumanGate，禁止提交结束会谈"
-            unlockPath="仅当既有 HumanGate 类型 E01_EXIT_CONFIRM 处于 PENDING 时才可提交"
-          />
-        </div>
-        <PageState :status="status" :error="error" idle-description="尚未加载离场确认" @retry="loadGates">
-          <p class="hint">
-            双方确认清单为只读/草稿。结束会谈必须走既有 HumanGate（{{ GATE_TYPE_LABELS.E01_EXIT_CONFIRM }} / E01_EXIT_CONFIRM）。
-          </p>
-          <ul class="item-list" data-testid="p17-checklist">
-            <li v-for="item in checklist" :key="item.id" class="item">
-              <label>
-                <input v-model="item.checked" type="checkbox" />
-                {{ item.label }}
-              </label>
-            </li>
-          </ul>
-        </PageState>
-      </main>
+    >
+      <template #actions>
+        <n-tooltip :disabled="Boolean(exitGate)">
+          <template #trigger>
+            <span>
+              <n-button
+                size="small"
+                type="primary"
+                data-testid="p17-end-meeting"
+                :disabled="!exitGate || ending"
+                @click="endMeeting"
+              >
+                结束会谈 →
+              </n-button>
+            </span>
+          </template>
+          无待处理 E01_EXIT_CONFIRM HumanGate，禁止提交结束会谈
+        </n-tooltip>
+      </template>
+    </ObjectHeader>
 
-      <GuidancePanel
-        next-step="确认离场清单 → 审批 E01_EXIT_CONFIRM 门禁 → 会谈结束"
-        business-rule="结束会谈必须走既有 HumanGate（E01_EXIT_CONFIRM）；清单为草稿，不写入权威。"
-        exception="门禁加载失败时保持上下文，展示原因与重试按钮。"
-        contract-usage="REUSE_EXISTING：消费既有 HumanGate 契约；无支持能力时禁用。"
-      >
-        <p class="gp-note">离场确认是人工审批节点，不可自动跳过。</p>
-      </GuidancePanel>
-    </div>
+    <StagePath :stages="stages" :current-key="currentKey" :completed-keys="completedKeys" />
+
+    <PageState :status="status" :error="error" idle-description="尚未加载离场确认" @retry="loadGates">
+      <p class="hint">
+        双方确认清单为只读/草稿。结束会谈必须走既有 HumanGate（{{ GATE_TYPE_LABELS.E01_EXIT_CONFIRM }} / E01_EXIT_CONFIRM）。
+      </p>
+      <ul class="item-list" data-testid="p17-checklist">
+        <li v-for="item in checklist" :key="item.id" class="item">
+          <label>
+            <input v-model="item.checked" type="checkbox" />
+            {{ item.label }}
+          </label>
+        </li>
+      </ul>
+    </PageState>
   </div>
 </template>
 
 <style scoped>
-.p17-body {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-}
-.p17-main {
-  flex: 1;
-  min-width: 0;
-}
-.toolbar {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
-}
 .hint {
   color: var(--text-tertiary);
   font-size: 13px;
-}
-.link-btn {
-  height: 32px;
-  padding: 0 12px;
-  border: 1px solid var(--border-normal);
-  border-radius: 6px;
-  background: var(--bg-surface);
-  cursor: pointer;
 }
 .item-list {
   list-style: none;

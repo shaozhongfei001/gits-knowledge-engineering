@@ -2,10 +2,11 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useMessage } from 'naive-ui'
 import { useRouter } from 'vue-router'
+import { NButton } from 'naive-ui'
 import ObjectHeader from '../components/shell/ObjectHeader.vue'
 import PageState from '../components/shell/PageState.vue'
-import DisabledAction from '../components/shell/DisabledAction.vue'
-import GuidancePanel from '../components/shell/GuidancePanel.vue'
+import StagePath from '../components/shell/StagePath.vue'
+import type { StagePathStage } from '../components/shell/StagePath.vue'
 import { deriveResourceStatus } from '../composables/useResourceStatus'
 import { useEngagementContext } from '../composables/useEngagementContext'
 import { usePageReferenceStore } from '../stores/pageReference'
@@ -19,6 +20,16 @@ const router = useRouter()
 const pageRefs = usePageReferenceStore()
 const previsitStore = usePrevisitStore()
 const { customerId, journeyId, operatingCaseId, rmId } = useEngagementContext()
+
+// 访前向导步骤（3.2 向导步骤条风格）
+const stages: StagePathStage[] = [
+  { key: 'gaps', label: '访前目标' },
+  { key: 'evidence', label: '证据装配' },
+  { key: 'pack', label: '访前包预览' },
+  { key: 'meeting', label: '会中工作区' },
+]
+const completedKeys = computed<string[]>(() => ['gaps'])
+const currentKey = 'evidence'
 
 const requested = ref(false)
 const loading = ref(false)
@@ -90,6 +101,25 @@ function syncContext() {
   })
 }
 
+function query() {
+  return {
+    ...(customerId.value ? { customerId: customerId.value } : {}),
+    ...(journeyId.value ? { journeyId: journeyId.value } : {}),
+    ...(operatingCaseId.value ? { operatingCaseId: operatingCaseId.value } : {}),
+    ...(rmId.value ? { rmId: rmId.value } : {}),
+  }
+}
+
+function goGaps() {
+  persistReference()
+  router.push({ path: '/engagement/previsit/gaps', query: query() })
+}
+
+function goPack() {
+  persistReference()
+  router.push({ name: 'PrevisitPack', query: query() })
+}
+
 async function generatePack() {
   if (!journeyId.value || !customerId.value || !operatingCaseId.value) {
     msg.warning('缺少旅程/客户上下文，请先从互动记录·访前路径启动旅程')
@@ -116,130 +146,67 @@ onBeforeUnmount(persistReference)
       :object-type="OBJECT_TYPE"
       :object-status="objectStatus"
       title="访前知识证据装配"
-    />
+    >
+      <template #actions>
+        <n-button size="small" @click="goGaps">← 返回缺口</n-button>
+        <n-button
+          size="small"
+          type="primary"
+          data-testid="p13-generate-pack"
+          :disabled="!journeyId || !customerId || !operatingCaseId || previsitStore.loading"
+          @click="generatePack"
+        >
+          {{ previsitStore.loading ? '生成中…' : '生成访前包' }}
+        </n-button>
+        <n-button size="small" data-testid="p13-go-pack" :disabled="!customerId" @click="goPack">
+          去访前包预览 →
+        </n-button>
+      </template>
+    </ObjectHeader>
 
-    <div class="p13-layout">
-      <main class="p13-main">
-        <div class="toolbar">
-          <button
-            type="button"
-            class="link-btn link-btn--primary"
-            data-testid="p13-generate-pack"
-            :disabled="!journeyId || !customerId || !operatingCaseId || previsitStore.loading"
-            @click="generatePack"
-          >
-            {{ previsitStore.loading ? '生成中…' : '生成访前包' }}
-          </button>
-          <button
-            type="button"
-            class="link-btn"
-            data-testid="p13-go-pack"
-            :disabled="!customerId"
-            @click="router.push({ name: 'PrevisitPack', query: { customerId: customerId, journeyId: journeyId, operatingCaseId: operatingCaseId, rmId: rmId } })"
-          >
-            去访前包预览 →
-          </button>
-          <DisabledAction
-            label="生成无来源结论"
-            :disabled="true"
-            reason="无合同来源时禁止生成结论"
-            unlockPath="先完成 preparePrevisit 并展示返回来源后只读消费"
-          />
-        </div>
+    <StagePath :stages="stages" :current-key="currentKey" :completed-keys="completedKeys" />
 
-        <PageState :status="status" :error="previsitStore.error" idle-description="尚未装配证据" @retry="generatePack">
-          <p class="hint">
-            只读消费既有 preparePrevisit 返回（唯一 KERT 入口）；无来源则空态，禁止无来源结论。
-          </p>
+    <PageState :status="status" :error="previsitStore.error" idle-description="尚未装配证据" @retry="generatePack">
+      <p class="hint">
+        只读消费既有 preparePrevisit 返回（唯一 KERT 入口）；无来源则空态，禁止无来源结论。
+      </p>
 
-          <template v-if="previsitStore.previsitDone">
-            <!-- 装配轨迹（DERIVED_READ_ONLY） -->
-            <h2 class="section-title">装配轨迹</h2>
-            <ul v-if="previsitStore.assemblyTrace.length" class="item-list trace-list" data-testid="p13-trace-list">
-              <li v-for="(step, i) in previsitStore.assemblyTrace" :key="i" class="item trace">
-                <span class="kind" :class="{ 'kind-skip': step.status === 'skipped' }">
-                  {{ step.status === 'skipped' ? '跳过' : step.phase }}
-                </span>
-                <span v-if="step.kiId" class="mono">{{ step.kiId }}</span>
-                <span class="msg">{{ step.message }}</span>
-              </li>
-            </ul>
-            <p v-else class="empty">DKWS 未返回装配轨迹</p>
+      <template v-if="previsitStore.previsitDone">
+        <!-- 装配轨迹（DERIVED_READ_ONLY） -->
+        <h2 class="section-title">装配轨迹</h2>
+        <ul v-if="previsitStore.assemblyTrace.length" class="item-list trace-list" data-testid="p13-trace-list">
+          <li v-for="(step, i) in previsitStore.assemblyTrace" :key="i" class="item trace">
+            <span class="kind" :class="{ 'kind-skip': step.status === 'skipped' }">
+              {{ step.status === 'skipped' ? '跳过' : step.phase }}
+            </span>
+            <span v-if="step.kiId" class="mono">{{ step.kiId }}</span>
+            <span class="msg">{{ step.message }}</span>
+          </li>
+        </ul>
+        <p v-else class="empty">DKWS 未返回装配轨迹</p>
 
-            <!-- 派生来源 -->
-            <h2 class="section-title">证据来源（派生视图）</h2>
-            <ul v-if="sources.length" class="item-list" data-testid="p13-source-list">
-              <li v-for="row in sources" :key="row.id" class="item">
-                <span class="kind">来源·{{ row.kind }}</span>
-                <span class="mono">{{ row.id }}</span>
-                <span>{{ row.summary || '-' }}</span>
-              </li>
-            </ul>
-          </template>
-          <p v-else class="empty" data-testid="p13-empty">
-            尚未执行一键访前。请先点击「生成访前包」触发 KERT（外联 + 会面 + R1 报告），装配轨迹将在此展示。
-          </p>
-        </PageState>
-      </main>
-
-      <GuidancePanel
-        next-step="逐条显示来源、日期、权限和用途；过期/冲突证据不得静默进入结论"
-        business-rule="过期、冲突或权限不足证据不得静默进入结论。"
-        exception="检索超时则保留人工证据夹，不得生成无来源结论。"
-        contract-usage="DERIVED_READ_ONLY：前端编排既有对象与证据形成派生视图，不新增持久化契约。"
-      >
-        <p class="gp-note">「生成访前包」是唯一 KERT 入口（3 Skill 并行）；本页其余内容为只读派生。</p>
-      </GuidancePanel>
-    </div>
+        <!-- 派生来源 -->
+        <h2 class="section-title">证据来源（派生视图）</h2>
+        <ul v-if="sources.length" class="item-list" data-testid="p13-source-list">
+          <li v-for="row in sources" :key="row.id" class="item">
+            <span class="kind">来源·{{ row.kind }}</span>
+            <span class="mono">{{ row.id }}</span>
+            <span>{{ row.summary || '-' }}</span>
+          </li>
+        </ul>
+      </template>
+      <p v-else class="empty" data-testid="p13-empty">
+        尚未执行一键访前。请先点击「生成访前包」触发 KERT（外联 + 会面 + R1 报告），装配轨迹将在此展示。
+      </p>
+    </PageState>
   </div>
 </template>
 
 <style scoped>
-.p13-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 16px;
-  align-items: start;
-}
-.toolbar {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  margin-bottom: 16px;
-}
-.link-btn {
-  height: 32px;
-  padding: 0 14px;
-  border: 1px solid var(--border-normal);
-  border-radius: 6px;
-  background: var(--bg-surface);
-  cursor: pointer;
-}
-.link-btn--primary {
-  background: var(--brand-primary);
-  border-color: var(--brand-primary);
-  color: #fff;
-  font-weight: 600;
-}
-.link-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
 .hint,
 .empty {
   color: var(--text-tertiary);
   font-size: 13px;
-}
-.nav-next {
-  margin-top: 20px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border-normal);
-}
-.gp-note {
-  margin: 0;
-  font-size: 12px;
-  color: var(--text-tertiary);
-  line-height: 1.5;
 }
 .section-title {
   margin: 16px 0 8px;
@@ -279,10 +246,5 @@ onBeforeUnmount(persistReference)
 }
 .msg {
   color: var(--text-primary);
-}
-@media (max-width: 900px) {
-  .p13-layout {
-    grid-template-columns: 1fr;
-  }
 }
 </style>

@@ -32,9 +32,13 @@ function goBack() {
       <h1>{{ title }}</h1>
       <p class="object-status" data-testid="object-status">当前状态：{{ objectStatus }}</p>
     </div>
-    <n-button quaternary size="small" data-testid="page-reference-back" @click="goBack">
-      返回并恢复位置
-    </n-button>
+    <div class="object-actions">
+      <slot name="actions">
+        <n-button quaternary size="small" data-testid="page-reference-back" @click="goBack">
+          返回并恢复位置
+        </n-button>
+      </slot>
+    </div>
   </header>
 </template>
 
@@ -42,9 +46,15 @@ function goBack() {
 .object-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
   margin-bottom: 16px;
+}
+.object-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 .object-type {
   margin: 0;
