@@ -4,6 +4,8 @@ Loop 状态：`blocked`（有意阻塞，非失败）
 
 基线提交：`43bbc0cb0ea99d9f58ae2a20f202e7d461923bf2`
 
+立项提交：`b176664`（`contract(data): migrate Oracle data-understanding capability to Leibniz-KERT`，2026-08-31，10 files changed, 767 insertions(+), 4 deletions(-)）
+
 权威依据：`docs/architecture/ADR-0018-oracle-data-understanding-migration-to-kert.md`
 
 ## 立项证据（2026-08-31，Tech Lead 只读盘点）
