@@ -82,7 +82,10 @@
       "owner": "data_mapping_owner",
       "compatibility": "versioned_mapping",
       "consumers": ["oracle_mapping_spike", "semantic_runtime", "ctr_map_001"],
-      "generated": ["generated/data/src-edwcrm-cust-base.v0.1.json"]
+      "generated": ["generated/data/src-edwcrm-cust-base.v0.1.json"],
+      "migration_target": "Leibniz-KERT",
+      "migration_adr": "ADR-0018",
+      "migration_status": "pending_kert_landing"
     },
     {
       "id": "CTR-EVIDENCE-001",
@@ -109,7 +112,10 @@
       "owner": "data_mapping_owner",
       "compatibility": "versioned_mapping",
       "consumers": ["oracle_mapping_spike", "semantic_runtime"],
-      "generated": []
+      "generated": [],
+      "migration_target": "Leibniz-KERT",
+      "migration_adr": "ADR-0018",
+      "migration_status": "pending_kert_landing"
     },
     {
       "id": "CTR-DATA-003",
@@ -118,7 +124,10 @@
       "owner": "data_mapping_owner",
       "compatibility": "versioned_mapping",
       "consumers": ["oracle_mapping_spike", "semantic_runtime", "operational_ontology"],
-      "generated": ["generated/data/src-oracle-metric-ontology.v0.1.json"]
+      "generated": ["generated/data/src-oracle-metric-ontology.v0.1.json"],
+      "migration_target": "Leibniz-KERT",
+      "migration_adr": "ADR-0018",
+      "migration_status": "pending_kert_landing"
     },
     {
       "id": "CTR-DATA-004",
@@ -128,7 +137,10 @@
       "compatibility": "versioned_mapping",
       "consumers": ["operational_ontology", "semantic_runtime"],
       "generated": ["generated/data/oracle-seed-claims.v0.1.json"],
-      "note": "2505条Oracle元数据种子Claim：175指标+910字段血缘+234对象血缘+1182衍生字段+4风险信号"
+      "note": "2505条Oracle元数据种子Claim：175指标+910字段血缘+234对象血缘+1182衍生字段+4风险信号",
+      "migration_target": "Leibniz-KERT",
+      "migration_adr": "ADR-0018",
+      "migration_status": "pending_kert_landing"
     },
     {
       "id": "CTR-V11-001",
