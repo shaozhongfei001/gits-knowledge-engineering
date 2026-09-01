@@ -132,6 +132,12 @@ const router = createRouter({
       meta: { title: '知识卡与产品适用边界', pageId: 'P38', objectType: '知识要素 KE（只读）', objectStatus: '只读' }
     },
     {
+      path: '/recommendation/:runId',
+      name: 'ProductRecommendationWorkspace',
+      component: () => import('../views/ProductRecommendationWorkspace.vue'),
+      meta: { title: '产品推荐三段式工作区', objectType: '产品推荐 ProductRecommendationRun', objectStatus: '三段式' }
+    },
+    {
       path: '/needs/:id/plan',
       name: 'NeedPlan',
       component: () => import('../views/NeedPlanView.vue'),

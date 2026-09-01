@@ -1,12 +1,40 @@
 <script setup lang="ts">
+import { useRoute, useRouter } from 'vue-router'
 import ProposalDegradeShell from '../components/shell/ProposalDegradeShell.vue'
 import { PROPOSAL_SHELL_PAGES } from '../composables/proposalDegrade'
 
 const page = PROPOSAL_SHELL_PAGES.P25
+
+const route = useRoute()
+const router = useRouter()
+
+/**
+ * 打开推荐工作区（G2 消费已决定采用的推荐子方案）。
+ * 本分支无持久化 run 关联：优先用 query.runId 打开既有运行；否则进入发起模式。
+ */
+function openRecommendationWorkspace() {
+  const linkedRunId = String(route.query.runId || '')
+  router.push({
+    name: 'ProductRecommendationWorkspace',
+    params: { runId: linkedRunId || 'new' },
+    query: route.query.customerId ? { customerId: String(route.query.customerId) } : {},
+  })
+}
 </script>
 
 <template>
-  <ProposalDegradeShell v-bind="page" v-slot="{ placeholder }">
+  <ProposalDegradeShell v-bind="page">
+    <template #toolbar>
+      <button
+        type="button"
+        class="open-rec"
+        data-testid="p25-open-recommendation"
+        @click="openRecommendationWorkspace"
+      >
+        打开推荐工作区
+      </button>
+    </template>
+    <template #default="{ placeholder }">
     <section v-if="placeholder" class="record">
       <dl class="facts">
         <div>
@@ -27,10 +55,20 @@ const page = PROPOSAL_SHELL_PAGES.P25
         <p>G0–G5 不是本分支合同对象，禁止把占位 ID 当作正式建议书阶段。</p>
       </section>
     </section>
+    </template>
   </ProposalDegradeShell>
 </template>
 
 <style scoped>
+.open-rec {
+  border: 1px solid var(--gits-blue-600, #1976d2);
+  background: var(--gits-blue-600, #1976d2);
+  color: #fff;
+  border-radius: 6px;
+  padding: 5px 14px;
+  cursor: pointer;
+  font-size: 13px;
+}
 .facts {
   display: grid;
   gap: 12px;

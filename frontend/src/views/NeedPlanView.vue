@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import ObjectHeader from '../components/shell/ObjectHeader.vue'
 import PageState from '../components/shell/PageState.vue'
 import DisabledAction from '../components/shell/DisabledAction.vue'
@@ -11,6 +11,7 @@ import { usePageReferenceStore } from '../stores/pageReference'
 const PAGE_ID = 'P22'
 
 const route = useRoute()
+const router = useRouter()
 const pageRefs = usePageReferenceStore()
 
 const sourceId = computed(() => String(route.params.id || ''))
@@ -40,6 +41,18 @@ const kycItems = computed(() => {
     ...kyc.knownItems.map(item => ({ kind: '已知', item })),
   ]
 })
+
+/** 发起产品推荐：进入 WP5-1 三段式工作区（发起模式）。 */
+function startRecommendation() {
+  persistReference()
+  router.push({
+    name: 'ProductRecommendationWorkspace',
+    params: { runId: 'new' },
+    query: {
+      ...(row.value?.customerId ? { customerId: row.value.customerId } : {}),
+    },
+  })
+}
 
 function persistReference() {
   pageRefs.capture(PAGE_ID, {
@@ -91,6 +104,15 @@ onBeforeUnmount(persistReference)
         reason="建议书工厂属 P34；本 Loop 禁止创建建议书，亦无 ServicePlan 合同对象"
         unlockPath="P34-gits-bank-proposal-degrade 在合同批准后交付"
       />
+      <button
+        type="button"
+        class="start-rec"
+        data-testid="p22-start-recommendation"
+        :disabled="!row?.customerId"
+        @click="startRecommendation"
+      >
+        发起产品推荐
+      </button>
     </div>
     <p class="hint">
       C2 只读派生：KYC 缺口与信号/Claim 摘要。这不是正式 ServicePlan，禁止把建议书阶段写成可回写枚举。
@@ -129,6 +151,21 @@ onBeforeUnmount(persistReference)
   display: flex;
   gap: 12px;
   margin-bottom: 16px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.start-rec {
+  border: 1px solid var(--gits-blue-600, #1976d2);
+  background: var(--gits-blue-600, #1976d2);
+  color: #fff;
+  border-radius: 6px;
+  padding: 5px 14px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.start-rec:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 .hint,
 .empty {
