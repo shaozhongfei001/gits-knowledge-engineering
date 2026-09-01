@@ -61,6 +61,8 @@ const objectStatus = computed(() => (runId.value === 'new' ? '发起' : runId.va
 
 // 创建表单
 const formCustomerId = ref(String(route.query.customerId || ''))
+const formJourneyId = ref(String(route.query.journeyId || ''))
+const formOperatingCaseId = ref(String(route.query.operatingCaseId || ''))
 const formObjective = ref(String(route.query.recommendationObjective || ''))
 const formDomains = ref(String(route.query.requestedProductDomains || ''))
 const formNeedVersionIds = ref(String(route.query.needVersionIds || ''))
@@ -83,8 +85,16 @@ async function submitCreate(): Promise<void> {
     formError.value = '推荐目的必填（禁止空泛的“给我推荐产品”）'
     return
   }
+  const journeyId = formJourneyId.value.trim()
+  const operatingCaseId = formOperatingCaseId.value.trim()
+  if (!journeyId && !operatingCaseId) {
+    formError.value = '客户旅程 ID 或经营案例 ID 至少填一个（经营上下文必填）'
+    return
+  }
   const created = await store.createRun({
     customerId: formCustomerId.value.trim(),
+    journeyId: journeyId || undefined,
+    operatingCaseId: operatingCaseId || undefined,
     needVersionIds: formNeedVersionIds.value
       ? formNeedVersionIds.value.split(',').map((s) => s.trim()).filter(Boolean)
       : undefined,
@@ -144,6 +154,14 @@ watch(runId, () => {
       <label>
         <span>客户 ID（必填）</span>
         <input v-model="formCustomerId" type="text" data-testid="pr-create-customer" />
+      </label>
+      <label>
+        <span>客户旅程 ID（与经营案例 ID 至少填一个）</span>
+        <input v-model="formJourneyId" type="text" data-testid="pr-create-journey" />
+      </label>
+      <label>
+        <span>经营案例 ID（可选，与客户旅程 ID 二选一必填）</span>
+        <input v-model="formOperatingCaseId" type="text" data-testid="pr-create-opcase" />
       </label>
       <label>
         <span>推荐目的（必填）</span>

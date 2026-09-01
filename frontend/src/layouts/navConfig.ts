@@ -3,7 +3,7 @@ export type ShellNavItem = {
   label: string
   icon: string
   to: string
-  domain: 'workbench' | 'commitments' | 'accounts' | 'panorama' | 'signals' | 'needs' | 'proposals' | 'collab' | 'plans' | 'evidence' | 'audit'
+  domain: 'workbench' | 'commitments' | 'accounts' | 'panorama' | 'signals' | 'needs' | 'proposals' | 'recommendation' | 'collab' | 'plans' | 'evidence' | 'audit'
 }
 
 export type ShellNavGroup = {
@@ -41,6 +41,7 @@ export const SHELL_NAV_GROUPS: ShellNavGroup[] = [
     label: '方案与交付',
     children: [
       { key: 'proposals', label: '服务建议书', icon: '▤', to: '/proposals', domain: 'proposals' },
+      { key: 'recommendation', label: '产品推荐', icon: '★', to: '/recommendation/new', domain: 'recommendation' },
       { key: 'collab', label: '专家协同', icon: '♙', to: '/collab', domain: 'collab' },
       { key: 'plans', label: '账户计划与价值', icon: '▱', to: '/account-plans', domain: 'plans' },
     ],
@@ -49,7 +50,7 @@ export const SHELL_NAV_GROUPS: ShellNavGroup[] = [
     key: 'governance',
     label: '知识与治理',
     children: [
-      { key: 'evidence', label: '证据与知识', icon: '⌁', to: '/claims', domain: 'evidence' },
+      { key: 'evidence', label: '产品解读与知识', icon: '⌁', to: '/knowledge-map', domain: 'evidence' },
       { key: 'audit', label: '审批与审计', icon: '◌', to: '/approvals', domain: 'audit' },
     ],
   },
@@ -74,6 +75,7 @@ export function navDomainForPath(path: string): ShellNavItem['domain'] {
   }
   if (path.startsWith('/needs')) return 'needs'
   if (path.startsWith('/proposals') || path.startsWith('/delivery')) return 'proposals'
+  if (path.startsWith('/recommendation')) return 'recommendation'
   if (path.startsWith('/collab')) return 'collab'
   if (path.startsWith('/account-plans') || path.startsWith('/value')) return 'plans'
   if (path.startsWith('/claims') || path.startsWith('/knowledge-map')) return 'evidence'

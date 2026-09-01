@@ -197,11 +197,12 @@ describe('WP5-1 ProductRecommendationWorkspace', () => {
     })
     const { wrapper } = await mountWorkspace('new', { customerId: 'c9' })
     await wrapper.get('[data-testid="pr-create-objective"]').setValue('扩产融资')
+    await wrapper.get('[data-testid="pr-create-journey"]').setValue('JOURNEY-1')
     await wrapper.get('[data-testid="pr-create-form"]').trigger('submit')
     await flushPromises()
     expect(api.createProductRecommendationRun).toHaveBeenCalledTimes(1)
     const call = (api.createProductRecommendationRun as ReturnType<typeof vi.fn>).mock.calls[0]
-    expect(call[0]).toMatchObject({ customerId: 'c9', recommendationObjective: '扩产融资' })
+    expect(call[0]).toMatchObject({ customerId: 'c9', recommendationObjective: '扩产融资', journeyId: 'JOURNEY-1' })
     expect(typeof call[1]).toBe('string')
   })
 })
