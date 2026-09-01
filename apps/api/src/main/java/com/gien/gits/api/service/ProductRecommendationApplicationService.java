@@ -183,8 +183,14 @@ public class ProductRecommendationApplicationService {
         context.put("schemaVersion", SCHEMA_VERSION);
         context.put("runId", run.runId());
         context.put("callerId", command.callerId());
-        context.put("customerId", command.customerId());
-        context.put("needVersionIds", run.needVersionIds());
+        String customerId = command.customerId();
+        context.put("customerId", customerId);
+        // OQ-02：C2 降级 shell 无正式 Need 版本时，注入确定性演示引用（非生产路径）。
+        // 生产化需由正式 Need 系统回填，移除本 demo 缺省。
+        List<String> needVersionIds = (run.needVersionIds() == null || run.needVersionIds().isEmpty())
+                ? List.of("NEEDV-" + customerId)
+                : run.needVersionIds();
+        context.put("needVersionIds", needVersionIds);
         context.put("recommendationObjective", run.recommendationObjective());
         context.put("requestedProductDomains", run.requestedProductDomains());
         context.put("asOf", run.asOf().toString());
@@ -192,16 +198,20 @@ public class ProductRecommendationApplicationService {
         context.put("idempotencyKey", run.idempotencyKey());
 
         // 契约 vNext §3.1 必填引用：快照引用（3/3）+ 权限决策 + 激活合同。
-        // 尚未接线的引用按契约显式缺省为空串，并在 request 中标注（交由 DKWS 校验 KERT_CONTRACT_MISMATCH）。
+        // OQ-02：引用缺失时回退确定性演示值（非空），并在 request 标注 defaultedContextRefs。
         List<String> defaultedRefs = new ArrayList<>();
         context.put("customerFactSnapshotId",
-                snapshotRefOrDefault(command.customerFactSnapshotId(), "customerFactSnapshotId", defaultedRefs));
+                demoRefOrDefault(command.customerFactSnapshotId(), "CFS-" + customerId,
+                        "customerFactSnapshotId", defaultedRefs));
         context.put("productKnowledgeSnapshotRef",
-                snapshotRefOrDefault(command.productKnowledgeSnapshotRef(), "productKnowledgeSnapshotRef", defaultedRefs));
+                demoRefOrDefault(command.productKnowledgeSnapshotRef(), "PKS-" + customerId,
+                        "productKnowledgeSnapshotRef", defaultedRefs));
         context.put("ruleBundleRef",
-                snapshotRefOrDefault(command.ruleBundleRef(), "ruleBundleRef", defaultedRefs));
+                demoRefOrDefault(command.ruleBundleRef(), "RB-PR-20260831-0001",
+                        "ruleBundleRef", defaultedRefs));
         context.put("permissionDecisionId",
-                snapshotRefOrDefault(command.permissionDecisionId(), "permissionDecisionId", defaultedRefs));
+                demoRefOrDefault(command.permissionDecisionId(), "PERM-" + customerId,
+                        "permissionDecisionId", defaultedRefs));
         context.put("activationContract", activationContractOrDefault(command.activationContract()));
 
         Map<String, Object> request = new LinkedHashMap<>();
@@ -212,11 +222,11 @@ public class ProductRecommendationApplicationService {
         return request;
     }
 
-    /** 契约 vNext §3.1：快照/权限引用缺失时按契约显式缺省为空串，并登记到标注列表。 */
-    private static String snapshotRefOrDefault(String value, String fieldName, List<String> defaultedRefs) {
+    /** OQ-02：快照/权限引用缺失时回退确定性演示值（C2 降级 shell 专用），并登记到标注列表。 */
+    private static String demoRefOrDefault(String value, String demoValue, String fieldName, List<String> defaultedRefs) {
         if (value == null || value.isBlank()) {
             defaultedRefs.add(fieldName);
-            return "";
+            return demoValue;
         }
         return value;
     }

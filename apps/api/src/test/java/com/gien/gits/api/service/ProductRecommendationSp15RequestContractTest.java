@@ -149,12 +149,11 @@ class ProductRecommendationSp15RequestContractTest {
         @SuppressWarnings("unchecked")
         Map<String, Object> context = (Map<String, Object>) request.get("context");
 
-        // 契约 vNext §3.1：缺失任一快照引用 → KERT_CONTRACT_MISMATCH。
-        // 本服务尚未接线快照引用，按契约显式缺省为空串（不省略 key）。
-        assertThat(context.get("customerFactSnapshotId")).isEqualTo("");
-        assertThat(context.get("productKnowledgeSnapshotRef")).isEqualTo("");
-        assertThat(context.get("ruleBundleRef")).isEqualTo("");
-        assertThat(context.get("permissionDecisionId")).isEqualTo("");
+        // OQ-02：缺失引用 → 回退确定性演示值（C2 降级 shell），并保留 defaultedContextRefs 标注
+        assertThat(context.get("customerFactSnapshotId")).isEqualTo("CFS-CUST-1");
+        assertThat(context.get("productKnowledgeSnapshotRef")).isEqualTo("PKS-CUST-1");
+        assertThat(context.get("ruleBundleRef")).isEqualTo("RB-PR-20260831-0001");
+        assertThat(context.get("permissionDecisionId")).isEqualTo("PERM-CUST-1");
         // activationContract 固定值
         assertThat(context.get("activationContract"))
                 .isEqualTo(ProductRecommendationApplicationService.ACTIVATION_CONTRACT_PRODUCT_RECOMMEND);

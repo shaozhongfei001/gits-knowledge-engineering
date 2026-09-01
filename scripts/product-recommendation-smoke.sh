@@ -36,9 +36,9 @@ DSH_BASE_URL="${DSH_BASE_URL:-http://127.0.0.1:8106}"
 GITS_API_KEY="${GITS_API_KEY:-}"
 DSH_API_KEY="${DSH_API_KEY:-}"
 
-CUSTOMER_ID="${CUSTOMER_ID:-CUST-SMOKE-001}"
-JOURNEY_ID="${JOURNEY_ID:-JOURNEY-SMOKE-001}"
-NEED_VERSION_ID="${NEED_VERSION_ID:-NEEDV-SMOKE-001}"
+CUSTOMER_ID="${CUSTOMER_ID:-CUST-CORP-0001}"
+JOURNEY_ID="${JOURNEY_ID:-JOURNEY-CUST-CORP-0001}"
+NEED_VERSION_ID="${NEED_VERSION_ID:-NEEDV-CUST-CORP-0001}"
 OBJECTIVE="${OBJECTIVE:-补充流动资金与跨境结算方案}"
 
 POLL_TIMEOUT_S="${POLL_TIMEOUT_S:-180}"   # 对齐 dsh.async-poll-timeout-ms
@@ -121,10 +121,10 @@ build_create_body() {
       recommendationObjective: $objective,
       requestedProductDomains: ["FINANCING", "SETTLEMENT"],
       asOf: $asOf,
-      customerFactSnapshotId: "CFS-SMOKE-001",
-      productKnowledgeSnapshotRef: "PKS-SMOKE-001",
-      ruleBundleRef: "RB-SMOKE-001",
-      permissionDecisionId: "PERM-SMOKE-001",
+      customerFactSnapshotId: "CFS-CUST-CORP-0001",
+      productKnowledgeSnapshotRef: "PKS-CUST-CORP-0001",
+      ruleBundleRef: "RB-PR-20260831-0001",
+      permissionDecisionId: "PERM-CUST-CORP-0001",
       activationContract: "AC-PRODUCT-RECOMMEND-001"
     }'
 }
