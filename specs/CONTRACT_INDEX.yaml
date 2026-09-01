@@ -244,6 +244,78 @@
       "compatibility": "backward_compatible",
       "consumers": ["knowledge_map_registry", "asset_registry", "agent_orchestrator"],
       "generated": ["generated/knowledge-architecture/knowledge-element.schema.json"]
+    },
+    {
+      "id": "CTR-PR-API-001",
+      "kind": "openapi_paths",
+      "authority_source": "specs/openapi/product-recommendation.openapi.json",
+      "owner": "integration_contract_owner",
+      "compatibility": "backward_compatible",
+      "consumers": ["api_app", "frontend_bff_adapter"],
+      "generated": [],
+      "scope": "vNext ProductRecommendation: POST /product-recommendation-runs, GET /product-recommendation-runs/{runId}, GET /product-recommendation-runs/{runId}/stages, GET /product-recommendation-runs/{runId}/versions/{versionId}, POST /product-recommendation-runs/{runId}/retry",
+      "status": "CANDIDATE",
+      "note": "Gate 0 通过后并入 gits-kno-api.openapi.json；先关闭 ProductMatch 三方漂移再增量实现"
+    },
+    {
+      "id": "CTR-PR-RUN-001",
+      "kind": "json_schema",
+      "authority_source": "specs/product-recommendation/product-recommendation-run.schema.json",
+      "owner": "scenario_services_owner",
+      "compatibility": "explicit_migration",
+      "consumers": ["scenario_services", "api_app"],
+      "generated": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "id": "CTR-PR-ELIG-001",
+      "kind": "json_schema",
+      "authority_source": "specs/product-recommendation/eligibility-result.schema.json",
+      "owner": "knowledge_architecture_owner",
+      "compatibility": "explicit_migration",
+      "consumers": ["scenario_services", "knowledge_architecture"],
+      "generated": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "id": "CTR-PR-FIT-001",
+      "kind": "json_schema",
+      "authority_source": "specs/product-recommendation/product-fit-result.schema.json",
+      "owner": "knowledge_architecture_owner",
+      "compatibility": "explicit_migration",
+      "consumers": ["scenario_services", "knowledge_architecture"],
+      "generated": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "id": "CTR-PR-PORT-001",
+      "kind": "json_schema",
+      "authority_source": "specs/product-recommendation/portfolio-candidate.schema.json",
+      "owner": "knowledge_architecture_owner",
+      "compatibility": "explicit_migration",
+      "consumers": ["scenario_services", "knowledge_architecture"],
+      "generated": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "id": "CTR-PR-RES-001",
+      "kind": "json_schema",
+      "authority_source": "specs/product-recommendation/recommendation-result.schema.json",
+      "owner": "knowledge_architecture_owner",
+      "compatibility": "explicit_migration",
+      "consumers": ["scenario_services", "knowledge_architecture"],
+      "generated": [],
+      "status": "CANDIDATE"
+    },
+    {
+      "id": "CTR-PR-DEC-001",
+      "kind": "json_schema",
+      "authority_source": "specs/product-recommendation/recommendation-human-decision.schema.json",
+      "owner": "human_action_owner",
+      "compatibility": "backward_compatible",
+      "consumers": ["human_action", "api_app"],
+      "generated": [],
+      "status": "CANDIDATE"
     }
   ]
 }
