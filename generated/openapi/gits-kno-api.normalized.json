@@ -905,6 +905,42 @@
         ],
         "type": "object"
       },
+      "EvidenceSummary": {
+        "properties": {
+          "authorityLevel": {
+            "enum": [
+              "INTERNAL_POLICY",
+              "REGULATORY",
+              "PUBLIC_PRICE_DISCLOSURE",
+              "PUBLIC_MARKETING"
+            ],
+            "type": "string"
+          },
+          "evidenceId": {
+            "type": "string"
+          },
+          "locatorHint": {
+            "type": "string"
+          },
+          "quoteExcerpt": {
+            "maxLength": 200,
+            "type": "string"
+          },
+          "sourceId": {
+            "type": "string"
+          },
+          "sourceVersionId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "evidenceId",
+          "sourceId",
+          "authorityLevel",
+          "locatorHint"
+        ],
+        "type": "object"
+      },
       "EvidenceVersion": {
         "properties": {
           "contentHash": {
@@ -1247,6 +1283,99 @@
           "objectId",
           "type",
           "content"
+        ],
+        "type": "object"
+      },
+      "InterpretationResponse": {
+        "properties": {
+          "bundleHash": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/InterpretedField"
+            },
+            "type": "array"
+          },
+          "generatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "isStale": {
+            "type": "boolean"
+          },
+          "productId": {
+            "type": "string"
+          },
+          "purpose": {
+            "enum": [
+              "INTERPRETATION",
+              "RECOMMENDATION"
+            ],
+            "type": "string"
+          },
+          "releaseId": {
+            "type": "string"
+          },
+          "view": {
+            "enum": [
+              "OVERVIEW",
+              "ELIGIBILITY",
+              "PRICING"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "productId",
+          "releaseId",
+          "bundleHash",
+          "view",
+          "purpose",
+          "fields",
+          "generatedAt"
+        ],
+        "type": "object"
+      },
+      "InterpretedField": {
+        "properties": {
+          "conflictId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "displayValue": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidenceSummaries": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceSummary"
+            },
+            "type": "array"
+          },
+          "fieldPath": {
+            "type": "string"
+          },
+          "knowledgeState": {
+            "enum": [
+              "SUPPORTED",
+              "UNKNOWN",
+              "CONFLICT",
+              "NOT_APPLICABLE",
+              "STALE"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "fieldPath",
+          "knowledgeState",
+          "evidenceSummaries"
         ],
         "type": "object"
       },
@@ -2064,6 +2193,44 @@
         ],
         "type": "object"
       },
+      "ProductKnowledgeErrorResponse": {
+        "properties": {
+          "code": {
+            "enum": [
+              "PRODUCT_KNOWLEDGE_NOT_PUBLISHED",
+              "PURPOSE_NOT_ALLOWED",
+              "RELEASE_STALE",
+              "KNOWLEDGE_GATE_FAILED",
+              "FAILED_CLOSED"
+            ],
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "timestamp": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "error",
+          "message",
+          "path",
+          "timestamp"
+        ],
+        "type": "object"
+      },
       "ProductKnowledgeVersion": {
         "properties": {
           "description": {
@@ -2592,6 +2759,112 @@
   },
   "openapi": "3.1.1",
   "paths": {
+    "/api/v1/product-knowledge/{productId}/interpretation": {
+      "get": {
+        "operationId": "getProductInterpretation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "productId",
+            "required": true,
+            "schema": {
+              "pattern": "^PROD-[A-Z]+-[0-9]{3}$",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "view",
+            "required": true,
+            "schema": {
+              "enum": [
+                "OVERVIEW",
+                "ELIGIBILITY",
+                "PRICING"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "purpose",
+            "required": true,
+            "schema": {
+              "enum": [
+                "INTERPRETATION",
+                "RECOMMENDATION"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "asOf",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterpretationResponse"
+                }
+              }
+            },
+            "description": "解读结果"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductKnowledgeErrorResponse"
+                }
+              }
+            },
+            "description": "产品无已发布 Release"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductKnowledgeErrorResponse"
+                }
+              }
+            },
+            "description": "Release 已 stale"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductKnowledgeErrorResponse"
+                }
+              }
+            },
+            "description": "用途不被允许"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductKnowledgeErrorResponse"
+                }
+              }
+            },
+            "description": "KERT 不可达，受控失败"
+          }
+        },
+        "summary": "获取产品解读三视图（KERT 已发布 Release 投影，GITS 只读消费）",
+        "tags": [
+          "ProductKnowledge"
+        ]
+      }
+    },
     "/architecture/status": {
       "get": {
         "operationId": "getArchitectureStatus",
@@ -3134,7 +3407,7 @@
     },
     "/engagement/customer/{customerId}/knowledge-map": {
       "get": {
-        "description": "Calls skill-customer-previsit-report. Empty sections when DKWS does not return. Does not serve the GITS knowledge-architecture snapshot.",
+        "description": "Calls skill-customer-previsit-report. Empty sections when KERT does not return. Does not serve the GITS knowledge-architecture snapshot.",
         "operationId": "getAssembledKnowledgeMap",
         "parameters": [
           {
@@ -3153,7 +3426,7 @@
             "description": "OK"
           }
         },
-        "summary": "DKWS assembled knowledge map for P38",
+        "summary": "KERT assembled knowledge map for P38",
         "tags": [
           "Customer Context"
         ]
