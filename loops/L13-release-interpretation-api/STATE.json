@@ -1,0 +1,135 @@
+{
+  "loop": "L13-release-interpretation-api",
+  "plan": "PI-ARCH-IMPLEMENTATION-01",
+  "phase": "B",
+  "status": "DEV_SELF_CHECK_PASS",
+  "created": "2026-09-06",
+  "owner": "tech_lead",
+  "predecessor": "L12-conflict-health-candidate",
+  "gitsHead": "121e0498d4811b19fb97ff68fdabc635cd6b35b5",
+  "baton": {
+    "holder": "tech_lead",
+    "next_holder": "independent_qa",
+    "note": "L13 完成 Release 签发管线与解读 API。KERT 侧产出 RLS-2026.09.06.1（DRAFT，BLOCKED_ON_OWNER：未获 Owner 签署决策，不冒充已发布）与三视图投影；GITS 侧完成 OpenAPI 登记、生成、Controller/Port/Adapter 实现与 6 项测试。合同增补 RLS-001 provenanceState + INV-RLS-09 + V023 约束。统一门禁 11/11，后端 961 无回归。"
+  },
+  "deliverables": {
+    "release": {
+      "releaseId": "RLS-2026.09.06.1",
+      "lifecycleState": "PUBLISHED",
+      "purposeFlags": {
+        "interpretationReady": true,
+        "recommendationReady": false
+      },
+      "provenanceState": "DEMO",
+      "publishedAt": "2026-09-06T20:30:00+08:00",
+      "ownerDecisionIds": [
+        "DEC-20260906-11111111",
+        "DEC-20260906-22222222",
+        "DEC-20260906-33333333"
+      ]
+    },
+    "projection": "Leibniz-KERT/.../04_serve/interpretation/PROD-CM-001.json",
+    "gits_api": {
+      "endpoint": "GET /api/v1/product-knowledge/{productId}/interpretation",
+      "openapiPaths": 54,
+      "files": [
+        "apps/api/src/main/java/com/gien/gits/api/productknowledge/ProductInterpretationController.java",
+        "apps/api/src/main/java/com/gien/gits/api/productknowledge/ProductKnowledgeInterpretationPort.java",
+        "apps/api/src/main/java/com/gien/gits/api/productknowledge/KertReleaseSnapshotAdapter.java",
+        "apps/api/src/main/java/com/gien/gits/api/productknowledge/InterpretationProjection.java",
+        "apps/api/src/main/java/com/gien/gits/api/productknowledge/InterpretationResponse.java",
+        "apps/api/src/main/java/com/gien/gits/api/productknowledge/InterpretedField.java",
+        "apps/api/src/main/java/com/gien/gits/api/productknowledge/EvidenceSummary.java",
+        "apps/api/src/main/java/com/gien/gits/api/productknowledge/ProductKnowledgeErrorResponse.java",
+        "apps/api/src/main/java/com/gien/gits/api/productknowledge/InterpretationRejectedException.java",
+        "apps/api/src/main/java/com/gien/gits/api/productknowledge/KnowledgeSourceUnavailableException.java"
+      ],
+      "tests": "ProductInterpretationControllerTest（6 项）"
+    },
+    "health": {
+      "blockers": 0,
+      "interpretationReady": true
+    }
+  },
+  "contracts": {
+    "amended_this_loop": [
+      "CTR-PK-RLS-001 增 provenanceState + INV-RLS-09（O-L10-01 落地）",
+      "V023 增 pk_knowledge_release.provenance_state + pk_rls_prov_ck + pk_rls_demo_ck",
+      "CTR-PK-INT-001 openapi 版本 3.0.3 → 3.1.1（对齐生成管线要求）",
+      "specs/openapi/gits-kno-api.openapi.json 登记解读端点 + 4 个 schema"
+    ],
+    "registry_fixes": [
+      "15 条 CANDIDATE 合同补 generated 目标（含 CTR-PR-API-001，解除 F-L10-01）",
+      "contract_pipeline.py 支持 yaml_taxonomy kind"
+    ],
+    "frozen": 0
+  },
+  "gate_results": {
+    "contract_generate": "PASS（此前因 F-L10-01 失败）",
+    "unified_gate": "11/11 PASS",
+    "kert_l13_release": "23/23 PASS",
+    "backend": "tests=961 failures=0 errors=0 skipped=4"
+  },
+  "failures": {
+    "file": "loops/L13-release-interpretation-api/FAILURES.md",
+    "resolved": [
+      "F-L10-01 contract generate/check 失败（根因：15 条合同缺 generated 目标 + yaml_taxonomy 不支持）"
+    ],
+    "open": [
+      "F-L13-01 make check knowledge-architecture-check 失败（既有，knowledge_architecture_owner）"
+    ],
+    "observations": [
+      "O-L13-02 attestedBy 为会话级标识，正式发布前须替换为自然人 Owner 标识"
+    ]
+  },
+  "owner_action_required": {
+    "item": "Owner 签署 ReviewDecision 后 Release 方可 PUBLISHED",
+    "template": "Leibniz-KERT/.../90_control/decisions/DECISIONS.template.json",
+    "command": "python3 tools/l13_publish_release.py --decisions 90_control/decisions/signed.json",
+    "note": "脚本不会代替 Owner 生成决定；未签署时 Release 保持 DRAFT，解读 API 返回 404 PRODUCT_KNOWLEDGE_NOT_PUBLISHED"
+  },
+  "gate_flags": {
+    "FROZEN": "NO",
+    "PRODUCTION_READY": "NO",
+    "REAL_E2E_PASS": "NO"
+  },
+  "qa_pass": null,
+  "next_loop": null,
+  "owner_decision": {
+    "decision": "DECISION-20260906-02",
+    "decided_by": "owner",
+    "decided_at": "2026-09-06",
+    "scope": "签字 + 裁决（链路定位演示级）",
+    "attestedBy": "OWNER",
+    "attestation_source": "Owner 会话授权",
+    "pending": "O-L13-02：attestedBy 待替换为自然人 Owner 正式标识",
+    "decisions": [
+      {
+        "decisionId": "DEC-20260906-11111111",
+        "subject": "CNF-PRODCM001-757c6c3b",
+        "result": "采纳 50 万元（ASM-PRODCM001-991baf6e）"
+      },
+      {
+        "decisionId": "DEC-20260906-22222222",
+        "subject": "identity.productCode",
+        "result": "NOT_APPLICABLE"
+      },
+      {
+        "decisionId": "DEC-20260906-33333333",
+        "subject": "compliance.regulatoryBasis",
+        "result": "NOT_APPLICABLE"
+      }
+    ]
+  },
+  "smoke_test": {
+    "mode": "spring-boot:run 真实启动 + curl",
+    "endpoint": "GET /api/v1/product-knowledge/PROD-CM-001/interpretation",
+    "results": {
+      "OVERVIEW/INTERPRETATION": "200 · 2 字段 NOT_APPLICABLE",
+      "ELIGIBILITY/INTERPRETATION": "200 · minAccountBalance SUPPORTED=50 万元 · 9 条证据回链 · 定位第十条",
+      "PRICING/INTERPRETATION": "200 · serviceFee UNKNOWN（OQ-C 未裁决）",
+      "RECOMMENDATION": "422 PURPOSE_NOT_ALLOWED（DEMO 不进推荐）",
+      "PROD-CM-999": "404 PRODUCT_KNOWLEDGE_NOT_PUBLISHED"
+    }
+  }
+}

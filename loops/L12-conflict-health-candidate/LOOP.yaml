@@ -1,0 +1,39 @@
+loop_id: L12-conflict-health-candidate
+plan: PI-ARCH-IMPLEMENTATION-01
+phase: B
+created: 2026-09-06
+status: DEV_SELF_CHECK_PASS
+holder: tech_lead
+predecessor: L11-evidence-span-assertion
+
+authorization:
+  decision: DECISION-20260906-01
+  still_forbidden:
+    - 系统自动写入 resolution（INV-CNF-03）
+    - 冲突自动择一或按时间戳覆盖
+    - 原地修改断言（必须 supersedes 链）
+    - 复用 13 张 legacy card
+    - git add .
+    - 自签 QA_PASS
+
+scope:
+  in_scope:
+    - 冲突检测 → ConflictCase（CTR-PK-CNF-001）
+    - 字段体检报告
+    - 候选卡编译（不复用 legacy）
+  out_of_scope:
+    - 冲突裁决（Owner，L13）
+    - Release 签发与解读 API（L13）
+
+work_packages:
+  W1: { title: 冲突检测, status: ACCEPT }
+  W2: { title: 字段体检, status: ACCEPT }
+  W3: { title: 候选卡编译, status: ACCEPT }
+  W4: { title: 门禁与证据, status: ACCEPT }
+
+gates:
+  G-L12-1: { name: 冲突检测, status: PASS }
+  G-L12-2: { name: 字段体检, status: PASS }
+  G-L12-3: { name: 候选卡编译, status: PASS }
+
+next_loop: L13
