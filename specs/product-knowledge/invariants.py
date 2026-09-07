@@ -235,6 +235,20 @@ def cnf_04(o):
 # CTR-PK-RLS-001  ProductKnowledgeRelease
 # ============================================================
 
+
+def asm_09(o, conflict_index=None):
+    """SUPPORTED 保留 conflictId 时必须与冲突裁决一致"""
+    if o.get("knowledgeState") != "SUPPORTED" or not o.get("conflictId"):
+        return None
+    c = (conflict_index or {}).get(o["conflictId"])
+    if not c:
+        return f"conflictId 指向的冲突不存在: {o['conflictId']}"
+    if c.get("status") != "RESOLVED":
+        return "SUPPORTED 断言引用的冲突必须已 RESOLVED"
+    if (c.get("resolution") or {}).get("decisionId") != o.get("reviewDecisionId"):
+        return "SUPPORTED 断言的 reviewDecisionId 必须等于冲突裁决的 decisionId"
+    return None
+
 def rls_01(o):
     """recommendationReady => interpretationReady"""
     f = o.get("purposeFlags", {})
@@ -553,7 +567,7 @@ INVARIANTS = {
     "INV-EVS-09": evs_09, "INV-EVS-10": evs_10, "INV-EVS-11": evs_11,
     "INV-ASM-01": asm_01, "INV-ASM-02": asm_02, "INV-ASM-03": asm_03,
     "INV-ASM-04": asm_04, "INV-ASM-05": asm_05, "INV-ASM-06": asm_06,
-    "INV-ASM-08": asm_08,
+    "INV-ASM-08": asm_08, "INV-ASM-09": asm_09,
     "INV-CNF-01": cnf_01, "INV-CNF-02": cnf_02, "INV-CNF-03": cnf_03, "INV-CNF-04": cnf_04,
     "INV-RLS-01": rls_01, "INV-RLS-02": rls_02, "INV-RLS-05": rls_05,
     "INV-RLS-06": rls_06, "INV-RLS-07": rls_07, "INV-RLS-09": rls_09,

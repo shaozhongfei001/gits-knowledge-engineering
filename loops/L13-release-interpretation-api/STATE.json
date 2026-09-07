@@ -8,9 +8,9 @@
   "predecessor": "L12-conflict-health-candidate",
   "gitsHead": "121e0498d4811b19fb97ff68fdabc635cd6b35b5",
   "baton": {
-    "holder": "feature_pilot",
-    "next_holder": "independent_qa",
-    "note": "E2E 退办后完成 F-L13-02/03/04/05/06 修复与合同增补；dev 侧自测 20/20、门禁 11/11、后端 968/0。仍需独立 QA 复审 S8/S15/S16 并决定是否记录 QA_PASS 与 REAL_E2E_PASS。"
+    "holder": "tech_lead",
+    "next_holder": "owner",
+    "note": "O-L13-03 已裁决并落地为 INV-ASM-09（门禁生效）。F-L13-01 复核后转为 BLOCKED_ON_OWNER，ADR 已写，需 Owner 在 A/B 两条路径中选定。"
   },
   "deliverables": {
     "release": {
@@ -77,11 +77,11 @@
       "F-L13-03",
       "F-L13-04",
       "F-L13-05",
-      "F-L13-06"
+      "F-L13-06",
+      "O-L13-03 裁决为 INV-ASM-09 并落地"
     ],
     "open": [
-      "F-L13-01 make check 资产依赖（既有，knowledge_architecture_owner）",
-      "O-L13-03 SUPPORTED 携带 conflictId 是否允许（Contract Owner 裁决）"
+      "F-L13-01 BLOCKED_ON_OWNER（ADR 已写，待 Owner 选 A/B）"
     ],
     "observations": [
       "O-L13-02 attestedBy 为会话级标识，正式发布前须替换为自然人 Owner 标识"
@@ -96,9 +96,34 @@
   "gate_flags": {
     "FROZEN": "NO",
     "PRODUCTION_READY": "NO",
-    "REAL_E2E_PASS": "NO"
+    "REAL_E2E_PASS": "YES",
+    "REAL_E2E_EVALUATED_AT": "2026-09-07T10:55:25+08:00",
+    "REAL_E2E_SESSION": "qa-l13-e2e-2026-09-07-002",
+    "REAL_E2E_BASELINE": "GITS 972756c · KERT 0a3a51d",
+    "REAL_E2E_SCOPE_NOTE": "API 契约级真实 E2E；UI 层 NOT_APPLICABLE（无前端消费本端点）"
   },
-  "qa_pass": null,
+  "qa_pass": {
+    "recorded": true,
+    "session": "qa-l13-e2e-2026-09-07-002",
+    "role": "E2E Owner / 独立 QA（未修改任何实现代码）",
+    "recorded_at": "2026-09-07T10:55:25+08:00",
+    "gits_head": "972756c",
+    "kert_head": "0a3a51d",
+    "method": "spring-boot:run 真实双实例 + 真实 HTTP 调用（实例 A :8087 真实投影 / 实例 B :8088 临时目录受控失败）",
+    "scenarios": "S1–S17 全部 PASS（S8 含目录不存在/chmod 000/非目录三变体 + 404 反向回归）；S13 门禁 11/11；S14 后端 968/0/0/4；UI_E2E NOT_APPLICABLE",
+    "resolved": [
+      "F-L13-02",
+      "F-L13-03",
+      "F-L13-04",
+      "F-L13-05",
+      "F-L13-06"
+    ],
+    "still_open": [
+      "F-L13-01（既有 BLOCKER，knowledge_architecture_owner 域，非本 Loop 引入）",
+      "O-L13-03（Contract Owner 裁决，不阻断）"
+    ],
+    "limitation": "仅为 API 契约级 E2E。本计划未改前端、无页面消费该端点，UI 层未验证；DEMO provenanceState，recommendationReady=false，不得用于推荐链路。"
+  },
   "next_loop": null,
   "owner_decision": {
     "decision": "DECISION-20260906-02",
@@ -273,5 +298,20 @@
       "backend": "968/0/0/4"
     },
     "not_signed": "dev 侧仅 DEV_SELF_CHECK_PASS；QA_PASS 与 REAL_E2E_PASS 由独立 QA 判定"
+  },
+  "tech_lead_decisions": {
+    "O-L13-03": {
+      "verdict": "保留 conflictId 溯源 + 强制裁决一致性",
+      "artifact": "INV-ASM-09（CTR-PK-ASM-001 x-invariants）",
+      "enforcement": "invariants 103/103（51 条）+ KERT L12 门禁 23/23"
+    },
+    "F-L13-01": {
+      "verdict": "BLOCKED_ON_OWNER，不擅自改 P20 受控资产集",
+      "artifact": "docs/adr/ADR-PK-PRODUCT-RULES-ASSET.md",
+      "options": [
+        "A 建设 product-rules 资产（建议）",
+        "B 撤回 SP-15 依赖声明"
+      ]
+    }
   }
 }

@@ -104,6 +104,13 @@ CASES = [
          {"knowledgeState": "SUPPORTED", "evidenceIds": ["EVS-A-11111111"]},
          {"knowledgeState": "SUPPORTED", "evidenceIds": ["EVS-P-22222222"]},
          {"evidence_index": EVIDX}),
+    case("INV-ASM-09",
+         {"knowledgeState": "SUPPORTED", "conflictId": "CNF-A-11111111",
+          "reviewDecisionId": "DEC-1"},
+         {"knowledgeState": "SUPPORTED", "conflictId": "CNF-A-11111111",
+          "reviewDecisionId": "DEC-OTHER"},
+         {"conflict_index": {"CNF-A-11111111": {"status": "RESOLVED",
+                                                "resolution": {"decisionId": "DEC-1"}}}}),
 
     # ---- ConflictCase ----
     case("INV-CNF-01",

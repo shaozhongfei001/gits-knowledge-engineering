@@ -290,6 +290,7 @@
     "INV-ASM-05: knowledgeState=NOT_APPLICABLE => reviewDecisionId 非空且签发者角色 ∈ {PRODUCT_OWNER, RISK_OWNER, COMPLIANCE_OWNER}",
     "INV-ASM-06: 值变更不得原地覆盖，必须新建 assertionId 并设置 supersedes",
     "INV-ASM-07: 禁止由模型在无证据情况下产生 normalizedValue",
-    "INV-ASM-08: evidenceIds 中任一证据 usage=VERIFICATION_ONLY => 本断言不得为 SUPPORTED"
+    "INV-ASM-08: evidenceIds 中任一证据 usage=VERIFICATION_ONLY => 本断言不得为 SUPPORTED",
+    "INV-ASM-09: SUPPORTED 断言可保留 conflictId 作为冲突溯源，但该冲突必须 status=RESOLVED 且 resolution.decisionId == 本断言 reviewDecisionId；且 evidenceIds 只含采信证据，不得含被否决证据"
   ]
 }

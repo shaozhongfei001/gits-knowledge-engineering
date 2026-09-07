@@ -33,7 +33,7 @@ generated/openapi/gits-kno-api.normalized.json：paths 53 → 54（含新解读�
 
 ---
 
-## F-L13-01 · BLOCKER · OPEN（既有，非本 Loop 引入）
+## F-L13-01 · BLOCKER · **BLOCKED_ON_OWNER**（既有，非本 Loop 引入；2026-09-07 Tech Lead 复核并登记 ADR）
 
 **标题**：`make check` 在 `knowledge-architecture-check` 失败：`SP-15.json: unknown asset dependency ASSET-KNOW-PRODUCT-RULES`
 
@@ -292,3 +292,117 @@ SUPPORTED 字段携带 `conflictId` 且历史证据集含相反数值。合同�
 统一门禁 11/11 · 后端 968 tests / 0 failure（基线 955 + 新增 13）
 后端测试数：961 → 968
 ```
+
+---
+---
+
+# 独立 QA 复审结论（2026-09-07 · session `qa-l13-e2e-2026-09-07-002`）
+
+> 复审基线：GITS `feature/PI-ARCH-L10-L13` @ `972756c` · KERT @ `0a3a51d`
+> 方法：真实 `spring-boot:run` 双实例 + 真实 HTTP 调用（实例 A `:8087` 真实投影；实例 B `:8088` 临时目录受控失败）
+> **结论：`REAL_E2E_PASS = YES`，记录 `QA_PASS`。**
+
+## 复审判定汇总
+
+| # | 场景 | 判定 | 实际响应要点 |
+|---|---|---|---|
+| S8 | 快照目录不存在 | **PASS** | `503` `{"code":"FAILED_CLOSED","message":"KERT 解读快照目录不可达: /tmp/e2e-l13/snap"}`；`leakedTokens=[]` |
+| S8b | 目录存在但 `chmod 000` | **PASS** | `503 FAILED_CLOSED`（复审新增变体，非 dev 自测范围） |
+| S8c | 路径指向普通文件 | **PASS** | `503 FAILED_CLOSED`（复审新增变体） |
+| S8r | 目录可达但产品无投影 | **PASS** | `404 PRODUCT_KNOWLEDGE_NOT_PUBLISHED` —— **404 与 503 已正确分离，未因修复而误伤** |
+| S15 | `view=BOGUS` | **PASS** | `400 BAD_REQUEST`「view 取值非法: BOGUS（允许 PRICING/ELIGIBILITY/OVERVIEW）」 |
+| S15 | `purpose=BOGUS` | **PASS** | `400 BAD_REQUEST`（此前 422 `PURPOSE_NOT_ALLOWED` 错码） |
+| S16 | 缺 `purpose` | **PASS** | `400`，六字段 `status/error/code/message/path/timestamp` 齐备（`missing=[]`）；缺 `view`、两者皆缺同样齐备 |
+| S17 | 证据去重 | **PASS** | `minAccountBalance` 摘要 `total=1 / distinct=1 / duplicated=false`（此前 9/4） |
+| S1–S7 | 主链路回归 | **PASS** | 三视图 200（`fields` 为 array，2/3/1 项）；`SUPPORTED` + `"50 万元"` + `第十条` 回链且原文可定位；三字段 `UNKNOWN` 不补值；无 `CANDIDATE`；`422`/`404`/`400` |
+| S9 / S10 | 损坏 / stale | **PASS** | `503 FAILED_CLOSED` / `409 RELEASE_STALE` |
+| S11 | 错误六字段 | **PASS** | 5 类错误响应（422/404/400×3）`missing=[]` |
+| S12 | 证据回链 | **PASS** | 1/1 命中 `SRC-CM-001.evidence-spans.json`，五字段逐项一致 |
+| S13 | 统一门禁 | **PASS** | `PASS 11 · FAIL 0 · SKIP 0` |
+| S14 | 后端回归 | **PASS** | `968 tests / 0 failure / 0 error / 4 skipped`（apps 585 + modules 224 + adapters 92 + scenario 67） |
+| UI | 前端 E2E | **NOT_APPLICABLE** | `frontend/src` 仍无代码调用本端点（`v11.ts` 的 `/product-knowledge/*` 为版本列表/详情），本计划未改前端 |
+
+## F-L13-02 · MAJOR → **RESOLVED（独立 QA 验证通过）**
+
+`KertReleaseSnapshotAdapter.load()` 新增 `!Files.isDirectory(snapshotDir) || !Files.isReadable(snapshotDir)` 分支 → 抛 `KnowledgeSourceUnavailableException`。
+复审除原 S8 外，另注入两个 dev 自测未覆盖的变体（`chmod 000`、路径指向普通文件），均得 `503 FAILED_CLOSED`；
+并反向验证「目录可达但产品无投影」仍为 `404`，确认修复未把两类语义重新合并。
+结构性漏网已补：`KertReleaseSnapshotAdapterTest`（5 项，真实文件系统 `@TempDir`）覆盖目录缺失/未配置/文件缺失/损坏/正常加载。
+
+## F-L13-03 · MAJOR → **RESOLVED（独立 QA 验证通过）**
+
+`normalizeEnum` 增白名单 `ALLOWED_VIEWS` / `ALLOWED_PURPOSES`，非法取值 → `400 BAD_REQUEST`。
+`view=BOGUS` 由「200 + 空 fields + 响应体携带合同外枚举值」修正为 400；`purpose=BOGUS` 由 422 错码修正为 400。
+
+## F-L13-04 · MINOR → **RESOLVED（独立 QA 验证通过）**
+
+新增 `@ExceptionHandler(MissingServletRequestParameterException)` → 统一错误体。
+缺 `purpose` / 缺 `view` / 两者皆缺三种组合均为 `400` 且六字段齐备。
+
+## F-L13-05 · MINOR → **RESOLVED（独立 QA 验证通过）**
+
+`CTR-PK-INT-001` 响应码由 `["200","404","409","422","503"]` 扩为 `["200","400","404","409","422","503"]`；
+`ErrorResponse.code` 枚举补 `BAD_REQUEST`。实现与合同的 400 缺口闭合。
+
+## F-L13-06 · MINOR → **RESOLVED（独立 QA 验证通过）**
+
+KERT 侧投影只取当前有效断言的证据并按 `evidenceId` 去重：`9 条 / 4 去重` → `1 条 / 1 去重`。
+投影文件 md5 `6da49bb4…` → `1ed0685f…`（KERT @ `0a3a51d`，已重新发布），复审后 md5 未再变动。
+
+## O-L13-03 · OBSERVATION · **保留 OPEN**
+
+`SUPPORTED` 仍携带 `conflictId=CNF-PRODCM001-757c6c3b`（投影中该字段 `conflictId` 非空且 `knowledgeState=SUPPORTED`）。
+合同未定义该不变式，按裁决交 Contract Owner，本轮不作为缺陷计，**不阻断 QA_PASS**。
+附带影响已确认：去重后被否决的相反证据（SRC-CM-003「100 万元」）不再出现在该字段下，
+冲突溯源改由 `conflictId` 承担 —— 与「SUPPORTED 只由采信证据支撑」一致，但需在合同裁决时一并确认。
+
+---
+
+## F-L13-01 复核（2026-09-07 · Tech Lead）
+
+**调查结论**：不是"漏注册一个资产"这么简单。
+
+- 资产清单来自 `specs/knowledge-architecture/assets/**/*.md`，**恰好 20 份**，
+  其中 `knowledge-rules/` 下只有 visit-sop / evidence-policy / kyc-question-library /
+  customer-ontology / product-cards / claim-reconciliation —— **无产品规则**；
+- 校验写死 `exactly 20 P20 asset manifests` ⇒ 新增第 21 份必须同时改常量，
+  即改动 P20 受控资产集基线；
+- 资产清单必填 `governance.owner/classification/permissionInherit/allowedActions`
+  与 `evidence` 三项全 true —— **尚未建设的资产无法诚实填写**；
+- 直接删依赖会让契约声称"产品适配不需要产品规则"，属**掩盖缺口**，不予采用。
+
+**同一缺口的另一处投影**：L13 Release 的 `rulePackageHash = SHA-256("RULEPACKAGE:EMPTY")`
+是占位值 —— 产品规则包同样未建设。两者是同一缺口在两个体系中的表达。
+
+**裁决**：不在本计划内擅自新增 P20 资产，也不删依赖。写
+`docs/adr/ADR-PK-PRODUCT-RULES-ASSET.md`，给出两条解除路径：
+
+| 路径 | 动作 | 建议 |
+|---|---|---|
+| A 建设资产 | 新增 `assets/knowledge-rules/product-rules.md` + 常量 20→21 + KERT 规则包落地 | **建议采用**（SP-15 是 RULE_MODEL，规则是必要输入） |
+| B 撤回声明 | 从 SP-15 / AC-PRODUCT-RECOMMEND-001 移除该依赖并复核 implementationType | 仅在规则改由 KERT Release 独载时采用 |
+
+**影响边界**：仅阻断 `make check` 的 `knowledge-architecture-check` 步骤（CI 绿灯）。
+PI-ARCH 交付不受影响 —— 统一门禁 11/11、E2E S1–S17 全 PASS、演示可用。
+
+## O-L13-03 裁决（2026-09-07 · Tech Lead）
+
+**问题**：SUPPORTED 断言携带 `conflictId`，且其证据集历史曾含被否决的相反数值原文。
+
+**裁决**：**保留 conflictId 作为溯源**，但强制"裁决一致性" —— 采信结论必须能追溯到
+正是哪一条 Owner 决策解决了那个冲突，且不得混入被否决证据。
+
+新增 **`INV-ASM-09`**（已进入 `CTR-PK-ASM-001` 的 `x-invariants`）：
+```
+SUPPORTED 断言可保留 conflictId 作为冲突溯源，但该冲突必须 status=RESOLVED
+且 resolution.decisionId == 本断言 reviewDecisionId；
+且 evidenceIds 只含采信证据，不得含被否决证据
+```
+
+落地：
+- `invariants.py` / `check_invariants.py`：谓词 + 正反例（103/103，51 条）
+- KERT `check_l12_conflicts.py`：对真实数据校验冲突存在/已裁决/决策 ID 一致/无被否决证据交集
+  （门禁 23/23 PASS）
+
+理由：清空 conflictId 会丢失"这个字段曾经打架、由谁裁决"的信息，
+对审计场景是资产而非负担；真正该管住的是**采信证据集合的纯净性**。
