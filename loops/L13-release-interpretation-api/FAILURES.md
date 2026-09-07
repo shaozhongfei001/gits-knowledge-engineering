@@ -33,7 +33,7 @@ generated/openapi/gits-kno-api.normalized.json：paths 53 → 54（含新解读�
 
 ---
 
-## F-L13-01 · BLOCKER · **BLOCKED_ON_OWNER**（既有，非本 Loop 引入；2026-09-07 Tech Lead 复核并登记 ADR）
+## F-L13-01 · BLOCKER · **RESOLVED**（既有，非本 Loop 引入；2026-09-07 Owner 选路径 A 后修复）
 
 **标题**：`make check` 在 `knowledge-architecture-check` 失败：`SP-15.json: unknown asset dependency ASSET-KNOW-PRODUCT-RULES`
 
@@ -406,3 +406,34 @@ SUPPORTED 断言可保留 conflictId 作为冲突溯源，但该冲突必须 sta
 
 理由：清空 conflictId 会丢失"这个字段曾经打架、由谁裁决"的信息，
 对审计场景是资产而非负担；真正该管住的是**采信证据集合的纯净性**。
+
+---
+
+## F-L13-01 修复（2026-09-07 · Owner 选定路径 A）
+
+| 步骤 | 内容 |
+|---|---|
+| 1 | 新增 `specs/knowledge-architecture/assets/knowledge-rules/product-rules.md`<br>（`ASSET-KNOW-PRODUCT-RULES`，`KNOWLEDGE_RULE` 类，governance/evidence 必填项齐全） |
+| 2 | `validate_knowledge_architecture.py`：资产基线 `exactly 20` → `21` |
+| 3 | KERT 新增 `04_serve/rule-packages/PROD-CM-001.rule-package.json`<br>`status=NOT_BUILT` / `rules=[]` / `failurePolicy=FAIL_CLOSED` |
+| 4 | `l13_publish_release.py`：`rulePackageHash` 由 `SHA-256("RULEPACKAGE:EMPTY")` 常量<br>改为**规则包文件的真实内容哈希**（已核验不再是 EMPTY 占位） |
+| 5 | Release 重新签发（bundle 变更） |
+
+**顺带修掉的同源基线不同步**：`unexpected P20 activation set` ——
+`IN_SCOPE_CONTRACTS` 缺 `AC-PRODUCT-RECOMMEND-001`（该文件早已存在未被登记）。
+补入后 `knowledge-architecture-check` 转 PASS。
+
+**诚实边界**：规则包**内容仍为空**（`NOT_BUILT`）。本次修的是"资产从未注册"与
+"哈希是写死常量"两件事 —— 让"规则未建设"显式可见且可追溯，
+**不是**宣称规则已生效。规则内容须由产品管理部与风险部共同签署后方可置 `BUILT`。
+
+**验证**：
+```
+make check                        → EXIT=0
+  contract-check PASS · knowledge-architecture-check PASS（assets=21）
+  loop-guard PASS · secret-scan PASS · enum-consistency PASS
+  semantic-rule-gate PASS（SHACL / Schema JSON / DMN / LinkML）
+python3 specs/product-knowledge/check_all.py → 11/11 PASS
+KERT L12=0 · L13=0
+```
+未改动任何 Java 代码，未重跑后端测试。

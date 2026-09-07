@@ -9,8 +9,8 @@
   "gitsHead": "121e0498d4811b19fb97ff68fdabc635cd6b35b5",
   "baton": {
     "holder": "tech_lead",
-    "next_holder": "owner",
-    "note": "O-L13-03 已裁决并落地为 INV-ASM-09（门禁生效）。F-L13-01 复核后转为 BLOCKED_ON_OWNER，ADR 已写，需 Owner 在 A/B 两条路径中选定。"
+    "next_holder": "independent_qa",
+    "note": "O-L13-03 已裁决为 INV-ASM-09；F-L13-01 依 Owner 选定的路径 A 修复完成，make check 全线 PASS（EXIT=0）。规则包内容仍为 NOT_BUILT，属显式登记而非宣称已生效。"
   },
   "deliverables": {
     "release": {
@@ -78,11 +78,10 @@
       "F-L13-04",
       "F-L13-05",
       "F-L13-06",
-      "O-L13-03 裁决为 INV-ASM-09 并落地"
+      "O-L13-03 裁决为 INV-ASM-09 并落地",
+      "F-L13-01 路径 A（资产登记 + 基线 21 + 规则包容器 + 真实哈希）"
     ],
-    "open": [
-      "F-L13-01 BLOCKED_ON_OWNER（ADR 已写，待 Owner 选 A/B）"
-    ],
+    "open": [],
     "observations": [
       "O-L13-02 attestedBy 为会话级标识，正式发布前须替换为自然人 Owner 标识"
     ]
@@ -306,12 +305,10 @@
       "enforcement": "invariants 103/103（51 条）+ KERT L12 门禁 23/23"
     },
     "F-L13-01": {
-      "verdict": "BLOCKED_ON_OWNER，不擅自改 P20 受控资产集",
-      "artifact": "docs/adr/ADR-PK-PRODUCT-RULES-ASSET.md",
-      "options": [
-        "A 建设 product-rules 资产（建议）",
-        "B 撤回 SP-15 依赖声明"
-      ]
+      "verdict": "路径 A 已执行",
+      "assets": 21,
+      "rule_package": "04_serve/rule-packages/PROD-CM-001.rule-package.json (NOT_BUILT)",
+      "make_check": "EXIT=0（全线 PASS）"
     }
   }
 }
