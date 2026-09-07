@@ -8,9 +8,9 @@
   "predecessor": "L12-conflict-health-candidate",
   "gitsHead": "121e0498d4811b19fb97ff68fdabc635cd6b35b5",
   "baton": {
-    "holder": "tech_lead",
+    "holder": "feature_pilot",
     "next_holder": "independent_qa",
-    "note": "L13 完成 Release 签发管线与解读 API。KERT 侧产出 RLS-2026.09.06.1（DRAFT，BLOCKED_ON_OWNER：未获 Owner 签署决策，不冒充已发布）与三视图投影；GITS 侧完成 OpenAPI 登记、生成、Controller/Port/Adapter 实现与 6 项测试。合同增补 RLS-001 provenanceState + INV-RLS-09 + V023 约束。统一门禁 11/11，后端 961 无回归。"
+    "note": "E2E 退办后完成 F-L13-02/03/04/05/06 修复与合同增补；dev 侧自测 20/20、门禁 11/11、后端 968/0。仍需独立 QA 复审 S8/S15/S16 并决定是否记录 QA_PASS 与 REAL_E2E_PASS。"
   },
   "deliverables": {
     "release": {
@@ -73,10 +73,15 @@
   "failures": {
     "file": "loops/L13-release-interpretation-api/FAILURES.md",
     "resolved": [
-      "F-L10-01 contract generate/check 失败（根因：15 条合同缺 generated 目标 + yaml_taxonomy 不支持）"
+      "F-L13-02",
+      "F-L13-03",
+      "F-L13-04",
+      "F-L13-05",
+      "F-L13-06"
     ],
     "open": [
-      "F-L13-01 make check knowledge-architecture-check 失败（既有，knowledge_architecture_owner）"
+      "F-L13-01 make check 资产依赖（既有，knowledge_architecture_owner）",
+      "O-L13-03 SUPPORTED 携带 conflictId 是否允许（Contract Owner 裁决）"
     ],
     "observations": [
       "O-L13-02 attestedBy 为会话级标识，正式发布前须替换为自然人 Owner 标识"
@@ -131,5 +136,142 @@
       "RECOMMENDATION": "422 PURPOSE_NOT_ALLOWED（DEMO 不进推荐）",
       "PROD-CM-999": "404 PRODUCT_KNOWLEDGE_NOT_PUBLISHED"
     }
+  },
+  "independent_qa_e2e": {
+    "session": "qa-l13-e2e-2026-09-07-001",
+    "role": "E2E Owner / 独立 QA（仅验证与记录，未改实现代码）",
+    "date": "2026-09-07",
+    "method": "spring-boot:run 真实启动 + 真实 HTTP 调用（非代码审阅）",
+    "instances": {
+      "A": {
+        "port": 8087,
+        "snapshotDir": "/home/szf/dev/Leibniz-KERT/examples/product-recommendation-assets/04_serve/interpretation",
+        "scenarios": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "S6",
+          "S7",
+          "S11",
+          "S12"
+        ]
+      },
+      "B": {
+        "port": 8088,
+        "snapshotDir": "/tmp/e2e-l13/snap（临时目录，受控失败注入）",
+        "scenarios": [
+          "S8",
+          "S9",
+          "S10"
+        ]
+      }
+    },
+    "gitsHead": "ca5ed72cea2962f6387e6ef3c6b50a3be0a346a0",
+    "kertHead": "5f3a2b8f7e553e4a8ecfde3e38c99654a4f57292",
+    "scenario_results": {
+      "S1": {
+        "verdict": "PASS",
+        "evidence": "OVERVIEW/ELIGIBILITY/PRICING × INTERPRETATION 均 200；fields 均为 array（2/3/1 项），无 null"
+      },
+      "S2": {
+        "verdict": "PASS",
+        "evidence": "eligibility.minAccountBalance = SUPPORTED，displayValue=\"50 万元\"，evidenceSummaries 9 条非空，含 locatorHint=\"第十条\"；4 个去重 evidenceId 的 quoteExcerpt 均可在 01_raw/_authoritative/SRC-CM-001.DEMO.md / SRC-CM-003.DEMO.md 中原样定位（verbatim=true）"
+      },
+      "S3": {
+        "verdict": "PASS",
+        "evidence": "eligibility.customerSegment / eligibility.prerequisiteProducts / pricing.serviceFee 均 UNKNOWN，displayValue=null，evidenceSummaries=[]，conflictId=null"
+      },
+      "S4": {
+        "verdict": "PASS",
+        "evidence": "三个视图响应体全量扫描，无 knowledgeState=CANDIDATE；响应体亦不含 CANDIDATE 令牌"
+      },
+      "S5": {
+        "verdict": "PASS",
+        "evidence": "purpose=RECOMMENDATION → 422 PURPOSE_NOT_ALLOWED（DEMO 不进推荐）"
+      },
+      "S6": {
+        "verdict": "PASS",
+        "evidence": "PROD-CM-999 → 404 PRODUCT_KNOWLEDGE_NOT_PUBLISHED"
+      },
+      "S7": {
+        "verdict": "PASS",
+        "evidence": "BAD-ID → 400 BAD_REQUEST（合同未定义 400，见 F-L13-05）"
+      },
+      "S8": {
+        "verdict": "FAIL",
+        "evidence": "快照目录不存在 → 404 PRODUCT_KNOWLEDGE_NOT_PUBLISHED，期望 503 FAILED_CLOSED；响应体无本地兜底令牌（leakedTokens=[]），未违反禁止本地兜底红线。见 F-L13-02"
+      },
+      "S9": {
+        "verdict": "PASS",
+        "evidence": "投影 JSON 截断损坏 → 503 FAILED_CLOSED，无 fields/部分数据泄漏"
+      },
+      "S10": {
+        "verdict": "PASS",
+        "evidence": "isStale=true → 409 RELEASE_STALE"
+      },
+      "S11": {
+        "verdict": "PASS",
+        "evidence": "422/404/400 三类错误响应均含 status/error/code/message/path/timestamp 六字段，missing=[]"
+      },
+      "S12": {
+        "verdict": "PASS",
+        "evidence": "9 条 evidenceSummaries 全量回链至 02_work/evidence-spans/*.json，且 sourceId / sourceVersionId / locator.clause / quote / authorityLevel 五项逐字段一致（consistent=true）"
+      },
+      "S13": {
+        "verdict": "PASS",
+        "evidence": "统一门禁 11/11 PASS（需用 /usr/bin/python3；workbuddy python 3.14.3 缺 jsonschema，属环境差异非产品缺陷）。其中 KERT L13 发布/投影 24/24（上一轮记录为 23/23，门禁增项所致，非回退）"
+      },
+      "S14": {
+        "verdict": "PASS",
+        "evidence": "apps/api 578 + modules 224 + adapters 92 + scenario 67 = 961 tests，failures=0 errors=0 skipped=4，与基线完全一致"
+      },
+      "UI_E2E": {
+        "verdict": "NOT_APPLICABLE",
+        "evidence": "frontend/src 无任何代码调用 /api/v1/product-knowledge/{productId}/interpretation（v11.ts 的 /product-knowledge/* 为版本列表/详情，与本端点无关）；本计划未改前端，无 UI 对象可验"
+      }
+    },
+    "failures_recorded": [
+      "F-L13-02 · MAJOR · OPEN —— 快照目录不可达降级为 404（S8 FAIL）",
+      "F-L13-03 · MAJOR · OPEN —— view/purpose 未做枚举校验，非法 view 返回 200 + 合同外枚举值",
+      "F-L13-04 · MINOR · OPEN —— 缺必填参数时返回非统一错误结构",
+      "F-L13-05 · MINOR · OPEN —— CTR-PK-INT-001 未定义 400 响应（合同缺口）",
+      "F-L13-06 · MINOR · OPEN —— KERT 投影 evidenceSummaries 重复条目（9 条 / 4 去重）"
+    ],
+    "observations_recorded": [
+      "O-L13-03 —— SUPPORTED 字段携带 conflictId 且证据集含相反数值原文，合同未定义不变式"
+    ],
+    "projection_integrity": {
+      "checked": true,
+      "file": "Leibniz-KERT/.../04_serve/interpretation/PROD-CM-001.json",
+      "md5_before_and_after": "6da49bb4a7b235d21883c0ed4c773ec5",
+      "polluted": false,
+      "note": "S8/S9/S10 全部在 /tmp/e2e-l13/snap 临时目录注入，已发布投影零改动"
+    },
+    "evidence_artifacts": [
+      "loops/L13-release-interpretation-api/evidence/e2e-2026-09-07/results_s1_s7.json",
+      "loops/L13-release-interpretation-api/evidence/e2e-2026-09-07/results_s8_s10.json",
+      "loops/L13-release-interpretation-api/evidence/e2e-2026-09-07/run_s1_s7.py",
+      "loops/L13-release-interpretation-api/evidence/e2e-2026-09-07/run_s8_s10.py"
+    ],
+    "qa_pass": null,
+    "qa_pass_reason": "S8 未通过（F-L13-02 MAJOR OPEN），不满足记录 QA_PASS 的条件；本轮仅做验证与记录，未修改任何实现代码"
+  },
+  "updated": "2026-09-07",
+  "fix_wave": {
+    "resolved": [
+      "F-L13-02 目录不可达 503 / 产品缺失 404 分离 + Adapter 级测试",
+      "F-L13-03 view/purpose 枚举白名单 → 400",
+      "F-L13-04 缺参返回统一错误体",
+      "F-L13-05 合同补 400 与 BAD_REQUEST",
+      "F-L13-06 投影证据去重（9→1）"
+    ],
+    "self_check": {
+      "scenarios": "20/20 PASS",
+      "unified_gate": "11/11",
+      "backend": "968/0/0/4"
+    },
+    "not_signed": "dev 侧仅 DEV_SELF_CHECK_PASS；QA_PASS 与 REAL_E2E_PASS 由独立 QA 判定"
   }
 }
