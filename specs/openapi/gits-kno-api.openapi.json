@@ -2234,6 +2234,16 @@
               }
             }
           },
+          "400": {
+            "description": "参数错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductKnowledgeErrorResponse"
+                }
+              }
+            }
+          },
           "404": {
             "description": "产品无已发布 Release",
             "content": {
@@ -5014,7 +5024,8 @@
               "PURPOSE_NOT_ALLOWED",
               "RELEASE_STALE",
               "KNOWLEDGE_GATE_FAILED",
-              "FAILED_CLOSED"
+              "FAILED_CLOSED",
+              "BAD_REQUEST"
             ]
           },
           "message": {

@@ -116,7 +116,8 @@
               "PURPOSE_NOT_ALLOWED",
               "RELEASE_STALE",
               "KNOWLEDGE_GATE_FAILED",
-              "FAILED_CLOSED"
+              "FAILED_CLOSED",
+              "BAD_REQUEST"
             ],
             "type": "string"
           },
@@ -347,6 +348,16 @@
               }
             },
             "description": "解读结果"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "参数错误（productId 格式非法、view/purpose 取值非法或缺失）"
           },
           "404": {
             "content": {

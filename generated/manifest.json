@@ -17,14 +17,14 @@
     "knowledge-architecture/knowledge-map.schema.json": "79a2f91f441dfd6c6dcec512811dd1a6cbe397131ebfd9ed425f01faa08154ed",
     "knowledge-architecture/route-policy.schema.json": "b7139de0c30710db5c52e22a6d8902cc4028f736ea9715df2f6812cba47d3af1",
     "knowledge-architecture/skill-descriptor.schema.json": "438699aea8737a599526ce05c568c7ffac3cfc4189d8f5d1fe309d71a1e28407",
-    "openapi/gits-kno-api.normalized.json": "cb78aef9735b8d92d20a61d0ff4a3f714ea4c0fb6b198c44163b34415783b987",
+    "openapi/gits-kno-api.normalized.json": "d3b5321a99e7d5384a40bde7a268a4a81477aa1b982329883e88a73f32f56f4d",
     "openapi/product-recommendation.normalized.json": "dcb241031820134eb8af22faaec37913e9e577f30b4e90f7f052613e54b6f297",
     "product-knowledge/conflict-case.schema.json": "782d4c30c1ad093f049d445f8a7f30528f1b0ab907b3a44e2713db8262b71f94",
     "product-knowledge/evidence-ref.schema.json": "0ab28cf3fef200630ac149d15920e9caac47d663f25bfc89ca5a878fa6d253bf",
     "product-knowledge/evidence-span.schema.json": "0b6819a927dc3087304be7f81e3dbf06689ef567f80bfbc6dc59be14f9fac567",
     "product-knowledge/field-assertion.schema.json": "9a822a1b79b222ba2fdbad983dac0d96c122f48c0d3dfc4da3e1d7e0eff9846b",
     "product-knowledge/field-policy.schema.json": "b9c0897cb77e7853334b11558703d16f7ed156ff023e1648a3deac0b38a2a195",
-    "product-knowledge/interpretation-api.normalized.json": "eeeda0080229c08551d11ebd11c63846951c15f7168b29ad0c1c8f6b58cdea15",
+    "product-knowledge/interpretation-api.normalized.json": "76d4b7782e3bdf0c4f2366e5740e1f9232e1ed90ba731661319918095cff5cbb",
     "product-knowledge/product-knowledge-changed.schema.json": "65117d67d3720b39f9db49946be140e84278f272cca0125b6eeff9aee52b0c4e",
     "product-knowledge/product-knowledge-release.schema.json": "ec29b820b9f1c4c0c337f63a3fb59fd4164e4c4965cf6d232eb74431699c198f",
     "product-knowledge/product-taxonomy.normalized.json": "7b0c2b78ad6d7a2e4e73676e6ebccc4874db090950f48530af0e696b14c87043",
@@ -46,7 +46,7 @@
   "source_hashes": {
     "CTR-ACTION-001": "650df57e991234d0e7e903aa3fa2674c9bf8f65b3d9b067cf42b5c1e1290b00b",
     "CTR-ACTIVATION-001": "cdb6d1d55f18eb534c2eafb07ef0b9ccc5ebb1bf56cb159b2383eb1e16670889",
-    "CTR-API-001": "783095166ad1d279c03d99a7b918d023fd8bf12c8c105e34b406e0281e122d51",
+    "CTR-API-001": "96a80fd644e7ca2e1758d8123f2cea3c3158f7aa651126bb9785fd0511f9ca23",
     "CTR-ASSET-001": "d479c1942b4fd6d51dceac190fedbabb2e048154935299e0fe4ffc063ef897eb",
     "CTR-DATA-001": "a3079c8ef7855dcc5be085f3e9e9545d19bdb28c62ca28e30c9c24874c4f5bc5",
     "CTR-DATA-002": "66663cb6f38d977419cfdfe878c6e9f1f244a710de11809ec1d29778b5d1a732",
@@ -64,7 +64,7 @@
     "CTR-PK-EVR-001": "fbe9245386b010a8679354f770051ebe8dec3f50350460aebf97f6a5fd3bfaf4",
     "CTR-PK-EVS-002": "b080e2206970d01fcd67c9a067f7571454ee00a81ad28fab7137023de25ce53b",
     "CTR-PK-FLD-001": "6b74ff840d69371ffd2a0aea5a7fdd972d516b6c919b75b914c1b86c789b2a1e",
-    "CTR-PK-INT-001": "b552fe8e5eff839a0098a61f6dc3be587f6ba67bf10a49dce1cb457e980dcc2a",
+    "CTR-PK-INT-001": "29f5fbc5b45c5d8681f2b51be25508270e5873169af3daf7bdfc711a6011b318",
     "CTR-PK-RLS-001": "b6fba7da67f7783445cc577933b50e3526ab565de2371cadea281bcb60cc843d",
     "CTR-PK-TAX-001": "21508c10dc10010db5a264d47a02f9445427a0467740300f84929063752aa7bc",
     "CTR-PLAN-001": "671ed824740eba6ed3587ce8c2743494cf2b8ade3255764217aacee1768b1de2",
@@ -81,9 +81,9 @@
     "CTR-SEM-002": "eddf0f74f0a0d1ad7e26821e158e4838b29872bb2c2a6711351d1a1b9fe0e212",
     "CTR-SKILL-001": "954406cf749725c9d9945e305361b9f7cd79cec4bbc723b54c4768b394fbb14e",
     "CTR-SKILL-002": "59a783e411d626144899b54e38587e27d62c9f625b19e99b8063309fe9c405d6",
-    "CTR-V11-001": "783095166ad1d279c03d99a7b918d023fd8bf12c8c105e34b406e0281e122d51",
-    "CTR-V11-002": "783095166ad1d279c03d99a7b918d023fd8bf12c8c105e34b406e0281e122d51",
-    "CTR-V11-003": "783095166ad1d279c03d99a7b918d023fd8bf12c8c105e34b406e0281e122d51",
-    "CTR-V11-004": "783095166ad1d279c03d99a7b918d023fd8bf12c8c105e34b406e0281e122d51"
+    "CTR-V11-001": "96a80fd644e7ca2e1758d8123f2cea3c3158f7aa651126bb9785fd0511f9ca23",
+    "CTR-V11-002": "96a80fd644e7ca2e1758d8123f2cea3c3158f7aa651126bb9785fd0511f9ca23",
+    "CTR-V11-003": "96a80fd644e7ca2e1758d8123f2cea3c3158f7aa651126bb9785fd0511f9ca23",
+    "CTR-V11-004": "96a80fd644e7ca2e1758d8123f2cea3c3158f7aa651126bb9785fd0511f9ca23"
   }
 }

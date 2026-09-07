@@ -31,6 +31,10 @@ public class ProductInterpretationController {
 
     private static final Logger log = LoggerFactory.getLogger(ProductInterpretationController.class);
     private static final Pattern PRODUCT_ID = Pattern.compile("^PROD-[A-Z]+-[0-9]{3}$");
+    private static final java.util.Set<String> ALLOWED_VIEWS =
+            java.util.Set.of("OVERVIEW", "ELIGIBILITY", "PRICING");
+    private static final java.util.Set<String> ALLOWED_PURPOSES =
+            java.util.Set.of("INTERPRETATION", "RECOMMENDATION");
     private static final String PATH_TEMPLATE = "/api/v1/product-knowledge/%s/interpretation";
 
     private final ProductKnowledgeInterpretationPort port;
@@ -52,8 +56,8 @@ public class ProductInterpretationController {
             throw new InterpretationRejectedException(HttpStatus.BAD_REQUEST, "BAD_REQUEST",
                     "productId 不符合 PROD-XX-NNN 格式: " + productId);
         }
-        String normalizedView = normalizeEnum(view, "view");
-        String normalizedPurpose = normalizeEnum(purpose, "purpose");
+        String normalizedView = normalizeEnum(view, "view", ALLOWED_VIEWS);
+        String normalizedPurpose = normalizeEnum(purpose, "purpose", ALLOWED_PURPOSES);
 
         Optional<InterpretationProjection> loaded = port.load(productId);
         if (loaded.isEmpty()) {
@@ -118,12 +122,29 @@ public class ProductInterpretationController {
         return new InterpretedField(f.getFieldPath(), value, state, visible, f.getConflictId());
     }
 
-    private static String normalizeEnum(String raw, String name) {
+    private static String normalizeEnum(String raw, String name, java.util.Set<String> allowed) {
         if (raw == null) {
             throw new InterpretationRejectedException(HttpStatus.BAD_REQUEST, "BAD_REQUEST",
                     name + " 为必填参数");
         }
-        return raw.toUpperCase(Locale.ROOT);
+        String normalized = raw.toUpperCase(Locale.ROOT);
+        if (!allowed.contains(normalized)) {
+            throw new InterpretationRejectedException(HttpStatus.BAD_REQUEST, "BAD_REQUEST",
+                    name + " 取值非法: " + raw + "（允许 " + String.join("/", allowed) + "）");
+        }
+        return normalized;
+    }
+
+    @ExceptionHandler(org.springframework.web.bind.MissingServletRequestParameterException.class)
+    public ResponseEntity<ProductKnowledgeErrorResponse> handleMissingParam(
+            org.springframework.web.bind.MissingServletRequestParameterException ex,
+            jakarta.servlet.http.HttpServletRequest request) {
+        return ResponseEntity.badRequest().body(new ProductKnowledgeErrorResponse(
+                400, "Bad Request", "BAD_REQUEST",
+                "缺少必填参数 " + ex.getParameterName(),
+                request == null ? String.format(PATH_TEMPLATE, "{productId}")
+                        : request.getRequestURI(),
+                Instant.now().toString()));
     }
 
     @ExceptionHandler(InterpretationRejectedException.class)

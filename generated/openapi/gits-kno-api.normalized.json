@@ -2201,7 +2201,8 @@
               "PURPOSE_NOT_ALLOWED",
               "RELEASE_STALE",
               "KNOWLEDGE_GATE_FAILED",
-              "FAILED_CLOSED"
+              "FAILED_CLOSED",
+              "BAD_REQUEST"
             ],
             "type": "string"
           },
@@ -2817,6 +2818,16 @@
               }
             },
             "description": "解读结果"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductKnowledgeErrorResponse"
+                }
+              }
+            },
+            "description": "参数错误"
           },
           "404": {
             "content": {

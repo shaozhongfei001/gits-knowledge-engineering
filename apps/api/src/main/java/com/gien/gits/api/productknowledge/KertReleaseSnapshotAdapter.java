@@ -39,6 +39,13 @@ public class KertReleaseSnapshotAdapter implements ProductKnowledgeInterpretatio
             log.warn("[PK-INTERPRETATION] snapshot-dir 未配置，受控失败: productId={}", productId);
             throw new KnowledgeSourceUnavailableException("KERT 解读快照目录未配置");
         }
+        // 目录不可达 ≠ 产品无投影：源不可达必须受控失败（503），
+        // 调用方才能区分「暂时不可用」与「确实没有已发布 Release」（404）。
+        if (!Files.isDirectory(snapshotDir) || !Files.isReadable(snapshotDir)) {
+            log.error("[PK-INTERPRETATION] 快照目录不可达，受控失败: productId={} dir={}",
+                    productId, snapshotDir);
+            throw new KnowledgeSourceUnavailableException("KERT 解读快照目录不可达: " + snapshotDir);
+        }
         Path file = snapshotDir.resolve(productId + ".json");
         if (!Files.isRegularFile(file)) {
             log.info("[PK-INTERPRETATION] 无投影快照: productId={} path={}", productId, file);

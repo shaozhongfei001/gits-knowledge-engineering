@@ -136,6 +136,50 @@ class ProductInterpretationControllerTest {
     }
 
     @Test
+    void invalidViewAndPurposeReturn400() throws Exception {
+        mvc(port -> Optional.of(projection("PUBLISHED"))).perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                                .get("/api/v1/product-knowledge/PROD-CM-001/interpretation")
+                                .param("view", "BOGUS")
+                                .param("purpose", "INTERPRETATION")
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers
+                        .status().isBadRequest())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers
+                        .jsonPath("$.code").value("BAD_REQUEST"));
+
+        mvc(port -> Optional.of(projection("PUBLISHED"))).perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                                .get("/api/v1/product-knowledge/PROD-CM-001/interpretation")
+                                .param("view", "OVERVIEW")
+                                .param("purpose", "BOGUS")
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers
+                        .status().isBadRequest())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers
+                        .jsonPath("$.code").value("BAD_REQUEST"));
+    }
+
+    @Test
+    void missingRequiredParamReturnsUnifiedErrorBody() throws Exception {
+        mvc(port -> Optional.of(projection("PUBLISHED"))).perform(
+                        org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                                .get("/api/v1/product-knowledge/PROD-CM-001/interpretation")
+                                .param("view", "OVERVIEW")
+                                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers
+                        .status().isBadRequest())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers
+                        .jsonPath("$.status").value(400))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers
+                        .jsonPath("$.code").value("BAD_REQUEST"))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers
+                        .jsonPath("$.path").exists())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers
+                        .jsonPath("$.timestamp").exists());
+    }
+
+    @Test
     void invalidProductIdReturns400() throws Exception {
         mvc(port -> Optional.empty()).perform(
                         org.springframework.test.web.servlet.request.MockMvcRequestBuilders
